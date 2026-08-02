@@ -38,7 +38,7 @@ input{font:inherit}
 .chip{font-size:11.5px;border-radius:20px;padding:7px 13px;white-space:nowrap;color:#5F5B52;background:#EDE8DC;display:inline-flex;align-items:center;gap:4px}
 .chip.on{background:#2B2A28;color:#FCFAF5;font-weight:500}
 .chip.sel{background:#0F6E56;color:#FCFAF5;font-weight:500}
-.badge{font-size:10.5px;border-radius:6px;padding:3px 8px;display:inline-block;font-weight:500}
+.badge{font-size:10.5px;border-radius:6px;padding:3px 8px;display:inline-block}
 .b-amber{color:#8A4F0B;background:#F7EDDF}
 .b-teal{color:#33564A;background:#E4EFEA}
 .b-gray{color:#5F5B52;background:#EDE8DC}
@@ -89,6 +89,7 @@ const IP = {
  share:'M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13',
  home:'M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
  chat:'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z',
+ tag:'M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8zM7 7h.01',
  check:'M20 6L9 17l-5-5', x:'M18 6L6 18M6 6l12 12',
  shield:'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM9 12l2 2 4-4',
  arrow:'M5 12h14M12 5l7 7-7 7',
@@ -96,6 +97,8 @@ const IP = {
  info:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20M12 16v-4M12 8h.01',
  alert:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20M12 8v4M12 16h.01',
  sliders:'M4 7h10M18 7h2M4 17h4M12 17h8M16 4v6M8 14v6',
+ file:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6',
+ plus:'M12 5v14M5 12h14',
 };
 const ic=(n,s=18,c='#8A867D',w=1.7)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${IP[n].split('M').filter(Boolean).map(d=>`<path d="M${d}"/>`).join('')}</svg>`;
 const mark=(s=20,c='#0F6E56')=>{const u='k'+Math.random().toString(36).slice(2,7);return`<svg width="${s}" height="${s}" viewBox="0 0 64 64"><defs><clipPath id="${u}"><path d="M56 10 L48 10 A22 22 0 0 0 48 54 L56 54 Z"/></clipPath></defs><path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="none" stroke="${c}" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M55 11 L48 10.5 A22 22 0 0 0 48 53.5 L55 53 Z" fill="none" stroke="${c}" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/><g clip-path="url(#${u})"><path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="${c}"/></g></svg>`};
@@ -112,14 +115,13 @@ const th=(x,s=46)=>{const t=typeof x==='string'?x:x.tint,c=typeof x==='string'?n
 
 /* ── 데이터 ── */
 const P=[
-{id:'p1',brand:'무이',slug:'tri-pan-28',checked:'2026.07.20',name:'스테인리스 3중 팬 28cm',sub:'프라이팬',cat:'pan',site:'mui.co.kr/tri-pan-28',spec:[['재질','스테인리스 3중 통판'],['크기','28cm · 깊이 5.2cm'],['무게','1,150g'],['열원','가스·인덕션·오븐'],['제조','한국'],['보증','1년']],tint:'green',label:'대체로 만족',n:294,price:39800,low:32900,lowNote:'2026.03 자사몰 봄세일 · 11일간 유지',deal:'open',dealPrice:33800,wait:421,target:100,endDate:'7월 30일',induction:1,dish:1,incl:294,excl:118,longN:96,keep:71,drop:25,dropWhy:'무게 (11건)',cons:[['손잡이가 뜨거워져요',32],['무게가 있는 편이에요',21],['처음엔 길들이기가 필요해요',14]]},
-{id:'p2',brand:'하로',slug:'ind-28',checked:'2026.07.18',name:'인덕션 코팅팬 28cm',sub:'프라이팬',cat:'pan',site:'haro.co.kr/ind-28',spec:[['재질','알루미늄 + 논스틱 코팅'],['크기','28cm · 깊이 4.8cm'],['무게','870g'],['열원','가스·인덕션'],['제조','중국'],['보증','6개월']],tint:'green',label:'대체로 만족',n:241,price:39800,low:35900,lowNote:'2026.01 오픈마켓 행사 · 9일간 유지',deal:'gathering',wait:87,target:100,induction:1,dish:0,incl:241,excl:96,longN:74,keep:52,drop:22,dropWhy:'코팅 박리 (14건)',cons:[['3~4개월에 코팅이 약해져요',28],['손잡이 유격이 생겨요',17],['광고 사진보다 얕아요',9]]},
-{id:'p3',brand:'온담',slug:'ceramic-28',checked:'2026.07.11',name:'세라믹 프라이팬 28cm',sub:'프라이팬',cat:'pan',site:'ondam.kr/ceramic-28',spec:[['재질','알루미늄 + 세라믹 코팅'],['크기','28cm · 깊이 4.5cm'],['무게','790g'],['열원','가스 전용'],['제조','중국'],['보증','6개월']],tint:'gray',label:'대체로 불만',n:132,price:34900,low:29900,lowNote:'2026.05 자사몰 세일 · 8일간 유지',deal:'none',wait:86,target:100,induction:0,dish:0,incl:132,excl:128,longN:38,keep:11,drop:27,dropWhy:'코팅 박리 (18건)',cons:[['3개월 전후로 눌어붙어요',41],['인덕션에서 바닥이 떠요',27],['손잡이가 헐거워져요',19]]},
-{id:'p4',brand:'코르나',slug:'griddle-26',checked:'2026.07.19',name:'무쇠 그리들 26cm',sub:'무쇠·주물',cat:'grill',site:'korna.co.kr/griddle-26',spec:[['재질','주철'],['크기','26cm · 사각'],['무게','2,340g'],['열원','가스·인덕션·직화'],['제조','중국'],['보증','1년']],tint:'warm',label:'대체로 만족',n:187,price:62000,low:55000,lowNote:'2025.11 블프 행사 · 14일간 유지',deal:'open',dealPrice:52700,wait:268,target:100,endDate:'8월 2일',induction:1,dish:0,incl:187,excl:74,longN:82,keep:68,drop:14,dropWhy:'무게 (9건)',cons:[['무거워서 손목에 부담이 돼요',24],['시즈닝이 손이 가요',18],['예열이 오래 걸려요',11]]},
-{id:'p5',brand:'무이',slug:'pot-20',checked:'2026.07.15',name:'통3중 스테인리스 냄비 20cm',sub:'냄비·솥',cat:'pot',site:'mui.co.kr/pot-20',spec:[['재질','스테인리스 통3중'],['크기','20cm · 3.0L'],['무게','1,480g'],['열원','가스·인덕션·오븐'],['제조','한국'],['보증','2년']],tint:'green',label:'의견 갈림',n:88,price:47000,low:41000,lowNote:'2026.02 자사몰 세일 · 7일간 유지',deal:'postponed',wait:54,target:100,pWhy:'가격 조건이 맞지 않아서',pDate:'6.28',induction:1,dish:1,incl:88,excl:51,longN:31,keep:18,drop:13,dropWhy:'눌어붙음 (7건)',cons:[['인덕션에서 소리가 나요',19],['바닥이 잘 눌어요',16],['손잡이가 뜨거워져요',8]]},
-{id:'p6',brand:'필로',slug:'wok-30',checked:'2026.06.28',name:'티타늄 코팅 웍 30cm',sub:'웍',cat:'wok',site:'filo.kr/wok-30',spec:[['재질','알루미늄 + 티타늄 코팅'],['크기','30cm · 깊이 8cm'],['무게','980g'],['열원','가스·인덕션'],['제조','베트남'],['보증',null]],tint:'sand',label:'표본 부족',n:12,price:52000,low:48000,lowNote:'2026.04 오픈마켓 행사 · 7일간 유지',deal:'none',wait:12,target:100,induction:1,dish:0,incl:12,excl:21,longN:4,keep:3,drop:1,dropWhy:'-',cons:[]},
-{id:'p7',brand:'세라',slug:'chef-20',checked:'2026.07.09',name:'다마스커스 셰프나이프 20cm',sub:'칼',cat:'knife',site:'sera.co.kr/chef-20',spec:[['재질','다마스커스 67겹'],['크기','날 20cm'],['무게','215g'],['손잡이','흑단 목재'],['제조','일본'],['날 경도',null],['보증','1년']],tint:'warm',label:'대체로 만족',n:74,price:89000,low:78000,lowNote:'2025.12 자사몰 세일 · 10일간 유지',deal:'talking',wait:31,target:60,tDate:'7.24',induction:0,dish:0,incl:74,excl:38,longN:29,keep:25,drop:4,dropWhy:'관리 부담 (2건)',cons:[['관리가 까다로워요',14],['손잡이가 미끄러워요',8],['무게가 가벼운 편이에요',5]]}];
-
+{id:'p1',brand:'무이',checked:'2026.07.20',name:'스테인리스 3중 팬 28cm',sub:'프라이팬',cat:'pan',site:'mui.co.kr/tri-pan-28',spec:[['재질','스테인리스 3중 통판'],['크기','28cm · 깊이 5.2cm'],['무게','1,150g'],['열원','가스·인덕션·오븐'],['제조','한국'],['보증','1년']],tint:'green',label:'대체로 만족',n:294,price:39800,low:32900,lowNote:'2026.03 자사몰 봄세일 · 11일간 유지',deal:'open',dealPrice:33800,wait:421,target:100,endDate:'7월 30일',induction:1,dish:1,incl:294,excl:118,longN:96,keep:71,drop:25,dropWhy:'무게 (11건)',cons:[['손잡이가 뜨거워져요',32],['무게가 있는 편이에요',21],['처음엔 길들이기가 필요해요',14]]},
+{id:'p2',brand:'하로',checked:'2026.07.18',name:'인덕션 코팅팬 28cm',sub:'프라이팬',cat:'pan',site:'haro.co.kr/ind-28',spec:[['재질','알루미늄 + 논스틱 코팅'],['크기','28cm · 깊이 4.8cm'],['무게','870g'],['열원','가스·인덕션'],['제조','중국'],['보증','6개월']],tint:'green',label:'대체로 만족',n:241,price:39800,low:35900,lowNote:'2026.01 오픈마켓 행사 · 9일간 유지',deal:'gathering',wait:87,target:100,induction:1,dish:0,incl:241,excl:96,longN:74,keep:52,drop:22,dropWhy:'코팅 박리 (14건)',cons:[['3~4개월에 코팅이 약해져요',28],['손잡이 유격이 생겨요',17],['광고 사진보다 얕아요',9]]},
+{id:'p3',brand:'온담',checked:'2026.07.11',name:'세라믹 프라이팬 28cm',sub:'프라이팬',cat:'pan',site:'ondam.kr/ceramic-28',spec:[['재질','알루미늄 + 세라믹 코팅'],['크기','28cm · 깊이 4.5cm'],['무게','790g'],['열원','가스 전용'],['제조','중국'],['보증','6개월']],tint:'gray',label:'대체로 불만',n:132,price:34900,low:29900,lowNote:'2026.05 자사몰 세일 · 8일간 유지',deal:'none',wait:86,target:100,induction:0,dish:0,incl:132,excl:128,longN:38,keep:11,drop:27,dropWhy:'코팅 박리 (18건)',cons:[['3개월 전후로 눌어붙어요',41],['인덕션에서 바닥이 떠요',27],['손잡이가 헐거워져요',19]]},
+{id:'p4',brand:'코르나',checked:'2026.07.19',name:'무쇠 그리들 26cm',sub:'무쇠·주물',cat:'grill',site:'korna.co.kr/griddle-26',spec:[['재질','주철'],['크기','26cm · 사각'],['무게','2,340g'],['열원','가스·인덕션·직화'],['제조','중국'],['보증','1년']],tint:'warm',label:'대체로 만족',n:187,price:62000,low:55000,lowNote:'2025.11 블프 행사 · 14일간 유지',deal:'open',dealPrice:52700,wait:268,target:100,endDate:'8월 2일',induction:1,dish:0,incl:187,excl:74,longN:82,keep:68,drop:14,dropWhy:'무게 (9건)',cons:[['무거워서 손목에 부담이 돼요',24],['시즈닝이 손이 가요',18],['예열이 오래 걸려요',11]]},
+{id:'p5',brand:'무이',checked:'2026.07.15',name:'통3중 스테인리스 냄비 20cm',sub:'냄비·솥',cat:'pot',site:'mui.co.kr/pot-20',spec:[['재질','스테인리스 통3중'],['크기','20cm · 3.0L'],['무게','1,480g'],['열원','가스·인덕션·오븐'],['제조','한국'],['보증','2년']],tint:'green',label:'의견 갈림',n:88,price:47000,low:41000,lowNote:'2026.02 자사몰 세일 · 7일간 유지',deal:'postponed',wait:54,target:100,pWhy:'가격 조건이 맞지 않아서',pDate:'6.28',induction:1,dish:1,incl:88,excl:51,longN:31,keep:18,drop:13,dropWhy:'눌어붙음 (7건)',cons:[['인덕션에서 소리가 나요',19],['바닥이 잘 눌어요',16],['손잡이가 뜨거워져요',8]]},
+{id:'p6',brand:'필로',checked:'2026.06.28',name:'티타늄 코팅 웍 30cm',sub:'웍',cat:'wok',site:'filo.kr/wok-30',spec:[['재질','알루미늄 + 티타늄 코팅'],['크기','30cm · 깊이 8cm'],['무게','980g'],['열원','가스·인덕션'],['제조','베트남'],['보증',null]],tint:'sand',label:'표본 부족',n:12,price:52000,low:48000,lowNote:'2026.04 오픈마켓 행사 · 7일간 유지',deal:'none',wait:12,target:100,induction:1,dish:0,incl:12,excl:21,longN:4,keep:3,drop:1,dropWhy:'-',cons:[]},
+{id:'p7',brand:'세라',checked:'2026.07.09',name:'다마스커스 셰프나이프 20cm',sub:'칼',cat:'knife',site:'sera.co.kr/chef-20',spec:[['재질','다마스커스 67겹'],['크기','날 20cm'],['무게','215g'],['손잡이','흑단 목재'],['제조','일본'],['날 경도',null],['보증','1년']],tint:'warm',label:'대체로 만족',n:74,price:89000,low:78000,lowNote:'2025.12 자사몰 세일 · 10일간 유지',deal:'talking',wait:31,target:60,tDate:'7.24',induction:0,dish:0,incl:74,excl:38,longN:29,keep:25,drop:4,dropWhy:'관리 부담 (2건)',cons:[['관리가 까다로워요',14],['손잡이가 미끄러워요',8],['무게가 가벼운 편이에요',5]]}];
 const byId=i=>P.find(p=>p.id===i);
 const CH={kakao:'카카오톡',naver:'네이버',phone:'휴대폰'};
 const won=n=>Number(n).toLocaleString('ko-KR')+'원';
@@ -129,18 +131,54 @@ const EXCL=[['협찬 표기','업체로부터 제품을 제공받아 작성했�
 ['출시 직후 집중','받자마자 써봤는데 코팅이 정말 좋네요','유튜브 댓글 · 2025.09.03'],
 ['문장 유사도','3중 구조라 열이 고르게 퍼지는 게 느껴집니다','블로그 · 2025.09.05'],
 ['제품 무관','저는 다른 브랜드 쓰는데 그것도 괜찮아요','유튜브 댓글 · 2026.01.22']];
+const PROM=[['다들이 기다리는 제품부터 이야기하러 가요','브랜드가 밀고 싶은 순서가 아니라, 대기 등록이 많이 모인 순서로 협상해요.'],
+['지금 최저가랑만 비교해서 보여드려요','정가를 부풀려 놓고 크게 깎아주는 것처럼 보이게 하지 않을게요.'],
+['재촉하지 않을게요','남은 수량이나 마감 임박 같은 말은 쓰지 않아요. 종료일만 알려드립니다.'],
+['다들은 후기를 모아 올 뿐이라, 내용을 고칠 수가 없어요','브랜드가 요청하셔도 마찬가지예요. 구조상 저희가 손댈 수 있는 자리가 없습니다.'],
+['수수료는 10%, 전부 브랜드가 내요','제품마다 얼마를 받는지 적어둘게요. 광고비나 상위 노출 비용은 받지 않아요.'],
+['후기는 받지 않고, 모으기만 해요','대가를 받고 쓴 후기를 걸러내는 곳인데, 저희가 후기를 받으면 안 되겠죠.'],
+['틀리면 고치고, 고친 자리를 남겨둬요','평가가 바뀌면 언제 왜 바뀌었는지 카드에 적어둡니다. 조용히 지우지 않을게요.']];
+
+
+/* ── 운영 데이터 ── */
+const CAND=[
+ {id:'c1',n:'세라믹 코팅팬 26cm',b:'하로',sc:87,est:'후기 180~240건 예상',
+  sig:[['검색량 3개월 추이','+38%'],['최근 6개월 리뷰 영상','12편'],['지식iN 문제 질문','24건'],['다들에 들어온 요청','7명']]},
+ {id:'c2',n:'스테인리스 밀크팬 14cm',b:'무이',sc:81,est:'후기 120~160건 예상',
+  sig:[['검색량 3개월 추이','+21%'],['최근 6개월 리뷰 영상','9편'],['지식iN 문제 질문','11건'],['다들에 들어온 요청','12명']],req:1},
+ {id:'c3',n:'주물 무쇠솥 20cm',b:'코르나',sc:74,est:'후기 90~130건 예상',
+  sig:[['검색량 3개월 추이','+9%'],['최근 6개월 리뷰 영상','7편'],['지식iN 문제 질문','18건'],['다들에 들어온 요청','3명']]},
+ {id:'c4',n:'논스틱 계란말이팬 18cm',b:'필로',sc:62,est:'후기 50~80건 예상',
+  sig:[['검색량 3개월 추이','-4%'],['최근 6개월 리뷰 영상','4편'],['지식iN 문제 질문','6건'],['다들에 들어온 요청','1명']]},
+ {id:'c5',n:'프리미엄 인덕션 전용 팬 30cm',b:'대기업',sc:58,est:'협상 대상 아님',block:'대기업 제품이라 협상이 어려워 후보에서 내렸어요'},
+];
+const STAGES=['수집','걸러내기','추출','라벨','발행 대기'];
+const JOBS=[
+ {n:'하로 세라믹 코팅팬 26cm',st:4,got:412,excl:171,val:241,lab:'대체로 만족'},
+ {n:'무이 스테인리스 밀크팬 14cm',st:3,got:288,excl:132,val:156,lab:'의견 갈림'},
+ {n:'코르나 주물 무쇠솥 20cm',st:2,got:214,excl:88,val:126,lab:null},
+ {n:'필로 논스틱 계란말이팬 18cm',st:0,got:41,excl:0,val:0,lab:null},
+];
+const AUDIT=[
+ {q:'인덕션에 3개월쯤 쓰니까 바닥이 살짝 떴어요',ex:'기간 3개월 · 증상 바닥변형 · 조건 인덕션 · 부정',src:'유튜브 댓글 · 2026.04.02',ok:1},
+ {q:'무겁긴 한데 그만큼 튼튼해서 2년째 잘 쓰는 중',ex:'기간 24개월 · 증상 없음 · 긍정',src:'커뮤니티 · 2026.03.11',ok:1},
+ {q:'저는 다른 브랜드 쓰는데 그것도 괜찮더라구요',ex:'제품 무관 · 제외',src:'유튜브 댓글 · 2026.05.20',ok:1},
+ {q:'선물받아서 아직 안 써봤어요 기대되네요',ex:'사용 전 · 제외',src:'유튜브 댓글 · 2026.06.01',ok:1},
+ {q:'한 1년 넘게 썼나 코팅은 아직 괜찮은데 손잡이가 좀 흔들려요',ex:'기간 12개월 · 증상 코팅박리 · 부정',src:'커뮤니티 · 2026.02.18',ok:0,fix:'증상은 손잡이유격이 맞아요'},
+];
 
 /* ── 상태 ── */
 const S={stack:[{s:'home'}],tab:'home',banner:1,atab:'cand',appr:{},aud:{},mine:0,cat:'전체',brand:null,drawer:0,ptab:'info',user:null,pending:null,noti:{open:1,post:1,drop:1,week:0},sheet:null,q:'',filters:[],picks:[],waits:{},bought:{},contact:'',tmp:null,toast:null};
 const cur=()=>S.stack[S.stack.length-1];
 const go=(s,id)=>{S.stack.push({s,id});draw()};
 const back=()=>{if(S.stack.length>1){S.stack.pop();draw()}};
+const root=(s)=>{S.stack=[{s}];S.tab=s;draw()};
 const say=m=>{S.toast=m;draw();setTimeout(()=>{S.toast=null;draw()},2200)};
 const waitCount=p=>p.wait+(S.waits[p.id]?1:0);
 
 /* ── 조각 ── */
 const bar=(t,sh)=>`<div class="bar"><div class="line"><button data-a="back">${ic('back',20)}</button><h1>${t}</h1>${sh?ic('share',17):'<span style="width:17px"></span>'}</div></div>`;
-const tabs=()=>`<div class="tabs">${[['home','홈','home'],['reviews','후기 모음','chat'],['me','내 정보','user']]
+const tabs=()=>`<div class="tabs">${[['home','홈','home'],['reviews','후기','chat'],['me','내 정보','user']]
  .map(([k,l,i])=>`<button class="tab ${S.tab===k?'on':''}" data-a="root:${k}">${ic(i,21,S.tab===k?'#0F6E56':'#A39E93')}${l}</button>`).join('')}</div>`;
 const bellBtn=p=>`<span data-a="price:${p.id}" style="width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${S.waits[p.id]?'#0F6E56':'#EDF2EF'}">${S.waits[p.id]?ic('check',17,'#FCFAF5'):ic('bell',17,'#0F6E56')}</span>`;
 const rowItem=(p,right)=>`<div class="card" style="padding:12px 13px;margin-bottom:9px;display:flex;gap:11px;align-items:center">
@@ -156,24 +194,23 @@ V.home=()=>{
  const fit=x=>(S.cat==='전체'||x.sub===S.cat)&&(!S.brand||x.brand===S.brand);
  const g=k=>P.filter(x=>x.deal===k&&fit(x));
  const openL=g('open'),talkL=g('talking'),gathL=g('gathering'),postL=g('postponed');
- const gcard=x=>{
-  const off=x.dealPrice?Math.round((1-x.dealPrice/x.price)*100):0; // 할인율 계산
+ const gcard=x=>{const off=x.dealPrice?Math.round((1-x.dealPrice/x.price)*100):0;
   return `<div class="card" data-a="product:${x.id}" style="overflow:hidden;cursor:pointer">
   <div style="height:118px;background:${TINT[x.tint]};display:flex;align-items:center;justify-content:center;position:relative">
    <svg width="66" height="66" viewBox="0 0 64 64" fill="none" stroke="rgba(43,42,40,.42)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${GLY[x.cat]}</svg>
-   ${x.deal==='open'?`<span class="badge b-amber" style="position:absolute;top:9px;left:9px">${x.endDate} 마감</span>`:''}
-   ${S.waits[x.id]?`<span class="badge b-teal" style="position:absolute;top:9px;right:9px">대기 중</span>`:''}</div>
+   ${x.deal==='open'?`<span class="badge b-amber" style="position:absolute;top:9px;left:9px">${x.endDate} 종료</span>`:''}
+   ${S.waits[x.id]?`<span class="badge b-teal" style="position:absolute;top:9px;right:9px">기다리는 중</span>`:''}</div>
   <div style="padding:11px 12px 13px">
    <div class="tiny">${x.brand}</div>
    <div class="h3" style="font-size:12.5px;margin-top:2px;line-height:1.45">${x.name}</div>
    ${x.deal==='open'
     ?`<div style="margin-top:8px;display:flex;align-items:baseline;gap:6px">
       <span class="num" style="font-size:11px;color:#A0610F;font-weight:600">-${off}%</span>
-      <span class="num" style="font-size:15px;font-weight:600;color:#A0610F;letter-spacing:-.03em">${won(x.dealPrice)}</span></div>
-      <div class="num tiny" style="text-decoration:line-through;color:#A39E93">${won(x.price)}</div>`
+      <span class="num" style="font-size:15px;font-weight:600;letter-spacing:-.03em">${won(x.dealPrice)}</span></div>
+      <div class="num tiny" style="text-decoration:line-through">${won(x.price)}</div>`
     :`<div style="margin-top:8px"><span class="num" style="font-size:14px;font-weight:600;letter-spacing:-.02em">${won(x.price)}</span>
-      <span class="tiny"> 온라인 최저가</span></div>
-      <div class="tiny num" style="margin-top:3px">${x.deal==='gathering'?`${waitCount(x)} / ${x.target}명 대기`:x.deal==='talking'?'브랜드와 협상 중':'이번엔 미뤄뒀어요'}</div>`}
+      <span class="tiny"> 지금 최저가</span></div>
+      <div class="tiny num" style="margin-top:3px">${x.deal==='gathering'?`${waitCount(x)} / ${x.target}명 모임`:x.deal==='talking'?'브랜드와 이야기 중':'이번엔 미뤄뒀어요'}</div>`}
    <div class="meta" style="margin-top:7px;padding-top:7px;border-top:.5px solid #F0EBE0">${x.label} · 후기 ${x.n}건</div></div></div>`};
  const sec=(t,d,arr)=>arr.length?`<div class="pad sec"><div class="h2" style="margin-bottom:3px">${t}</div>
   <div class="meta" style="margin-bottom:12px">${d}</div><div class="grid">${arr.map(gcard).join('')}</div></div>`:'';
@@ -192,13 +229,16 @@ V.home=()=>{
  ${sec('지금 사실 수 있어요','협상이 끝나 열려 있어요',openL)}
  ${sec('곧 열려요','수요를 들고 브랜드와 이야기하는 중이에요',talkL)}
  ${sec('수요가 모이는 중','목표에 닿으면 협상을 시작해요',gathL)}
- ${sec('이번엔 미뤄뒀어요','안 된 것도 남겨둘게요. 대기 등록은 그대로 있어요',postL)}
+ ${sec('이번엔 미뤄뒀어요','안 된 것도 남겨둘게요. 등록은 그대로 있어요',postL)}
+ ${openL.length+talkL.length+gathL.length+postL.length?'':`<div class="pad" style="padding-top:50px;text-align:center">
+  <div class="h2">이 조건에 맞는 제품이 아직 없어요</div><div class="sub" style="margin-top:8px">다른 카테고리를 보시거나 전체로 돌아가 보세요.</div>
+  <button class="btn ghost" style="margin-top:16px" data-a="cat:전체">전체 보기</button></div>`}
 
  <div class="pad sec"><div class="h2" style="margin-bottom:12px">브랜드로 보기</div>
  <div style="display:flex;gap:7px;flex-wrap:wrap">${[...new Set(P.map(x=>x.brand))].map(b=>`<span class="chip" data-a="brandSel:${b}">${b}</span>`).join('')}</div></div>
 
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" data-a="log" style="padding:16px 17px;cursor:pointer">
- <div class="h3" style="font-size:14px;margin-bottom:6px">이번 달에 12번 이야기해서 3번 잘 됐어요</div>
+ <div class="h3" style="font-size:14px;margin-bottom:6px">이번 달에 12번 이야기해서 3번 됐어요</div>
  <div style="font-size:12.5px;color:#5F5B52;line-height:1.75">안 된 것도 숫자 그대로 적어둡니다. 무엇을 걸렀는지 보이지 않으면 고른 것도 못 믿으니까요.</div>
  <div style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:#0F6E56;font-weight:500">협상 기록 보기 ${ic('arrow',15,'#0F6E56')}</div></div></div>
  </div>${tabs()}`};
@@ -216,6 +256,13 @@ ${ic('search',17)}<span style="font-size:13px;color:#A39E93">브랜드 · 제품
  <div class="pad sec"><div class="row" style="margin-bottom:3px"><span class="h2">문제 언급이 가장 적은</span><span class="meta">더 보기</span></div>
  <div class="meta" style="margin-bottom:12px">후기 50건 이상인 제품만 · 언급률 낮은 순</div>
  ${['p7','p4'].map(byId).map(p=>rowItem(p,bellBtn(p))).join('')}</div>
+ <div class="pad sec"><div class="h2" style="margin-bottom:12px">주제별로 모아 봤어요</div>
+ ${[['코팅팬 12종 · 문제를 겪은 분들은 언제 겪었나','후기 1,847건 · 7월 22일 갱신'],['인덕션에서 정말 잘 되는 냄비 9종','후기 962건 · 7월 19일 갱신']]
+ .map(([t,s])=>`<div class="card" data-a="list" style="padding:14px 15px;margin-bottom:9px;cursor:pointer"><div class="h3">${t}</div><div class="meta" style="margin-top:3px">${s}</div></div>`).join('')}</div>
+ <div class="pad sec" style="padding-bottom:26px"><div class="soft" data-a="method" style="padding:15px 16px;cursor:pointer">
+ <div class="h3" style="font-size:14px">어떻게 판단하는지 궁금하세요</div>
+ <div class="sub" style="margin-top:5px">다들이 쓰는 기준표를 그대로 공개해 두었어요. 같은 기준을 대면 누구나 같은 결론이 나옵니다.</div>
+ <div style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:#0F6E56;font-weight:500">기준표 보기 ${ic('arrow',15,'#0F6E56')}</div></div></div>
 </div>${tabs()}`;
 
 const searchHits=()=>{const k=S.q.trim();
@@ -224,7 +271,7 @@ const searchHits=()=>{const k=S.q.trim();
  return h.sort((a,b)=>b.n-a.n)};
 
 const searchResults=()=>{const h=searchHits();
- if(h.length) return `<div class="pad" style="padding-top:13px"><div class="row"><span class="meta">${h.length}개 · <span style="color:#5F5B52">후기 많은 순</span></span></div></div>
+ if(h.length) return `<div class="pad" style="padding-top:13px"><div class="row"><span class="meta">${h.length}개 · <span style="color:#5F5B52">후기 많은 순</span></span><span class="meta" style="color:#5F5B52">정렬</span></div></div>
  <div class="pad" style="padding-top:12px">${h.map(p=>`<div class="card" style="padding:11px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:center">
  <span data-a="pick:${p.id}" style="width:20px;height:20px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${S.picks.includes(p.id)?'#0F6E56':'transparent'};border:${S.picks.includes(p.id)?'none':'1.5px solid #D5CFC1'}">${S.picks.includes(p.id)?ic('check',14,'#FCFAF5'):''}</span>
  <div data-a="product:${p.id}" style="display:flex;gap:10px;align-items:center;flex:1;min-width:0;cursor:pointer">${th(p,42)}
@@ -233,131 +280,707 @@ const searchResults=()=>{const h=searchHits();
  return `<div class="pad" style="padding-top:34px;text-align:center">
  <div style="width:56px;height:56px;border-radius:16px;background:#EDE8DC;display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px">${ic('search',26,'#A39E93')}</div>
  <div class="h2">아직 못 모은 제품이에요</div>
- <div class="sub" style="margin-top:7px">다들은 후기 30건 이상 모인 제품부터 올려요.<br>요청해 주시면 다음 순서로 후기를 모아볼게요.</div></div>
- <div class="pad" style="padding-top:20px"><button class="btn teal" data-a="req">이 제품 후기 모아주세요</button></div>`;
-};
+ <div class="sub" style="margin-top:7px">다들은 후기 30건 이상 모인 제품부터 올려요.<br>요청해 주시면 다음 순서로 올려둘게요.</div></div>
+ <div class="pad" style="padding-top:20px"><button class="btn teal" data-a="req">이 제품 후기 모아주세요</button>
+ <div class="tiny" style="text-align:center;margin-top:9px">지금까지 38명이 이 제품을 찾으셨어요.</div></div>
+ <div class="pad sec" style="padding-bottom:40px"><div class="h3" style="color:#5F5B52;margin-bottom:11px">비슷한 제품은 모아 두었어요</div>
+ ${['p4','p1'].map(byId).map(p=>rowItem(p,bellBtn(p))).join('')}</div>`};
 
 V.search=()=>`
 <div class="bar"><div class="line"><button data-a="back">${ic('back',20)}</button>
 <div style="flex:1;background:#F1ECE0;border-radius:10px;padding:9px 11px;display:flex;align-items:center;gap:7px">${ic('search',15)}
 <input id="q" class="field" style="border:0;background:none;padding:0;font-size:12.5px" placeholder="찾으시는 제품을 적어주세요" value="${S.q}"></div></div></div>
-<div class="body"><div id="results">${searchResults()}</div></div>`;
+<div class="body">
+ <div class="pad" style="padding-top:13px;display:flex;gap:6px;flex-wrap:wrap">
+ ${['인덕션 가능','3~5만원'].map(f=>`<span class="chip ${S.filters.includes(f)?'sel':''}" data-a="filter:${f}">${f}${S.filters.includes(f)?ic('x',13,'#FCFAF5'):''}</span>`).join('')}
+ <span class="chip">${ic('sliders',13,'#5F5B52')} 필터</span></div>
+ <div id="results">${searchResults()}</div>
+</div>
+${S.picks.length?`<div style="position:absolute;left:18px;right:18px;bottom:22px;z-index:15"><button data-a="compare" style="background:#2B2A28;border-radius:14px;padding:12px 15px;width:100%;display:flex;justify-content:space-between;align-items:center">
+<span style="font-size:12.5px;color:#FCFAF5">${S.picks.length}개 담음</span><span style="font-size:13px;font-weight:600;color:#FCFAF5">비교하기</span></button></div>`:''}`;
+
+V.compare=()=>{const it=S.picks.map(byId);
+ const rows=[['다들',p=>p.label],['모은 후기',p=>p.n+'건'],['지금 최저가',p=>won(p.price)],['확인된 최저가',p=>won(p.low)],
+ ['오래 쓴 분 중 계속 씀',p=>Math.round(p.keep/(p.keep+p.drop)*100)+'%'],['가장 많이 나온 말',p=>p.cons[0]?p.cons[0][0]:'—'],
+ ['인덕션',p=>p.induction?'가능':'안 됨'],['식기세척기',p=>p.dish?'가능':'안 됨']];
+ return bar('비교하기')+`<div class="body">
+ <div class="pad" style="padding-top:18px"><div class="h1">담아두신 ${it.length}개예요</div>
+ <div class="sub" style="margin-top:8px">같은 항목끼리 나란히 두었어요. 후기 수가 다르면 비율로 보시는 게 정확해요.</div></div>
+ <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px">
+ <div style="display:flex;gap:10px;margin-bottom:14px">${it.map(p=>`<div style="flex:1;text-align:center;min-width:0">${th(p,52)}
+ <div class="h3" style="font-size:12px;margin-top:7px">${p.brand}</div><div class="tiny" style="line-height:1.4">${p.name}</div></div>`).join('')}</div>
+ ${rows.map(([k,f],i)=>`<div style="padding-top:10px;margin-top:${i?10:0}px;${i?'border-top:.5px solid #EFEAE0':''}">
+ <div class="tiny" style="margin-bottom:5px">${k}</div><div style="display:flex;gap:10px">
+ ${it.map(p=>`<div style="flex:1;font-size:12px;font-weight:500;min-width:0;letter-spacing:-.01em">${f(p)}</div>`).join('')}</div></div>`).join('')}</div></div>
+ <div class="pad sec" style="padding-bottom:26px">${it.map(p=>`<button class="btn ghost" style="margin-bottom:8px" data-a="product:${p.id}">${p.brand} ${p.name} 자세히 보기</button>`).join('')}</div></div>`};
+
+V.list=()=>bar('후기 모음',1)+`<div class="body">
+ <div class="pad" style="padding-top:20px"><div class="tiny" style="letter-spacing:.03em">코팅 프라이팬 · 12종</div>
+ <div class="h1" style="font-size:23px;margin-top:5px">문제를 겪은 분들은,<br>언제 겪었나</div>
+ <div class="sub" style="margin-top:9px">후기에서 "문제가 생겼다"고 하신 시점만 모아 봤어요. 제품 수명이 아니라, 겪으신 분들의 시점이에요.</div></div>
+ <div class="scroller" style="padding-top:16px">${['문제 늦게 생긴 순','가격순','인덕션만'].map((c,i)=>`<span class="chip ${i?'':'on'}">${c}</span>`).join('')}</div>
+ <div class="pad" style="padding-top:16px">
+ ${[['하로 인덕션 코팅팬 28cm',14,100,'green','대체로 만족 · 241건',1],['필로 티타늄 코팅팬 28cm',11,79,'sand','대체로 만족 · 188건',0],
+ ['세라 세라믹 코팅팬 26cm',8,57,'warm','의견 갈림 · 156건',0],['온담 세라믹 프라이팬 28cm',4,29,'gray','대체로 불만 · 132건',0]]
+ .map(([n,m,w,t,s,b])=>`<div class="card" style="padding:13px 14px;margin-bottom:9px"><div style="display:flex;gap:11px;align-items:center">
+ ${th(t)}<div style="min-width:0;flex:1"><div class="h3">${n}</div><div class="meta" style="margin-top:1px">${s}</div></div>
+ <div style="text-align:right;flex-shrink:0"><div class="num" style="font-size:19px;font-weight:600;letter-spacing:-.03em;color:${b?'#0F6E56':'#2B2A28'}">${m}</div>
+ <div class="tiny" style="margin-top:-2px">개월</div></div></div>
+ <div class="track" style="margin-top:11px;height:4px"><div style="width:${w}%;height:4px;border-radius:2px;background:${b?'#0F6E56':'#8C7F6C'}"></div></div></div>`).join('')}
+ <div class="card" style="padding:13px 14px;opacity:.7;display:flex;gap:11px;align-items:center">${th('gray')}
+ <div style="flex:1;min-width:0"><div class="h3">필로 티타늄 코팅 웍 30cm</div><div class="meta" style="margin-top:1px">표본 부족 · 후기 12건</div></div>
+ <div style="font-size:12px;color:#A39E93;text-align:right;line-height:1.3">아직<br>모자라요</div></div></div>
+ <div class="pad sec"><div class="card" style="padding:16px 17px"><div class="h3" style="font-size:14px;margin-bottom:12px">이 숫자는 어떻게 나왔나요</div>
+ ${[['모은 후기','1,847건'],['뺀 후기','1,102건'],['기간을 밝힌 후기','745건']].map(([k,v])=>`<div class="row" style="padding:4px 0;font-size:12.5px"><span style="color:#7D796F">${k}</span><span class="num" style="font-weight:600">${v}</span></div>`).join('')}
+ <div class="meta" style="margin-top:12px;padding-top:12px;border-top:.5px solid #EFEAE0">오픈마켓이나 자사몰 리뷰는 쓰지 않았어요. 협찬 표기가 있거나, 출시 직후에 몰린 글은 뺐습니다.</div>
+ <button data-a="excluded" style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12px;color:#0F6E56;font-weight:500">뺀 후기 직접 보기 ${ic('arrow',15,'#0F6E56')}</button></div></div>
+ <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:16px 17px"><div class="h3" style="font-size:14px;margin-bottom:6px">이 중에 협상하고 있는 제품</div>
+ <div style="font-size:12.5px;color:#5F5B52;line-height:1.75">하로 인덕션 코팅팬을 ${waitCount(byId('p2'))}분이 기다리고 계세요. 100명이 되면 브랜드에 이야기하러 갑니다.</div>
+ <div class="track" style="margin-top:12px;background:#E1DACB"><div class="fill" style="width:${waitCount(byId('p2'))}%"></div></div></div></div></div>`;
+
+V.excluded=()=>bar('뺀 후기')+`<div class="body">
+ <div class="pad" style="padding-top:20px"><div class="h1">이런 글은 빼두었어요</div>
+ <div class="sub" style="margin-top:8px">왜 뺐는지, 어떤 글이었는지 그대로 보여드려요. 원문은 저장하지 않고 링크만 남겨둡니다.</div></div>
+ <div class="pad" style="padding-top:16px">${EXCL.map(([w,t,s])=>`<div class="card" style="padding:14px 15px;margin-bottom:9px">
+ <div class="row" style="margin-bottom:9px"><span class="badge b-gray">${w}</span><span class="tiny">${s}</span></div>
+ <div class="quote">${t}</div>
+ <button data-a="say:원문 페이지로 이동해요" style="margin-top:10px;display:flex;align-items:center;gap:5px;font-size:11.5px;color:#0F6E56">${ic('ext',13,'#0F6E56')} 원문 보기</button></div>`).join('')}</div>
+ <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:14px 15px"><div class="sub" style="color:#5F5B52">뺀 글이 남긴 글보다 많은 날도 있어요. 그래도 이렇게 하는 게 맞다고 생각합니다.</div></div></div></div>`;
+
+V.method=()=>bar('판단 기준')+`<div class="body">
+ <div class="pad" style="padding-top:20px"><div class="h1">기준표를 그대로<br>공개해 둘게요</div>
+ <div class="sub" style="margin-top:8px">다들이 따로 판단하지 않아요. 후기에서 뽑은 숫자를 아래 표에 넣으면 결과가 나옵니다. 같은 기준을 대면 누구나 같은 결론에 닿아요.</div></div>
+ <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px">
+ ${[['유효 후기 30건 미만','표본 부족'],['문제 언급 15% 미만','대체로 만족'],['문제 언급 15~35%','의견 갈림'],['문제 언급 35% 이상','대체로 불만']]
+ .map(([c,r],i)=>`<div class="row" style="padding:9px 0;${i?'border-top:.5px solid #EFEAE0':''}"><span style="font-size:12.5px;color:#7D796F">${c}</span><span class="h3" style="font-size:13px">${r}</span></div>`).join('')}</div></div>
+ <div class="pad sec"><div class="h2" style="margin-bottom:11px">이런 글은 세지 않아요</div>
+ ${[['협찬이라고 밝힌 글','고지 문구가 있으면 뺍니다'],['출시 직후에 몰린 글','2주 안에 40% 넘게 몰리면 그 구간을 뺍니다'],
+ ['서로 너무 닮은 글','문장이 겹치면 묶어서 한 번만 셉니다'],['제품 이름이 없는 영상의 댓글','어느 모델 이야기인지 알 수 없어서요']]
+ .map(([t,s])=>`<div class="card" style="padding:13px 14px;margin-bottom:8px"><div class="h3">${t}</div><div class="meta" style="margin-top:3px;line-height:1.7">${s}</div></div>`).join('')}</div>
+ <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:15px 16px"><div class="h3" style="font-size:13.5px;margin-bottom:6px">사람이 보는 자리도 남겨뒀어요</div>
+ <div class="sub" style="color:#5F5B52">매주 무작위로 5개를 골라 직접 원문까지 확인해요. 몇 개를 봤고 몇 개를 고쳤는지 카드 아래에 적어둡니다.</div></div></div></div>`;
 
 V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thin=p.label==='표본 부족';
- const off=p.dealPrice?Math.round((1-p.dealPrice/p.price)*100):0;
  const foot=p.deal==='open'
- ?`<div class="row" style="margin-bottom:11px"><span class="meta">지금 브랜드 협상이 열려 있어요</span>
-    <span style="display:flex;align-items:baseline;gap:6px">
-     <span class="num" style="font-size:12px;color:#A39E93;text-decoration:line-through">${won(p.price)}</span>
-     <span class="num" style="font-size:18px;font-weight:600;color:#A0610F">${won(p.dealPrice)}</span>
-     <span class="badge b-amber num">-${off}%</span>
-    </span></div>
-   <button class="btn amber" data-a="deal:${p.id}">협상 상세 보기</button>`
+ ?`<div class="row" style="margin-bottom:11px"><span class="meta">지금 협상이 열려 있어요</span><span class="num" style="font-size:15px;font-weight:600;color:#A0610F">${won(p.dealPrice)}</span></div>
+   <button class="btn amber" data-a="deal:${p.id}">협상 보러 가기</button>`
  :(bad||thin)
- ?`<div style="background:#F2EEE4;border-radius:12px;padding:13px 14px;margin-bottom:12px"><div class="h3" style="margin-bottom:5px">아직 협상 순서가 아니에요</div>
-   <div class="meta" style="line-height:1.7">${thin?'후기가 더 모이면 규칙표에 따라 다시 판단해 볼게요.':'후기 평가가 낮아 협상 순서를 뒤로 두었습니다.'}</div></div>
-   <button class="btn ghost" data-a="price:${p.id}">온라인 최저가 변동 알림 받기</button>`
- :`<div class="row" style="margin-bottom:11px"><span class="meta">지금 대기 중인 인원</span>
+ ?`<div style="background:#F2EEE4;border-radius:12px;padding:13px 14px;margin-bottom:12px"><div class="h3" style="margin-bottom:5px">아직 순서가 아니에요</div>
+   <div class="meta" style="line-height:1.7">${thin?'후기가 더 모이면 다시 살펴볼게요.':'다들의 이야기가 나아지면 그때 협상도 열립니다.'}</div></div>
+   <button class="btn teal" data-a="list">같은 조건의 팬 12종 비교</button>
+   <button class="btn ghost" style="margin-top:9px" data-a="price:${p.id}">가격이 내려가면 알려주세요</button>`
+ :p.deal==='talking'
+ ?`<div style="background:#EDF2EF;border-radius:12px;padding:13px 14px;margin-bottom:12px"><div class="h3" style="margin-bottom:5px">브랜드와 이야기하고 있어요</div>
+   <div class="meta" style="line-height:1.7">${p.tDate}에 시작했어요. 결과가 나오면 기다리시는 분께 먼저 알려드릴게요.</div></div>
+   <button class="btn teal" data-a="price:${p.id}">${S.waits[p.id]?'등록하신 가격 바꾸기':'이 가격이면 살게요'}</button>`
+ :p.deal==='postponed'
+ ?`<div style="background:#F2EEE4;border-radius:12px;padding:13px 14px;margin-bottom:12px"><div class="h3" style="margin-bottom:5px">이번엔 미뤄뒀어요</div>
+   <div class="meta" style="line-height:1.7">${p.pWhy} 지금 여는 건 의미가 없다고 봤어요. 조건이 나아지면 다시 이야기해 볼게요.</div></div>
+   <button class="btn teal" data-a="price:${p.id}">${S.waits[p.id]?'등록하신 가격 바꾸기':'다시 열리면 알려주세요'}</button>
+   <div class="tiny" style="text-align:center;margin-top:9px">등록은 그대로 두었어요.</div>`
+ :`<div class="row" style="margin-bottom:11px"><span class="meta">지금 기다리는 분</span>
    <span class="meta num"><b style="color:#2B2A28">${waitCount(p)}명</b> · ${p.target}명이 되면 협상 시작</span></div>
-   <button class="btn teal" data-a="price:${p.id}">${S.waits[p.id]?'등록하신 희망 가격 바꾸기':'이 가격이면 살게요'}</button>`;
+   <button class="btn teal" data-a="price:${p.id}">${S.waits[p.id]?'등록하신 가격 바꾸기':'이 가격이면 살게요'}</button>
+   <div class="tiny" style="text-align:center;margin-top:9px">브랜드가 팔고 싶은 것 말고, 다들 사고 싶어 하는 것.</div>`;
 
  const INFO=`
  <div class="pad" style="padding-top:18px"><div class="card" style="padding:16px 17px">
  <div class="h3" style="font-size:14px;margin-bottom:11px">제품 정보</div>
  ${p.spec.map(([k,v],i)=>`<div class="row" style="padding:8px 0;${i?'border-top:.5px solid #F2EDE3':''}">
-  <span style="font-size:12.5px;color:#7D796F">${k}</span><span style="font-size:12.5px;font-weight:500;text-align:right;max-width:62%;${v?'':'color:#B5B0A6'}">${v||'확인 중'}</span></div>`).join('')}</div></div>`;
+  <span style="font-size:12.5px;color:#7D796F">${k}</span><span style="font-size:12.5px;font-weight:500;text-align:right;max-width:62%;${v?'':'color:#B5B0A6'}">${v||'확인 중'}</span></div>`).join('')}
+ <div class="row" style="padding:8px 0;border-top:.5px solid #F2EDE3">
+  <span style="font-size:12.5px;color:#7D796F">식기세척기</span><span style="font-size:12.5px;font-weight:500">${p.dish?'사용 가능':'권장하지 않음'}</span></div>
+ <div class="meta" style="margin-top:12px;padding-top:11px;border-top:.5px solid #F2EDE3;line-height:1.75">
+  브랜드가 공개한 자료에서 값만 모아 정리했어요. 제품마다 공개된 항목이 달라서, 확인되지 않은 것은 비워 둡니다. ${p.checked} 확인</div></div></div>
+ <div class="pad" style="padding-top:12px">
+ <button class="btn ghost" data-a="official:${p.id}" style="display:flex;align-items:center;justify-content:center;gap:7px">
+  ${ic('ext',15,'#4A4740')} 브랜드 공식 페이지에서 보기</button>
+ <div class="tiny" style="text-align:center;margin-top:9px">${p.site}</div></div>
+ <div class="pad sec" style="padding-bottom:20px"><div class="h3" style="font-size:14px;margin-bottom:11px">${p.brand}의 다른 제품</div>
+ ${P.filter(x=>x.brand===p.brand&&x.id!==p.id).length?P.filter(x=>x.brand===p.brand&&x.id!==p.id).map(x=>rowItem(x,ic('next',18,'#C9C4BA'))).join('')
+  :`<div class="soft" style="padding:16px;text-align:center"><div class="meta">아직 이 브랜드의 다른 제품은 모으지 못했어요</div></div>`}</div>`;
 
  const REV=`
- <div class="pad" style="padding-top:18px"><div class="tiny" style="letter-spacing:.06em">다들 후기 모음</div>
- <div class="row" style="align-items:baseline;margin-top:4px"><span style="font-size:27px;font-weight:600;letter-spacing:-.035em;color:#2B2A28">${p.label}</span>
+ <div class="pad" style="padding-top:18px"><div class="tiny" style="letter-spacing:.06em">다들</div>
+ <div class="row" style="align-items:baseline;margin-top:4px"><span style="font-size:27px;font-weight:600;letter-spacing:-.035em">${p.label}</span>
  <span class="num" style="font-size:14px;color:#7D796F">후기 ${p.n}건</span></div>
- <div class="sub" style="margin-top:8px">${thin?'아직 후기가 30건 미만이라 판단을 보류했습니다.':bad?'오래 쓰신 분들 사이에서 불만 사항이 반복되어 유의가 필요합니다.':'오래 쓰신 분들 대부분이 만족하고 계십니다.'}</div></div>
+ <div class="sub" style="margin-top:8px">${thin?'아직 후기가 충분히 모이지 않아 뭐라 말씀드리기 어려워요.':bad?'오래 쓰신 분들 사이에서 아쉽다는 말씀이 반복해서 나왔어요.':'오래 쓰신 분들 대부분이 계속 쓰고 계세요.'}</div></div>
  <div class="pad" style="padding-top:16px"><div style="background:#F2EEE4;border-radius:12px;padding:14px 15px">
- <div class="row" style="font-size:13px"><span style="color:#7D796F">분석에 사용한 후기</span><span class="num" style="font-weight:600">${p.incl}건</span></div>
- <div class="row" style="font-size:13px;margin-top:7px"><span style="color:#7D796F">걸러낸 후기 (협찬/복붙 등)</span><span class="num" style="font-weight:600">${p.excl}건</span></div></div></div>`;
+ <div class="row" style="font-size:13px"><span style="color:#7D796F">센 후기</span><span class="num" style="font-weight:600">${p.incl}건</span></div>
+ <div class="row" style="font-size:13px;margin-top:7px"><span style="color:#7D796F">빼둔 후기</span><span class="num" style="font-weight:600">${p.excl}건</span></div>
+ <button data-a="excluded" style="margin-top:12px;display:flex;align-items:center;gap:6px;font-size:12px;color:#0F6E56;font-weight:500">${ic('ext',14,'#0F6E56')} 뺀 후기 직접 보기</button></div></div>
+ ${p.cons.length?`<div class="pad sec"><div class="h3" style="font-size:14px;margin-bottom:12px">여러 번 나온 이야기</div>
+ ${p.cons.map(([t,c])=>`<div style="margin-bottom:14px"><div class="row" style="font-size:13px"><span>${t}</span><span class="num" style="color:#7D796F">${c}회</span></div>
+ <div class="track" style="margin-top:7px;height:3px"><div style="width:${c/p.cons[0][1]*100}%;height:3px;background:#8C7F6C;border-radius:2px"></div></div></div>`).join('')}</div>`:''}
+ <div class="pad sec"><div class="row" style="align-items:baseline"><span class="h3" style="font-size:14px">6개월 넘게 쓰신 분들</span><span class="tiny num">${p.longN}명</span></div>
+ <div style="display:flex;gap:10px;margin-top:12px">${[['계속 쓰고 계세요',p.keep],['정리하셨어요',p.drop]].map(([k,v])=>`<div style="flex:1;padding:12px 13px;border:.5px solid #E8E2D6;border-radius:16px;background:#fff">
+ <div class="tiny">${k}</div><div class="num" style="font-size:21px;font-weight:600;margin-top:3px">${v}</div></div>`).join('')}</div>
+ <div class="meta" style="margin-top:10px">정리하신 이유 1위 — ${p.dropWhy}</div></div>
+ <div class="pad sec"><div class="card" style="padding:15px 16px">
+ <div class="h3" style="margin-bottom:9px">이런 분께는 조금 아쉬울 수 있어요</div>
+ <div style="font-size:13px;color:#7D796F;line-height:1.85">${bad?'· 인덕션을 주로 쓰시는 경우<br>· 매일 센 불로 조리하시는 경우':'· 가벼운 조리도구를 찾으시는 경우<br>· 손목이 약하신 경우'}</div>
+ <div class="h3" style="margin:14px 0 9px">이런 분께는 잘 맞아요</div>
+ <div style="font-size:13px;color:#7D796F;line-height:1.85">${bad?'· 가스레인지에서 주 2~3회 쓰시는 경우<br>· 1년쯤 쓰고 바꿀 생각이신 경우':'· 오래 두고 쓰실 생각이신 경우<br>· 인덕션과 가스를 함께 쓰시는 경우'}</div></div></div>
+ <div class="pad sec"><div style="background:#EDF2EF;border-radius:12px;padding:13px 15px;display:flex;gap:9px">
+ ${ic('shield',17,'#0F6E56')}<div style="font-size:12px;color:#33564A;line-height:1.7">오픈마켓이나 자사몰 리뷰는 쓰지 않았어요. 판매자가 정렬이나 삭제를 정할 수 있는 자리라서요.</div></div></div>
+ <div class="pad sec" style="padding-bottom:20px"><div class="tiny" style="line-height:1.75">고친 자리 · 2026.07.18 오래 쓰신 분 후기 22건을 더 넣어 다시 계산했어요<br>사람이 본 날 · 2026.07.21</div></div>`;
 
  return bar(p.brand,1)+`<div class="body">
  <div style="height:200px;background:${TINT[p.tint]};display:flex;align-items:center;justify-content:center;position:relative">
- <svg width="104" height="104" viewBox="0 0 64 64" fill="none" stroke="rgba(43,42,40,.4)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${GLY[p.cat]}</svg></div>
+ <svg width="104" height="104" viewBox="0 0 64 64" fill="none" stroke="rgba(43,42,40,.4)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${GLY[p.cat]}</svg>
+ ${p.deal==='open'?`<span class="badge b-amber" style="position:absolute;top:14px;left:16px">${p.endDate} 종료</span>`:''}</div>
  <div class="pad" style="padding-top:16px">
  <div class="tiny">${p.brand} · ${p.sub}</div>
  <div style="font-size:18px;font-weight:600;letter-spacing:-.025em;margin-top:3px;line-height:1.4">${p.name}</div>
  <div style="display:flex;align-items:baseline;gap:8px;margin-top:9px">
  ${p.deal==='open'?`<span class="num" style="font-size:12px;color:#A39E93;text-decoration:line-through">${won(p.price)}</span>
   <span class="num" style="font-size:22px;font-weight:600;color:#A0610F;letter-spacing:-.03em">${won(p.dealPrice)}</span>
-  <span class="badge b-amber num">-${off}%</span>`
- :`<span class="num" style="font-size:20px;font-weight:600;letter-spacing:-.03em">${won(p.price)}</span><span class="tiny">온라인 최저가</span>`}</div>
- <div class="meta" style="margin-top:8px">라벨: <b>${p.label}</b> · 모은 후기 ${p.n}건 (제외 ${p.excl}건)</div></div>
+  <span class="badge b-amber num">-${Math.round((1-p.dealPrice/p.price)*100)}%</span>`
+ :`<span class="num" style="font-size:20px;font-weight:600;letter-spacing:-.03em">${won(p.price)}</span><span class="tiny">지금 온라인 최저가</span>`}</div>
+ <div class="meta" style="margin-top:8px">다들 · ${p.label} · 후기 ${p.n}건</div></div>
  <div style="display:flex;margin-top:14px;padding:0 18px;border-bottom:.5px solid #E7E1D4">
  <button class="ptab ${S.ptab==='info'?'on':''}" data-a="ptab:info">제품 정보</button>
- <button class="ptab ${S.ptab==='rev'?'on':''}" data-a="ptab:rev">다들 후기 모음</button></div>
+ <button class="ptab ${S.ptab==='rev'?'on':''}" data-a="ptab:rev">다들 후기</button></div>
  ${S.ptab==='info'?INFO:REV}
  </div>
  <div style="background:#FFFDF9;box-shadow:0 -.5px 0 #E8E2D6;padding:14px 18px 18px;flex-shrink:0">${foot}</div>`};
 
-V.deal=id=>{const p=byId(id);const st=ladder(p);const off=Math.round((1-p.dealPrice/p.price)*100);
- return bar('다들 협상 상세',1)+`<div class="body">
+V.drawer=()=>{const CATS=['전체','프라이팬','냄비·솥','웍','칼','무쇠·주물'];
+ return `<div class="drawer" data-a="closeDrawer"><div class="dpanel" data-stop>
+ <div style="padding:18px 18px 14px;box-shadow:0 .5px 0 #E7E1D4">
+ <div class="row"><div style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em">다들</span></div>
+ <button data-a="closeDrawer">${ic('x',19)}</button></div>
+ <div class="meta" style="margin-top:7px">${S.user?CH[S.user.ch]+'으로 연결됨':'아직 연결하지 않으셨어요'}</div></div>
+ <div style="padding:16px 18px">
+ <div class="tiny" style="letter-spacing:.04em;margin-bottom:4px">카테고리</div>
+ ${CATS.map(c=>`<div class="drow" data-a="cat:${c}" style="cursor:pointer">
+  <span style="${S.cat===c?'font-weight:600;color:#0F6E56':''}">${c}</span>
+  <span class="tiny num">${c==='전체'?P.length:P.filter(x=>x.sub===c).length}</span></div>`).join('')}</div>
+ <div style="padding:6px 18px 16px;border-top:.5px solid #EFEAE0">
+ <div class="tiny" style="letter-spacing:.04em;margin:12px 0 4px">브랜드</div>
+ ${[...new Set(P.map(x=>x.brand))].map(b=>`<div class="drow" data-a="brandSel:${b}" style="cursor:pointer">
+  <span style="${S.brand===b?'font-weight:600;color:#0F6E56':''}">${b}</span>
+  <span class="tiny num">${P.filter(x=>x.brand===b).length}</span></div>`).join('')}</div>
+ <div style="padding:6px 18px 24px;border-top:.5px solid #EFEAE0">
+ ${[['후기 모음','root:reviews'],['다들의 약속','rules'],['협상 기록','log'],['판단 기준','method'],['내 정보','root:me'],['운영 콘솔','admin']]
+ .map(([t,a])=>`<div class="drow" data-a="${a}" style="cursor:pointer"><span>${t}</span>${ic('next',16,'#C9C4BA')}</div>`).join('')}</div>
+ </div><div style="flex:1" data-a="closeDrawer"></div></div>`};
+
+V.status=()=>{
+ const mine=x=>!S.mine||S.waits[x.id];
+ const g=k=>P.filter(x=>x.deal===k&&mine(x));
+ const openL=g('open'),talkL=g('talking'),gathL=g('gathering'),postL=g('postponed'),noneL=g('none');
+ const total=openL.length+talkL.length+gathL.length+postL.length+noneL.length;
+ const openCard=x=>`<div class="card" data-a="deal:${x.id}" style="padding:14px;margin-bottom:10px;cursor:pointer">
+  <div style="display:flex;gap:13px">${th(x,60)}<div style="min-width:0;flex:1">
+  <div style="display:flex;gap:5px"><span class="badge b-amber">${x.endDate} 종료</span>${S.waits[x.id]?'<span class="badge b-teal">내가 기다린 것</span>':''}</div>
+  <div class="h3" style="font-size:14px;margin-top:5px">${x.brand} ${x.name}</div>
+  <div class="meta" style="margin-top:2px">${x.label} · 후기 ${x.n}건</div></div></div>
+  <div class="row" style="margin-top:12px;padding-top:11px;border-top:.5px solid #EFEAE0;align-items:baseline">
+  <span class="num" style="font-size:11.5px;color:#A39E93;text-decoration:line-through">${won(x.price)}</span>
+  <span style="display:flex;align-items:baseline;gap:7px"><span class="badge b-amber num">-${Math.round((1-x.dealPrice/x.price)*100)}%</span>
+  <span class="num" style="font-size:18px;font-weight:600;color:#A0610F;letter-spacing:-.03em">${won(x.dealPrice)}</span></span></div></div>`;
+ const plain=(x,badge,line)=>`<div class="card" data-a="product:${x.id}" style="padding:13px 14px;margin-bottom:9px;cursor:pointer">
+  <div class="row" style="margin-bottom:7px"><span class="badge b-gray">${badge}</span>${S.waits[x.id]?`<span class="tiny num">내 가격 ${won(S.waits[x.id])}</span>`:''}</div>
+  <div class="h3" style="font-size:13.5px">${x.brand} ${x.name}</div>
+  <div class="meta" style="margin-top:3px;line-height:1.7">${line}</div>
+  ${x.deal==='gathering'?`<div class="track" style="margin-top:10px;height:4px"><div class="fill" style="height:4px;width:${Math.min(100,waitCount(x)/x.target*100)}%"></div></div>
+  <div class="meta num" style="margin-top:6px;text-align:right">${waitCount(x)} / ${x.target}명</div>`:''}</div>`;
+ const sec=(t,d,body)=>body?`<div class="pad sec"><div class="h2" style="margin-bottom:3px">${t}</div>
+  <div class="meta" style="margin-bottom:12px">${d}</div>${body}</div>`:'';
+ return `<div class="bar"><div class="h1" style="font-size:19px">현황</div>
+ <div class="meta" style="margin-top:3px">다들이 이야기하고 있는 것들을 한눈에 모았어요</div>
+ <div style="display:flex;gap:6px;margin-top:12px">
+ <span class="chip ${S.mine?'':'on'}" data-a="seg:0">전체</span>
+ <span class="chip ${S.mine?'on':''}" data-a="seg:1">내가 기다리는 것 ${Object.keys(S.waits).length}</span></div></div>
+ <div class="body">
+ ${total?'':(S.mine&&!S.user?`<div class="pad" style="padding-top:56px;text-align:center"><div class="h2">연결하시면 여기에 모여요</div>
+  <div class="sub" style="margin-top:8px">기다리시는 것과 구매 내역을<br>어느 기기에서든 그대로 보실 수 있어요.</div>
+  <div style="padding:0 20px"><button class="btn" style="background:#FEE500;color:#191600;margin-top:16px" data-a="oauth:kakao">카카오톡으로 계속하기</button>
+  <button class="btn ghost" style="margin-top:8px" data-a="loginSheet">다른 방법으로 하기</button></div></div>`
+  :`<div class="pad" style="padding-top:60px;text-align:center"><div class="h2">아직 기다리시는 게 없어요</div>
+  <div class="sub" style="margin-top:8px">후기를 보시다가 마음에 드는 가격을 골라두시면<br>여기에서 진행 상황을 보실 수 있어요.</div>
+  <button class="btn ghost" style="margin-top:16px" data-a="root:reviews">후기 모음 둘러보기</button></div>`)}
+ ${sec('지금 사실 수 있어요','협상이 끝나 열려 있는 것들이에요',openL.map(openCard).join(''))}
+ ${sec('브랜드와 이야기 중','수요를 들고 협상하는 중이에요. 결과가 나오면 알려드릴게요',
+   talkL.map(x=>plain(x,'협상 중',`${x.tDate}에 시작했어요 · ${waitCount(x)}분의 수요를 들고 갔습니다`)).join(''))}
+ ${sec('수요가 모이는 중','기다리는 분이 목표에 닿으면 협상을 시작해요',
+   gathL.map(x=>plain(x,'모집 중','조금만 더 모이면 브랜드에 이야기하러 갑니다')).join(''))}
+ ${sec('이번엔 미뤄뒀어요','안 된 것도 남겨둘게요. 등록은 그대로 있어요',
+   postL.map(x=>plain(x,'다음을 기약했어요',`${x.pDate} · ${x.pWhy} 이번엔 접었어요`)).join(''))}
+ ${sec('아직 순서가 아니에요','다들의 이야기가 더 모이면 다시 살펴볼게요',
+   noneL.map(x=>plain(x,x.label,x.label==='표본 부족'?'후기가 더 쌓이면 판단해 볼게요':'평가가 낮아 협상 순서를 뒤로 두었어요')).join(''))}
+ <div class="pad sec" style="padding-bottom:26px"><div class="soft" data-a="log" style="padding:16px 17px;cursor:pointer">
+ <div class="h3" style="font-size:14px;margin-bottom:6px">협상 기록</div>
+ <div style="font-size:12.5px;color:#5F5B52;line-height:1.75">이번 달에 몇 번 이야기해서 몇 번 잘 됐는지, 숫자 그대로 적어두었어요.</div>
+ <div style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:#0F6E56;font-weight:500">기록 보기 ${ic('arrow',15,'#0F6E56')}</div></div></div>
+ </div>${tabs()}`};
+
+V.deal=id=>{const p=byId(id);const st=ladder(p);
+ return bar('다들 협상',1)+`<div class="body">
  <div class="pad" style="padding-top:16px;display:flex;gap:14px">${th(p,58)}<div style="min-width:0">
- <div style="display:flex;gap:6px;margin-bottom:3px"><span class="badge b-amber">협상 완료</span></div>
+ <div style="display:flex;gap:6px;margin-bottom:3px"><span class="badge b-amber">협상 성사</span><span class="badge b-teal">6회차 브랜드</span></div>
  <div style="font-size:16px;font-weight:600;letter-spacing:-.02em">${p.brand} ${p.name}</div>
- <div class="meta" style="margin-top:3px">${p.endDate} 마감</div></div></div>
+ <div class="meta" style="margin-top:3px">${p.endDate} 종료</div></div></div>
  <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px">
- ${[['현재 온라인 최저가',won(p.price)],['확인된 최저가(7일 유지)',won(p.low)]].map(([k,v])=>`<div class="row" style="font-size:12px;padding:3px 0"><span style="color:#7D796F">${k}</span><span class="num">${v}</span></div>`).join('')}
+ ${[['지금 온라인 최저가',won(p.price)],['확인된 최저가',won(p.low)]].map(([k,v])=>`<div class="row" style="font-size:12px;padding:3px 0"><span style="color:#7D796F">${k}</span><span class="num">${v}</span></div>`).join('')}
+ <div class="tiny" style="margin-top:1px">${p.lowNote}</div>
  <div class="row" style="align-items:baseline;padding-top:12px;margin-top:11px;border-top:.5px solid #E8E2D6">
- <span class="h3" style="font-size:14px">최종 협상가</span>
- <span style="display:flex;align-items:baseline;gap:6px">
-  <span class="num" style="font-size:12px;color:#A39E93;text-decoration:line-through">${won(p.price)}</span>
-  <span class="num" style="font-size:24px;font-weight:600;color:#A0610F;letter-spacing:-.03em">${won(p.dealPrice)}</span>
-  <span class="badge b-amber num">-${off}%</span>
- </span></div></div></div>
+ <span class="h3" style="font-size:14px">이번 협상가</span><span class="num" style="font-size:24px;font-weight:600;color:#A0610F;letter-spacing:-.03em">${won(p.dealPrice)}</span></div>
+ <div class="row" style="font-size:12px;margin-top:6px"><span style="color:#7D796F">실제로 아끼시는 금액</span>
+ <span class="num" style="color:#A0610F">${won(p.price-p.dealPrice)} · ${Math.round((1-p.dealPrice/p.price)*100)}%</span></div></div></div>
+ <div class="pad sec"><div class="row" style="margin-bottom:11px"><span class="h3" style="font-size:14px">다들 · ${p.label}</span>
+ <button class="meta" style="color:#0F6E56" data-a="product:${p.id}">후기 전체 보기</button></div>
+ <div class="meta" style="margin-bottom:9px">이 제품에서 여러 번 나온 이야기예요</div>
+ <div style="font-size:13px;color:#5F5B52;line-height:1.9">${p.cons.map(([t,c])=>`<div class="row"><span>${t}</span><span class="num" style="color:#A39E93">${c}회</span></div>`).join('')}</div></div>
+ <div class="pad sec"><div class="h3" style="font-size:14px;margin-bottom:5px">어떻게 이 가격이 됐나요</div>
+ <div class="meta" style="margin-bottom:12px;line-height:1.75">${st[4].people}분이 각자 살 만한 가격을 골라주셨어요. 그 표를 들고 브랜드를 만났고, 브랜드가 ${won(p.dealPrice)} 자리를 골랐습니다.</div>
+ <div class="card" style="padding:12px 14px">${st.map(s=>{const hit=Math.abs(s.price-p.dealPrice)<900;
+ return `<div class="row" style="font-size:12px;${hit?'padding:6px 8px;margin:3px -8px;background:#F5EBDD;border-radius:7px;color:#8A4F0B;font-weight:600':'padding:3px 0;color:#A39E93'}">
+ <span class="num">${won(s.price)}</span><span class="num">${s.people}명${hit?' · 여기서 성사':''}</span></div>`}).join('')}</div>
+ <div class="meta" style="margin-top:11px;line-height:1.75">더 낮은 가격을 고르신 분들은 이번엔 빠지세요. 다음 협상 때 다시 알려드릴게요.</div></div>
  <div class="pad sec"><div style="background:#EDF2EF;border-radius:12px;padding:13px 15px;display:flex;gap:9px">${ic('shield',17,'#0F6E56')}
  <div><div class="h3" style="margin-bottom:3px">60일 최저가 보장</div>
- <div style="font-size:12px;color:#33564A;line-height:1.7">구매 후 60일 이내 더 싼 곳이 생기면 알려주세요. 차액은 브랜드가 지급합니다.</div></div></div></div>
+ <div style="font-size:12px;color:#33564A;line-height:1.7">더 싼 곳을 발견하시면 알려주세요. 차액은 브랜드가 지급합니다. 다들은 대신 청구하고 결과를 알려드려요.</div></div></div></div>
+ <div class="pad sec"><div style="background:#F2EEE4;border-radius:12px;padding:12px 15px">
+ <div class="row" style="font-size:12px;color:#5F5B52"><span>다들이 받는 수수료</span><span class="num">판매가의 10% · 브랜드 부담</span></div>
+ <div class="tiny" style="margin-top:5px;line-height:1.7">인플루언서 공구는 보통 15~30%를 받아요. 저희가 덜 받는 만큼 협상가가 내려갑니다.</div></div></div>
  <div style="height:20px"></div></div>
  <div style="background:#FFFDF9;box-shadow:0 -.5px 0 #E8E2D6;padding:15px 18px 18px;flex-shrink:0">
- <button class="btn amber" data-a="leave:${p.id}">브랜드 판매처에서 구매하기</button></div>`};
+ ${S.bought[p.id]?`<button class="btn ghost" data-a="report:${p.id}">더 싼 곳을 찾았어요</button>
+ <div class="tiny" style="text-align:center;margin-top:9px">가격 보장에 등록해 두셨어요. 60일 동안 지켜볼게요.</div>`
+ :`<button class="btn amber" data-a="leave:${p.id}">브랜드 판매처에서 구매하기</button>
+ <div class="tiny" style="text-align:center;margin-top:10px;line-height:1.7">결제와 배송, 교환은 브랜드가 맡아요.<br>구매하신 뒤 돌아오셔서 가격 보장을 등록해 주세요.</div>`}</div>`};
 
-V.me=()=>`<div class="bar"><div class="h1" style="font-size:19px">내 정보</div></div><div class="body"><div class="pad" style="padding-top:20px"><div class="card" style="padding:16px;text-align:center"><div class="h3">대기 중인 등록 내역 관리</div></div></div></div>${tabs()}`;
+V.verify=id=>{const p=byId(id);return bar('가격 보장 받기')+`<div class="body">
+ <div class="pad" style="padding-top:20px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">${ic('shield',20,'#0F6E56')}
+ <span class="h1" style="font-size:19px">가격 보장 받기</span></div><div class="meta">${p.brand} ${p.name} · 협상가 ${won(p.dealPrice)}</div></div>
+ <div class="pad" style="padding-top:15px"><div class="hint sub">주문번호만 남겨주시면 60일 동안 이 제품 가격을 대신 지켜볼게요.${S.user?'':' 차액을 돌려드리려면 연락받으실 곳이 필요해서, 이때 한 번만 연결해 주세요.'}</div></div>
+ <div class="pad" style="padding-top:16px"><div class="meta" style="margin-bottom:6px">주문번호</div>
+ <input class="field" placeholder="판매처 주문 내역에서 복사해 주세요">
+ <div class="meta" style="margin:13px 0 6px">결제하신 금액</div>
+ <input class="field num" placeholder="${p.dealPrice}"></div>
+ <div class="pad" style="padding-top:18px;padding-bottom:26px"><button class="btn teal" data-a="doverify:${p.id}">보장 등록하기</button>
+ <div class="tiny" style="text-align:center;margin-top:10px;line-height:1.7">협상이 끝난 뒤에도 60일 안에는<br>언제든 등록하실 수 있어요.</div></div></div>`};
+
+V.report=id=>{const p=byId(id);return bar('더 싼 곳 알려주기')+`<div class="body">
+ <div class="pad" style="padding-top:20px"><div class="h1" style="font-size:19px">더 싼 곳을 찾으셨나요</div>
+ <div class="meta" style="margin-top:5px">${p.brand} ${p.name} · 협상가 ${won(p.dealPrice)}</div></div>
+ <div class="pad" style="padding-top:16px"><div class="meta" style="margin-bottom:6px">판매 페이지 주소</div><input class="field" placeholder="https://">
+ <div class="meta" style="margin:13px 0 6px">확인하신 가격</div><input class="field num" placeholder="29,900"></div>
+ <div class="pad" style="padding-top:16px"><div class="hint meta">같은 상품 · 국내 정품 · 배송비 포함 · 하루 이상 유지된 가격이 대상이에요. 병행수입과 개인 판매는 빼고 봅니다.</div></div>
+ <div class="pad" style="padding-top:18px;padding-bottom:26px"><button class="btn teal" data-a="doreport:${p.id}">알려주기</button>
+ <div class="tiny" style="text-align:center;margin-top:10px;line-height:1.65">확인까지 이틀쯤 걸려요.<br>확인되면 함께 사신 분들께도 알려드립니다.</div></div></div>`};
+
+V.done=kind=>{const C={
+ wait:['등록해 뒀어요',`${S.doneName||''} 협상이 열리면 가장 먼저 알려드릴게요.`,'고르신 가격보다 더 싸게 열리면 자동으로 포함돼요.'],
+ verified:['보장 등록됐어요','60일 동안 이 제품 가격을 대신 지켜볼게요. 더 싼 곳이 나오면 바로 알려드립니다.','혹시 먼저 발견하시면 신고해 주셔도 좋아요.'],
+ reported:['신고 접수됐어요','이틀 안에 확인해서 알려드릴게요. 확인되면 함께 사신 분들께도 모두 알려드립니다.','차액은 브랜드가 지급해요. 다들이 대신 청구할게요.']}[kind];
+ return `<div class="bar"><div class="line"><span style="width:20px"></span><h1>다들</h1><span style="width:17px"></span></div></div>
+ <div class="body"><div class="pad" style="padding-top:60px;text-align:center">
+ <div style="width:62px;height:62px;border-radius:20px;background:#E4EFEA;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px">${ic('check',30,'#0F6E56',2.2)}</div>
+ <div class="h1" style="font-size:20px">${C[0]}</div><div class="sub" style="margin-top:9px">${C[1]}</div></div>
+ <div class="pad" style="padding-top:22px"><div class="soft" style="padding:14px 15px"><div class="sub" style="color:#5F5B52">${C[2]}</div></div></div>
+ <div class="pad" style="padding-top:20px"><button class="btn teal" data-a="root:me">내 현황 보기</button>
+ <button class="btn ghost" style="margin-top:9px" data-a="root:home">홈으로</button></div></div>`};
+
+V.me=()=>{
+ const waiting=Object.keys(S.waits).length, guard=P.filter(x=>S.bought[x.id]);
+ const tg=(k,t,d)=>`<div class="row" style="padding:11px 0;${k!=='open'?'border-top:.5px solid #EFEAE0':''}">
+  <div style="padding-right:12px"><div style="font-size:13px;font-weight:500;letter-spacing:-.01em">${t}</div>
+  <div class="tiny" style="margin-top:2px">${d}</div></div>
+  <span data-a="toggle:${k}" style="width:42px;height:24px;border-radius:12px;flex-shrink:0;position:relative;background:${S.noti[k]?'#0F6E56':'#DCD5C7'}">
+  <span style="position:absolute;top:3px;left:${S.noti[k]?21:3}px;width:18px;height:18px;border-radius:9px;background:#fff"></span></span></div>`;
+ return `<div class="bar"><div class="h1" style="font-size:19px">내 정보</div>
+ <div class="meta" style="margin-top:3px">회원가입 없이, 알림 받으실 곳만 두고 있어요</div></div>
+ <div class="body">
+ <div class="pad" style="padding-top:18px">${S.user?'':`<div class="card" style="padding:18px 17px;margin-bottom:12px">
+ <div class="h2" style="font-size:15px">기기를 바꾸셔도 그대로 이어져요</div>
+ <div class="sub" style="margin-top:7px">지금은 이 기기에만 남아 있어요. 연결해 두시면 기다리시던 것과 구매 내역, 60일 가격 보장이 어디서든 따라옵니다.</div>
+ <button class="btn" style="background:#FEE500;color:#191600;margin-top:14px" data-a="oauth:kakao">카카오톡으로 계속하기</button>
+ <button class="btn ghost" style="margin-top:8px" data-a="loginSheet">다른 방법으로 하기</button></div>`}
+ <div class="card" style="padding:16px 17px">
+ <div class="row"><div><div class="tiny">${S.user?CH[S.user.ch]+'으로 연결됨':'알림 받는 곳'}</div>
+ <div style="font-size:15px;font-weight:600;letter-spacing:-.02em;margin-top:3px">${S.user?S.user.id:'아직 연결하지 않으셨어요'}</div></div>
+ <button class="chip" data-a="${S.user?'editContact':'loginSheet'}">${S.user?'수정':'연결'}</button></div>
+ <div class="row" style="margin-top:14px;padding-top:13px;border-top:.5px solid #EFEAE0;text-align:center">
+ <div style="flex:1" data-a="root:home"><div class="num" style="font-size:19px;font-weight:600">${waiting}</div><div class="tiny" style="margin-top:1px">기다리는 것</div></div>
+ <div style="width:.5px;background:#EFEAE0;align-self:stretch"></div>
+ <div style="flex:1"><div class="num" style="font-size:19px;font-weight:600">${guard.length}</div><div class="tiny" style="margin-top:1px">구매한 것</div></div>
+ <div style="width:.5px;background:#EFEAE0;align-self:stretch"></div>
+ <div style="flex:1" data-a="noti"><div class="num" style="font-size:19px;font-weight:600">2</div><div class="tiny" style="margin-top:1px">새 알림</div></div></div></div></div>
+
+ <div class="pad sec"><div class="h2" style="margin-bottom:3px">구매 내역</div>
+ <div class="meta" style="margin-bottom:12px">협상으로 사신 것들이에요. 보장 기간 동안 가격을 지켜봅니다</div>
+ ${guard.length?guard.map(x=>`<div class="card" style="padding:13px 14px;margin-bottom:9px">
+  <div style="display:flex;gap:11px;align-items:center">${th(x,44)}
+  <div style="min-width:0;flex:1"><div class="h3" style="font-size:13.5px">${x.brand} ${x.name}</div>
+  <div class="meta num" style="margin-top:2px">${won(x.dealPrice)} · 7.28 구매</div></div></div>
+  <div class="row" style="margin-top:11px;padding-top:11px;border-top:.5px solid #EFEAE0">
+  <span class="badge b-teal">60일 보장 중 · 52일 남음</span>
+  <button class="meta" style="color:#0F6E56;font-weight:500" data-a="report:${x.id}">더 싼 곳 알리기</button></div></div>`).join('')
+ :`<div class="card" style="padding:20px 16px;text-align:center"><div class="sub">아직 구매하신 내역이 없어요.<br>협상이 열리면 여기에 모아 보여드릴게요.</div>
+  <button class="btn ghost" style="margin-top:14px" data-a="root:home">열린 협상 보러 가기</button></div>`}</div>
+
+ <div class="pad sec"><div class="h2" style="margin-bottom:3px">기다리는 것</div>
+ <div class="meta" style="margin-bottom:12px">협상이 열리면 가장 먼저 알려드릴게요</div>
+ ${waiting?P.filter(x=>S.waits[x.id]).map(x=>`<div class="card" data-a="product:${x.id}" style="padding:13px 14px;margin-bottom:9px;display:flex;gap:11px;align-items:center;cursor:pointer">
+  ${th(x,44)}<div style="min-width:0;flex:1"><div class="h3" style="font-size:13.5px">${x.brand} ${x.name}</div>
+  <div class="meta num" style="margin-top:2px">내 가격 ${won(S.waits[x.id])} · ${x.deal==='open'?'협상 열림':x.deal==='talking'?'브랜드와 이야기 중':x.deal==='postponed'?'이번엔 미뤄뒀어요':waitCount(x)+' / '+x.target+'명'}</div></div>
+  ${ic('next',17,'#C9C4BA')}</div>`).join('')
+ :`<div class="card" style="padding:20px 16px;text-align:center"><div class="sub">아직 기다리시는 게 없어요.<br>마음에 드는 가격을 골라두시면 여기에 모아 보여드릴게요.</div>
+  <button class="btn ghost" style="margin-top:14px" data-a="root:home">공구 둘러보기</button></div>`}</div>
+
+ <div class="pad sec"><div class="h2" style="margin-bottom:12px">알림 설정</div>
+ <div class="card" style="padding:4px 16px 8px">
+ ${tg('open','협상이 열렸을 때','기다리시던 제품을 사실 수 있게 됐을 때')}
+ ${tg('post','협상이 미뤄졌을 때','왜 그렇게 됐는지 함께 알려드려요')}
+ ${tg('drop','가격이 내려갔을 때','보장 기간 중 더 싼 곳이 생기면')}
+ ${tg('week','주간 후기 리포트','이번 주에 새로 모은 후기를 한 번에')}</div></div>
+
+ <div class="pad sec"><div class="card" style="padding:4px 16px">
+ ${[['다들의 약속','rules'],['협상 기록','log'],['판단 기준','method'],['알림 내역','noti']].concat(S.user?[['연결 해제','logout']]:[])
+ .map(([t,a],i)=>`<div class="row" data-a="${a}" style="padding:14px 0;${i?'border-top:.5px solid #EFEAE0':''};cursor:pointer">
+  <span style="font-size:13.5px;letter-spacing:-.01em">${t}</span>${ic('next',17,'#C9C4BA')}</div>`).join('')}</div></div>
+
+ <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:14px 15px">
+ <div class="h3" style="font-size:12.5px;margin-bottom:6px">남기신 정보는 이것뿐이에요</div>
+ <div class="meta" style="line-height:1.8">알림 받으실 연락처와 고르신 가격, 그리고 주문번호예요. 다른 곳에 쓰지 않고, 지워달라고 하시면 바로 지워드립니다.</div>
+ <button class="meta" style="margin-top:10px;color:#8C6A45;font-weight:500" data-a="say:정보 삭제 요청이 접수됐어요">내 정보 지우기</button></div></div>
+ </div>${tabs()}`};
+
+V.noti=()=>bar('알림')+`<div class="body"><div class="pad" style="padding-top:20px">
+ <div class="card" style="padding:16px 17px;margin-bottom:12px">
+ <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px">${mark(17)}<span class="meta">2시간 전</span></div>
+ <div class="h2" style="font-size:15px;margin-bottom:8px">조금만 더 기다려주실래요</div>
+ <div style="font-size:12.5px;color:#5F5B52;line-height:1.85"><b style="color:#2B2A28">무이 통3중 스테인리스 냄비 20cm</b> 협상이 이번에는 잘 마무리되지 않았어요. 가격 조건이 저희가 생각한 만큼 맞지 않아서, 지금 여는 건 의미가 없다고 판단했습니다.</div>
+ <div style="background:#F7F4ED;border-radius:12px;padding:12px 13px;margin-top:13px">
+ <div class="row" style="font-size:12px;padding:2px 0"><span style="color:#7D796F">기다리신 분</span><span class="num">54명</span></div>
+ <div class="row" style="font-size:12px;padding:2px 0"><span style="color:#7D796F">고르신 가격</span><span class="num">44,000원</span></div></div>
+ <div style="font-size:12.5px;color:#5F5B52;line-height:1.85;margin-top:13px">등록은 그대로 두었어요. 조건이 나아지면 다시 이야기해 보고, 그때 제일 먼저 알려드릴게요.</div>
+ <button class="btn ghost" style="margin-top:14px" data-a="list">비슷한 제품 보러 가기</button></div>
+ <div class="card" data-a="deal:p1" style="padding:15px 16px;margin-bottom:12px;cursor:pointer">
+ <div class="meta" style="margin-bottom:8px">3일 전</div>
+ <div class="h2" style="font-size:14px;margin-bottom:6px">기다리시던 제품, 협상이 열렸어요</div>
+ <div style="font-size:12.5px;color:#5F5B52;line-height:1.85"><b style="color:#2B2A28">무이 스테인리스 3중 팬 28cm</b>이 33,800원에 열렸어요. 고르신 가격보다 2,000원 낮습니다.</div></div>
+ <div class="soft" style="padding:13px 14px;margin-bottom:26px"><div class="meta" style="line-height:1.8">협상 소식은 기다리고 계신 분께만 보내드려요. 부담스러우시면 언제든 꺼두실 수 있어요.</div></div>
+ </div></div>`;
+
+V.log=()=>bar('협상 기록',1)+`<div class="body">
+ <div class="pad" style="padding-top:18px"><div class="h1">몇 번 이야기하고<br>몇 번 미뤘는지</div>
+ <div class="sub" style="margin-top:8px">잘된 것만 보여드리면 무엇을 걸렀는지 알 수가 없잖아요. 매달 숫자 그대로 적어둘게요.</div></div>
+ <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px"><div class="h3" style="margin-bottom:12px">2026년 7월</div>
+ <div style="display:flex;text-align:center">${[['12','이야기 나눴어요',0],['3','잘 됐어요',1],['9','미뤄뒀어요',0]].map(([v,l,g],i)=>`${i?'<div style="width:.5px;background:#EFEAE0;margin:2px 0"></div>':''}
+ <div style="flex:1"><div class="num" style="font-size:20px;font-weight:600;letter-spacing:-.03em;color:${g?'#0F6E56':'#2B2A28'}">${v}</div>
+ <div style="font-size:10.5px;color:#8A867D;margin-top:1px">${l}</div></div>`).join('')}</div>
+ <div style="margin-top:13px;padding-top:12px;border-top:.5px solid #EFEAE0"><div class="tiny" style="margin-bottom:6px">미뤄둔 이유</div>
+ ${[['가격 조건이 맞지 않아서',4],['다들의 평가가 아직 낮아서',3],['시점이 맞지 않아서',1],['저희 원칙과 맞지 않아서',1]]
+ .map(([k,v])=>`<div class="row" style="padding:3px 0;font-size:11.5px;color:#7D796F"><span>${k}</span><span class="num">${v}</span></div>`).join('')}</div></div></div>
+ <div class="pad sec"><div class="h3" style="color:#5F5B52;margin-bottom:11px">이번 달 잘 된 협상</div>
+ ${[['p1','421분의 마음을 전해드렸더니 맞춰주셨어요. 60일 가격 보장도 함께 약속받았습니다.','7.14'],
+ ['p4','268분이 기다려 주신 덕분이에요. 60일 가격 보장 포함입니다.','7.06']].map(([id,s,d])=>{const p=byId(id);
+ return `<div class="card" style="padding:13px 14px;margin-bottom:8px"><div class="row" style="margin-bottom:6px">
+ <span class="badge b-amber num">-${Math.round((1-p.dealPrice/p.price)*100)}%</span><span class="tiny">${d}</span></div>
+ <div class="h3">${p.brand} ${p.name}</div><div class="meta" style="margin-top:3px;line-height:1.75">${s}</div></div>`}).join('')}</div>
+ <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:14px 15px">
+ <div class="h3" style="font-size:12.5px;margin-bottom:6px">미뤄둔 협상은 왜 안 적나요</div>
+ <div class="meta" style="line-height:1.8">이야기가 잘 안 된 건 저희와 브랜드 사이의 일이라, 자세한 사정까지 적지는 않으려고 해요. 대신 <b style="color:#2B2A28">기다리고 계신 분께는 개별로 꼭 알려드립니다.</b></div></div>
+ <button class="btn ghost" style="margin-top:12px" data-a="rules">다들의 약속 보기</button></div></div>`;
+
+V.rules=()=>bar('다들의 약속')+`<div class="body">
+ <div class="pad" style="padding-top:18px"><div class="h1">다들이 스스로에게<br>하는 약속이에요</div>
+ <div class="sub" style="margin-top:8px">지키기 쉬운 것만 적으면 약속이 아니겠죠. 어기면 어겼다고 여기에 적어둘게요.</div></div>
+ <div class="pad" style="padding-top:16px">${PROM.map(([t,s],i)=>`<div class="card" style="padding:14px 15px;margin-bottom:8px;display:flex;gap:9px">
+ <span class="num" style="font-size:11px;font-weight:600;color:#0F6E56;flex-shrink:0;padding-top:1px">${String(i+1).padStart(2,'0')}</span>
+ <div><div class="h3">${t}</div><div class="meta" style="margin-top:3px;line-height:1.75">${s}</div></div></div>`).join('')}</div>
+ <div class="pad sec" style="padding-bottom:26px"><div class="tiny" style="line-height:1.8">최종 갱신 2026.07.22 · 예전 버전 보기<br>다들의 평가는 제품 하나하나에 대한 것이에요. 브랜드 전체를 평가하지는 않습니다.</div></div></div>`;
+
+V.admin=()=>{
+ const T=[['cand','후보'],['job','수집'],['aud','감사'],['pub','발행'],['nego','협상'],['kpi','지표']];
+ const nAppr=Object.values(S.appr).filter(Boolean).length;
+ const cand=`
+ <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">이번 주 후보 ${CAND.length}개</div>
+ <div class="sub" style="margin-top:8px">네 가지 신호를 점수로 매겨 AI가 골라 왔어요. 승인하신 것만 수집이 돌아갑니다.</div></div>
+ <div class="pad" style="padding-top:14px"><div class="hint meta" style="line-height:1.8">
+ 검색량 추이 · 최근 리뷰 영상 수 · 지식iN 문제 질문 수 · 다들에 들어온 요청 수를 합산해요.
+ <b style="color:#2B2A28">요청 수에 가장 큰 가중치</b>를 둡니다. 유저가 직접 찾은 제품이 가장 확실한 수요라서요.</div></div>
+ <div class="pad" style="padding-top:14px">
+ ${CAND.map(c=>`<div class="card" style="padding:14px 15px;margin-bottom:9px;${c.block?'opacity:.55':''}">
+  <div class="row" style="align-items:flex-start">
+   <div style="min-width:0;flex:1"><div class="tiny">${c.b}${c.req?' · 유저 요청 있음':''}</div>
+   <div class="h3" style="font-size:14px;margin-top:2px">${c.n}</div></div>
+   ${c.block?'<span class="badge b-gray">제외</span>'
+   :`<span data-a="appr:${c.id}" style="width:24px;height:24px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${S.appr[c.id]?'#0F6E56':'transparent'};border:${S.appr[c.id]?'none':'1.5px solid #D5CFC1'}">${S.appr[c.id]?ic('check',15,'#FCFAF5'):''}</span>`}</div>
+  <div style="display:flex;align-items:center;gap:9px;margin:11px 0">
+   <div class="track" style="flex:1;height:4px"><div style="height:4px;border-radius:2px;width:${c.sc}%;background:${c.sc>=75?'#0F6E56':'#8C7F6C'}"></div></div>
+   <span class="num" style="font-size:12px;font-weight:600">${c.sc}</span></div>
+  ${c.block?`<div class="meta">${c.block}</div>`
+  :`<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px 10px">
+   ${c.sig.map(([k,v])=>`<div class="row" style="font-size:11px;color:#7D796F"><span>${k}</span><span class="num" style="font-weight:600;color:#2B2A28">${v}</span></div>`).join('')}</div>
+   <div class="meta" style="margin-top:10px;padding-top:9px;border-top:.5px solid #F2EDE3">${c.est}</div>`}</div>`).join('')}</div>
+ <div class="pad" style="padding-top:6px;padding-bottom:26px">
+ <button class="btn teal" style="opacity:${nAppr?1:.4}" data-a="runJob">${nAppr?nAppr+'개 승인하고 수집 시작':'승인할 후보를 골라주세요'}</button>
+ <div class="tiny" style="text-align:center;margin-top:9px">모델명과 별칭은 승인 뒤에 확인 화면에서 고치실 수 있어요.</div></div>`;
+
+ const job=`
+ <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">수집 현황</div>
+ <div class="sub" style="margin-top:8px">밤사이 자동으로 돌아요. 사장님이 하실 일은 표본 감사와 발행 승인뿐입니다.</div></div>
+ <div class="pad" style="padding-top:14px">
+ ${JOBS.map(j=>`<div class="card" style="padding:14px 15px;margin-bottom:9px">
+  <div class="row" style="margin-bottom:11px"><span class="h3" style="font-size:13.5px">${j.n}</span>
+  <span class="badge ${j.st===4?'b-teal':'b-gray'}">${STAGES[j.st]}</span></div>
+  <div style="display:flex;gap:4px;margin-bottom:11px">${STAGES.map((_,i)=>`<div style="flex:1;height:3px;border-radius:2px;background:${i<=j.st?'#0F6E56':'#EDE8DC'}"></div>`).join('')}</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
+  ${[['모은 것',j.got],['뺀 것',j.excl],['쓸 것',j.val]].map(([k,v])=>`<div><div class="num" style="font-size:15px;font-weight:600">${v||'—'}</div><div class="tiny">${k}</div></div>`).join('')}</div>
+  ${j.lab?`<div class="meta" style="margin-top:11px;padding-top:10px;border-top:.5px solid #F2EDE3">규칙표 적용 결과 · <b style="color:#2B2A28">${j.lab}</b></div>`:''}</div>`).join('')}</div>
+ <div class="pad" style="padding-top:6px;padding-bottom:26px"><div class="soft" style="padding:14px 15px">
+ <div class="h3" style="font-size:12.5px;margin-bottom:6px">막히면 여기서 멈춰요</div>
+ <div class="meta" style="line-height:1.8">유효 후기가 30건에 못 미치면 라벨을 붙이지 않고 <b style="color:#2B2A28">표본 부족</b>으로 올립니다. 억지로 판단하지 않는 게 규칙이에요.</div></div></div>`;
+
+ const aud=`
+ <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">이번 주 표본 감사</div>
+ <div class="sub" style="margin-top:8px">전체를 다 보진 못하니 무작위로 5건만 원문과 맞춰봐요. 결과는 사이트에 그대로 공개합니다.</div></div>
+ <div class="pad" style="padding-top:14px">
+ ${AUDIT.map((a,i)=>`<div class="card" style="padding:14px 15px;margin-bottom:9px">
+  <div class="row" style="margin-bottom:9px"><span class="tiny">${a.src}</span>
+  ${S.aud[i]===undefined?'':`<span class="badge ${S.aud[i]?'b-teal':'b-amber'}">${S.aud[i]?'통과':'수정함'}</span>`}</div>
+  <div class="quote">${a.q}</div>
+  <div style="background:#F7F4ED;border-radius:10px;padding:10px 12px;margin-top:10px">
+   <div class="tiny" style="margin-bottom:3px">AI가 뽑은 것</div>
+   <div class="num" style="font-size:12px;letter-spacing:-.01em">${a.ex}</div></div>
+  ${a.fix?`<div class="meta" style="margin-top:8px;color:#8C6A45">사람 의견 · ${a.fix}</div>`:''}
+  ${S.aud[i]===undefined?`<div style="display:flex;gap:8px;margin-top:12px">
+   <button class="btn ghost" style="flex:1" data-a="audit:${i}:1">맞아요</button>
+   <button class="btn ghost" style="flex:1" data-a="audit:${i}:0">고칠게요</button></div>`:''}</div>`).join('')}</div>
+ <div class="pad" style="padding-top:6px;padding-bottom:26px"><div class="soft" style="padding:14px 15px">
+ <div class="meta" style="line-height:1.8">${Object.keys(S.aud).length}건 검토 · ${Object.values(S.aud).filter(x=>!x).length}건 수정 —
+ 이 숫자가 다들 카드 아래에 <b style="color:#2B2A28">사람이 본 날</b>로 적힙니다.</div></div></div>`;
+
+ const pub=`
+ <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">발행 대기</div>
+ <div class="sub" style="margin-top:8px">규칙표가 붙인 라벨이에요. 올리기 전에 한 번만 확인해 주세요.</div></div>
+ <div class="pad" style="padding-top:14px"><div class="card" style="padding:16px 17px">
+ <div class="tiny">하로</div><div class="h3" style="font-size:14.5px;margin-top:2px">세라믹 코팅팬 26cm</div>
+ <div class="row" style="align-items:baseline;margin-top:12px;padding-top:12px;border-top:.5px solid #F2EDE3">
+ <span style="font-size:22px;font-weight:600;letter-spacing:-.03em">대체로 만족</span><span class="num meta">후기 241건</span></div>
+ <div class="meta" style="margin-top:7px">문제 언급 11.6% · 기준 15% 미만 → 대체로 만족</div>
+ <div style="margin-top:12px;padding-top:11px;border-top:.5px solid #F2EDE3">
+ ${[['3~4개월에 코팅이 약해져요',18],['손잡이가 뜨거워져요',12],['광고보다 얕아요',7]].map(([t,c])=>`<div class="row" style="font-size:12px;padding:3px 0"><span>${t}</span><span class="num" style="color:#7D796F">${c}회</span></div>`).join('')}</div>
+ <div class="meta" style="margin-top:11px;padding-top:10px;border-top:.5px solid #F2EDE3">모은 것 412 · 뺀 것 171 · 쓴 것 241</div></div></div>
+ <div class="pad" style="padding-top:14px;padding-bottom:26px">
+ <button class="btn teal" data-a="say:발행했어요. 다들 카드가 올라갑니다">이대로 발행하기</button>
+ <button class="btn ghost" style="margin-top:9px" data-a="say:보류함. 다음 주에 다시 봅니다">한 주 더 모아보기</button>
+ <div class="tiny" style="text-align:center;margin-top:10px;line-height:1.7">발행하면 정정 이력이 함께 켜져요.<br>나중에 라벨이 바뀌면 언제 왜 바뀌었는지 자동으로 남습니다.</div></div>`;
+
+ const nego=`
+ <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">협상 관리</div>
+ <div class="sub" style="margin-top:8px">브랜드별 진행 단계와 다음에 할 일을 여기서 옮겨요.</div></div>
+ <div class="pad" style="padding-top:14px">
+ ${[{b:'무이',n:'스테인리스 3중 팬 28cm',st:5,wait:421,last:'7.14 계약 완료 · 60일 보장',next:'공구 종료 후 정산 대조',grade:'파트너 · 6회차'},
+    {b:'세라',n:'다마스커스 셰프나이프 20cm',st:2,wait:31,last:'7.24 제안서 발송',next:'회신 없으면 7.31 재연락',grade:'신규'},
+    {b:'무이',n:'통3중 스테인리스 냄비 20cm',st:6,wait:54,last:'6.28 조건 불일치로 보류',next:'9월 재제안 예정',grade:'파트너 · 6회차'}]
+ .map(j=>{const ST=['수요 집계','제안서 준비','제안 발송','회신 대기','조건 협의','계약·오픈','보류'];
+ return `<div class="card" style="padding:14px 15px;margin-bottom:9px">
+  <div class="row" style="align-items:flex-start"><div style="min-width:0;flex:1">
+  <div class="tiny">${j.b} · ${j.grade}</div><div class="h3" style="font-size:13.5px;margin-top:2px">${j.n}</div></div>
+  <span class="badge ${j.st===5?'b-teal':j.st===6?'b-amber':'b-gray'}">${ST[j.st]}</span></div>
+  <div style="display:flex;gap:3px;margin:11px 0">${ST.slice(0,6).map((_,i)=>`<div style="flex:1;height:3px;border-radius:2px;background:${j.st===6?'#E0D8C6':i<=j.st?'#0F6E56':'#EDE8DC'}"></div>`).join('')}</div>
+  <div class="row" style="font-size:11.5px;color:#7D796F;padding:2px 0"><span>모인 수요</span><span class="num" style="color:#2B2A28;font-weight:600">${j.wait}명</span></div>
+  <div class="row" style="font-size:11.5px;color:#7D796F;padding:2px 0"><span>최근 기록</span><span style="text-align:right;max-width:62%">${j.last}</span></div>
+  <div style="margin-top:10px;padding-top:9px;border-top:.5px solid #F2EDE3;font-size:12px">
+  <span class="tiny">다음 할 일</span><div style="margin-top:2px;font-weight:500">${j.next}</div></div>
+  <div style="display:flex;gap:8px;margin-top:12px">
+  <button class="btn ghost" style="flex:1;padding:10px;font-size:12.5px" data-a="say:제안서 초안을 만들었어요">제안서 초안</button>
+  <button class="btn ghost" style="flex:1;padding:10px;font-size:12.5px" data-a="say:단계를 옮겼어요">단계 옮기기</button></div></div>`}).join('')}</div>
+ <div class="pad" style="padding-top:6px;padding-bottom:26px"><div class="soft" style="padding:14px 15px">
+ <div class="h3" style="font-size:12.5px;margin-bottom:6px">제안서에 자동으로 들어가는 것</div>
+ <div class="meta" style="line-height:1.8">가격 구간별 수요 곡선 · 예상 거래액 · 지난 회차 실현율 · 60일 가격 보장 조항 · 수수료 10% 고지.
+ <b style="color:#2B2A28">숫자는 전부 파이프라인에서 자동으로 채워집니다.</b></div></div></div>`;
+
+ const kpi=`
+ <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">지표</div>
+ <div class="sub" style="margin-top:8px">가장 위의 숫자 하나만 보시면 돼요. 나머지는 그 숫자를 만드는 것들입니다.</div></div>
+ <div class="pad" style="padding-top:14px"><div class="card" style="padding:16px 17px">
+ <div class="tiny" style="letter-spacing:.04em">이번 주 대기 등록</div>
+ <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px">
+ <span class="num" style="font-size:30px;font-weight:600;letter-spacing:-.04em">42</span>
+ <span class="num" style="font-size:12px;color:#0F6E56;font-weight:600">+11</span></div>
+ <div style="display:flex;align-items:flex-end;gap:5px;height:52px;margin-top:14px">
+ ${[14,19,17,26,23,31,42].map((v,i)=>`<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%">
+  <div style="height:${v/42*100}%;background:${i===6?'#0F6E56':'#DDD6C8'};border-radius:3px 3px 0 0"></div></div>`).join('')}</div>
+ <div class="tiny" style="margin-top:6px">최근 7주 · 12주까지 누적 150건이 목표</div></div></div>
+ <div class="pad" style="padding-top:12px"><div class="card" style="padding:6px 16px">
+ ${[['대기 등록 전환율','5.2%','목표 5% 넘김',1],['검색 실패율','38%','50% 넘으면 콘텐츠 우선',1],
+   ['4주 재방문율','21%','목표 25% 미달',0],['구매 인증률','—','첫 공구 이후 측정',null],
+   ['판정 통과율','64%','비추천 비율 하한 30% 유지 중',1]]
+ .map(([k,v,note,ok],i)=>`<div style="padding:12px 0;${i?'border-top:.5px solid #F2EDE3':''}">
+  <div class="row"><span style="font-size:12.5px;color:#5F5B52">${k}</span>
+  <span class="num" style="font-size:14px;font-weight:600;color:${ok===0?'#8C6A45':'#2B2A28'}">${v}</span></div>
+  <div class="tiny" style="margin-top:2px">${note}</div></div>`).join('')}</div></div>
+ <div class="pad sec"><div class="h3" style="font-size:14px;margin-bottom:11px">못 찾고 돌아간 검색어</div>
+ <div class="card" style="padding:6px 16px">
+ ${[['무쇠 스킬렛',38],['압력솥',24],['에어프라이어',19],['도마',12]].map(([k,v],i)=>`<div class="row" style="padding:11px 0;${i?'border-top:.5px solid #F2EDE3':''}">
+  <span style="font-size:12.5px">${k}</span><span class="num" style="font-size:12px;color:#7D796F">${v}명</span></div>`).join('')}</div>
+ <div class="meta" style="margin-top:10px;line-height:1.8">이 목록이 다음 주 후보의 <b style="color:#2B2A28">가장 큰 가중치</b>로 들어가요.</div></div>
+ <div style="height:26px"></div>`;
+
+ return bar('운영 콘솔')+`
+ <div style="display:flex;gap:2px;padding:0 14px;border-bottom:.5px solid #E7E1D4;background:#FCFAF5;overflow-x:auto">
+ ${T.map(([k,l])=>`<button class="ptab ${S.atab===k?'on':''}" style="flex:0 0 auto;padding:12px 13px;white-space:nowrap" data-a="atab:${k}">${l}</button>`).join('')}</div>
+ <div class="body"><div class="pad" style="padding-top:14px"><div class="hint tiny" style="line-height:1.7">프로토타입 화면이에요. 실제로는 관리자 권한 계정으로 로그인해 데스크톱 화면에서 쓰시게 됩니다.</div></div>${{cand,job,aud,pub,nego,kpi}[S.atab]}</div>`};
 
 /* ── 시트 ── */
 const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const p=byId(id)||P[0];
  if(k==='price'){const st=ladder(p);return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
  <div class="grab"></div>
- <div class="pad" style="padding-top:10px;padding-bottom:14px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">이 가격이면 살게요 (희망 가격 대기 등록)</div>
+ <div class="pad" style="padding-top:10px;padding-bottom:14px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">이 가격이면 살게요</div>
  <div class="meta" style="margin-top:4px">${p.brand} ${p.name}</div></div>
+ <div class="pad" style="padding-bottom:14px"><div class="hint row"><span class="meta">지금 온라인 최저가</span>
+ <span class="num" style="font-size:14px;font-weight:600">${won(p.price)}</span></div></div>
  <div class="pad">${st.map((s,i)=>`<button class="opt ${S.tmp===s.price?'on':''}" data-a="pick2:${s.price}">
- <span style="display:flex;align-items:baseline;gap:9px"><span class="num" style="font-size:15px;${S.tmp===s.price?'font-weight:600;color:#0F6E56':''}">${won(s.price)}</span></span>
- <span class="num" style="font-size:12px;color:#7D796F">${s.people}명 선택</span></button>`).join('')}</div>
- <div class="pad" style="padding-top:16px"><button class="btn teal" data-a="closeSheet" onclick="say('대기 등록이 완료되었습니다!')">등록 완료</button></div></div></div>`}
+ <span style="display:flex;align-items:baseline;gap:9px"><span class="num" style="font-size:15px;${S.tmp===s.price?'font-weight:600;color:#0F6E56':''}">${won(s.price)}</span>
+ <span class="tiny">${i===0?'지금 가격':s.mid?'확인된 최저가':i===4?'여기까지 골라주실 수 있어요':'-'+Math.round((1-s.price/p.price)*100)+'%'}</span></span>
+ <span class="num" style="font-size:12px;color:#7D796F">${s.people}명</span></button>`).join('')}</div>
+ <div class="pad" style="padding-top:8px"><div class="hint" style="display:flex;gap:9px">${ic('info',16,'#8C7F6C')}
+ <div style="font-size:12px;color:#5C584F;line-height:1.75">고르신 가격보다 <b>더 싸게 열리면 자동으로 포함</b>돼요. 다만 너무 낮게 고르시면 이번 협상에서는 빠지실 수 있어요.</div></div></div>
+ <div class="pad" style="padding-top:16px"><button class="btn teal" style="opacity:${S.tmp?1:.4}" data-a="toLogin:${p.id}">${S.tmp?won(S.tmp)+'에 등록하기':'가격을 골라주세요'}</button>
+ <div class="tiny" style="text-align:center;margin-top:9px">등록은 구매가 아니에요. 언제든 취소하실 수 있어요.</div></div></div></div>`}
+ if(k==='login')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
+ <div class="grab"></div>
+ <div class="pad" style="padding-top:14px;text-align:center">${mark(34)}
+ <div style="font-size:18px;font-weight:600;letter-spacing:-.025em;margin-top:10px">잠깐만요, 어디로 알려드릴까요</div>
+ <div class="sub" style="margin-top:7px">협상이 열리거나 미뤄질 때만 딱 한 번 보내드려요.<br>기기를 바꾸셔도 기다리시던 게 그대로 따라옵니다.</div></div>
+ <div class="pad" style="padding-top:20px">
+ <button class="btn" style="background:#FEE500;color:#191600" data-a="oauth:kakao">카카오톡으로 계속하기</button>
+ <button class="btn" style="background:#03C75A;color:#fff;margin-top:9px" data-a="oauth:naver">네이버로 계속하기</button>
+ <button class="btn ghost" style="margin-top:9px" data-a="toCode">휴대폰 번호로 계속하기</button></div>
+ <div class="pad" style="padding-top:16px"><div class="hint meta">받는 건 연락처 하나뿐이에요. 이름도 주소도 받지 않고, 알림 보낼 때만 씁니다.</div></div>
+ <div class="pad" style="padding-top:12px"><button class="btn ghost" data-a="closeSheet" style="border:none;color:#8A867D">다음에 할게요</button></div></div></div>`;
+ if(k==='code')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
+ <div class="grab"></div>
+ <div class="pad" style="padding-top:10px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">휴대폰 번호로 시작하기</div>
+ <div class="sub" style="margin-top:6px">번호를 넣으시면 인증번호를 보내드려요. 비밀번호는 따로 만들지 않으셔도 됩니다.</div></div>
+ <div class="pad" style="padding-top:14px"><div class="meta" style="margin-bottom:6px">휴대폰 번호</div>
+ <input id="contact" class="field" placeholder="010-0000-0000" value="${S.contact}">
+ <div class="meta" style="margin:13px 0 6px">인증번호</div>
+ <div style="display:flex;gap:8px"><input class="field num" placeholder="6자리" style="flex:1">
+ <button class="chip" style="padding:0 14px" data-a="say:인증번호를 보냈어요">받기</button></div></div>
+ <div class="pad" style="padding-top:16px"><button class="btn teal" data-a="docode">확인</button>
+ <button class="btn ghost" style="margin-top:9px" data-a="toLoginSheet">다른 방법으로 하기</button></div></div></div>`;
+ if(k==='edit')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
+ <div class="grab"></div>
+ <div class="pad" style="padding-top:10px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">알림 받으실 곳</div>
+ <div class="sub" style="margin-top:6px">협상 소식이 있을 때만 보내드려요. 회원가입은 없어요.</div></div>
+ <div class="pad" style="padding-top:14px"><input id="contact" class="field" placeholder="010-0000-0000 또는 이메일 주소" value="${S.contact}"></div>
+ <div class="pad" style="padding-top:16px"><button class="btn teal" data-a="saveContact">저장하기</button>
+ <button class="btn ghost" style="margin-top:9px" data-a="closeSheet">닫기</button></div></div></div>`;
+ if(k==='site')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop style="height:78%">
+ <div class="grab"></div>
+ <div class="pad" style="padding-top:8px;padding-bottom:12px"><div class="row">
+ <div style="min-width:0"><div class="h3" style="font-size:13px">${p.brand} 공식몰</div><div class="tiny num">${p.site}</div></div>
+ <button class="chip" data-a="closeSheet">닫기</button></div></div>
+ <div style="margin:0 18px;background:#fff;border-radius:14px;padding:40px 20px;text-align:center;box-shadow:inset 0 0 0 .5px #E8E2D6">
+ <div style="opacity:.5">${ic('ext',30,'#8A867D')}</div>
+ <div class="h3" style="margin-top:12px">브랜드 페이지를 불러오는 중이에요</div>
+ <div class="sub" style="margin-top:8px">브랜드 쪽 설정에 따라 여기서 열리지 않을 수 있어요.<br>그럴 땐 새 창으로 열어드립니다.</div>
+ <button class="btn ghost" style="margin-top:16px" data-a="say:새 창으로 열었다고 가정할게요">새 창으로 열기</button></div>
+ <div class="pad" style="padding-top:16px"><div class="hint meta">여기서 보시는 정보는 브랜드가 만든 것이에요. 다들이 정리한 제품 정보와 다를 수 있어요.</div></div></div></div>`;
+ if(k==='leave')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
+ <div class="grab"></div>
+ <div class="pad" style="padding-top:12px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">브랜드 판매처로 이동해요</div>
+ <div class="sub" style="margin-top:7px">다들은 물건을 직접 팔지 않아요. 결제와 배송, 교환과 환불은 모두 브랜드가 맡습니다.</div></div>
+ <div class="pad" style="padding-top:14px"><div class="card" style="padding:14px 15px;box-shadow:none;border:.5px solid #E8E2D6">
+ ${[['파는 곳',p.brand+' 공식몰'],['협상가',won(p.dealPrice)],['보장 기간','구매일로부터 60일']]
+ .map(([k2,v])=>`<div class="row" style="font-size:12.5px;padding:4px 0"><span style="color:#7D796F">${k2}</span><span class="num">${v}</span></div>`).join('')}</div></div>
+ <div class="pad" style="padding-top:14px"><div class="hint" style="display:flex;gap:9px">${ic('alert',16,'#8C7F6C')}
+ <div style="font-size:12px;color:#5C584F;line-height:1.75">구매를 마치시면 <b>다들로 돌아와 주문번호를 남겨주세요.</b> 그래야 60일 가격 보장을 받으실 수 있어요.</div></div></div>
+ <div class="pad" style="padding-top:16px"><button class="btn amber" data-a="toVerify:${p.id}">판매처로 이동하기</button>
+ <button class="btn ghost" style="margin-top:9px" data-a="closeSheet">조금 더 볼게요</button>
+ <div class="tiny" style="text-align:center;margin-top:10px">다들이 받는 수수료는 판매가의 10%예요. 브랜드가 냅니다.</div></div></div></div>`;
  return''};
+
+function finish(){const q=S.pending;S.pending=null;S.sheet=null;
+ if(!q){draw();return}
+ if(q.kind==='verify'){S.bought[q.id]=1;go('verified');return}
+ const p=byId(q.id);S.waits[q.id]=q.price;
+ S.doneName=`${p.brand} ${p.name}을 ${won(q.price)}에 등록하셨어요.`;go('wait')}
 
 /* ── 렌더 ── */
 function draw(){const c=cur();
- const html=(c.s==='product'?V.product(c.id):c.s==='deal'?V.deal(c.id):(V[c.s]||V.home)());
- document.getElementById('app').innerHTML=html+sheetHTML();
+ const html=(c.s==='product'?V.product(c.id):c.s==='deal'?V.deal(c.id):c.s==='verify'?V.verify(c.id)
+  :c.s==='report'?V.report(c.id):['wait','verified','reported'].includes(c.s)?V.done(c.s):(V[c.s]||V.home)());
+ document.getElementById('app').innerHTML=html+(S.drawer?V.drawer():'')+
+ (S.banner&&cur().s==='home'&&!S.sheet?`<div class="pop">${mark(22,'#FCFAF5')}
+ <div style="flex:1"><div style="font-size:13.5px;font-weight:600;letter-spacing:-.02em">다들 모여서, 더 저렴하게</div>
+ <div style="font-size:11.5px;color:#CFCAC0;line-height:1.65;margin-top:3px">실사용자 후기를 모아 살 만한 것만 고르고, 기다리는 분이 모이면 브랜드와 값을 협상해요.</div></div>
+ <button data-a="closePop" style="flex-shrink:0;opacity:.6">${ic('x',15,'#FCFAF5')}</button></div>`:'')+sheetHTML()+(S.toast?`<div class="toast">${S.toast}</div>`:'');
  const q=document.getElementById('q');
- if(q){q.focus();q.oninput=e=>{S.q=e.target.value;document.getElementById('results').innerHTML=searchResults()}}
+ if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length);
+  q.oninput=e=>{S.q=e.target.value;document.getElementById('results').innerHTML=searchResults()}}
+ const ct=document.getElementById('contact');
+ if(ct)ct.oninput=e=>{S.contact=e.target.value};
 }
 
 document.getElementById('app').addEventListener('click',e=>{
  const t=e.target.closest('[data-a]');if(!t)return;
+ if(t.hasAttribute('data-stop'))return;
  const raw=t.getAttribute('data-a');const i=raw.indexOf(':');
  const a=i<0?raw:raw.slice(0,i), v=i<0?'':raw.slice(i+1);
  e.stopPropagation();
  switch(a){
   case'back':back();break;
   case'root':S.stack=[{s:v}];S.tab=v;draw();break;
+  case'noti':go('noti');break;
   case'search':go('search');break;
-  case'product':S.ptab='info';go('product',v);break;
+  case'list':go('list');break;
+  case'excluded':go('excluded');break;
+  case'method':go('method');break;
+  case'log':go('log');break;
+  case'rules':go('rules');break;
+  case'compare':go('compare');break;
+  case'product':S.ptab='info';S.drawer=0;go('product',v);break;
   case'deal':go('deal',v);break;
+  case'report':go('report',v);break;
   case'price':S.tmp=S.waits[v]||null;S.sheet='price:'+v;draw();break;
   case'pick2':S.tmp=Number(v);draw();break;
+  case'toLogin':if(!S.tmp)break;S.pending={kind:'wait',id:v,price:S.tmp};
+   if(S.user){finish()}else{S.sheet='login:'+v};draw();break;
+  case'toLoginSheet':S.sheet='login:'+(S.pending?S.pending.id:'p1');draw();break;
+  case'oauth':S.user={ch:v,id:v==='kakao'?'카카오 계정':'네이버 계정'};S.contact=S.contact||(v==='kakao'?'카카오톡 알림':'네이버 이메일');S.sheet=null;finish();break;
+  case'docode':{const c=document.getElementById('contact');const val=c?c.value.trim():'';
+   if(!val){say('번호를 적어주세요');break}S.user={ch:'phone',id:val};S.contact=val;S.sheet=null;finish();break}
+  case'logout':S.user=null;S.sheet=null;say('로그아웃했어요');break;
+  case'toVerify':S.sheet=null;say('판매처로 이동했다고 가정할게요');setTimeout(()=>go('verify',v),900);break;
+  case'leave':S.sheet='leave:'+v;draw();break;
   case'closeSheet':S.sheet=null;draw();break;
+  case'closePop':S.banner=0;draw();break;
+  case'admin':S.drawer=0;S.atab='cand';go('admin');break;
+  case'atab':S.atab=v;draw();break;
+  case'appr':S.appr[v]=!S.appr[v];draw();break;
+  case'runJob':if(Object.values(S.appr).filter(Boolean).length){S.atab='job';draw();say('수집을 시작했어요. 밤사이 돌아갑니다')}break;
+  case'audit':{const[i,ok]=v.split(':');S.aud[i]=Number(ok);draw();break}
+  case'doverify':if(!S.user){S.pending={kind:'verify',id:v};S.sheet='login:'+v;draw();break}S.bought[v]=1;go('verified');break;
+  case'doreport':go('reported');break;
+  case'pick':S.picks=S.picks.includes(v)?S.picks.filter(x=>x!==v):[...S.picks,v].slice(-4);
+   document.getElementById('results').innerHTML=searchResults();draw();break;
+  case'filter':S.filters=S.filters.includes(v)?S.filters.filter(x=>x!==v):[...S.filters,v];draw();break;
+  case'req':say('요청 접수됐어요. 올라오면 알려드릴게요');S.q='';break;
+  case'seg':S.mine=Number(v);draw();break;
+  case'toggle':S.noti[v]=S.noti[v]?0:1;draw();break;
+  case'editContact':S.sheet='edit:x';draw();break;
+  case'loginSheet':S.sheet='login:p1';draw();break;
+  case'openDrawer':S.drawer=1;draw();break;
+  case'closeDrawer':S.drawer=0;draw();break;
+  case'cat':S.cat=v;S.brand=null;S.drawer=0;if(cur().s!=='home'){S.stack=[{s:'home'}];S.tab='home'}draw();break;
+  case'brandSel':S.brand=v||null;S.cat='전체';S.drawer=0;if(cur().s!=='home'){S.stack=[{s:'home'}];S.tab='home'}draw();break;
   case'ptab':S.ptab=v;draw();break;
-  case'req':say('후기 모음 요청이 접수되었습니다.');S.q='';break;
+  case'official':S.sheet='site:'+v;draw();break;
+  case'saveContact':{const c=document.getElementById('contact');S.contact=c?c.value.trim():S.contact;S.sheet=null;draw();say('저장했어요');break}
+  case'say':say(v);break;
  }
 });
 draw();
+setTimeout(()=>{if(S.banner){S.banner=0;draw()}},7000);
 </script>
 </body>
 </html>
