@@ -2,22 +2,36 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#FCFAF5" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
 <title>다들 · DADEUL 프로토타입</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
 body{font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
  -webkit-font-smoothing:antialiased;color:#2B2A28;line-height:1.6;background:#EFECE4;
- display:flex;justify-content:center;padding:24px 12px;min-height:100vh}
+ display:flex;justify-content:center;padding:24px 12px;min-height:100vh;min-height:100dvh;
+ overflow:hidden;overscroll-behavior:none}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;text-align:left}
 input{font:inherit}
-.phone{width:100%;max-width:390px;height:min(812px,calc(100vh - 48px));background:#F7F4ED;border-radius:32px;
+.phone{width:100%;max-width:390px;height:min(812px,calc(100vh - 48px));
+ height:min(812px,calc(100dvh - 48px));background:#F7F4ED;border-radius:32px;
  overflow:hidden;display:flex;flex-direction:column;position:relative;
  box-shadow:0 0 0 .5px #DDD6C8,0 20px 50px -12px rgba(43,42,40,.22)}
+
+/* 실제 모바일에서는 프레임을 없애고 화면을 꽉 채웁니다 */
+@media (max-width:520px){
+ body{padding:0;background:#F7F4ED}
+ .phone{max-width:none;height:100vh;height:100dvh;border-radius:0;box-shadow:none}
+ .tabs{padding-bottom:calc(14px + env(safe-area-inset-bottom))}
+ .bar:first-child{padding-top:calc(14px + env(safe-area-inset-top))}
+ .drawer,.veil{position:fixed}
+}
 .bar{background:#FCFAF5;box-shadow:0 .5px 0 #E7E1D4;padding:14px 18px;flex-shrink:0;z-index:5}
 .bar .line{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .bar h1{font-size:15px;font-weight:600;letter-spacing:-.03em}
-.body{flex:1;overflow-y:auto;position:relative}
+.body{flex:1;overflow-y:auto;position:relative;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
 .ptr{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:center;
  pointer-events:none;z-index:9;overflow:hidden;height:0}
 .ptr i{display:block;width:26px;height:26px;border-radius:50%;border:2px solid #DCD5C7;
