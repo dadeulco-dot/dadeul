@@ -17,7 +17,14 @@ input{font:inherit}
 .bar{background:#FCFAF5;box-shadow:0 .5px 0 #E7E1D4;padding:14px 18px;flex-shrink:0;z-index:5}
 .bar .line{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .bar h1{font-size:15px;font-weight:600;letter-spacing:-.03em}
-.body{flex:1;overflow-y:auto}
+.body{flex:1;overflow-y:auto;position:relative}
+.ptr{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:center;
+ pointer-events:none;z-index:9;overflow:hidden;height:0}
+.ptr i{display:block;width:26px;height:26px;border-radius:50%;border:2px solid #DCD5C7;
+ border-top-color:#0F6E56;box-sizing:border-box}
+.ptr.spin i{animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.body.pull{transition:transform .22s cubic-bezier(.2,.7,.3,1)}
 .body::-webkit-scrollbar{width:0}
 .pad{padding:0 18px}
 .sec{padding-top:26px}
@@ -35,7 +42,7 @@ input{font:inherit}
 .teal{background:#0F6E56;color:#FCFAF5}
 .amber{background:#A0610F;color:#FCFAF5}
 .ghost{border:.5px solid #D5CFC1;color:#4A4740;font-weight:500;font-size:13.5px}
-.chip{font-size:11.5px;border-radius:20px;padding:7px 13px;white-space:nowrap;color:#5F5B52;background:#EDE8DC;display:inline-flex;align-items:center;gap:4px}
+.chip{font-size:12px;border-radius:20px;padding:8px 15px;white-space:nowrap;flex-shrink:0;color:#5F5B52;background:#EDE8DC;display:inline-flex;align-items:center;gap:4px}
 .chip.on{background:#2B2A28;color:#FCFAF5;font-weight:500}
 .chip.sel{background:#0F6E56;color:#FCFAF5;font-weight:500}
 .badge{font-size:10.5px;border-radius:6px;padding:3px 8px;display:inline-block}
@@ -49,8 +56,15 @@ input{font:inherit}
 .tab{flex:1;text-align:center;color:#A39E93;font-size:10px}
 .tab.on{color:#0F6E56;font-weight:600}
 .tab svg{display:block;margin:0 auto 2px}
-.scroller{display:flex;gap:7px;overflow-x:auto;padding:0 18px 2px}
-.scroller::-webkit-scrollbar{height:0}
+.scroller,.scroller2{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;
+ scroll-snap-type:x proximity;scrollbar-width:none;scroll-padding-left:20px}
+.scroller{gap:8px;padding:2px 0 4px 20px}
+.scroller2{gap:11px;padding:2px 0 4px 20px}
+.scroller>*,.scroller2>*{flex:0 0 auto;scroll-snap-align:start}
+/* flex+overflow에서 마지막 padding-right가 먹지 않아 스페이서로 대체 */
+.scroller::after,.scroller2::after{content:"";flex:0 0 20px;height:1px}
+.scroller::-webkit-scrollbar,.scroller2::-webkit-scrollbar{height:0;display:none}
+.chiprow{margin-top:14px;margin-bottom:2px}
 .veil{position:absolute;inset:0;background:rgba(43,42,40,.32);display:flex;align-items:flex-end;z-index:20}
 .sheet{width:100%;background:#F7F4ED;border-radius:22px 22px 0 0;max-height:88%;overflow-y:auto;padding-bottom:20px}
 .grab{width:36px;height:4px;border-radius:2px;background:#DCD5C7;margin:11px auto 4px}
@@ -107,7 +121,13 @@ const GLY={
  pot:'<path d="M16 29h32v12.5a6 6 0 0 1-6 6H22a6 6 0 0 1-6-6z" fill="#FFFDF9" fill-opacity=".66"/><path d="M16 29h32v12.5a6 6 0 0 1-6 6H22a6 6 0 0 1-6-6z"/><path d="M12.5 25h39" stroke-width="4.2"/><path d="M32 17.5v5.5"/><circle cx="32" cy="15" r="2.6" fill="#FFFDF9" fill-opacity=".9"/><path d="M16 34h-4.5M48 34h4.5"/><path d="M23 35v6" stroke-opacity=".3"/>',
  wok:'<path d="M11 26.5a21 21 0 0 0 42 0z" fill="#FFFDF9" fill-opacity=".66"/><path d="M11 26.5a21 21 0 0 0 42 0z"/><path d="M8 26.5h48" stroke-width="3.2"/><path d="M53.5 24l8-4" stroke-width="4.4"/><path d="M22 32a10 10 0 0 0 20 0" stroke-opacity=".38"/>',
  knife:'<path d="M20.5 38.5L44 15l5 5-23.5 23.5z" fill="#FFFDF9" fill-opacity=".66"/><path d="M20.5 38.5L44 15l5 5-23.5 23.5z"/><path d="M20.5 38.5l-7 7a3.6 3.6 0 0 0 5 5l7-7z" fill="#FFFDF9" fill-opacity=".92"/><path d="M27 32L44 15" stroke-opacity=".33"/>',
- grill:'<rect x="13" y="21" width="38" height="22.5" rx="5.5" fill="#FFFDF9" fill-opacity=".66"/><rect x="13" y="21" width="38" height="22.5" rx="5.5"/><path d="M13.5 28.5h37M13.5 36h37" stroke-opacity=".38"/><path d="M9 26h4.5M50.5 26h4.5" stroke-width="3.6"/>'};
+ tool:'<path d="M20 46L38 20" stroke-width="4.4"/><path d="M34 14c5-4 12-3 15 2s2 12-3 15z" fill="#FFFDF9" fill-opacity=".66"/><circle cx="19" cy="47" r="3.4" fill="#FFFDF9" fill-opacity=".9"/>',
+ bake:'<path d="M14 30h36v12a5 5 0 0 1-5 5H19a5 5 0 0 1-5-5z" fill="#FFFDF9" fill-opacity=".66"/><path d="M14 30h36v12a5 5 0 0 1-5 5H19a5 5 0 0 1-5-5z"/><path d="M18 30c0-6 4-9 8-9M32 30c0-6 4-9 8-9" stroke-opacity=".45"/>',
+ store:'<rect x="16" y="24" width="32" height="24" rx="4" fill="#FFFDF9" fill-opacity=".66"/><rect x="16" y="24" width="32" height="24" rx="4"/><path d="M12 20h40" stroke-width="4.2"/><path d="M26 20v-4h12v4" stroke-opacity=".5"/>',
+ appl:'<rect x="16" y="16" width="32" height="34" rx="5" fill="#FFFDF9" fill-opacity=".66"/><rect x="16" y="16" width="32" height="34" rx="5"/><rect x="22" y="23" width="20" height="14" rx="3" stroke-opacity=".45"/><circle cx="40" cy="44" r="2.4"/>',
+ dish:'<circle cx="32" cy="32" r="17" fill="#FFFDF9" fill-opacity=".66"/><circle cx="32" cy="32" r="17"/><circle cx="32" cy="32" r="10" stroke-opacity=".38"/>',
+ misc:'<path d="M22 20h20l4 28H18z" fill="#FFFDF9" fill-opacity=".66"/><path d="M22 20h20l4 28H18z"/><path d="M26 20c0-4 2.7-6 6-6s6 2 6 6" stroke-opacity=".5"/>',
+ grill:'<rect x="13"  y="21" width="38" height="22.5" rx="5.5" fill="#FFFDF9" fill-opacity=".66"/><rect x="13" y="21" width="38" height="22.5" rx="5.5"/><path d="M13.5 28.5h37M13.5 36h37" stroke-opacity=".38"/><path d="M9 26h4.5M50.5 26h4.5" stroke-width="3.6"/>'};
 const TINT={green:'linear-gradient(150deg,#E4E7E3,#CDD4CC)',sand:'linear-gradient(150deg,#E9E2D2,#D6CCB8)',gray:'linear-gradient(150deg,#E2E0DB,#C9C5BC)',warm:'linear-gradient(150deg,#E7E4DC,#D0CABE)'};
 const th=(x,s=46)=>{const t=typeof x==='string'?x:x.tint,c=typeof x==='string'?null:x.cat;
  return `<div class="thumb" style="width:${s}px;height:${s}px;background:${TINT[t]};display:flex;align-items:center;justify-content:center">`+
@@ -115,15 +135,85 @@ const th=(x,s=46)=>{const t=typeof x==='string'?x:x.tint,c=typeof x==='string'?n
 
 /* ── 데이터 ── */
 const P=[
-{id:'p1',brand:'무이',checked:'2026.07.20',name:'스테인리스 3중 팬 28cm',sub:'프라이팬',cat:'pan',site:'mui.co.kr/tri-pan-28',spec:[['재질','스테인리스 3중 통판'],['크기','28cm · 깊이 5.2cm'],['무게','1,150g'],['열원','가스·인덕션·오븐'],['제조','한국'],['보증','1년']],tint:'green',label:'대체로 만족',n:294,price:39800,low:32900,lowNote:'2026.03 자사몰 봄세일 · 11일간 유지',deal:'open',dealPrice:33800,wait:421,target:100,endDate:'7월 30일',induction:1,dish:1,incl:294,excl:118,longN:96,keep:71,drop:25,dropWhy:'무게 (11건)',cons:[['손잡이가 뜨거워져요',32],['무게가 있는 편이에요',21],['처음엔 길들이기가 필요해요',14]]},
-{id:'p2',brand:'하로',checked:'2026.07.18',name:'인덕션 코팅팬 28cm',sub:'프라이팬',cat:'pan',site:'haro.co.kr/ind-28',spec:[['재질','알루미늄 + 논스틱 코팅'],['크기','28cm · 깊이 4.8cm'],['무게','870g'],['열원','가스·인덕션'],['제조','중국'],['보증','6개월']],tint:'green',label:'대체로 만족',n:241,price:39800,low:35900,lowNote:'2026.01 오픈마켓 행사 · 9일간 유지',deal:'gathering',wait:87,target:100,induction:1,dish:0,incl:241,excl:96,longN:74,keep:52,drop:22,dropWhy:'코팅 박리 (14건)',cons:[['3~4개월에 코팅이 약해져요',28],['손잡이 유격이 생겨요',17],['광고 사진보다 얕아요',9]]},
-{id:'p3',brand:'온담',checked:'2026.07.11',name:'세라믹 프라이팬 28cm',sub:'프라이팬',cat:'pan',site:'ondam.kr/ceramic-28',spec:[['재질','알루미늄 + 세라믹 코팅'],['크기','28cm · 깊이 4.5cm'],['무게','790g'],['열원','가스 전용'],['제조','중국'],['보증','6개월']],tint:'gray',label:'대체로 불만',n:132,price:34900,low:29900,lowNote:'2026.05 자사몰 세일 · 8일간 유지',deal:'none',wait:86,target:100,induction:0,dish:0,incl:132,excl:128,longN:38,keep:11,drop:27,dropWhy:'코팅 박리 (18건)',cons:[['3개월 전후로 눌어붙어요',41],['인덕션에서 바닥이 떠요',27],['손잡이가 헐거워져요',19]]},
-{id:'p4',brand:'코르나',checked:'2026.07.19',name:'무쇠 그리들 26cm',sub:'무쇠·주물',cat:'grill',site:'korna.co.kr/griddle-26',spec:[['재질','주철'],['크기','26cm · 사각'],['무게','2,340g'],['열원','가스·인덕션·직화'],['제조','중국'],['보증','1년']],tint:'warm',label:'대체로 만족',n:187,price:62000,low:55000,lowNote:'2025.11 블프 행사 · 14일간 유지',deal:'open',dealPrice:52700,wait:268,target:100,endDate:'8월 2일',induction:1,dish:0,incl:187,excl:74,longN:82,keep:68,drop:14,dropWhy:'무게 (9건)',cons:[['무거워서 손목에 부담이 돼요',24],['시즈닝이 손이 가요',18],['예열이 오래 걸려요',11]]},
-{id:'p5',brand:'무이',checked:'2026.07.15',name:'통3중 스테인리스 냄비 20cm',sub:'냄비·솥',cat:'pot',site:'mui.co.kr/pot-20',spec:[['재질','스테인리스 통3중'],['크기','20cm · 3.0L'],['무게','1,480g'],['열원','가스·인덕션·오븐'],['제조','한국'],['보증','2년']],tint:'green',label:'의견 갈림',n:88,price:47000,low:41000,lowNote:'2026.02 자사몰 세일 · 7일간 유지',deal:'postponed',wait:54,target:100,pWhy:'가격 조건이 맞지 않아서',pDate:'6.28',induction:1,dish:1,incl:88,excl:51,longN:31,keep:18,drop:13,dropWhy:'눌어붙음 (7건)',cons:[['인덕션에서 소리가 나요',19],['바닥이 잘 눌어요',16],['손잡이가 뜨거워져요',8]]},
-{id:'p6',brand:'필로',checked:'2026.06.28',name:'티타늄 코팅 웍 30cm',sub:'웍',cat:'wok',site:'filo.kr/wok-30',spec:[['재질','알루미늄 + 티타늄 코팅'],['크기','30cm · 깊이 8cm'],['무게','980g'],['열원','가스·인덕션'],['제조','베트남'],['보증',null]],tint:'sand',label:'표본 부족',n:12,price:52000,low:48000,lowNote:'2026.04 오픈마켓 행사 · 7일간 유지',deal:'none',wait:12,target:100,induction:1,dish:0,incl:12,excl:21,longN:4,keep:3,drop:1,dropWhy:'-',cons:[]},
-{id:'p7',brand:'세라',checked:'2026.07.09',name:'다마스커스 셰프나이프 20cm',sub:'칼',cat:'knife',site:'sera.co.kr/chef-20',spec:[['재질','다마스커스 67겹'],['크기','날 20cm'],['무게','215g'],['손잡이','흑단 목재'],['제조','일본'],['날 경도',null],['보증','1년']],tint:'warm',label:'대체로 만족',n:74,price:89000,low:78000,lowNote:'2025.12 자사몰 세일 · 10일간 유지',deal:'talking',wait:31,target:60,tDate:'7.24',induction:0,dish:0,incl:74,excl:38,longN:29,keep:25,drop:4,dropWhy:'관리 부담 (2건)',cons:[['관리가 까다로워요',14],['손잡이가 미끄러워요',8],['무게가 가벼운 편이에요',5]]}];
+{id:"p1",brand:"하로",checked:"2026.05.16",name:"인덕션 코팅팬 28cm",sub:"프라이팬",cat:"pan",tint:"green",label:"대체로 만족",n:229,price:39800,low:33300,lowNote:"2026.03 자사몰 세일 · 9일간 유지",deal:"talking",wait:387,target:100,induction:1,dish:0,incl:229,excl:141,longN:33,keep:15,drop:18,dropWhy:"3~4개월에 코팅이 약해져요 (18건)",cons:[["3~4개월에 코팅이 약해져요", 26], ["손잡이가 뜨거워져요", 18], ["광고보다 얕아요", 10]],site:"haro.co.kr/p1",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]],tDate:"7.19"},
+{id:"p2",brand:"온담",checked:"2026.05.23",name:"세라믹 프라이팬 28cm",sub:"프라이팬",cat:"pan",tint:"gray",label:"대체로 만족",n:133,price:34900,low:30300,lowNote:"2026.05 자사몰 세일 · 11일간 유지",deal:"none",wait:370,target:100,induction:1,dish:1,incl:133,excl:125,longN:54,keep:43,drop:11,dropWhy:"3~4개월에 코팅이 약해져요 (15건)",cons:[["3~4개월에 코팅이 약해져요", 15], ["손잡이가 뜨거워져요", 10], ["광고보다 얕아요", 6]],site:"ondam.co.kr/p2",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]]},
+{id:"p3",brand:"무이",checked:"2026.05.17",name:"스테인리스 3중 팬 28cm",sub:"프라이팬",cat:"pan",tint:"green",label:"대체로 불만",n:166,price:39800,low:33200,lowNote:"2026.01 자사몰 세일 · 14일간 유지",deal:"none",wait:434,target:100,induction:1,dish:0,incl:166,excl:90,longN:26,keep:19,drop:7,dropWhy:"3~4개월에 코팅이 약해져요 (3건)",cons:[["3~4개월에 코팅이 약해져요", 19], ["손잡이가 뜨거워져요", 13], ["광고보다 얕아요", 7]],site:"mui.co.kr/p3",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]]},
+{id:"p4",brand:"노바",checked:"2026.07.20",name:"티타늄 코팅팬 26cm",sub:"프라이팬",cat:"pan",tint:"sand",label:"대체로 만족",n:122,price:31000,low:26800,lowNote:"2026.02 자사몰 세일 · 15일간 유지",deal:"none",wait:325,target:100,induction:1,dish:0,incl:122,excl:79,longN:53,keep:31,drop:22,dropWhy:"3~4개월에 코팅이 약해져요 (15건)",cons:[["3~4개월에 코팅이 약해져요", 14], ["손잡이가 뜨거워져요", 9], ["광고보다 얕아요", 5]],site:"nova.co.kr/p4",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]]},
+{id:"p5",brand:"프리모",checked:"2026.07.22",name:"다이아몬드 코팅팬 24cm",sub:"프라이팬",cat:"pan",tint:"warm",label:"대체로 만족",n:251,price:27500,low:23700,lowNote:"2026.01 자사몰 세일 · 10일간 유지",deal:"none",wait:43,target:100,induction:1,dish:0,incl:251,excl:161,longN:32,keep:14,drop:18,dropWhy:"3~4개월에 코팅이 약해져요 (6건)",cons:[["3~4개월에 코팅이 약해져요", 29], ["손잡이가 뜨거워져요", 19], ["광고보다 얕아요", 11]],site:"primo.co.kr/p5",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]]},
+{id:"p6",brand:"필로",checked:"2026.07.14",name:"티타늄 코팅 웍 30cm",sub:"웍",cat:"wok",tint:"sand",label:"대체로 불만",n:222,price:52000,low:46000,lowNote:"2026.05 자사몰 세일 · 8일간 유지",deal:"none",wait:195,target:100,induction:1,dish:0,incl:222,excl:97,longN:17,keep:14,drop:3,dropWhy:"무거워서 손목에 부담이 돼요 (9건)",cons:[["무거워서 손목에 부담이 돼요", 20], ["예열이 오래 걸려요", 12], ["길들이기가 필요해요", 8]],site:"filo.co.kr/p6",spec:[["재질", "탄소강"], ["크기", "30cm"], ["무게", "1,240g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "1년"]]},
+{id:"p7",brand:"한스틸",checked:"2026.07.21",name:"탄소강 웍 32cm",sub:"웍",cat:"wok",tint:"gray",label:"대체로 만족",n:240,price:68000,low:56800,lowNote:"2026.04 자사몰 세일 · 8일간 유지",deal:"postponed",wait:68,target:100,induction:1,dish:1,incl:240,excl:227,longN:38,keep:24,drop:14,dropWhy:"무거워서 손목에 부담이 돼요 (17건)",cons:[["무거워서 손목에 부담이 돼요", 22], ["예열이 오래 걸려요", 14], ["길들이기가 필요해요", 9]],site:"hansteel.co.kr/p7",spec:[["재질", "탄소강"], ["크기", "30cm"], ["무게", "1,240g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "1년"]],pWhy:"시점이 맞지 않아서",pDate:"6.27"},
+{id:"p8",brand:"담온",checked:"2026.06.18",name:"궁중팬 28cm",sub:"궁중팬",cat:"wok",tint:"warm",label:"의견 갈림",n:207,price:44000,low:36400,lowNote:"2026.04 자사몰 세일 · 9일간 유지",deal:"gathering",wait:273,target:100,induction:1,dish:0,incl:207,excl:106,longN:40,keep:14,drop:26,dropWhy:"무거워서 손목에 부담이 돼요 (14건)",cons:[["무거워서 손목에 부담이 돼요", 18], ["예열이 오래 걸려요", 12], ["길들이기가 필요해요", 7]],site:"damon.co.kr/p8",spec:[["재질", "탄소강"], ["크기", "30cm"], ["무게", "1,240g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "1년"]]},
+{id:"p9",brand:"노바",checked:"2026.07.19",name:"논스틱 계란말이팬 18cm",sub:"계란말이팬",cat:"pan",tint:"green",label:"대체로 만족",n:123,price:22000,low:19700,lowNote:"2026.01 자사몰 세일 · 11일간 유지",deal:"open",wait:274,target:100,induction:1,dish:1,incl:123,excl:110,longN:69,keep:66,drop:3,dropWhy:"3~4개월에 코팅이 약해져요 (14건)",cons:[["3~4개월에 코팅이 약해져요", 14], ["손잡이가 뜨거워져요", 9], ["광고보다 얕아요", 5]],site:"nova.co.kr/p9",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]],dealPrice:19000,endDate:"8월 5일"},
+{id:"p10",brand:"코르나",checked:"2026.07.17",name:"주물 그릴팬 24cm",sub:"그릴팬",cat:"grill",tint:"warm",label:"대체로 만족",n:320,price:58000,low:51000,lowNote:"2026.05 자사몰 세일 · 10일간 유지",deal:"gathering",wait:421,target:100,induction:1,dish:0,incl:320,excl:272,longN:53,keep:40,drop:13,dropWhy:"무거워요 (10건)",cons:[["무거워요", 34], ["시즈닝이 손이 가요", 24], ["보관이 불편해요", 13]],site:"korna.co.kr/p10",spec:[["재질", "주철"], ["크기", "26cm"], ["무게", "2,340g"], ["열원", "가스·인덕션·직화"], ["제조", "중국"], ["보증", "1년"]]},
+{id:"p11",brand:"무이",checked:"2026.07.10",name:"통3중 스테인리스 냄비 20cm",sub:"편수냄비",cat:"pot",tint:"green",label:"표본 부족",n:12,price:47000,low:39500,lowNote:"2026.01 자사몰 세일 · 11일간 유지",deal:"gathering",wait:250,target:100,induction:1,dish:1,incl:12,excl:6,longN:53,keep:39,drop:14,dropWhy:"- (14건)",cons:[],site:"mui.co.kr/p11",spec:[["재질", "스테인리스 통3중"], ["용량", "3.0L"], ["무게", "1,480g"], ["열원", "가스·인덕션·오븐"], ["제조", "한국"], ["보증", "2년"]]},
+{id:"p12",brand:"미리내",checked:"2026.06.12",name:"법랑 편수냄비 18cm",sub:"편수냄비",cat:"pot",tint:"sand",label:"대체로 만족",n:276,price:38000,low:34500,lowNote:"2026.02 자사몰 세일 · 8일간 유지",deal:"talking",wait:125,target:100,induction:1,dish:1,incl:276,excl:140,longN:68,keep:54,drop:14,dropWhy:"바닥이 잘 눌어요 (9건)",cons:[["바닥이 잘 눌어요", 27], ["손잡이가 뜨거워져요", 18], ["뚜껑 김이 새요", 9]],site:"mirinae.co.kr/p12",spec:[["재질", "스테인리스 통3중"], ["용량", "3.0L"], ["무게", "1,480g"], ["열원", "가스·인덕션·오븐"], ["제조", "한국"], ["보증", "2년"]],tDate:"7.25"},
+{id:"p13",brand:"한스틸",checked:"2026.07.12",name:"양수 스테인리스 냄비 24cm",sub:"양수냄비",cat:"pot",tint:"gray",label:"대체로 불만",n:48,price:62000,low:54100,lowNote:"2026.01 자사몰 세일 · 13일간 유지",deal:"none",wait:409,target:100,induction:1,dish:0,incl:48,excl:31,longN:63,keep:49,drop:14,dropWhy:"바닥이 잘 눌어요 (8건)",cons:[["바닥이 잘 눌어요", 4], ["손잡이가 뜨거워져요", 3], ["뚜껑 김이 새요", 3]],site:"hansteel.co.kr/p13",spec:[["재질", "스테인리스 통3중"], ["용량", "3.0L"], ["무게", "1,480g"], ["열원", "가스·인덕션·오븐"], ["제조", "한국"], ["보증", "2년"]]},
+{id:"p14",brand:"담온",checked:"2026.05.22",name:"뚝배기형 전골냄비 22cm",sub:"전골냄비",cat:"pot",tint:"warm",label:"표본 부족",n:12,price:35000,low:30300,lowNote:"2026.04 자사몰 세일 · 13일간 유지",deal:"postponed",wait:389,target:100,induction:1,dish:0,incl:12,excl:9,longN:61,keep:48,drop:13,dropWhy:"- (8건)",cons:[],site:"damon.co.kr/p14",spec:[["재질", "스테인리스 통3중"], ["용량", "3.0L"], ["무게", "1,480g"], ["열원", "가스·인덕션·오븐"], ["제조", "한국"], ["보증", "2년"]],pWhy:"가격 조건이 맞지 않아서",pDate:"6.12"},
+{id:"p15",brand:"프리모",checked:"2026.07.14",name:"스테인리스 압력솥 5L",sub:"압력솥",cat:"pot",tint:"gray",label:"의견 갈림",n:125,price:129000,low:114100,lowNote:"2026.05 자사몰 세일 · 14일간 유지",deal:"none",wait:345,target:60,induction:1,dish:1,incl:125,excl:60,longN:65,keep:37,drop:28,dropWhy:"바닥이 잘 눌어요 (7건)",cons:[["바닥이 잘 눌어요", 12], ["손잡이가 뜨거워져요", 8], ["뚜껑 김이 새요", 4]],site:"primo.co.kr/p15",spec:[["재질", "스테인리스 통3중"], ["용량", "3.0L"], ["무게", "1,480g"], ["열원", "가스·인덕션·오븐"], ["제조", "한국"], ["보증", "2년"]]},
+{id:"p16",brand:"한스틸",checked:"2026.07.13",name:"통3중 곰솥 26cm",sub:"밥솥·곰솥",cat:"pot",tint:"green",label:"대체로 만족",n:58,price:89000,low:73100,lowNote:"2026.05 자사몰 세일 · 9일간 유지",deal:"none",wait:231,target:60,induction:1,dish:0,incl:58,excl:49,longN:96,keep:70,drop:26,dropWhy:"바닥이 잘 눌어요 (9건)",cons:[["바닥이 잘 눌어요", 5], ["손잡이가 뜨거워져요", 3], ["뚜껑 김이 새요", 3]],site:"hansteel.co.kr/p16",spec:[["재질", "스테인리스 통3중"], ["용량", "3.0L"], ["무게", "1,480g"], ["열원", "가스·인덕션·오븐"], ["제조", "한국"], ["보증", "2년"]]},
+{id:"p17",brand:"미리내",checked:"2026.05.28",name:"법랑 주전자 1.8L",sub:"주전자",cat:"pot",tint:"sand",label:"의견 갈림",n:62,price:29000,low:24500,lowNote:"2026.03 자사몰 세일 · 11일간 유지",deal:"gathering",wait:287,target:100,induction:1,dish:1,incl:62,excl:53,longN:45,keep:26,drop:19,dropWhy:"바닥이 잘 눌어요 (4건)",cons:[["바닥이 잘 눌어요", 6], ["손잡이가 뜨거워져요", 4], ["뚜껑 김이 새요", 3]],site:"mirinae.co.kr/p17",spec:[["재질", "스테인리스 통3중"], ["용량", "3.0L"], ["무게", "1,480g"], ["열원", "가스·인덕션·오븐"], ["제조", "한국"], ["보증", "2년"]]},
+{id:"p18",brand:"코르나",checked:"2026.07.23",name:"무쇠 스킬렛 26cm",sub:"무쇠팬",cat:"grill",tint:"warm",label:"대체로 만족",n:229,price:54000,low:49600,lowNote:"2026.05 자사몰 세일 · 9일간 유지",deal:"none",wait:281,target:100,induction:1,dish:0,incl:229,excl:157,longN:71,keep:50,drop:21,dropWhy:"무거워요 (3건)",cons:[["무거워요", 24], ["시즈닝이 손이 가요", 17], ["보관이 불편해요", 9]],site:"korna.co.kr/p18",spec:[["재질", "주철"], ["크기", "26cm"], ["무게", "2,340g"], ["열원", "가스·인덕션·직화"], ["제조", "중국"], ["보증", "1년"]]},
+{id:"p19",brand:"코르나",checked:"2026.05.15",name:"주물 더치오븐 24cm",sub:"더치오븐",cat:"grill",tint:"gray",label:"의견 갈림",n:273,price:148000,low:134000,lowNote:"2026.02 자사몰 세일 · 14일간 유지",deal:"gathering",wait:325,target:60,induction:1,dish:0,incl:273,excl:192,longN:49,keep:46,drop:3,dropWhy:"무거워요 (13건)",cons:[["무거워요", 29], ["시즈닝이 손이 가요", 20], ["보관이 불편해요", 11]],site:"korna.co.kr/p19",spec:[["재질", "주철"], ["크기", "26cm"], ["무게", "2,340g"], ["열원", "가스·인덕션·직화"], ["제조", "중국"], ["보증", "1년"]]},
+{id:"p20",brand:"코르나",checked:"2026.05.27",name:"무쇠 그리들 26cm",sub:"그리들",cat:"grill",tint:"warm",label:"대체로 불만",n:313,price:62000,low:54400,lowNote:"2026.01 자사몰 세일 · 10일간 유지",deal:"postponed",wait:106,target:100,induction:1,dish:1,incl:313,excl:132,longN:66,keep:38,drop:28,dropWhy:"무거워요 (6건)",cons:[["무거워요", 33], ["시즈닝이 손이 가요", 23], ["보관이 불편해요", 13]],site:"korna.co.kr/p20",spec:[["재질", "주철"], ["크기", "26cm"], ["무게", "2,340g"], ["열원", "가스·인덕션·직화"], ["제조", "중국"], ["보증", "1년"]],pWhy:"저희 원칙과 맞지 않아서",pDate:"6.26"},
+{id:"p21",brand:"세라",checked:"2026.06.20",name:"다마스커스 셰프나이프 20cm",sub:"셰프나이프",cat:"knife",tint:"warm",label:"대체로 불만",n:62,price:89000,low:80400,lowNote:"2026.05 자사몰 세일 · 15일간 유지",deal:"gathering",wait:319,target:60,induction:0,dish:0,incl:62,excl:48,longN:71,keep:66,drop:5,dropWhy:"관리가 까다로워요 (17건)",cons:[["관리가 까다로워요", 4], ["손잡이가 미끄러워요", 3], ["날이 금방 무뎌져요", 3]],site:"sera.co.kr/p21",spec:[["재질", "스테인리스"], ["날 길이", "20cm"], ["무게", "215g"], ["손잡이", "목재"], ["제조", "일본"], ["보증", "1년"]]},
+{id:"p22",brand:"한스틸",checked:"2026.07.17",name:"스테인리스 셰프나이프 18cm",sub:"셰프나이프",cat:"knife",tint:"gray",label:"표본 부족",n:12,price:42000,low:36700,lowNote:"2026.05 자사몰 세일 · 11일간 유지",deal:"none",wait:295,target:100,induction:0,dish:0,incl:12,excl:10,longN:77,keep:59,drop:18,dropWhy:"- (7건)",cons:[],site:"hansteel.co.kr/p22",spec:[["재질", "스테인리스"], ["날 길이", "20cm"], ["무게", "215g"], ["손잡이", "목재"], ["제조", "일본"], ["보증", "1년"]]},
+{id:"p23",brand:"세라",checked:"2026.06.12",name:"과도 9cm",sub:"과도",cat:"knife",tint:"sand",label:"표본 부족",n:12,price:24000,low:20700,lowNote:"2026.02 자사몰 세일 · 13일간 유지",deal:"none",wait:46,target:100,induction:0,dish:0,incl:12,excl:9,longN:50,keep:33,drop:17,dropWhy:"- (6건)",cons:[],site:"sera.co.kr/p23",spec:[["재질", "스테인리스"], ["날 길이", "20cm"], ["무게", "215g"], ["손잡이", "목재"], ["제조", "일본"], ["보증", "1년"]]},
+{id:"p24",brand:"세라",checked:"2026.06.14",name:"물결날 빵칼 22cm",sub:"빵칼",cat:"knife",tint:"warm",label:"의견 갈림",n:127,price:38000,low:35000,lowNote:"2026.03 자사몰 세일 · 9일간 유지",deal:"none",wait:248,target:100,induction:0,dish:0,incl:127,excl:102,longN:73,keep:49,drop:24,dropWhy:"관리가 까다로워요 (6건)",cons:[["관리가 까다로워요", 8], ["손잡이가 미끄러워요", 5], ["날이 금방 무뎌져요", 3]],site:"sera.co.kr/p24",spec:[["재질", "스테인리스"], ["날 길이", "20cm"], ["무게", "215g"], ["손잡이", "목재"], ["제조", "일본"], ["보증", "1년"]]},
+{id:"p25",brand:"필로",checked:"2026.05.15",name:"분리형 주방가위",sub:"가위",cat:"knife",tint:"gray",label:"대체로 불만",n:251,price:19000,low:17400,lowNote:"2026.04 자사몰 세일 · 15일간 유지",deal:"none",wait:215,target:100,induction:0,dish:1,incl:251,excl:158,longN:42,keep:18,drop:24,dropWhy:"관리가 까다로워요 (14건)",cons:[["관리가 까다로워요", 17], ["손잡이가 미끄러워요", 11], ["날이 금방 무뎌져요", 7]],site:"hansteel.co.kr/p25",spec:[["재질", "스테인리스"], ["날 길이", "20cm"], ["무게", "215g"], ["손잡이", "목재"], ["제조", "일본"], ["보증", "1년"]]},
+{id:"p26",brand:"우드림",checked:"2026.06.27",name:"편백 도마 대형",sub:"도마",cat:"knife",tint:"warm",label:"대체로 만족",n:211,price:46000,low:38100,lowNote:"2026.04 자사몰 세일 · 14일간 유지",deal:"none",wait:369,target:100,induction:0,dish:0,incl:211,excl:129,longN:34,keep:31,drop:3,dropWhy:"관리가 까다로워요 (12건)",cons:[["관리가 까다로워요", 14], ["손잡이가 미끄러워요", 9], ["날이 금방 무뎌져요", 6]],site:"woodream.co.kr/p26",spec:[["재질", "스테인리스"], ["날 길이", "20cm"], ["무게", "215g"], ["손잡이", "목재"], ["제조", "일본"], ["보증", "1년"]]},
+{id:"p27",brand:"세라",checked:"2026.05.13",name:"양면 숫돌 1000/3000",sub:"숫돌",cat:"knife",tint:"gray",label:"대체로 만족",n:310,price:33000,low:30500,lowNote:"2026.01 자사몰 세일 · 11일간 유지",deal:"none",wait:148,target:100,induction:0,dish:0,incl:310,excl:278,longN:43,keep:15,drop:28,dropWhy:"관리가 까다로워요 (8건)",cons:[["관리가 까다로워요", 21], ["손잡이가 미끄러워요", 14], ["날이 금방 무뎌져요", 9]],site:"sera.co.kr/p27",spec:[["재질", "스테인리스"], ["날 길이", "20cm"], ["무게", "215g"], ["손잡이", "목재"], ["제조", "일본"], ["보증", "1년"]]},
+{id:"p28",brand:"우드림",checked:"2026.07.18",name:"비장탄 뒤집개",sub:"뒤집개",cat:"tool",tint:"warm",label:"대체로 만족",n:186,price:12000,low:10800,lowNote:"2026.04 자사몰 세일 · 9일간 유지",deal:"gathering",wait:283,target:100,induction:0,dish:1,incl:186,excl:146,longN:76,keep:60,drop:16,dropWhy:"손잡이가 헐거워져요 (5건)",cons:[["손잡이가 헐거워져요", 10], ["열에 약해요", 6], ["세척이 번거로워요", 4]],site:"woodream.co.kr/p28",spec:[["재질", "스테인리스"], ["길이", "30cm"], ["무게", "120g"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]]},
+{id:"p29",brand:"필로",checked:"2026.05.23",name:"스테인리스 국자",sub:"국자",cat:"tool",tint:"gray",label:"표본 부족",n:12,price:9800,low:8300,lowNote:"2026.01 자사몰 세일 · 11일간 유지",deal:"postponed",wait:17,target:100,induction:0,dish:0,incl:12,excl:10,longN:84,keep:59,drop:25,dropWhy:"- (5건)",cons:[],site:"hansteel.co.kr/p29",spec:[["재질", "스테인리스"], ["길이", "30cm"], ["무게", "120g"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]],pWhy:"저희 원칙과 맞지 않아서",pDate:"6.19"},
+{id:"p30",brand:"노바",checked:"2026.05.20",name:"실리콘 집게 30cm",sub:"집게",cat:"tool",tint:"green",label:"대체로 만족",n:82,price:11500,low:9700,lowNote:"2026.05 자사몰 세일 · 13일간 유지",deal:"none",wait:477,target:100,induction:0,dish:1,incl:82,excl:60,longN:32,keep:15,drop:17,dropWhy:"손잡이가 헐거워져요 (4건)",cons:[["손잡이가 헐거워져요", 4], ["열에 약해요", 3], ["세척이 번거로워요", 3]],site:"nova.co.kr/p30",spec:[["재질", "스테인리스"], ["길이", "30cm"], ["무게", "120g"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]]},
+{id:"p31",brand:"무이",checked:"2026.05.18",name:"스테인리스 거품기",sub:"거품기",cat:"tool",tint:"gray",label:"대체로 만족",n:317,price:13000,low:11600,lowNote:"2026.01 자사몰 세일 · 9일간 유지",deal:"open",wait:112,target:100,induction:0,dish:1,incl:317,excl:236,longN:74,keep:68,drop:6,dropWhy:"손잡이가 헐거워져요 (9건)",cons:[["손잡이가 헐거워져요", 17], ["열에 약해요", 11], ["세척이 번거로워요", 7]],site:"hansteel.co.kr/p31",spec:[["재질", "스테인리스"], ["길이", "30cm"], ["무게", "120g"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]],dealPrice:10800,endDate:"7월 30일"},
+{id:"p32",brand:"노바",checked:"2026.05.18",name:"계량컵 계량스푼 세트",sub:"계량도구",cat:"tool",tint:"green",label:"대체로 불만",n:304,price:15000,low:13400,lowNote:"2026.01 자사몰 세일 · 7일간 유지",deal:"none",wait:18,target:100,induction:0,dish:0,incl:304,excl:207,longN:39,keep:25,drop:14,dropWhy:"손잡이가 헐거워져요 (10건)",cons:[["손잡이가 헐거워져요", 16], ["열에 약해요", 11], ["세척이 번거로워요", 7]],site:"nova.co.kr/p32",spec:[["재질", "스테인리스"], ["길이", "30cm"], ["무게", "120g"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]]},
+{id:"p33",brand:"담온",checked:"2026.06.25",name:"스테인리스 볼 5종 세트",sub:"채반·볼",cat:"tool",tint:"gray",label:"대체로 만족",n:276,price:34000,low:28200,lowNote:"2026.05 자사몰 세일 · 13일간 유지",deal:"none",wait:268,target:100,induction:0,dish:1,incl:276,excl:214,longN:83,keep:60,drop:23,dropWhy:"손잡이가 헐거워져요 (10건)",cons:[["손잡이가 헐거워져요", 14], ["열에 약해요", 10], ["세척이 번거로워요", 6]],site:"hansteel.co.kr/p33",spec:[["재질", "스테인리스"], ["길이", "30cm"], ["무게", "120g"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]]},
+{id:"p34",brand:"베이크한",checked:"2026.07.14",name:"논스틱 오븐팬 2호",sub:"오븐팬",cat:"bake",tint:"sand",label:"대체로 불만",n:223,price:28000,low:23500,lowNote:"2026.04 자사몰 세일 · 12일간 유지",deal:"gathering",wait:36,target:100,induction:0,dish:0,incl:223,excl:90,longN:89,keep:64,drop:25,dropWhy:"코팅이 벗겨져요 (11건)",cons:[["코팅이 벗겨져요", 13], ["열이 고르지 않아요", 9], ["분리가 잘 안 돼요", 5]],site:"bakehan.co.kr/p34",spec:[["재질", "탄소강 + 논스틱"], ["크기", "2호"], ["무게", "480g"], ["내열", "230도"], ["제조", "한국"], ["보증", "6개월"]]},
+{id:"p35",brand:"베이크한",checked:"2026.06.26",name:"분리형 케이크틀 18cm",sub:"케이크틀",cat:"bake",tint:"warm",label:"대체로 만족",n:268,price:21000,low:17500,lowNote:"2026.03 자사몰 세일 · 10일간 유지",deal:"talking",wait:363,target:100,induction:0,dish:1,incl:268,excl:113,longN:37,keep:13,drop:24,dropWhy:"코팅이 벗겨져요 (8건)",cons:[["코팅이 벗겨져요", 16], ["열이 고르지 않아요", 11], ["분리가 잘 안 돼요", 6]],site:"bakehan.co.kr/p35",spec:[["재질", "탄소강 + 논스틱"], ["크기", "2호"], ["무게", "480g"], ["내열", "230도"], ["제조", "한국"], ["보증", "6개월"]],tDate:"7.20"},
+{id:"p36",brand:"베이크한",checked:"2026.06.27",name:"12구 머핀틀",sub:"머핀틀",cat:"bake",tint:"sand",label:"의견 갈림",n:185,price:24000,low:20800,lowNote:"2026.03 자사몰 세일 · 10일간 유지",deal:"none",wait:26,target:100,induction:0,dish:1,incl:185,excl:96,longN:38,keep:24,drop:14,dropWhy:"코팅이 벗겨져요 (8건)",cons:[["코팅이 벗겨져요", 11], ["열이 고르지 않아요", 7], ["분리가 잘 안 돼요", 4]],site:"bakehan.co.kr/p36",spec:[["재질", "탄소강 + 논스틱"], ["크기", "2호"], ["무게", "480g"], ["내열", "230도"], ["제조", "한국"], ["보증", "6개월"]]},
+{id:"p37",brand:"우드림",checked:"2026.06.26",name:"원목 밀대 45cm",sub:"밀대",cat:"bake",tint:"warm",label:"의견 갈림",n:48,price:18000,low:15400,lowNote:"2026.02 자사몰 세일 · 10일간 유지",deal:"none",wait:267,target:100,induction:0,dish:0,incl:48,excl:21,longN:31,keep:13,drop:18,dropWhy:"코팅이 벗겨져요 (5건)",cons:[["코팅이 벗겨져요", 3], ["열이 고르지 않아요", 3], ["분리가 잘 안 돼요", 3]],site:"woodream.co.kr/p37",spec:[["재질", "탄소강 + 논스틱"], ["크기", "2호"], ["무게", "480g"], ["내열", "230도"], ["제조", "한국"], ["보증", "6개월"]]},
+{id:"p38",brand:"하로",checked:"2026.05.19",name:"실리콘 몰드 6구",sub:"실리콘몰드",cat:"bake",tint:"green",label:"대체로 만족",n:121,price:13500,low:11600,lowNote:"2026.03 자사몰 세일 · 10일간 유지",deal:"none",wait:52,target:100,induction:0,dish:0,incl:121,excl:92,longN:25,keep:10,drop:15,dropWhy:"코팅이 벗겨져요 (15건)",cons:[["코팅이 벗겨져요", 7], ["열이 고르지 않아요", 5], ["분리가 잘 안 돼요", 3]],site:"nova.co.kr/p38",spec:[["재질", "탄소강 + 논스틱"], ["크기", "2호"], ["무게", "480g"], ["내열", "230도"], ["제조", "한국"], ["보증", "6개월"]]},
+{id:"p39",brand:"하로",checked:"2026.06.14",name:"밀폐용기 12종 세트",sub:"밀폐용기",cat:"store",tint:"green",label:"대체로 만족",n:214,price:39000,low:35000,lowNote:"2026.01 자사몰 세일 · 15일간 유지",deal:"none",wait:330,target:100,induction:0,dish:1,incl:214,excl:171,longN:46,keep:39,drop:7,dropWhy:"뚜껑이 헐거워져요 (7건)",cons:[["뚜껑이 헐거워져요", 18], ["냄새가 배요", 13], ["변색이 생겨요", 8]],site:"nova.co.kr/p39",spec:[["재질", "트라이탄"], ["구성", "12종"], ["밀폐", "실리콘 패킹"], ["전자레인지", "가능"], ["제조", "한국"], ["보증", "1년"]]},
+{id:"p40",brand:"미리내",checked:"2026.05.28",name:"내열 유리용기 8종",sub:"유리용기",cat:"store",tint:"sand",label:"의견 갈림",n:316,price:48000,low:43300,lowNote:"2026.02 자사몰 세일 · 8일간 유지",deal:"gathering",wait:24,target:100,induction:0,dish:0,incl:316,excl:149,longN:73,keep:44,drop:29,dropWhy:"뚜껑이 헐거워져요 (14건)",cons:[["뚜껑이 헐거워져요", 27], ["냄새가 배요", 19], ["변색이 생겨요", 11]],site:"mirinae.co.kr/p40",spec:[["재질", "트라이탄"], ["구성", "12종"], ["밀폐", "실리콘 패킹"], ["전자레인지", "가능"], ["제조", "한국"], ["보증", "1년"]]},
+{id:"p41",brand:"프리모",checked:"2026.05.10",name:"진공 저장용기 3종",sub:"진공용기",cat:"store",tint:"gray",label:"대체로 만족",n:101,price:56000,low:48200,lowNote:"2026.05 자사몰 세일 · 10일간 유지",deal:"none",wait:259,target:100,induction:0,dish:1,incl:101,excl:40,longN:56,keep:36,drop:20,dropWhy:"뚜껑이 헐거워져요 (5건)",cons:[["뚜껑이 헐거워져요", 8], ["냄새가 배요", 6], ["변색이 생겨요", 3]],site:"primo.co.kr/p41",spec:[["재질", "트라이탄"], ["구성", "12종"], ["밀폐", "실리콘 패킹"], ["전자레인지", "가능"], ["제조", "한국"], ["보증", "1년"]]},
+{id:"p42",brand:"미리내",checked:"2026.07.12",name:"유리 저장병 1L 3개",sub:"저장병",cat:"store",tint:"sand",label:"의견 갈림",n:305,price:26000,low:23800,lowNote:"2026.04 자사몰 세일 · 11일간 유지",deal:"gathering",wait:423,target:100,induction:0,dish:0,incl:305,excl:263,longN:37,keep:13,drop:24,dropWhy:"뚜껑이 헐거워져요 (10건)",cons:[["뚜껑이 헐거워져요", 26], ["냄새가 배요", 19], ["변색이 생겨요", 11]],site:"mirinae.co.kr/p42",spec:[["재질", "트라이탄"], ["구성", "12종"], ["밀폐", "실리콘 패킹"], ["전자레인지", "가능"], ["제조", "한국"], ["보증", "1년"]]},
+{id:"p43",brand:"온담",checked:"2026.06.22",name:"스테인리스 도시락 2단",sub:"도시락",cat:"store",tint:"green",label:"대체로 만족",n:153,price:32000,low:27000,lowNote:"2026.01 자사몰 세일 · 14일간 유지",deal:"postponed",wait:475,target:100,induction:0,dish:1,incl:153,excl:125,longN:66,keep:49,drop:17,dropWhy:"뚜껑이 헐거워져요 (9건)",cons:[["뚜껑이 헐거워져요", 13], ["냄새가 배요", 9], ["변색이 생겨요", 5]],site:"nova.co.kr/p43",spec:[["재질", "트라이탄"], ["구성", "12종"], ["밀폐", "실리콘 패킹"], ["전자레인지", "가능"], ["제조", "한국"], ["보증", "1년"]],pWhy:"가격 조건이 맞지 않아서",pDate:"6.16"},
+{id:"p44",brand:"프리모",checked:"2026.06.28",name:"에어프라이어 5.5L",sub:"에어프라이어",cat:"appl",tint:"gray",label:"의견 갈림",n:217,price:119000,low:100900,lowNote:"2026.02 자사몰 세일 · 7일간 유지",deal:"open",wait:255,target:60,induction:0,dish:0,incl:217,excl:144,longN:80,keep:55,drop:25,dropWhy:"소음이 커요 (6건)",cons:[["소음이 커요", 20], ["세척이 번거로워요", 15], ["예열이 오래 걸려요", 9]],site:"primo.co.kr/p44",spec:[["용량", "5.5L"], ["정격", "1,700W"], ["무게", "5.2kg"], ["부속", "바스켓 2종"], ["제조", "중국"], ["보증", "1년"]],dealPrice:102500,endDate:"8월 2일"},
+{id:"p45",brand:"온담",checked:"2026.06.24",name:"스테인리스 전기포트 1.7L",sub:"전기포트",cat:"appl",tint:"green",label:"의견 갈림",n:298,price:45000,low:38300,lowNote:"2026.04 자사몰 세일 · 8일간 유지",deal:"open",wait:466,target:100,induction:0,dish:0,incl:298,excl:170,longN:53,keep:41,drop:12,dropWhy:"소음이 커요 (5건)",cons:[["소음이 커요", 28], ["세척이 번거로워요", 21], ["예열이 오래 걸려요", 12]],site:"nova.co.kr/p45",spec:[["용량", "5.5L"], ["정격", "1,700W"], ["무게", "5.2kg"], ["부속", "바스켓 2종"], ["제조", "중국"], ["보증", "1년"]],dealPrice:39400,endDate:"8월 5일"},
+{id:"p46",brand:"프리모",checked:"2026.07.24",name:"2구 토스터",sub:"토스터",cat:"appl",tint:"warm",label:"표본 부족",n:12,price:62000,low:50900,lowNote:"2026.03 자사몰 세일 · 13일간 유지",deal:"gathering",wait:116,target:100,induction:0,dish:0,incl:12,excl:5,longN:42,keep:37,drop:5,dropWhy:"- (5건)",cons:[],site:"primo.co.kr/p46",spec:[["용량", "5.5L"], ["정격", "1,700W"], ["무게", "5.2kg"], ["부속", "바스켓 2종"], ["제조", "중국"], ["보증", "1년"]]},
+{id:"p47",brand:"프리모",checked:"2026.05.26",name:"고속 블렌더 1.5L",sub:"블렌더",cat:"appl",tint:"gray",label:"의견 갈림",n:120,price:158000,low:142500,lowNote:"2026.03 자사몰 세일 · 8일간 유지",deal:"postponed",wait:369,target:60,induction:0,dish:1,incl:120,excl:63,longN:38,keep:24,drop:14,dropWhy:"소음이 커요 (18건)",cons:[["소음이 커요", 11], ["세척이 번거로워요", 8], ["예열이 오래 걸려요", 5]],site:"primo.co.kr/p47",spec:[["용량", "5.5L"], ["정격", "1,700W"], ["무게", "5.2kg"], ["부속", "바스켓 2종"], ["제조", "중국"], ["보증", "1년"]],pWhy:"시점이 맞지 않아서",pDate:"6.12"},
+{id:"p48",brand:"한스틸",checked:"2026.06.22",name:"2단 식기건조대",sub:"식기건조기",cat:"appl",tint:"gray",label:"대체로 만족",n:129,price:54000,low:44300,lowNote:"2026.03 자사몰 세일 · 9일간 유지",deal:"none",wait:222,target:100,induction:0,dish:1,incl:129,excl:78,longN:63,keep:39,drop:24,dropWhy:"소음이 커요 (6건)",cons:[["소음이 커요", 12], ["세척이 번거로워요", 9], ["예열이 오래 걸려요", 5]],site:"hansteel.co.kr/p48",spec:[["용량", "5.5L"], ["정격", "1,700W"], ["무게", "5.2kg"], ["부속", "바스켓 2종"], ["제조", "중국"], ["보증", "1년"]]},
+{id:"p49",brand:"미리내",checked:"2026.06.22",name:"도자 접시 4인 세트",sub:"접시",cat:"dish",tint:"sand",label:"표본 부족",n:12,price:68000,low:62000,lowNote:"2026.01 자사몰 세일 · 10일간 유지",deal:"none",wait:374,target:100,induction:0,dish:0,incl:12,excl:10,longN:21,keep:8,drop:13,dropWhy:"- (12건)",cons:[],site:"mirinae.co.kr/p49",spec:[["재질", "도자기"], ["구성", "4인 세트"], ["전자레인지", "가능"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]]},
+{id:"p50",brand:"미리내",checked:"2026.07.12",name:"도자 공기 대접 세트",sub:"볼·공기",cat:"dish",tint:"warm",label:"대체로 불만",n:177,price:52000,low:44700,lowNote:"2026.03 자사몰 세일 · 13일간 유지",deal:"gathering",wait:395,target:100,induction:0,dish:1,incl:177,excl:153,longN:48,keep:33,drop:15,dropWhy:"이가 잘 나가요 (11건)",cons:[["이가 잘 나가요", 10], ["전자레인지 사용이 안 돼요", 6], ["무거워요", 4]],site:"mirinae.co.kr/p50",spec:[["재질", "도자기"], ["구성", "4인 세트"], ["전자레인지", "가능"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]]},
+{id:"p51",brand:"미리내",checked:"2026.07.14",name:"도자 머그 2p",sub:"머그",cat:"dish",tint:"sand",label:"대체로 불만",n:100,price:24000,low:19800,lowNote:"2026.02 자사몰 세일 · 11일간 유지",deal:"none",wait:232,target:100,induction:0,dish:1,incl:100,excl:50,longN:62,keep:50,drop:12,dropWhy:"이가 잘 나가요 (14건)",cons:[["이가 잘 나가요", 5], ["전자레인지 사용이 안 돼요", 3], ["무거워요", 3]],site:"mirinae.co.kr/p51",spec:[["재질", "도자기"], ["구성", "4인 세트"], ["전자레인지", "가능"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]]},
+{id:"p52",brand:"노바",checked:"2026.07.22",name:"내열 유리컵 6p",sub:"유리컵",cat:"dish",tint:"green",label:"대체로 만족",n:267,price:28000,low:25600,lowNote:"2026.05 자사몰 세일 · 15일간 유지",deal:"none",wait:113,target:100,induction:0,dish:0,incl:267,excl:114,longN:86,keep:59,drop:27,dropWhy:"이가 잘 나가요 (16건)",cons:[["이가 잘 나가요", 15], ["전자레인지 사용이 안 돼요", 10], ["무거워요", 6]],site:"nova.co.kr/p52",spec:[["재질", "도자기"], ["구성", "4인 세트"], ["전자레인지", "가능"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]]},
+{id:"p53",brand:"한스틸",checked:"2026.07.19",name:"스테인리스 수저 4벌",sub:"수저",cat:"dish",tint:"gray",label:"표본 부족",n:12,price:36000,low:31300,lowNote:"2026.04 자사몰 세일 · 7일간 유지",deal:"none",wait:475,target:100,induction:0,dish:0,incl:12,excl:5,longN:63,keep:56,drop:7,dropWhy:"- (16건)",cons:[],site:"hansteel.co.kr/p53",spec:[["재질", "도자기"], ["구성", "4인 세트"], ["전자레인지", "가능"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]]},
+{id:"p54",brand:"우드림",checked:"2026.07.18",name:"리넨 앞치마",sub:"앞치마",cat:"misc",tint:"warm",label:"대체로 만족",n:223,price:34000,low:28900,lowNote:"2026.04 자사몰 세일 · 10일간 유지",deal:"open",wait:163,target:100,induction:0,dish:1,incl:223,excl:157,longN:50,keep:24,drop:26,dropWhy:"금방 해져요 (15건)",cons:[["금방 해져요", 11], ["냄새가 배요", 7], ["크기가 애매해요", 4]],site:"woodream.co.kr/p54",spec:[["재질", "리넨"], ["크기", "프리"], ["세탁", "기계세탁 가능"], ["제조", "한국"], ["보증", null]],dealPrice:28100,endDate:"8월 12일"},
+{id:"p55",brand:"노바",checked:"2026.06.27",name:"천연 수세미 6p",sub:"행주·수세미",cat:"misc",tint:"green",label:"대체로 만족",n:130,price:9000,low:7400,lowNote:"2026.02 자사몰 세일 · 14일간 유지",deal:"none",wait:473,target:100,induction:0,dish:1,incl:130,excl:123,longN:68,keep:40,drop:28,dropWhy:"금방 해져요 (17건)",cons:[["금방 해져요", 6], ["냄새가 배요", 4], ["크기가 애매해요", 3]],site:"nova.co.kr/p55",spec:[["재질", "리넨"], ["크기", "프리"], ["세탁", "기계세탁 가능"], ["제조", "한국"], ["보증", null]]},
+{id:"p56",brand:"노바",checked:"2026.05.15",name:"실리콘 오븐장갑",sub:"장갑",cat:"misc",tint:"sand",label:"대체로 만족",n:266,price:14000,low:11600,lowNote:"2026.03 자사몰 세일 · 15일간 유지",deal:"gathering",wait:55,target:100,induction:0,dish:1,incl:266,excl:141,longN:30,keep:20,drop:10,dropWhy:"금방 해져요 (11건)",cons:[["금방 해져요", 13], ["냄새가 배요", 8], ["크기가 애매해요", 5]],site:"nova.co.kr/p56",spec:[["재질", "리넨"], ["크기", "프리"], ["세탁", "기계세탁 가능"], ["제조", "한국"], ["보증", null]]},
+{id:"p57",brand:"한스틸",checked:"2026.06.22",name:"2단 싱크선반",sub:"수납선반",cat:"misc",tint:"gray",label:"의견 갈림",n:151,price:48000,low:44000,lowNote:"2026.04 자사몰 세일 · 15일간 유지",deal:"talking",wait:116,target:100,induction:0,dish:1,incl:151,excl:82,longN:85,keep:55,drop:30,dropWhy:"금방 해져요 (4건)",cons:[["금방 해져요", 7], ["냄새가 배요", 5], ["크기가 애매해요", 3]],site:"hansteel.co.kr/p57",spec:[["재질", "리넨"], ["크기", "프리"], ["세탁", "기계세탁 가능"], ["제조", "한국"], ["보증", null]],tDate:"7.25"},
+{id:"p58",brand:"노바",checked:"2026.07.26",name:"페달 휴지통 20L",sub:"휴지통",cat:"misc",tint:"green",label:"의견 갈림",n:190,price:39000,low:34400,lowNote:"2026.05 자사몰 세일 · 10일간 유지",deal:"gathering",wait:56,target:100,induction:0,dish:1,incl:190,excl:169,longN:38,keep:31,drop:7,dropWhy:"금방 해져요 (15건)",cons:[["금방 해져요", 9], ["냄새가 배요", 6], ["크기가 애매해요", 3]],site:"nova.co.kr/p58",spec:[["재질", "리넨"], ["크기", "프리"], ["세탁", "기계세탁 가능"], ["제조", "한국"], ["보증", null]]}];
 const byId=i=>P.find(p=>p.id===i);
+let SEED=Date.now();
+const reshuffle=()=>{SEED=Date.now()+Math.floor(Math.random()*99999)};
+const shuffle=a=>{const r=a.slice();for(let i=r.length-1;i>0;i--){
+ const x=Math.sin(SEED+i)*10000,j=Math.floor((x-Math.floor(x))*(i+1));[r[i],r[j]]=[r[j],r[i]]}return r};
 const CH={kakao:'카카오톡',naver:'네이버',phone:'휴대폰'};
+const CATS=[
+ {k:'조리팬',   g:'pan',   subs:['프라이팬','웍','궁중팬','계란말이팬','그릴팬','전골팬']},
+ {k:'냄비·솥',  g:'pot',   subs:['편수냄비','양수냄비','전골냄비','압력솥','밥솥·곰솥','주전자']},
+ {k:'무쇠·주물',g:'grill', subs:['무쇠팬','더치오븐','그리들','석쇠·불판']},
+ {k:'칼·도마',  g:'knife', subs:['셰프나이프','과도','빵칼','가위','도마','숫돌']},
+ {k:'조리도구', g:'tool',  subs:['뒤집개','국자','집게','거품기','계량도구','채반·볼']},
+ {k:'베이킹',   g:'bake',  subs:['오븐팬','케이크틀','머핀틀','밀대','실리콘몰드']},
+ {k:'보관용기', g:'store', subs:['밀폐용기','유리용기','진공용기','저장병','도시락']},
+ {k:'주방가전', g:'appl',  subs:['에어프라이어','전기포트','토스터','블렌더','식기건조기']},
+ {k:'식기·컵',  g:'dish',  subs:['접시','볼·공기','머그','유리컵','수저']},
+ {k:'주방잡화', g:'misc',  subs:['앞치마','행주·수세미','장갑','수납선반','휴지통']},
+];
+const SUB2CAT={};CATS.forEach(c=>c.subs.forEach(x=>SUB2CAT[x]=c.k));
+const CATN=k=>P.filter(x=>SUB2CAT[x.sub]===k).length;
+
 const won=n=>Number(n).toLocaleString('ko-KR')+'원';
 const ladder=p=>{const g=Math.round(((p.price-p.low)/2)/100)*100;const base=[86,168,294,421,537];
  return [p.price,p.price-g,p.low,p.low-g,p.low-g*2].map((v,i)=>({price:Math.round(v/100)*100,people:Math.round(base[i]*(p.wait/421))+4,mid:i===2}))};
@@ -168,7 +258,7 @@ const AUDIT=[
 ];
 
 /* ── 상태 ── */
-const S={stack:[{s:'home'}],tab:'home',banner:1,atab:'cand',appr:{},aud:{},mine:0,cat:'전체',brand:null,drawer:0,ptab:'info',user:null,pending:null,noti:{open:1,post:1,drop:1,week:0},sheet:null,q:'',filters:[],picks:[],waits:{},bought:{},contact:'',tmp:null,toast:null};
+const S={stack:[{s:'home'}],tab:'home',banner:1,view:'grid',sec:null,opencat:null,glist:null,rlist:null,rax:'all',rpick:null,atab:'cand',appr:{},aud:{},mine:0,cat:'전체',brand:null,drawer:0,ptab:'info',user:null,pending:null,noti:{open:1,post:1,drop:1,week:0},sheet:null,q:'',filters:[],picks:[],waits:{},bought:{},contact:'',tmp:null,toast:null};
 const cur=()=>S.stack[S.stack.length-1];
 const go=(s,id)=>{S.stack.push({s,id});draw()};
 const back=()=>{if(S.stack.length>1){S.stack.pop();draw()}};
@@ -179,7 +269,7 @@ const waitCount=p=>p.wait+(S.waits[p.id]?1:0);
 /* ── 조각 ── */
 const bar=(t,sh)=>`<div class="bar"><div class="line"><button data-a="back">${ic('back',20)}</button><h1>${t}</h1>${sh?ic('share',17):'<span style="width:17px"></span>'}</div></div>`;
 const tabs=()=>`<div class="tabs">${[['home','홈','home'],['reviews','후기','chat'],['me','내 정보','user']]
- .map(([k,l,i])=>`<button class="tab ${S.tab===k?'on':''}" data-a="root:${k}">${ic(i,21,S.tab===k?'#0F6E56':'#A39E93')}${l}</button>`).join('')}</div>`;
+ .map(([k,l,i])=>`<button class="tab ${S.tab===k?'on':''}" data-a="${k==='home'?'goHome':'root:'+k}">${ic(i,21,S.tab===k?'#0F6E56':'#A39E93')}${l}</button>`).join('')}</div>`;
 const bellBtn=p=>`<span data-a="price:${p.id}" style="width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${S.waits[p.id]?'#0F6E56':'#EDF2EF'}">${S.waits[p.id]?ic('check',17,'#FCFAF5'):ic('bell',17,'#0F6E56')}</span>`;
 const rowItem=(p,right)=>`<div class="card" style="padding:12px 13px;margin-bottom:9px;display:flex;gap:11px;align-items:center">
  <div data-a="product:${p.id}" style="display:flex;gap:11px;align-items:center;flex:1;min-width:0;cursor:pointer">${th(p)}
@@ -190,10 +280,10 @@ const rowItem=(p,right)=>`<div class="card" style="padding:12px 13px;margin-bott
 const V={};
 
 V.home=()=>{
- const CATS=['전체','프라이팬','냄비·솥','웍','칼','무쇠·주물'];
- const fit=x=>(S.cat==='전체'||x.sub===S.cat)&&(!S.brand||x.brand===S.brand);
- const g=k=>P.filter(x=>x.deal===k&&fit(x));
+ const fit=x=>(S.cat==='전체'||x.sub===S.cat||SUB2CAT[x.sub]===S.cat)&&(!S.brand||x.brand===S.brand);
+ const g=k=>shuffle(P.filter(x=>x.deal===k&&fit(x)));
  const openL=g('open'),talkL=g('talking'),gathL=g('gathering'),postL=g('postponed');
+ const total=openL.length+talkL.length+gathL.length+postL.length;
  const gcard=x=>{const off=x.dealPrice?Math.round((1-x.dealPrice/x.price)*100):0;
   return `<div class="card" data-a="product:${x.id}" style="overflow:hidden;cursor:pointer">
   <div style="height:118px;background:${TINT[x.tint]};display:flex;align-items:center;justify-content:center;position:relative">
@@ -212,58 +302,278 @@ V.home=()=>{
       <span class="tiny"> 지금 최저가</span></div>
       <div class="tiny num" style="margin-top:3px">${x.deal==='gathering'?`${waitCount(x)} / ${x.target}명 모임`:x.deal==='talking'?'브랜드와 이야기 중':'이번엔 미뤄뒀어요'}</div>`}
    <div class="meta" style="margin-top:7px;padding-top:7px;border-top:.5px solid #F0EBE0">${x.label} · 후기 ${x.n}건</div></div></div>`};
- const sec=(t,d,arr)=>arr.length?`<div class="pad sec"><div class="h2" style="margin-bottom:3px">${t}</div>
-  <div class="meta" style="margin-bottom:12px">${d}</div><div class="grid">${arr.map(gcard).join('')}</div></div>`:'';
- return `<div class="bar"><div class="line">
+ const sec=(k,t,d,arr)=>arr.length?`<div class="pad sec">
+  <div class="row" style="margin-bottom:3px"><span class="h2">${t}</span>
+  ${arr.length?`<button class="meta" data-a="glist:${k}" style="display:flex;align-items:center;gap:3px">더보기 <span class="num">${arr.length}</span> ${ic('next',13,'#8A867D')}</button>`:''}</div>
+  <div class="meta" style="margin-bottom:12px">${d}</div>
+  <div class="grid">${arr.slice(0,4).map(gcard).join('')}</div></div>`:'';
+
+ const mini=x=>`<div data-a="product:${x.id}" style="cursor:pointer;flex:0 0 108px">
+  <div class="thumb" style="width:108px;height:84px;border-radius:12px;background:${TINT[x.tint]};display:flex;align-items:center;justify-content:center;position:relative">
+   <svg width="46" height="46" viewBox="0 0 64 64" fill="none" stroke="rgba(43,42,40,.42)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${GLY[x.cat]}</svg>
+   ${x.deal==='open'?`<span class="badge b-amber num" style="position:absolute;top:6px;left:6px;font-size:9.5px;padding:2px 6px">협상가 ${(x.dealPrice/10000).toFixed(1)}만</span>`:''}</div>
+  <div style="font-size:11.5px;font-weight:600;margin-top:6px;line-height:1.35;letter-spacing:-.02em">${x.name}</div>
+  <div class="tiny num" style="margin-top:2px">${won(x.deal==='open'?x.dealPrice:x.price)}</div></div>`;
+
+ const catView=CATS.map(c=>{const ps=shuffle(P.filter(x=>SUB2CAT[x.sub]===c.k));
+  return `<div class="pad sec">
+  <div class="row" style="margin-bottom:3px">
+   <span style="display:flex;align-items:center;gap:8px">
+   <svg width="20" height="20" viewBox="0 0 64 64" fill="none" stroke="#8C8578" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${GLY[c.g]}</svg>
+   <span class="h2">${c.k}</span></span>
+   <button class="meta" data-a="cat:${c.k}" style="display:flex;align-items:center;gap:3px">전체 <span class="num">${ps.length}</span> ${ic('next',13,'#8A867D')}</button></div>
+  <div class="meta" style="margin-bottom:11px">${c.subs.join(' · ')}</div>
+  ${ps.length?`<div class="scroller2" style="margin:0 -18px 0 -20px">${ps.slice(0,8).map(mini).join('')}</div>`
+  :`<div class="soft" style="padding:16px;text-align:center"><div class="meta">아직 모은 제품이 없어요</div></div>`}</div>`}).join('');
+
+ const brandView=[...new Set(P.map(x=>x.brand))].map(b=>{const ps=shuffle(P.filter(x=>x.brand===b));
+  const c={open:0,talking:0,gathering:0,postponed:0,none:0};ps.forEach(x=>c[x.deal]++);
+  const cats=[...new Set(ps.map(x=>SUB2CAT[x.sub]))];
+  const stat=[['open','협상 완료','#A0610F','#F7EDDF'],['talking','협상 중','#33564A','#E4EFEA'],
+              ['gathering','수요 모집','#33564A','#E4EFEA'],['postponed','미뤄둠','#6E6A60','#EDE8DC']];
+  return `<div class="pad sec">
+  <div class="card" style="padding:14px 15px;margin-bottom:11px">
+   <div class="row" style="align-items:flex-start">
+    <div style="min-width:0;flex:1">
+     <div style="font-size:16px;font-weight:600;letter-spacing:-.03em">${b}</div>
+     <div class="tiny" style="margin-top:3px">${cats.join(' · ')}</div></div>
+    <button class="chip" data-a="brandSel:${b}" style="flex-shrink:0">전체 ${ps.length}</button></div>
+   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px">
+    ${stat.map(([k,t,fg,bg])=>{const n=c[k],has=n>0;
+     return `<div ${has?`data-a="brandStat:${b}:${k}" style="cursor:pointer;`:'style="'}background:${has?bg:'#F4F1EA'};border-radius:10px;padding:9px 6px;text-align:center">
+     <div class="num" style="font-size:17px;font-weight:600;letter-spacing:-.03em;color:${has?fg:'#C4BFB4'}">${n}</div>
+     <div style="font-size:10px;margin-top:2px;color:${has?fg:'#BDB8AD'};${has?'opacity:.85':''};white-space:nowrap">${t}</div></div>`}).join('')}</div></div>
+  <div class="scroller2" style="margin:0 -18px 0 -20px">${ps.slice(0,8).map(mini).join('')}</div></div>`}).join('');
+
+ const label=S.brand?S.brand:(S.cat!=='전체'?S.cat:null);
+ const topbar=S.view!=='grid'
+  ?`<div class="bar"><div class="line"><button data-a="clearFilter">${ic('back',20)}</button>
+    <h1>${S.view==='cat'?'카테고리로 찾기':'브랜드로 찾기'}</h1><span style="width:19px"></span></div></div>`
+  :`<div class="bar"><div class="line">
  <button data-a="openDrawer" style="display:flex;align-items:center;gap:8px">
   <span style="display:block"><span style="display:block;width:17px;height:1.7px;background:#4A4740;border-radius:1px"></span>
   <span style="display:block;width:17px;height:1.7px;background:#4A4740;border-radius:1px;margin-top:4px"></span>
   <span style="display:block;width:12px;height:1.7px;background:#4A4740;border-radius:1px;margin-top:4px"></span></span></button>
  <div style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em">다들</span></div>
- <div style="display:flex;gap:14px"><button data-a="search">${ic('search',19)}</button><button data-a="noti">${ic('bell',19)}</button></div></div></div>
+ <div style="display:flex;gap:14px"><button data-a="search">${ic('search',19)}</button><button data-a="noti">${ic('bell',19)}</button></div></div></div>`;
+ return topbar+`
  <div class="body">
-
- <div class="scroller" style="padding-top:16px">${CATS.map(c=>`<span class="chip ${S.cat===c?'on':''}" data-a="cat:${c}">${c}</span>`).join('')}</div>
- ${S.brand?`<div class="pad" style="padding-top:12px"><span class="chip sel" data-a="brandSel:">${S.brand} ${ic('x',13,'#FCFAF5')}</span></div>`:''}
-
- ${sec('지금 사실 수 있어요','협상이 끝나 열려 있어요',openL)}
- ${sec('곧 열려요','수요를 들고 브랜드와 이야기하는 중이에요',talkL)}
- ${sec('수요가 모이는 중','목표에 닿으면 협상을 시작해요',gathL)}
- ${sec('이번엔 미뤄뒀어요','안 된 것도 남겨둘게요. 등록은 그대로 있어요',postL)}
- ${openL.length+talkL.length+gathL.length+postL.length?'':`<div class="pad" style="padding-top:50px;text-align:center">
-  <div class="h2">이 조건에 맞는 제품이 아직 없어요</div><div class="sub" style="margin-top:8px">다른 카테고리를 보시거나 전체로 돌아가 보세요.</div>
-  <button class="btn ghost" style="margin-top:16px" data-a="cat:전체">전체 보기</button></div>`}
-
- <div class="pad sec"><div class="h2" style="margin-bottom:12px">브랜드로 보기</div>
- <div style="display:flex;gap:7px;flex-wrap:wrap">${[...new Set(P.map(x=>x.brand))].map(b=>`<span class="chip" data-a="brandSel:${b}">${b}</span>`).join('')}</div></div>
-
+ ${S.view==='grid'&&!label?`<div class="pad" style="padding-top:14px">
+  <div style="background:#EFEBE0;border-radius:14px;padding:13px 15px;display:flex;gap:11px;align-items:center">
+  <div style="flex:1;min-width:0">
+   <div style="font-size:13px;font-weight:600;letter-spacing:-.02em">후기로 고르고, 모여서 깎아 삽니다</div>
+   <div class="tiny" style="margin-top:3px;line-height:1.6">기다리는 분이 모이면 브랜드와 값을 협상하고, 판매처를 열어드려요.</div></div>
+  <button class="chip" data-a="method" style="flex-shrink:0">어떻게요?</button></div></div>`:''}
+ ${label?`<div class="pad" style="padding-top:14px"><div class="row">
+  <span class="chip sel" data-a="clearFilter">${label} ${ic('x',13,'#FCFAF5')}</span>
+  <span class="meta num">${total}개</span></div></div>`:''}
+ ${S.view==='cat'?catView+'<div style="height:26px"></div>':S.view==='brand'?brandView+'<div style="height:26px"></div>':`
+ ${sec('open','지금 살 수 있어요','협상이 끝난 제품이에요. 판매처에서 바로 사실 수 있어요',openL)}
+ ${sec('talking','곧 살 수 있어요','수요를 들고 브랜드와 값을 이야기하는 중이에요',talkL)}
+ ${sec('gathering','수요가 모이는 중','목표에 닿으면 협상을 시작해요',gathL)}
+ ${sec('postponed','이번엔 미뤄뒀어요','안 된 것도 남겨둘게요. 등록은 그대로 있어요',postL)}
+ ${sec('none','아직 순서가 아니에요','후기는 모았지만 협상은 아직이에요',g('none').slice(0,4))}
+ ${total?'':`<div class="pad" style="padding-top:50px;text-align:center">
+  <div class="h2">이 갈래는 아직 준비 중이에요</div>
+  <div class="sub" style="margin-top:8px">모은 제품이 쌓이면 여기에 올려둘게요.<br>찾으시는 제품이 있으면 알려주세요.</div>
+  <div style="padding:0 20px"><button class="btn teal" style="margin-top:16px" data-a="search">제품 찾아보기</button>
+  <button class="btn ghost" style="margin-top:8px" data-a="clearFilter">전체 보기</button></div></div>`}
+ <div class="pad sec"><div class="grid">
+  <div class="card" data-a="view:cat" style="padding:15px 14px;cursor:pointer">
+  <div class="h3" style="font-size:13px">카테고리로 찾기</div><div class="tiny" style="margin-top:3px">${CATS.length}개 갈래</div></div>
+  <div class="card" data-a="view:brand" style="padding:15px 14px;cursor:pointer">
+  <div class="h3" style="font-size:13px">브랜드로 찾기</div><div class="tiny" style="margin-top:3px">${new Set(P.map(x=>x.brand)).size}개 브랜드</div></div></div></div>`}
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" data-a="log" style="padding:16px 17px;cursor:pointer">
  <div class="h3" style="font-size:14px;margin-bottom:6px">이번 달에 12번 이야기해서 3번 됐어요</div>
  <div style="font-size:12.5px;color:#5F5B52;line-height:1.75">안 된 것도 숫자 그대로 적어둡니다. 무엇을 걸렀는지 보이지 않으면 고른 것도 못 믿으니까요.</div>
  <div style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:#0F6E56;font-weight:500">협상 기록 보기 ${ic('arrow',15,'#0F6E56')}</div></div></div>
  </div>${tabs()}`};
 
-V.reviews=()=>`
-<div class="bar"><div style="display:flex;align-items:center;gap:7px;margin-bottom:12px">${mark(20)}
-<span style="font-size:17px;font-weight:600;letter-spacing:-.03em">후기 모음</span><span class="meta" style="margin-left:2px">조리도구 142개</span></div>
-<button data-a="search" style="background:#F1ECE0;border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:8px;width:100%">
-${ic('search',17)}<span style="font-size:13px;color:#A39E93">브랜드 · 제품명 · 궁금한 점</span></button></div>
-<div class="body">
- <div class="scroller" style="padding-top:16px">${['전체','프라이팬','냄비·솥','웍','칼','무쇠·주물'].map((c,i)=>`<span class="chip ${i?'':'on'}">${c}</span>`).join('')}</div>
- <div class="pad sec"><div class="row" style="margin-bottom:3px"><span class="h2">후기가 가장 많이 쌓인</span><span class="meta">더 보기</span></div>
- <div class="meta" style="margin-bottom:12px">수집한 후기 건수 순</div>
- ${[...P].sort((a,b)=>b.n-a.n).slice(0,3).map(p=>rowItem(p,bellBtn(p))).join('')}</div>
- <div class="pad sec"><div class="row" style="margin-bottom:3px"><span class="h2">문제 언급이 가장 적은</span><span class="meta">더 보기</span></div>
- <div class="meta" style="margin-bottom:12px">후기 50건 이상인 제품만 · 언급률 낮은 순</div>
- ${['p7','p4'].map(byId).map(p=>rowItem(p,bellBtn(p))).join('')}</div>
+V.glist=()=>{
+ const M={open:['지금 살 수 있어요','협상이 끝난 제품이에요. 판매처에서 바로 사실 수 있어요'],
+  talking:['곧 살 수 있어요','수요를 들고 브랜드와 값을 이야기하는 중이에요'],
+  gathering:['수요가 모이는 중','목표에 닿으면 협상을 시작해요'],
+  postponed:['이번엔 미뤄뒀어요','안 된 것도 남겨둘게요. 등록은 그대로 있어요'],
+  none:['아직 순서가 아니에요','후기는 모았지만 협상은 아직이에요']};
+ const k=S.glist||'open',[t,d]=M[k];
+ const arr=shuffle(P.filter(x=>x.deal===k&&(S.cat==='전체'||x.sub===S.cat||SUB2CAT[x.sub]===S.cat)&&(!S.brand||x.brand===S.brand)));
+ const gcard=x=>{const off=x.dealPrice?Math.round((1-x.dealPrice/x.price)*100):0;
+  return `<div class="card" data-a="product:${x.id}" style="overflow:hidden;cursor:pointer">
+  <div style="height:110px;background:${TINT[x.tint]};display:flex;align-items:center;justify-content:center;position:relative">
+   <svg width="60" height="60" viewBox="0 0 64 64" fill="none" stroke="rgba(43,42,40,.42)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${GLY[x.cat]}</svg>
+   ${x.deal==='open'?`<span class="badge b-amber" style="position:absolute;top:9px;left:9px">${x.endDate} 종료</span>`:''}
+   ${S.waits[x.id]?`<span class="badge b-teal" style="position:absolute;top:9px;right:9px">기다리는 중</span>`:''}</div>
+  <div style="padding:11px 12px 13px"><div class="tiny">${x.brand} · ${x.sub}</div>
+   <div class="h3" style="font-size:12.5px;margin-top:2px;line-height:1.45">${x.name}</div>
+   ${x.deal==='open'
+    ?`<div style="margin-top:8px;display:flex;align-items:baseline;gap:6px">
+      <span class="num" style="font-size:11px;color:#A0610F;font-weight:600">-${off}%</span>
+      <span class="num" style="font-size:15px;font-weight:600;letter-spacing:-.03em">${won(x.dealPrice)}</span></div>`
+    :`<div style="margin-top:8px"><span class="num" style="font-size:14px;font-weight:600">${won(x.price)}</span></div>
+      <div class="tiny num" style="margin-top:3px">${x.deal==='gathering'?`${waitCount(x)} / ${x.target}명`:''}</div>`}
+   <div class="meta" style="margin-top:7px;padding-top:7px;border-top:.5px solid #F0EBE0">${x.label} · 후기 ${x.n}건</div></div></div>`};
+ return `<div class="bar"><div class="line"><button data-a="back">${ic('back',20)}</button>
+ <h1>${t}</h1><button data-a="search">${ic('search',18)}</button></div></div>
+ <div class="body">
+ <div class="pad" style="padding-top:16px"><div class="meta">${d}</div></div>
+ <div class="scroller chiprow">
+ ${Object.keys(M).map(x=>`<span class="chip ${k===x?'on':''}" data-a="glist:${x}">${M[x][0]} ${P.filter(y=>y.deal===x).length}</span>`).join('')}</div>
+ <div class="pad" style="padding-top:14px"><div class="row" style="margin-bottom:12px">
+ <span class="meta num">${arr.length}개</span>
+ ${S.cat!=='전체'||S.brand?`<span class="chip sel" data-a="clearFilter">${S.brand||S.cat} ${ic('x',13,'#FCFAF5')}</span>`:''}</div>
+ ${arr.length?`<div class="grid">${arr.map(gcard).join('')}</div>`
+ :`<div style="padding:50px 0;text-align:center"><div class="h2">여기엔 아직 없어요</div>
+   <div class="sub" style="margin-top:8px">다른 상태를 눌러보시거나<br>필터를 지워보세요.</div></div>`}</div>
+ <div style="height:26px"></div></div>`};
+
+V.rlist=()=>{
+ const M={
+  many:['후기가 가장 많이 쌓인','수집한 후기 건수가 많은 순이에요',
+        a=>a.slice().sort((x,y)=>y.n-x.n)],
+  clean:['문제 언급이 가장 적은','후기 50건 이상인 제품만 · 언급률이 낮은 순이에요',
+        a=>a.filter(x=>x.n>=48).slice().sort((x,y)=>(x.cons[0]?x.cons[0][1]/x.n:0)-(y.cons[0]?y.cons[0][1]/y.n:0))],
+  long:['오래 쓴 사람이 많은','6개월 넘게 쓰신 분이 많은 순이에요',
+        a=>a.filter(x=>x.longN>0).slice().sort((x,y)=>y.longN-x.longN)],
+  keep:['계속 쓴다는 비율이 높은','오래 쓰신 분 중 계속 쓰는 비율 순이에요',
+        a=>a.filter(x=>x.keep+x.drop>=10).slice().sort((x,y)=>y.keep/(y.keep+y.drop)-x.keep/(x.keep+x.drop))],
+  thin:['아직 판단하기 이른','후기가 더 모여야 말씀드릴 수 있어요',
+        a=>a.filter(x=>x.label==='표본 부족')],
+ };
+ const k=S.rlist||'many',[t,d,fn]=M[k];
+ const base=P.filter(x=>(S.cat==='전체'||x.sub===S.cat||SUB2CAT[x.sub]===S.cat)&&(!S.brand||x.brand===S.brand));
+ const arr=fn(base);
+ const extra=x=>{
+  if(k==='clean')return x.cons[0]?`문제 언급 ${Math.round(x.cons[0][1]/x.n*100)}%`:'문제 언급 없음';
+  if(k==='long')return `6개월 이상 ${x.longN}명`;
+  if(k==='keep')return `계속 쓴다 ${Math.round(x.keep/(x.keep+x.drop)*100)}%`;
+  if(k==='thin')return `후기 ${x.n}건 · 30건 넘으면 판단해요`;
+  return `후기 ${x.n}건`;
+ };
+ const row=x=>`<div class="card" style="padding:12px 13px;margin-bottom:9px;display:flex;gap:11px;align-items:center">
+  <div data-a="product:${x.id}" style="display:flex;gap:11px;align-items:center;flex:1;min-width:0;cursor:pointer">${th(x)}
+  <div style="min-width:0;flex:1">
+   <div class="tiny">${x.brand} · ${x.sub}</div>
+   <div class="h3" style="font-size:13px;margin-top:1px">${x.name}</div>
+   <div class="meta" style="margin-top:3px">${x.label} · <span class="num">${extra(x)}</span></div></div></div>
+  ${bellBtn(x)}</div>`;
+ const scope=S.brand||(S.cat!=='전체'?S.cat:null);
+ return `<div class="bar"><div class="line"><button data-a="back">${ic('back',20)}</button>
+ <h1>${scope||'후기 모음'}</h1><button data-a="search">${ic('search',18)}</button></div></div>
+ <div class="body">
+ <div class="pad" style="padding-top:18px">
+ ${scope?`<div class="tiny" style="margin-bottom:4px">${S.brand?'브랜드':'카테고리'} · ${scope}</div>`:''}
+ <div class="h1" style="font-size:19px">${t}</div>
+ <div class="sub" style="margin-top:7px">${d}${scope?` · ${scope} 안에서만 봅니다`:''}</div></div>
+ <div class="scroller chiprow">${Object.keys(M).map(x=>`<span class="chip ${k===x?'on':''}" data-a="rlist:${x}">${M[x][0]}</span>`).join('')}</div>
+ <div class="pad" style="padding-top:16px"><div class="row" style="margin-bottom:12px">
+  <span class="meta num">${arr.length}개</span>
+  ${S.cat!=='전체'||S.brand?`<span class="chip sel" data-a="clearFilter">${S.brand||S.cat} ${ic('x',13,'#FCFAF5')}</span>`:''}</div>
+ ${arr.length?arr.map(row).join('')
+ :`<div style="padding:46px 0;text-align:center"><div class="h2">여기엔 아직 없어요</div>
+   <div class="sub" style="margin-top:8px">다른 기준을 눌러보시거나<br>필터를 지워보세요.</div></div>`}</div>
+ <div style="height:26px"></div></div>`};
+
+V.reviews=()=>{
+ const AX=[['all','전체로 보기'],['cat','카테고리별'],['brand','브랜드별']];
+ const ax=S.rax||'all';
+ const best=(arr,fn)=>arr.slice().sort(fn)[0];
+ const line=(x,txt)=>`<div class="card" style="padding:12px 13px;margin-bottom:9px;display:flex;gap:11px;align-items:center">
+  <div data-a="product:${x.id}" style="display:flex;gap:11px;align-items:center;flex:1;min-width:0;cursor:pointer">${th(x)}
+  <div style="min-width:0;flex:1"><div class="tiny">${x.brand} · ${x.sub}</div>
+   <div class="h3" style="font-size:13px;margin-top:1px">${x.name}</div>
+   <div class="meta" style="margin-top:3px">${x.label} · <span class="num">${txt}</span></div></div></div>
+  ${bellBtn(x)}</div>`;
+
+ const allView=`
+ <div class="pad sec"><div class="row" style="margin-bottom:3px"><span class="h2">후기가 가장 많이 쌓인</span>
+  <button class="meta" data-a="rlist:many" style="display:flex;align-items:center;gap:3px">더 보기 ${ic('next',13,'#8A867D')}</button></div>
+  <div class="meta" style="margin-bottom:12px">수집한 후기 건수 순</div>
+  ${shuffle([...P].sort((a,b)=>b.n-a.n).slice(0,8)).slice(0,3).map(x=>line(x,`후기 ${x.n}건`)).join('')}</div>
+ <div class="pad sec"><div class="row" style="margin-bottom:3px"><span class="h2">문제 언급이 가장 적은</span>
+  <button class="meta" data-a="rlist:clean" style="display:flex;align-items:center;gap:3px">더 보기 ${ic('next',13,'#8A867D')}</button></div>
+  <div class="meta" style="margin-bottom:12px">후기 50건 이상인 제품만 · 언급률 낮은 순</div>
+  ${shuffle(P.filter(x=>x.n>=48&&x.label==='대체로 만족')).slice(0,3).map(x=>line(x,x.cons[0]?`문제 언급 ${Math.round(x.cons[0][1]/x.n*100)}%`:'문제 언급 없음')).join('')}</div>
+ <div class="pad sec"><div class="row" style="margin-bottom:3px"><span class="h2">오래 쓴 사람이 많은</span>
+  <button class="meta" data-a="rlist:long" style="display:flex;align-items:center;gap:3px">더 보기 ${ic('next',13,'#8A867D')}</button></div>
+  <div class="meta" style="margin-bottom:12px">6개월 넘게 쓰신 분이 많은 순</div>
+  ${shuffle(P.filter(x=>x.longN>=40)).slice(0,3).map(x=>line(x,`6개월 이상 ${x.longN}명`)).join('')}</div>
+ <div class="pad sec"><div class="row" style="margin-bottom:3px"><span class="h2">아직 판단하기 이른</span>
+  <button class="meta" data-a="rlist:thin" style="display:flex;align-items:center;gap:3px">더 보기 ${ic('next',13,'#8A867D')}</button></div>
+  <div class="meta" style="margin-bottom:12px">후기가 더 모여야 말씀드릴 수 있어요</div>
+  ${shuffle(P.filter(x=>x.label==='표본 부족')).slice(0,2).map(x=>line(x,`후기 ${x.n}건`)).join('')}</div>
  <div class="pad sec"><div class="h2" style="margin-bottom:12px">주제별로 모아 봤어요</div>
  ${[['코팅팬 12종 · 문제를 겪은 분들은 언제 겪었나','후기 1,847건 · 7월 22일 갱신'],['인덕션에서 정말 잘 되는 냄비 9종','후기 962건 · 7월 19일 갱신']]
- .map(([t,s])=>`<div class="card" data-a="list" style="padding:14px 15px;margin-bottom:9px;cursor:pointer"><div class="h3">${t}</div><div class="meta" style="margin-top:3px">${s}</div></div>`).join('')}</div>
+ .map(([t,sb])=>`<div class="card" data-a="list" style="padding:14px 15px;margin-bottom:9px;cursor:pointer"><div class="h3">${t}</div><div class="meta" style="margin-top:3px">${sb}</div></div>`).join('')}</div>`;
+
+ const secHead=(t,d,go2)=>`<div class="row" style="margin-bottom:3px"><span class="h2">${t}</span>
+  <button class="meta" data-a="${go2}" style="display:flex;align-items:center;gap:3px">더 보기 ${ic('next',13,'#8A867D')}</button></div>
+  <div class="meta" style="margin-bottom:11px">${d}</div>`;
+ const pick=(arr,fn,ex)=>{const c=arr.filter(x=>!ex||x.id!==ex.id).slice().sort(fn)[0];return c};
+ const rate=x=>x.cons[0]?x.cons[0][1]/x.n:0;
+
+ const catView=(()=>{
+  const avail=shuffle(CATS.filter(x=>CATN(x.k)));
+  const cur=S.rpick&&CATS.find(c=>c.k===S.rpick)?S.rpick:avail[0].k;
+  const c=CATS.find(x=>x.k===cur), ps=P.filter(x=>SUB2CAT[x.sub]===cur);
+  const a=pick(ps,(x,y)=>y.n-x.n);
+  const b=pick(ps.filter(x=>x.n>=48),(x,y)=>rate(x)-rate(y),a);
+  const d=pick(ps.filter(x=>x.longN>0),(x,y)=>y.longN-x.longN,a);
+  const e=ps.find(x=>x.label==='표본 부족');
+  const subs=c.subs.filter(sb=>P.some(x=>x.sub===sb));
+  return `
+  <div class="scroller chiprow" style="margin-top:10px">${avail.map(x=>`<span class="chip ${cur===x.k?'on':''}" data-a="rpick:${x.k}">${x.k} ${CATN(x.k)}</span>`).join('')}</div>
+  <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px">
+   <div class="row"><span style="display:flex;align-items:center;gap:9px">
+    <svg width="22" height="22" viewBox="0 0 64 64" fill="none" stroke="#8C8578" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${GLY[c.g]}</svg>
+    <span style="font-size:17px;font-weight:600;letter-spacing:-.03em">${c.k}</span></span>
+    <button class="chip" data-a="rcat:${c.k}">전체 ${ps.length}</button></div>
+   <div class="meta" style="margin-top:9px;line-height:1.7">후기 ${ps.reduce((t,x)=>t+x.n,0).toLocaleString('ko-KR')}건 · ${subs.join(' · ')}</div></div></div>
+  ${a?`<div class="pad sec">${secHead('후기가 가장 많아요','이 갈래에서 사람들이 가장 많이 말한 제품',`rgo:cat:${c.k}:many`)}${line(a,`후기 ${a.n}건`)}</div>`:''}
+  ${b?`<div class="pad sec">${secHead('문제 언급이 가장 적어요','후기 50건 이상 중에서',`rgo:cat:${c.k}:clean`)}${line(b,rate(b)?`문제 언급 ${Math.round(rate(b)*100)}%`:'문제 언급 없음')}</div>`:''}
+  ${d?`<div class="pad sec">${secHead('오래 쓴 사람이 많아요','6개월 넘게 쓰신 분 기준',`rgo:cat:${c.k}:long`)}${line(d,`6개월 이상 ${d.longN}명`)}</div>`:''}
+  ${e?`<div class="pad sec">${secHead('아직 판단하기 일러요','후기가 더 모여야 말씀드릴 수 있어요',`rgo:cat:${c.k}:thin`)}${line(e,`후기 ${e.n}건`)}</div>`:''}
+  <div class="pad" style="padding-top:20px"><button class="btn ghost" data-a="rcat:${c.k}">${c.k} 전체 ${ps.length}개 보기</button></div>`;
+ })();
+
+ const brandView=(()=>{
+  const BR=shuffle([...new Set(P.map(x=>x.brand))]);
+  const cur=S.rpick&&BR.includes(S.rpick)?S.rpick:BR[0];
+  const ps=P.filter(x=>x.brand===cur);
+  const g=ps.filter(x=>x.label==='대체로 만족').length, bd=ps.filter(x=>x.label==='대체로 불만').length;
+  const tot=ps.reduce((t,x)=>t+x.n,0);
+  const a=pick(ps,(x,y)=>y.n-x.n);
+  const b=pick(ps.filter(x=>x.n>=48),(x,y)=>rate(x)-rate(y),a);
+  const d=pick(ps.filter(x=>x.keep+x.drop>=10),(x,y)=>y.keep/(y.keep+y.drop)-x.keep/(x.keep+x.drop),a);
+  const bar=[['#0F6E56',g],['#C9B896',ps.length-g-bd],['#A98A72',bd]].filter(([,n])=>n>0);
+  return `
+  <div class="scroller chiprow" style="margin-top:10px">${BR.map(x=>`<span class="chip ${cur===x?'on':''}" data-a="rpick:${x}">${x} ${P.filter(y=>y.brand===x).length}</span>`).join('')}</div>
+  <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px">
+   <div class="row"><span style="font-size:17px;font-weight:600;letter-spacing:-.03em">${cur}</span>
+    <button class="chip" data-a="rbrand:${cur}">전체 ${ps.length}</button></div>
+   <div class="meta" style="margin-top:7px">후기 ${tot.toLocaleString('ko-KR')}건 · ${[...new Set(ps.map(x=>SUB2CAT[x.sub]))].join(' · ')}</div>
+   <div style="display:flex;height:7px;border-radius:4px;overflow:hidden;margin-top:12px">
+    ${bar.map(([c2,n])=>`<div style="width:${n/ps.length*100}%;background:${c2}"></div>`).join('')}</div>
+   <div style="display:flex;gap:12px;margin-top:9px;font-size:11px;color:#7D796F">
+    <span><b style="color:#0F6E56">${g}</b> 만족</span><span><b style="color:#8C7F6C">${ps.length-g-bd}</b> 갈림</span>
+    <span><b style="color:#8C6A45">${bd}</b> 불만</span></div></div></div>
+  ${a?`<div class="pad sec">${secHead('후기가 가장 많아요','이 브랜드에서 사람들이 가장 많이 말한 제품',`rgo:brand:${cur}:many`)}${line(a,`후기 ${a.n}건`)}</div>`:''}
+  ${b?`<div class="pad sec">${secHead('문제 언급이 가장 적어요','후기 50건 이상 중에서',`rgo:brand:${cur}:clean`)}${line(b,rate(b)?`문제 언급 ${Math.round(rate(b)*100)}%`:'문제 언급 없음')}</div>`:''}
+  ${d?`<div class="pad sec">${secHead('계속 쓴다는 비율이 높아요','오래 쓰신 분 중에서',`rgo:brand:${cur}:keep`)}${line(d,`계속 쓴다 ${Math.round(d.keep/(d.keep+d.drop)*100)}%`)}</div>`:''}
+  <div class="pad" style="padding-top:20px"><button class="btn ghost" data-a="rbrand:${cur}">${cur} 전체 ${ps.length}개 보기</button></div>`;
+ })();
+
+ return `<div class="bar"><div style="display:flex;align-items:center;gap:7px;margin-bottom:12px">${mark(20)}
+ <span style="font-size:17px;font-weight:600;letter-spacing:-.03em">후기 모음</span></div>
+ <button data-a="search" style="background:#F1ECE0;border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:8px;width:100%">
+ ${ic('search',17)}<span style="font-size:13px;color:#A39E93">브랜드 · 제품명 · 궁금한 점</span></button></div>
+ <div class="body">
+ <div class="scroller chiprow">${AX.map(([k,t])=>`<span class="chip ${ax===k?'on':''}" data-a="rax:${k}">${t}</span>`).join('')}</div>
+ ${ax==='all'?allView:ax==='cat'?catView:brandView}
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" data-a="method" style="padding:15px 16px;cursor:pointer">
  <div class="h3" style="font-size:14px">어떻게 판단하는지 궁금하세요</div>
  <div class="sub" style="margin-top:5px">다들이 쓰는 기준표를 그대로 공개해 두었어요. 같은 기준을 대면 누구나 같은 결론이 나옵니다.</div>
  <div style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:#0F6E56;font-weight:500">기준표 보기 ${ic('arrow',15,'#0F6E56')}</div></div></div>
-</div>${tabs()}`;
+ </div>${tabs()}`};
 
 const searchHits=()=>{const k=S.q.trim();
  let h=k?P.filter(p=>(p.brand+p.name+p.sub).includes(k)||(k.includes('인덕션')&&p.induction)):P.slice();
@@ -284,7 +594,7 @@ const searchResults=()=>{const h=searchHits();
  <div class="pad" style="padding-top:20px"><button class="btn teal" data-a="req">이 제품 후기 모아주세요</button>
  <div class="tiny" style="text-align:center;margin-top:9px">지금까지 38명이 이 제품을 찾으셨어요.</div></div>
  <div class="pad sec" style="padding-bottom:40px"><div class="h3" style="color:#5F5B52;margin-bottom:11px">비슷한 제품은 모아 두었어요</div>
- ${['p4','p1'].map(byId).map(p=>rowItem(p,bellBtn(p))).join('')}</div>`};
+ ${shuffle(P).slice(0,2).map(p=>rowItem(p,bellBtn(p))).join('')}</div>`};
 
 V.search=()=>`
 <div class="bar"><div class="line"><button data-a="back">${ic('back',20)}</button>
@@ -318,7 +628,7 @@ V.list=()=>bar('후기 모음',1)+`<div class="body">
  <div class="pad" style="padding-top:20px"><div class="tiny" style="letter-spacing:.03em">코팅 프라이팬 · 12종</div>
  <div class="h1" style="font-size:23px;margin-top:5px">문제를 겪은 분들은,<br>언제 겪었나</div>
  <div class="sub" style="margin-top:9px">후기에서 "문제가 생겼다"고 하신 시점만 모아 봤어요. 제품 수명이 아니라, 겪으신 분들의 시점이에요.</div></div>
- <div class="scroller" style="padding-top:16px">${['문제 늦게 생긴 순','가격순','인덕션만'].map((c,i)=>`<span class="chip ${i?'':'on'}">${c}</span>`).join('')}</div>
+ <div class="scroller chiprow" style="margin-top:16px">${['문제 늦게 생긴 순','가격순','인덕션만'].map((c,i)=>`<span class="chip ${i?'':'on'}">${c}</span>`).join('')}</div>
  <div class="pad" style="padding-top:16px">
  ${[['하로 인덕션 코팅팬 28cm',14,100,'green','대체로 만족 · 241건',1],['필로 티타늄 코팅팬 28cm',11,79,'sand','대체로 만족 · 188건',0],
  ['세라 세라믹 코팅팬 26cm',8,57,'warm','의견 갈림 · 156건',0],['온담 세라믹 프라이팬 28cm',4,29,'gray','대체로 불만 · 132건',0]]
@@ -362,8 +672,8 @@ V.method=()=>bar('판단 기준')+`<div class="body">
 
 V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thin=p.label==='표본 부족';
  const foot=p.deal==='open'
- ?`<div class="row" style="margin-bottom:11px"><span class="meta">지금 협상이 열려 있어요</span><span class="num" style="font-size:15px;font-weight:600;color:#A0610F">${won(p.dealPrice)}</span></div>
-   <button class="btn amber" data-a="deal:${p.id}">협상 보러 가기</button>`
+ ?`<div class="row" style="margin-bottom:11px"><span class="meta">협상이 끝나 지금 살 수 있어요</span><span class="num" style="font-size:15px;font-weight:600;color:#A0610F">${won(p.dealPrice)}</span></div>
+   <button class="btn amber" data-a="deal:${p.id}">협상가로 사러 가기</button>`
  :(bad||thin)
  ?`<div style="background:#F2EEE4;border-radius:12px;padding:13px 14px;margin-bottom:12px"><div class="h3" style="margin-bottom:5px">아직 순서가 아니에요</div>
    <div class="meta" style="line-height:1.7">${thin?'후기가 더 모이면 다시 살펴볼게요.':'다들의 이야기가 나아지면 그때 협상도 열립니다.'}</div></div>
@@ -394,10 +704,9 @@ V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thi
   브랜드가 공개한 자료에서 값만 모아 정리했어요. 제품마다 공개된 항목이 달라서, 확인되지 않은 것은 비워 둡니다. ${p.checked} 확인</div></div></div>
  <div class="pad" style="padding-top:12px">
  <button class="btn ghost" data-a="official:${p.id}" style="display:flex;align-items:center;justify-content:center;gap:7px">
-  ${ic('ext',15,'#4A4740')} 브랜드 공식 페이지에서 보기</button>
- <div class="tiny" style="text-align:center;margin-top:9px">${p.site}</div></div>
+  ${ic('ext',15,'#4A4740')} 브랜드 공식 페이지에서 상세히 보기</button></div>
  <div class="pad sec" style="padding-bottom:20px"><div class="h3" style="font-size:14px;margin-bottom:11px">${p.brand}의 다른 제품</div>
- ${P.filter(x=>x.brand===p.brand&&x.id!==p.id).length?P.filter(x=>x.brand===p.brand&&x.id!==p.id).map(x=>rowItem(x,ic('next',18,'#C9C4BA'))).join('')
+ ${P.filter(x=>x.brand===p.brand&&x.id!==p.id).length?shuffle(P.filter(x=>x.brand===p.brand&&x.id!==p.id)).slice(0,3).map(x=>rowItem(x,ic('next',18,'#C9C4BA'))).join('')
   :`<div class="soft" style="padding:16px;text-align:center"><div class="meta">아직 이 브랜드의 다른 제품은 모으지 못했어요</div></div>`}</div>`;
 
  const REV=`
@@ -430,7 +739,7 @@ V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thi
  <svg width="104" height="104" viewBox="0 0 64 64" fill="none" stroke="rgba(43,42,40,.4)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${GLY[p.cat]}</svg>
  ${p.deal==='open'?`<span class="badge b-amber" style="position:absolute;top:14px;left:16px">${p.endDate} 종료</span>`:''}</div>
  <div class="pad" style="padding-top:16px">
- <div class="tiny">${p.brand} · ${p.sub}</div>
+ <div class="tiny">${p.brand} · ${SUB2CAT[p.sub]||''} · ${p.sub}</div>
  <div style="font-size:18px;font-weight:600;letter-spacing:-.025em;margin-top:3px;line-height:1.4">${p.name}</div>
  <div style="display:flex;align-items:baseline;gap:8px;margin-top:9px">
  ${p.deal==='open'?`<span class="num" style="font-size:12px;color:#A39E93;text-decoration:line-through">${won(p.price)}</span>
@@ -445,81 +754,56 @@ V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thi
  </div>
  <div style="background:#FFFDF9;box-shadow:0 -.5px 0 #E8E2D6;padding:14px 18px 18px;flex-shrink:0">${foot}</div>`};
 
-V.drawer=()=>{const CATS=['전체','프라이팬','냄비·솥','웍','칼','무쇠·주물'];
+V.drawer=()=>{
+ const BRANDS=[...new Set(P.map(x=>x.brand))];
+ const ST=[['open','지금 살 수 있어요'],['talking','곧 살 수 있어요'],['gathering','수요가 모이는 중'],
+           ['postponed','이번엔 미뤄뒀어요'],['none','아직 순서가 아니에요']];
+ const arw=on=>`<span style="display:inline-block;transform:rotate(${on?90:0}deg);transition:transform .18s">${ic('next',15,'#C9C4BA')}</span>`;
+ const head=(kk,t,n)=>`<div class="drow" data-a="toggleSec:${kk}" style="cursor:pointer;padding:14px 0;border-top:.5px solid #EFEAE0">
+  <span style="font-weight:600;font-size:14px">${t}</span>
+  <span style="display:flex;align-items:center;gap:7px">${n!==undefined?`<span class="tiny num">${n}</span>`:''}${arw(S.sec===kk)}</span></div>`;
+ const sub=(a,t,n,on)=>`<div class="drow" data-a="${a}" style="padding:8px 0 8px 14px;cursor:pointer">
+  <span style="font-size:12.5px;${on?'font-weight:600;color:#0F6E56':(n===0?'color:#B5B0A6':'color:#5F5B52')}">${t}</span>
+  ${n!==undefined?`<span class="tiny num" style="${n?'':'color:#C9C4BA'}">${n}</span>`:ic('next',15,'#C9C4BA')}</div>`;
+
  return `<div class="drawer" data-a="closeDrawer"><div class="dpanel" data-stop>
- <div style="padding:18px 18px 14px;box-shadow:0 .5px 0 #E7E1D4">
+ <div style="padding:18px 18px 12px;box-shadow:0 .5px 0 #E7E1D4">
  <div class="row"><div style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em">다들</span></div>
  <button data-a="closeDrawer">${ic('x',19)}</button></div>
  <div class="meta" style="margin-top:7px">${S.user?CH[S.user.ch]+'으로 연결됨':'아직 연결하지 않으셨어요'}</div></div>
- <div style="padding:16px 18px">
- <div class="tiny" style="letter-spacing:.04em;margin-bottom:4px">카테고리</div>
- ${CATS.map(c=>`<div class="drow" data-a="cat:${c}" style="cursor:pointer">
-  <span style="${S.cat===c?'font-weight:600;color:#0F6E56':''}">${c}</span>
-  <span class="tiny num">${c==='전체'?P.length:P.filter(x=>x.sub===c).length}</span></div>`).join('')}</div>
- <div style="padding:6px 18px 16px;border-top:.5px solid #EFEAE0">
- <div class="tiny" style="letter-spacing:.04em;margin:12px 0 4px">브랜드</div>
- ${[...new Set(P.map(x=>x.brand))].map(b=>`<div class="drow" data-a="brandSel:${b}" style="cursor:pointer">
-  <span style="${S.brand===b?'font-weight:600;color:#0F6E56':''}">${b}</span>
-  <span class="tiny num">${P.filter(x=>x.brand===b).length}</span></div>`).join('')}</div>
- <div style="padding:6px 18px 24px;border-top:.5px solid #EFEAE0">
- ${[['후기 모음','root:reviews'],['다들의 약속','rules'],['협상 기록','log'],['판단 기준','method'],['내 정보','root:me'],['운영 콘솔','admin']]
- .map(([t,a])=>`<div class="drow" data-a="${a}" style="cursor:pointer"><span>${t}</span>${ic('next',16,'#C9C4BA')}</div>`).join('')}</div>
- </div><div style="flex:1" data-a="closeDrawer"></div></div>`};
 
-V.status=()=>{
- const mine=x=>!S.mine||S.waits[x.id];
- const g=k=>P.filter(x=>x.deal===k&&mine(x));
- const openL=g('open'),talkL=g('talking'),gathL=g('gathering'),postL=g('postponed'),noneL=g('none');
- const total=openL.length+talkL.length+gathL.length+postL.length+noneL.length;
- const openCard=x=>`<div class="card" data-a="deal:${x.id}" style="padding:14px;margin-bottom:10px;cursor:pointer">
-  <div style="display:flex;gap:13px">${th(x,60)}<div style="min-width:0;flex:1">
-  <div style="display:flex;gap:5px"><span class="badge b-amber">${x.endDate} 종료</span>${S.waits[x.id]?'<span class="badge b-teal">내가 기다린 것</span>':''}</div>
-  <div class="h3" style="font-size:14px;margin-top:5px">${x.brand} ${x.name}</div>
-  <div class="meta" style="margin-top:2px">${x.label} · 후기 ${x.n}건</div></div></div>
-  <div class="row" style="margin-top:12px;padding-top:11px;border-top:.5px solid #EFEAE0;align-items:baseline">
-  <span class="num" style="font-size:11.5px;color:#A39E93;text-decoration:line-through">${won(x.price)}</span>
-  <span style="display:flex;align-items:baseline;gap:7px"><span class="badge b-amber num">-${Math.round((1-x.dealPrice/x.price)*100)}%</span>
-  <span class="num" style="font-size:18px;font-weight:600;color:#A0610F;letter-spacing:-.03em">${won(x.dealPrice)}</span></span></div></div>`;
- const plain=(x,badge,line)=>`<div class="card" data-a="product:${x.id}" style="padding:13px 14px;margin-bottom:9px;cursor:pointer">
-  <div class="row" style="margin-bottom:7px"><span class="badge b-gray">${badge}</span>${S.waits[x.id]?`<span class="tiny num">내 가격 ${won(S.waits[x.id])}</span>`:''}</div>
-  <div class="h3" style="font-size:13.5px">${x.brand} ${x.name}</div>
-  <div class="meta" style="margin-top:3px;line-height:1.7">${line}</div>
-  ${x.deal==='gathering'?`<div class="track" style="margin-top:10px;height:4px"><div class="fill" style="height:4px;width:${Math.min(100,waitCount(x)/x.target*100)}%"></div></div>
-  <div class="meta num" style="margin-top:6px;text-align:right">${waitCount(x)} / ${x.target}명</div>`:''}</div>`;
- const sec=(t,d,body)=>body?`<div class="pad sec"><div class="h2" style="margin-bottom:3px">${t}</div>
-  <div class="meta" style="margin-bottom:12px">${d}</div>${body}</div>`:'';
- return `<div class="bar"><div class="h1" style="font-size:19px">현황</div>
- <div class="meta" style="margin-top:3px">다들이 이야기하고 있는 것들을 한눈에 모았어요</div>
- <div style="display:flex;gap:6px;margin-top:12px">
- <span class="chip ${S.mine?'':'on'}" data-a="seg:0">전체</span>
- <span class="chip ${S.mine?'on':''}" data-a="seg:1">내가 기다리는 것 ${Object.keys(S.waits).length}</span></div></div>
- <div class="body">
- ${total?'':(S.mine&&!S.user?`<div class="pad" style="padding-top:56px;text-align:center"><div class="h2">연결하시면 여기에 모여요</div>
-  <div class="sub" style="margin-top:8px">기다리시는 것과 구매 내역을<br>어느 기기에서든 그대로 보실 수 있어요.</div>
-  <div style="padding:0 20px"><button class="btn" style="background:#FEE500;color:#191600;margin-top:16px" data-a="oauth:kakao">카카오톡으로 계속하기</button>
-  <button class="btn ghost" style="margin-top:8px" data-a="loginSheet">다른 방법으로 하기</button></div></div>`
-  :`<div class="pad" style="padding-top:60px;text-align:center"><div class="h2">아직 기다리시는 게 없어요</div>
-  <div class="sub" style="margin-top:8px">후기를 보시다가 마음에 드는 가격을 골라두시면<br>여기에서 진행 상황을 보실 수 있어요.</div>
-  <button class="btn ghost" style="margin-top:16px" data-a="root:reviews">후기 모음 둘러보기</button></div>`)}
- ${sec('지금 사실 수 있어요','협상이 끝나 열려 있는 것들이에요',openL.map(openCard).join(''))}
- ${sec('브랜드와 이야기 중','수요를 들고 협상하는 중이에요. 결과가 나오면 알려드릴게요',
-   talkL.map(x=>plain(x,'협상 중',`${x.tDate}에 시작했어요 · ${waitCount(x)}분의 수요를 들고 갔습니다`)).join(''))}
- ${sec('수요가 모이는 중','기다리는 분이 목표에 닿으면 협상을 시작해요',
-   gathL.map(x=>plain(x,'모집 중','조금만 더 모이면 브랜드에 이야기하러 갑니다')).join(''))}
- ${sec('이번엔 미뤄뒀어요','안 된 것도 남겨둘게요. 등록은 그대로 있어요',
-   postL.map(x=>plain(x,'다음을 기약했어요',`${x.pDate} · ${x.pWhy} 이번엔 접었어요`)).join(''))}
- ${sec('아직 순서가 아니에요','다들의 이야기가 더 모이면 다시 살펴볼게요',
-   noneL.map(x=>plain(x,x.label,x.label==='표본 부족'?'후기가 더 쌓이면 판단해 볼게요':'평가가 낮아 협상 순서를 뒤로 두었어요')).join(''))}
- <div class="pad sec" style="padding-bottom:26px"><div class="soft" data-a="log" style="padding:16px 17px;cursor:pointer">
- <div class="h3" style="font-size:14px;margin-bottom:6px">협상 기록</div>
- <div style="font-size:12.5px;color:#5F5B52;line-height:1.75">이번 달에 몇 번 이야기해서 몇 번 잘 됐는지, 숫자 그대로 적어두었어요.</div>
- <div style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:#0F6E56;font-weight:500">기록 보기 ${ic('arrow',15,'#0F6E56')}</div></div></div>
- </div>${tabs()}`};
+ <div style="padding:0 18px 24px">
+ <div class="drow" data-a="goHome" style="cursor:pointer;padding:14px 0"><span style="font-weight:600;font-size:14px">홈</span>${ic('next',16,'#C9C4BA')}</div>
+
+ ${head('state','상태별로 보기')}
+ ${S.sec==='state'?ST.map(([kk,t])=>sub('glist:'+kk,t,P.filter(x=>x.deal===kk).length,S.glist===kk)).join(''):''}
+
+ ${head('cat','카테고리',CATS.length)}
+ ${S.sec==='cat'?`${sub('view:cat','전체 보기')}
+  ${CATS.map(c=>{const on=S.opencat===c.k;
+   return `<div><div class="drow" data-a="toggleCat:${c.k}" style="padding:8px 0 8px 14px;cursor:pointer">
+    <span style="display:flex;align-items:center;gap:8px;font-size:12.5px;${on?'font-weight:600;color:#0F6E56':'color:#5F5B52'}">
+    <svg width="16" height="16" viewBox="0 0 64 64" fill="none" stroke="${on?'#0F6E56':'#9C968A'}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">${GLY[c.g]}</svg>
+    ${c.k}</span><span style="display:flex;align-items:center;gap:6px"><span class="tiny num">${CATN(c.k)}</span>${arw(on)}</span></div>
+    ${on?`<div style="padding:0 0 6px 38px">${c.subs.map(sb=>{const n=P.filter(x=>x.sub===sb).length;
+     return `<div class="drow" data-a="cat:${sb}" style="padding:6px 0;cursor:pointer">
+      <span style="font-size:12px;color:${S.cat===sb?'#0F6E56':(n?'#5F5B52':'#B5B0A6')};${S.cat===sb?'font-weight:600':''}">${sb}</span>
+      <span class="tiny num" style="${n?'':'color:#C9C4BA'}">${n}</span></div>`}).join('')}</div>`:''}</div>`}).join('')}`:''}
+
+ ${head('brand','브랜드',BRANDS.length)}
+ ${S.sec==='brand'?`${sub('view:brand','전체 보기')}
+  ${BRANDS.map(b=>sub('brandSel:'+b,b,P.filter(x=>x.brand===b).length,S.brand===b)).join('')}`:''}
+
+ ${head('menu','메뉴')}
+ ${S.sec==='menu'?[['후기 모음','root:reviews'],['다들의 약속','rules'],['협상 기록','log'],
+   ['판단 기준','method'],['내 정보','root:me'],['운영 콘솔','admin']].map(([t,a])=>sub(a,t)).join(''):''}
+ </div>
+ </div><div style="flex:1" data-a="closeDrawer"></div></div>`};
 
 V.deal=id=>{const p=byId(id);const st=ladder(p);
  return bar('다들 협상',1)+`<div class="body">
  <div class="pad" style="padding-top:16px;display:flex;gap:14px">${th(p,58)}<div style="min-width:0">
- <div style="display:flex;gap:6px;margin-bottom:3px"><span class="badge b-amber">협상 성사</span><span class="badge b-teal">6회차 브랜드</span></div>
+ <div style="display:flex;gap:6px;margin-bottom:3px"><span class="badge b-amber">협상 완료 · 지금 구매 가능</span><span class="badge b-teal">6회차 브랜드</span></div>
  <div style="font-size:16px;font-weight:600;letter-spacing:-.02em">${p.brand} ${p.name}</div>
  <div class="meta" style="margin-top:3px">${p.endDate} 종료</div></div></div>
  <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px">
@@ -629,7 +913,7 @@ V.me=()=>{
   <div class="meta num" style="margin-top:2px">내 가격 ${won(S.waits[x.id])} · ${x.deal==='open'?'협상 열림':x.deal==='talking'?'브랜드와 이야기 중':x.deal==='postponed'?'이번엔 미뤄뒀어요':waitCount(x)+' / '+x.target+'명'}</div></div>
   ${ic('next',17,'#C9C4BA')}</div>`).join('')
  :`<div class="card" style="padding:20px 16px;text-align:center"><div class="sub">아직 기다리시는 게 없어요.<br>마음에 드는 가격을 골라두시면 여기에 모아 보여드릴게요.</div>
-  <button class="btn ghost" style="margin-top:14px" data-a="root:home">공구 둘러보기</button></div>`}</div>
+  <button class="btn ghost" style="margin-top:14px" data-a="root:home">협상 둘러보기</button></div>`}</div>
 
  <div class="pad sec"><div class="h2" style="margin-bottom:12px">알림 설정</div>
  <div class="card" style="padding:4px 16px 8px">
@@ -776,7 +1060,7 @@ V.admin=()=>{
  <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">협상 관리</div>
  <div class="sub" style="margin-top:8px">브랜드별 진행 단계와 다음에 할 일을 여기서 옮겨요.</div></div>
  <div class="pad" style="padding-top:14px">
- ${[{b:'무이',n:'스테인리스 3중 팬 28cm',st:5,wait:421,last:'7.14 계약 완료 · 60일 보장',next:'공구 종료 후 정산 대조',grade:'파트너 · 6회차'},
+ ${[{b:'무이',n:'스테인리스 3중 팬 28cm',st:5,wait:421,last:'7.14 계약 완료 · 60일 보장',next:'협상 종료 후 정산 대조',grade:'파트너 · 6회차'},
     {b:'세라',n:'다마스커스 셰프나이프 20cm',st:2,wait:31,last:'7.24 제안서 발송',next:'회신 없으면 7.31 재연락',grade:'신규'},
     {b:'무이',n:'통3중 스테인리스 냄비 20cm',st:6,wait:54,last:'6.28 조건 불일치로 보류',next:'9월 재제안 예정',grade:'파트너 · 6회차'}]
  .map(j=>{const ST=['수요 집계','제안서 준비','제안 발송','회신 대기','조건 협의','계약·오픈','보류'];
@@ -811,7 +1095,7 @@ V.admin=()=>{
  <div class="tiny" style="margin-top:6px">최근 7주 · 12주까지 누적 150건이 목표</div></div></div>
  <div class="pad" style="padding-top:12px"><div class="card" style="padding:6px 16px">
  ${[['대기 등록 전환율','5.2%','목표 5% 넘김',1],['검색 실패율','38%','50% 넘으면 콘텐츠 우선',1],
-   ['4주 재방문율','21%','목표 25% 미달',0],['구매 인증률','—','첫 공구 이후 측정',null],
+   ['4주 재방문율','21%','목표 25% 미달',0],['구매 인증률','—','첫 협상 이후 측정',null],
    ['판정 통과율','64%','비추천 비율 하한 30% 유지 중',1]]
  .map(([k,v,note,ok],i)=>`<div style="padding:12px 0;${i?'border-top:.5px solid #F2EDE3':''}">
   <div class="row"><span style="font-size:12.5px;color:#5F5B52">${k}</span>
@@ -906,19 +1190,70 @@ function finish(){const q=S.pending;S.pending=null;S.sheet=null;
  S.doneName=`${p.brand} ${p.name}을 ${won(q.price)}에 등록하셨어요.`;go('wait')}
 
 /* ── 렌더 ── */
+let busy=0;
+function refresh(){
+ if(busy)return; busy=1;
+ const b=document.querySelector('.body'); const ind=document.querySelector('.ptr');
+ if(ind){ind.style.height='52px';ind.classList.add('spin')}
+ if(b){b.classList.add('pull');b.style.transform='translateY(52px)'}
+ reshuffle();
+ setTimeout(()=>{
+  busy=0; draw();
+  const nb=document.querySelector('.body'); if(nb)nb.scrollTop=0;
+  say('새로 불러왔어요');
+ },620);
+}
+
+function bindPull(){
+ const b=document.querySelector('.body'); if(!b)return;
+ let y0=null, dy=0, ready=0;
+ const ind=b.querySelector('.ptr');
+ const reset=()=>{b.classList.add('pull');b.style.transform='';if(ind)ind.style.height='0px';y0=null;dy=0;ready=0};
+ b.addEventListener('touchstart',e=>{
+  if(busy)return;
+  if(b.scrollTop<=0){y0=e.touches[0].clientY;b.classList.remove('pull')} else y0=null;
+ },{passive:true});
+ b.addEventListener('touchmove',e=>{
+  if(y0===null||busy)return;
+  dy=e.touches[0].clientY-y0;
+  if(dy<=0){reset();return}
+  const d=Math.min(96,dy*0.48);
+  b.style.transform='translateY('+d+'px)';
+  if(ind){ind.style.height=d+'px';ind.style.opacity=Math.min(1,d/44)}
+  ready = d>=44;
+ },{passive:true});
+ b.addEventListener('touchend',()=>{
+  if(y0===null||busy)return;
+  if(ready){b.classList.add('pull');refresh()} else reset();
+  y0=null;
+ },{passive:true});
+ // 마우스 휠로도 확인 가능하게
+ let acc=0,t=null;
+ b.addEventListener('wheel',e=>{
+  if(busy||b.scrollTop>0||e.deltaY>=0){acc=0;return}
+  acc+=-e.deltaY;
+  if(ind){const d=Math.min(96,acc*0.5);ind.style.height=d+'px';ind.style.opacity=Math.min(1,d/44)}
+  clearTimeout(t); t=setTimeout(()=>{
+   if(acc>=88){refresh()} else if(ind){ind.style.height='0px'}
+   acc=0;
+  },170);
+ },{passive:true});
+}
+
 function draw(){const c=cur();
  const html=(c.s==='product'?V.product(c.id):c.s==='deal'?V.deal(c.id):c.s==='verify'?V.verify(c.id)
   :c.s==='report'?V.report(c.id):['wait','verified','reported'].includes(c.s)?V.done(c.s):(V[c.s]||V.home)());
- document.getElementById('app').innerHTML=html+(S.drawer?V.drawer():'')+
+ document.getElementById('app').innerHTML=html.replace('<div class="body">','<div class="body"><div class="ptr"><i></i></div>')+(S.drawer?V.drawer():'')+
  (S.banner&&cur().s==='home'&&!S.sheet?`<div class="pop">${mark(22,'#FCFAF5')}
- <div style="flex:1"><div style="font-size:13.5px;font-weight:600;letter-spacing:-.02em">다들 모여서, 더 저렴하게</div>
- <div style="font-size:11.5px;color:#CFCAC0;line-height:1.65;margin-top:3px">실사용자 후기를 모아 살 만한 것만 고르고, 기다리는 분이 모이면 브랜드와 값을 협상해요.</div></div>
+ <div style="flex:1"><div style="font-size:13.5px;font-weight:600;letter-spacing:-.02em">다들 모여서 협상하고, 더 싸게 삽니다</div>
+ <div style="font-size:11.5px;color:#CFCAC0;line-height:1.65;margin-top:3px">흩어진 후기를 모아 살 만한 것만 고르고, 기다리는 분이 모이면 브랜드와 값을 깎아 판매처를 열어드려요.</div></div>
  <button data-a="closePop" style="flex-shrink:0;opacity:.6">${ic('x',15,'#FCFAF5')}</button></div>`:'')+sheetHTML()+(S.toast?`<div class="toast">${S.toast}</div>`:'');
  const q=document.getElementById('q');
  if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length);
   q.oninput=e=>{S.q=e.target.value;document.getElementById('results').innerHTML=searchResults()}}
  const ct=document.getElementById('contact');
  if(ct)ct.oninput=e=>{S.contact=e.target.value};
+ bindPull();
 }
 
 document.getElementById('app').addEventListener('click',e=>{
@@ -929,18 +1264,18 @@ document.getElementById('app').addEventListener('click',e=>{
  e.stopPropagation();
  switch(a){
   case'back':back();break;
-  case'root':S.stack=[{s:v}];S.tab=v;draw();break;
-  case'noti':go('noti');break;
-  case'search':go('search');break;
-  case'list':go('list');break;
-  case'excluded':go('excluded');break;
-  case'method':go('method');break;
-  case'log':go('log');break;
-  case'rules':go('rules');break;
-  case'compare':go('compare');break;
+  case'root':S.drawer=0;S.sheet=null;S.stack=[{s:v}];S.tab=v;draw();break;
+  case'noti':S.drawer=0;go('noti');break;
+  case'search':S.drawer=0;go('search');break;
+  case'list':S.drawer=0;go('list');break;
+  case'excluded':S.drawer=0;go('excluded');break;
+  case'method':S.drawer=0;go('method');break;
+  case'log':S.drawer=0;go('log');break;
+  case'rules':S.drawer=0;go('rules');break;
+  case'compare':S.drawer=0;go('compare');break;
   case'product':S.ptab='info';S.drawer=0;go('product',v);break;
-  case'deal':go('deal',v);break;
-  case'report':go('report',v);break;
+  case'deal':S.drawer=0;go('deal',v);break;
+  case'report':S.drawer=0;go('report',v);break;
   case'price':S.tmp=S.waits[v]||null;S.sheet='price:'+v;draw();break;
   case'pick2':S.tmp=Number(v);draw();break;
   case'toLogin':if(!S.tmp)break;S.pending={kind:'wait',id:v,price:S.tmp};
@@ -969,11 +1304,34 @@ document.getElementById('app').addEventListener('click',e=>{
   case'toggle':S.noti[v]=S.noti[v]?0:1;draw();break;
   case'editContact':S.sheet='edit:x';draw();break;
   case'loginSheet':S.sheet='login:p1';draw();break;
-  case'openDrawer':S.drawer=1;draw();break;
+  case'openDrawer':S.drawer=1;S.sec=null;S.opencat=null;draw();break;
   case'closeDrawer':S.drawer=0;draw();break;
-  case'cat':S.cat=v;S.brand=null;S.drawer=0;if(cur().s!=='home'){S.stack=[{s:'home'}];S.tab='home'}draw();break;
-  case'brandSel':S.brand=v||null;S.cat='전체';S.drawer=0;if(cur().s!=='home'){S.stack=[{s:'home'}];S.tab='home'}draw();break;
+  case'toggleCat':S.opencat=S.opencat===v?null:v;draw();break;
+  case'toggleBrand':S.openbrand=S.openbrand?0:1;draw();break;
+  case'view':S.drawer=0;S.view=v;S.cat='전체';S.brand=null;
+   if(cur().s!=='home'){S.stack=[{s:'home'}];S.tab='home'}draw();break;
+  case'clearFilter':S.cat='전체';S.brand=null;S.view='grid';draw();break;
+  case'goHome':{const atHome=cur().s==='home'&&S.view==='grid'&&S.cat==='전체'&&!S.brand;
+   S.drawer=0;S.sheet=null;S.view='grid';S.cat='전체';S.brand=null;S.stack=[{s:'home'}];S.tab='home';
+   if(atHome){refresh()}else{draw();const b=document.querySelector('.body');if(b)b.scrollTop=0}
+   break}
+  case'cat':S.cat=v;S.brand=null;S.view='grid';S.drawer=0;
+   if(cur().s!=='home'){S.stack=[{s:'home'}];S.tab='home'}draw();break;
+  case'brandStat':{const[bn,st]=v.split(':');S.brand=bn;S.cat='전체';S.view='grid';S.drawer=0;S.glist=st;
+   S.stack=[{s:'home'}];S.tab='home';go('glist');break}
+  case'brandSel':S.brand=v||null;S.cat='전체';S.view='grid';S.drawer=0;
+   if(cur().s!=='home'){S.stack=[{s:'home'}];S.tab='home'}draw();break;
   case'ptab':S.ptab=v;draw();break;
+  case'toggleSec':S.sec=S.sec===v?null:v;draw();break;
+  case'rax':S.rax=v;S.rpick=null;draw();break;
+  case'rpick':S.rpick=v;draw();const bb=document.querySelector('.body');if(bb)bb.scrollTop=0;break;
+  case'rgo':{const[ax,name,sort]=v.split(':');
+   if(ax==='cat'){S.cat=name;S.brand=null}else{S.brand=name;S.cat='전체'}
+   S.rlist=sort;go('rlist');break}
+  case'rcat':S.cat=v;S.brand=null;S.rlist='many';go('rlist');break;
+  case'rbrand':S.brand=v;S.cat='전체';S.rlist='many';go('rlist');break;
+  case'rlist':S.drawer=0;if(cur().s==='rlist'){S.rlist=v;draw()}else{S.rlist=v;go('rlist')}break;
+  case'glist':S.drawer=0;if(cur().s==='glist'){S.glist=v;draw()}else{S.glist=v;go('glist')}break;
   case'official':S.sheet='site:'+v;draw();break;
   case'saveContact':{const c=document.getElementById('contact');S.contact=c?c.value.trim():S.contact;S.sheet=null;draw();say('저장했어요');break}
   case'say':say(v);break;
