@@ -354,7 +354,7 @@ V.home=()=>{
   <span style="display:block"><span style="display:block;width:17px;height:1.7px;background:#4A4740;border-radius:1px"></span>
   <span style="display:block;width:17px;height:1.7px;background:#4A4740;border-radius:1px;margin-top:4px"></span>
   <span style="display:block;width:12px;height:1.7px;background:#4A4740;border-radius:1px;margin-top:4px"></span></span></button>
- <div style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em">다들</span></div>
+ <button data-a="goHome" style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em">다들</span></button>
  <div style="display:flex;gap:14px"><button data-a="search">${ic('search',19)}</button><button data-a="noti">${ic('bell',19)}</button></div></div></div>`;
  return topbar+`
  <div class="body">
@@ -562,8 +562,10 @@ V.reviews=()=>{
   <div class="pad" style="padding-top:20px"><button class="btn ghost" data-a="rbrand:${cur}">${cur} 전체 ${ps.length}개 보기</button></div>`;
  })();
 
- return `<div class="bar"><div style="display:flex;align-items:center;gap:7px;margin-bottom:12px">${mark(20)}
- <span style="font-size:17px;font-weight:600;letter-spacing:-.03em">후기 모음</span></div>
+ return `<div class="bar"><div class="row" style="margin-bottom:12px">
+ <span style="font-size:17px;font-weight:600;letter-spacing:-.03em">후기 모음</span>
+ <button data-a="goHome" style="display:flex;align-items:center;gap:6px;opacity:.72">${mark(18)}
+ <span style="font-size:14px;font-weight:600;letter-spacing:-.04em">다들</span></button></div>
  <button data-a="search" style="background:#F1ECE0;border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:8px;width:100%">
  ${ic('search',17)}<span style="font-size:13px;color:#A39E93">브랜드 · 제품명 · 궁금한 점</span></button></div>
  <div class="body">
