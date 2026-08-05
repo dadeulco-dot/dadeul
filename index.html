@@ -102,9 +102,13 @@ input,textarea,select{font:inherit;font-size:16px;color:var(--ink);background:tr
 .scroller>*,.scroller2>*{flex:0 0 auto;scroll-snap-align:start}
 .scroller>.chip{justify-content:center;text-align:center}
 .swrap{position:relative}
-.swrap::after{content:"";position:absolute;top:0;right:0;bottom:0;width:26px;pointer-events:none;
- background:linear-gradient(90deg,transparent,var(--panel));opacity:0;transition:opacity .2s}
+.swrap::after{content:"";position:absolute;top:0;right:0;bottom:6px;width:44px;pointer-events:none;
+ background:linear-gradient(90deg,transparent,var(--panel) 72%);opacity:0;transition:opacity .22s}
 .swrap.more::after{opacity:1}
+.swrap::before{content:"";position:absolute;top:50%;right:9px;width:6px;height:6px;pointer-events:none;
+ border-right:1.6px solid var(--faint);border-top:1.6px solid var(--faint);
+ transform:translateY(-60%) rotate(45deg);opacity:0;transition:opacity .22s;z-index:2}
+.swrap.more::before{opacity:1}
 /* flex+overflow에서 마지막 padding-right가 먹지 않아 스페이서로 대체 */
 .scroller::after,.scroller2::after{content:"";flex:0 0 20px;height:1px}
 .scroller::-webkit-scrollbar,.scroller2::-webkit-scrollbar{height:0;display:none}
@@ -1651,6 +1655,7 @@ function refresh(){
  },620);
 }
 
+const peeked=new Set();
 function equalizeChips(){
  document.querySelectorAll('.scroller').forEach(sc=>{
   const chips=[...sc.children].filter(el=>el.classList.contains('chip'));
@@ -1660,12 +1665,31 @@ function equalizeChips(){
   let max=0; chips.forEach(c=>{max=Math.max(max,Math.ceil(c.getBoundingClientRect().width))});
   const w=Math.min(max,cap);
   chips.forEach(c=>{c.style.minWidth=w+'px'});
-  // 다음 칩이 살짝 보이도록 여백 보정
   const wrap=sc.parentElement;
+  const more=sc.scrollWidth-sc.clientWidth>4;
   if(wrap&&wrap.classList.contains('swrap')){
-   const more=sc.scrollWidth-sc.clientWidth>4;
    wrap.classList.toggle('more',more);
    sc.onscroll=()=>{wrap.classList.toggle('more',sc.scrollWidth-sc.scrollLeft-sc.clientWidth>4)};
+  }
+  if(!more)return;
+
+  // 선택된 칩이 화면 밖이면 안으로 데려옴 (다음 칩도 살짝 보이게)
+  const on=chips.find(c=>c.classList.contains('on')||c.classList.contains('sel'));
+  if(on){
+   const L=on.offsetLeft, R=L+on.offsetWidth;
+   const vL=sc.scrollLeft, vR=vL+sc.clientWidth;
+   if(L<vL+20) sc.scrollTo({left:Math.max(0,L-20),behavior:'smooth'});
+   else if(R>vR-30) sc.scrollTo({left:R-sc.clientWidth+44,behavior:'smooth'});
+  }
+
+  // 처음 열릴 때 한 번만: 살짝 밀었다 되돌아와 "더 있다"를 알림
+  const key=sc.dataset.pk||(sc.dataset.pk=[...chips].map(c=>c.textContent.trim()).join('|'));
+  if(!peeked.has(key)&&sc.scrollLeft<2){
+   peeked.add(key);
+   setTimeout(()=>{
+    sc.scrollTo({left:26,behavior:'smooth'});
+    setTimeout(()=>sc.scrollTo({left:0,behavior:'smooth'}),380);
+   },420);
   }
  });
 }
