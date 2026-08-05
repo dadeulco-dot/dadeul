@@ -21,50 +21,6 @@ input{font:inherit}
  box-shadow:0 0 0 .5px #E9E9E7,0 20px 50px -12px rgba(27,27,29,.16)}
 
 /* 실제 모바일에서는 프레임을 없애고 화면을 꽉 채웁니다 */
-@media (prefers-color-scheme:dark){
- body{background:#0C0C0D}
- .phone{background:#131315;box-shadow:0 0 0 .5px #26262A,0 20px 50px -12px rgba(0,0,0,.6)}
- .bar,.tabs{background:#131315;box-shadow:0 .5px 0 #26262A}
- .tabs{box-shadow:0 -.5px 0 #26262A}
- .card{background:#1A1A1D;border-color:#2A2A2E}
- .soft,.hint{background:#1E1E21}
- .sheet{background:#131315}
- .field{background:#1A1A1D;border-color:#2E2E33;color:#F2F2F0}
- .chip{background:#232327;color:#C7C7CC}
- .chip.on{background:#0E7A5E;color:#fff}
- .track{background:#2A2A2E}
- .toast{background:#F2F2F0;color:#1B1B1D}
- .ghost{border-color:#33333A;color:#E5E5E7}
- .h2::before{background:#2AA07E}
- body,.h1,.h2,.h3,.pname{color:#F2F2F0}
- .sub,.meta{color:#98989E}
- .tiny{color:#77777D}
- .quote{border-color:#33333A;color:#98989E}
- /* 인라인 하드코딩 색상 보정 */
- .dd-dark [style*="color:#1B1B1D"]{color:#F2F2F0 !important}
- [style*="color:#1B1B1D"]{color:#F2F2F0 !important}
- [style*="color:#3A3A3D"]{color:#D8D8DC !important}
- [style*="color:#4A4A4E"]{color:#C7C7CC !important}
- [style*="color:#6B6B70"]{color:#98989E !important}
- [style*="color:#86868B"]{color:#8A8A90 !important}
- [style*="color:#9E9EA3"],[style*="color:#A5A5AA"]{color:#77777D !important}
- [style*="color:#C2C2C7"],[style*="color:#C8C8CC"]{color:#5C5C62 !important}
- [style*="background:#FFFFFF"]{background:#1A1A1D !important}
- [style*="background:#F6F6F4"],[style*="background:#F3F3F1"],[style*="background:#F0F0EE"]{background:#1E1E21 !important}
- [style*="background:#EAF3F0"],[style*="background:#E3F1EC"]{background:#16302A !important}
- [style*="background:#FBEDE6"]{background:#33231C !important}
- [style*="color:#0A5F49"]{color:#3FB894 !important}
- [style*="color:#B4552A"]{color:#E08050 !important}
- [style*="color:#A34A22"]{color:#E08050 !important}
- [style*="border-top:.5px solid #F1F1EF"],[style*="border-top:.5px solid #EFEFED"]{border-top-color:#2A2A2E !important}
- [style*="border-bottom:.5px solid #ECECEA"],[style*="border-top:.5px solid #ECECEA"]{border-color:#2A2A2E !important}
- [style*="solid #E4E4E1"],[style*="solid #ECECEA"],[style*="solid #EFEFED"]{border-color:#2A2A2E !important}
- /* 히어로·버튼 등 원래 흰 글씨는 유지 */
- [style*="color:#FFFFFF"],[style*="color:#fff"]{color:#FFFFFF !important}
- .teal,.dark{color:#FFFFFF !important}
- .teal{background:#0E7A5E !important}
- .dark{background:#2A2A2E !important}
-}
 @media (max-width:520px){
  body{padding:0;background:#FFFFFF}
  .phone{max-width:none;height:100vh;height:100dvh;border-radius:0;box-shadow:none}
@@ -153,6 +109,66 @@ input{font:inherit}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .ptab{flex:1;text-align:center;padding:13px 0;font-size:14px;font-weight:500;color:#86868B;border-bottom:2px solid transparent;letter-spacing:-.02em}
 .ptab.on{color:#0A5F49;font-weight:700;border-bottom-color:#0A5F49}
+
+/* ── 다크 모드 (반드시 마지막에 위치) ── */
+@media (prefers-color-scheme:dark){
+ html,body{background:#0C0C0D !important;color:#F2F2F0 !important}
+ .phone{background:#131315 !important;box-shadow:0 0 0 .5px #2A2A2E,0 20px 50px -12px rgba(0,0,0,.6) !important}
+ .bar{background:#131315 !important;box-shadow:0 .5px 0 #2A2A2E !important}
+ .tabs{background:#131315 !important;box-shadow:0 -.5px 0 #2A2A2E !important}
+ .card{background:#1A1A1D !important;border-color:#2C2C31 !important}
+ .soft,.hint{background:#1E1E22 !important}
+ .sheet{background:#141416 !important}
+ .grab{background:#3A3A40 !important}
+ .field{background:#1A1A1D !important;border-color:#33333A !important;color:#F2F2F0 !important}
+ .field::placeholder{color:#6E6E75 !important}
+ .chip{background:#26262B !important;color:#D4D4D8 !important}
+ .chip.on{background:#0E7A5E !important;color:#fff !important}
+ .chip.sel{background:#0E7A5E !important;color:#fff !important}
+ .track{background:#2C2C31 !important}
+ .toast{background:#F2F2F0 !important;color:#1B1B1D !important}
+ .ghost{border-color:#3A3A40 !important;color:#EDEDEF !important}
+ .teal{background:#0E7A5E !important;color:#fff !important}
+ .opt{background:#1A1A1D !important;border-color:#33333A !important}
+ .opt.on{background:#12352C !important;border-color:#2AA07E !important}
+ .h2::before{background:#2AA07E !important}
+ .h1,.h2,.h3,.pname{color:#F2F2F0 !important}
+ .sub{color:#A8A8AE !important}
+ .meta{color:#9A9AA1 !important}
+ .tiny{color:#82828A !important}
+ .num{color:inherit}
+ .quote{border-color:#3A3A40 !important;color:#A8A8AE !important}
+ .ptab{color:#9A9AA1 !important}
+ .ptab.on{color:#2AA07E !important;border-bottom-color:#2AA07E !important}
+ .tab{color:#82828A !important}
+ .tab.on{color:#2AA07E !important}
+ .badge{filter:none}
+ .b-teal{color:#7FD9BA !important;background:#16302A !important}
+ .b-amber{color:#E8A176 !important;background:#33231C !important}
+ .b-gray{color:#B4B4BA !important;background:#26262B !important}
+ .drawer .dpanel{background:#131315 !important;box-shadow:6px 0 24px -8px rgba(0,0,0,.7) !important}
+ .drow{border-color:#2C2C31 !important}
+ /* 인라인 하드코딩 보정 */
+ [style*="color:#1B1B1D"]{color:#F2F2F0 !important}
+ [style*="color:#3A3A3D"]{color:#DEDEE2 !important}
+ [style*="color:#4A4A4E"]{color:#CACACF !important}
+ [style*="color:#6B6B70"]{color:#A8A8AE !important}
+ [style*="color:#86868B"]{color:#9A9AA1 !important}
+ [style*="color:#9E9EA3"],[style*="color:#A5A5AA"]{color:#82828A !important}
+ [style*="color:#C2C2C7"],[style*="color:#C8C8CC"]{color:#63636A !important}
+ [style*="color:#0A5F49"]{color:#3FB894 !important}
+ [style*="color:#B4552A"],[style*="color:#A34A22"]{color:#E8A176 !important}
+ [style*="background:#FFFFFF"]{background:#1A1A1D !important}
+ [style*="background:#F6F6F4"],[style*="background:#F3F3F1"],[style*="background:#F0F0EE"]{background:#1E1E22 !important}
+ [style*="background:#F2F2F0"]{background:#26262B !important}
+ [style*="background:#EAF3F0"],[style*="background:#E3F1EC"]{background:#16302A !important}
+ [style*="background:#FBEDE6"]{background:#33231C !important}
+ [style*="solid #E4E4E1"],[style*="solid #ECECEA"],[style*="solid #EFEFED"],
+ [style*="solid #F1F1EF"],[style*="solid #DCDCDA"]{border-color:#2C2C31 !important}
+ /* 흰 글씨는 유지 */
+ [style*="color:#FFFFFF"],[style*="color:#fff"],[style*="color:rgba(255,255,255"]{color:#FFFFFF !important}
+ .teal,.dark{color:#FFFFFF !important}
+}
 </style>
 </head>
 <body>
@@ -182,7 +198,8 @@ const IP = {
 };
 const ICL={back:'뒤로',search:'검색',bell:'알림',user:'내 정보',share:'공유',x:'닫기',next:'더 보기',arrow:'이동',ext:'새 창',info:'안내',alert:'주의',sliders:'필터',file:'기록',shield:'가격 보장',check:'완료',home:'홈',chat:'후기',tag:'협상',plus:'추가',chev:'접기'};
 const ic=(n,s=18,c='#86868B',w=1.7)=>`<svg role="img" aria-label="${ICL[n]||''}" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${IP[n].split('M').filter(Boolean).map(d=>`<path d="M${d}"/>`).join('')}</svg>`;
-const mark=(s=20,c='#0A5F49')=>{const u='k'+Math.random().toString(36).slice(2,7);return`<svg role="img" aria-label="다들" width="${s}" height="${s}" viewBox="0 0 64 64"><defs><clipPath id="${u}"><path d="M56 10 L48 10 A22 22 0 0 0 48 54 L56 54 Z"/></clipPath></defs><path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="none" stroke="${c}" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M55 11 L48 10.5 A22 22 0 0 0 48 53.5 L55 53 Z" fill="none" stroke="${c}" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/><g clip-path="url(#${u})"><path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="${c}"/></g></svg>`};
+const isDark=()=>typeof matchMedia!=='undefined'&&matchMedia('(prefers-color-scheme:dark)').matches;
+const mark=(s=20,c)=>{c=c||(isDark()?'#2AA07E':'#0A5F49');const u='k'+Math.random().toString(36).slice(2,7);return`<svg role="img" aria-label="다들" width="${s}" height="${s}" viewBox="0 0 64 64"><defs><clipPath id="${u}"><path d="M56 10 L48 10 A22 22 0 0 0 48 54 L56 54 Z"/></clipPath></defs><path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="none" stroke="${c}" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M55 11 L48 10.5 A22 22 0 0 0 48 53.5 L55 53 Z" fill="none" stroke="${c}" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/><g clip-path="url(#${u})"><path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="${c}"/></g></svg>`};
 const GLY={
  pan:'<circle cx="27" cy="34" r="16.5" fill="#FFFFFF" fill-opacity=".66"/><circle cx="27" cy="34" r="16.5"/><circle cx="27" cy="34" r="10.5" stroke-opacity=".4"/><path d="M43.5 30.5L57.5 26.5" stroke-width="4.6"/><circle cx="21.5" cy="28" r="2.1" fill="#FFFFFF" fill-opacity=".9" stroke="none"/>',
  pot:'<path d="M16 29h32v12.5a6 6 0 0 1-6 6H22a6 6 0 0 1-6-6z" fill="#FFFFFF" fill-opacity=".66"/><path d="M16 29h32v12.5a6 6 0 0 1-6 6H22a6 6 0 0 1-6-6z"/><path d="M12.5 25h39" stroke-width="4.2"/><path d="M32 17.5v5.5"/><circle cx="32" cy="15" r="2.6" fill="#FFFFFF" fill-opacity=".9"/><path d="M16 34h-4.5M48 34h4.5"/><path d="M23 35v6" stroke-opacity=".3"/>',
@@ -341,11 +358,19 @@ const AUDIT=[
 /* ── 상태 ── */
 const S={stack:[{s:'home'}],tab:'home',unread:2,foot:1,sort:'n',fcat:0,doneShow:{},pubState:'wait',reqDone:null,view:'grid',sec:null,opencat:null,glist:null,rlist:null,rax:'all',rpick:null,atab:'cand',appr:{},aud:{},mine:0,cat:'전체',brand:null,drawer:0,ptab:'rev',user:null,pending:null,noti:{open:1,post:1,drop:1,week:0},sheet:null,q:'',filters:[],picks:[],waits:{},bought:{},contact:'',tmp:null,toast:null};
 const cur=()=>S.stack[S.stack.length-1];
+let navLock=0;
+const pushHist=()=>{if(navLock)return;try{history.pushState({d:S.stack.length},'')}catch(e){}};
 const go=(s2,id)=>{const b=document.querySelector('.body');
  if(b)S.stack[S.stack.length-1].top=b.scrollTop;
- S.stack.push({s:s2,id});draw()};
-const back=()=>{if(S.stack.length>1){S.stack.pop();draw();
- const t=cur().top||0,b=document.querySelector('.body');if(b)b.scrollTop=t}};
+ S.stack.push({s:s2,id});pushHist();draw()};
+const popView=()=>{if(S.drawer){S.drawer=0;draw();return true}
+ if(S.sheet){S.sheet=null;draw();return true}
+ if(S.stack.length>1){S.stack.pop();draw();
+  const t=cur().top||0,b=document.querySelector('.body');if(b)b.scrollTop=t;return true}
+ return false};
+const back=()=>{if(S.drawer||S.sheet||S.stack.length>1){navLock=1;
+ try{history.back()}catch(e){popView()}
+ setTimeout(()=>{navLock=0},60)}};
 const root=(s)=>{S.stack=[{s}];S.tab=s;draw()};
 const say=m=>{S.toast=m;draw();setTimeout(()=>{S.toast=null;draw()},2200)};
 const waitCount=p=>p.wait+(S.waits[p.id]?1:0);
@@ -445,7 +470,7 @@ V.home=()=>{
   <span style="display:block"><span style="display:block;width:17px;height:1.7px;background:#3A3A3D;border-radius:1px"></span>
   <span style="display:block;width:17px;height:1.7px;background:#3A3A3D;border-radius:1px;margin-top:4px"></span>
   <span style="display:block;width:12px;height:1.7px;background:#3A3A3D;border-radius:1px;margin-top:4px"></span></span></button>
- <button data-a="goHome" style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em">다들</span></button>
+ <button data-a="goHome" style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em;color:#1B1B1D">다들</span></button>
  <div style="display:flex;gap:14px"><button data-a="search">${ic('search',19)}</button><button data-a="noti" style="position:relative">${ic('bell',19)}${S.unread?`<span style="position:absolute;top:-1px;right:-2px;width:7px;height:7px;border-radius:4px;background:#B4552A"></span>`:''}</button></div></div></div>`;
  return topbar+`
  <div class="body">
@@ -668,7 +693,7 @@ V.reviews=()=>{
  return `<div class="bar"><div class="row" style="margin-bottom:12px">
  <span style="font-size:17px;font-weight:600;letter-spacing:-.03em">후기 모음</span>
  <button data-a="goHome" style="display:flex;align-items:center;gap:6px;opacity:.72">${mark(18)}
- <span style="font-size:14px;font-weight:600;letter-spacing:-.04em">다들</span></button></div>
+ <span style="font-size:14px;font-weight:600;letter-spacing:-.04em;color:#1B1B1D">다들</span></button></div>
  <button data-a="search" style="background:#F3F3F1;border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:8px;width:100%">
  ${ic('search',17)}<span style="font-size:13px;color:#A5A5AA">브랜드 · 제품명 · 궁금한 점</span></button></div>
  <div class="body">
@@ -927,7 +952,7 @@ V.drawer=()=>{
 
  return `<div class="drawer" data-a="closeDrawer"><div class="dpanel" data-stop>
  <div style="padding:18px 18px 12px;box-shadow:0 .5px 0 #ECECEA">
- <div class="row"><div style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em">다들</span></div>
+ <div class="row"><div style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em;color:#1B1B1D">다들</span></div>
  <button data-a="closeDrawer">${ic('x',19)}</button></div>
  <div class="meta" style="margin-top:7px">${S.user?CH[S.user.ch]+'으로 연결됨':'아직 연결하지 않으셨어요'}</div></div>
 
@@ -1528,7 +1553,7 @@ document.getElementById('app').addEventListener('click',e=>{
   case'product':S.ptab='rev';S.drawer=0;go('product',v);break;
   case'deal':S.drawer=0;go('deal',v);break;
   case'report':S.drawer=0;go('report',v);break;
-  case'price':S.tmp=S.waits[v]||null;S.sheet='price:'+v;draw();break;
+  case'price':S.tmp=S.waits[v]||null;S.sheet='price:'+v;pushHist();draw();break;
   case'pick2':S.tmp=Number(v);draw();break;
   case'toLogin':if(!S.tmp)break;S.pending={kind:'wait',id:v,price:S.tmp};
    if(S.user){finish()}else{S.sheet='login:'+v};draw();break;
@@ -1538,14 +1563,14 @@ document.getElementById('app').addEventListener('click',e=>{
    if(!val){say('번호를 적어주세요');break}S.user={ch:'phone',id:val};S.contact=val;S.sheet=null;finish();break}
   case'logout':S.user=null;S.sheet=null;say('로그아웃했어요');break;
   case'toVerify':S.sheet=null;say('판매처로 이동했다고 가정할게요');setTimeout(()=>go('verify',v),900);break;
-  case'leave':S.sheet='leave:'+v;draw();break;
+  case'leave':S.sheet='leave:'+v;pushHist();draw();break;
   case'closeSheet':S.sheet=null;draw();break;
   case'admin':S.drawer=0;S.atab='cand';go('admin');break;
   case'atab':S.atab=v;draw();break;
   case'appr':S.appr[v]=!S.appr[v];draw();break;
   case'runJob':if(Object.values(S.appr).filter(Boolean).length){S.atab='job';draw();say('수집을 시작했어요. 밤사이 돌아갑니다')}break;
   case'audit':{const[i,ok]=v.split(':');S.aud[i]=Number(ok);draw();break}
-  case'doverify':if(!S.user){S.pending={kind:'verify',id:v};S.sheet='login:'+v;draw();break}S.bought[v]=1;go('verified',v);break;
+  case'doverify':if(!S.user){S.pending={kind:'verify',id:v};S.sheet='login:'+v;pushHist();draw();break}S.bought[v]=1;go('verified',v);break;
   case'doreport':go('reported',v);break;
   case'pick':S.picks=S.picks.includes(v)?S.picks.filter(x=>x!==v):[...S.picks,v].slice(-4);
    document.getElementById('results').innerHTML=searchResults();draw();break;
@@ -1553,9 +1578,9 @@ document.getElementById('app').addEventListener('click',e=>{
   case'req':S.reqDone=S.q.trim();draw();say('요청 접수됐어요');break;
   case'seg':S.mine=Number(v);draw();break;
   case'toggle':S.noti[v]=S.noti[v]?0:1;draw();break;
-  case'editContact':S.sheet='edit:x';draw();break;
-  case'loginSheet':S.sheet='login:p1';draw();break;
-  case'openDrawer':S.drawer=1;S.sec=null;S.opencat=null;draw();break;
+  case'editContact':S.sheet='edit:x';pushHist();draw();break;
+  case'loginSheet':S.sheet='login:p1';pushHist();draw();break;
+  case'openDrawer':S.drawer=1;S.sec=null;S.opencat=null;pushHist();draw();break;
   case'closeDrawer':S.drawer=0;draw();break;
   case'toggleCat':S.opencat=S.opencat===v?null:v;draw();break;
   case'toggleBrand':S.openbrand=S.openbrand?0:1;draw();break;
@@ -1574,9 +1599,9 @@ document.getElementById('app').addEventListener('click',e=>{
    if(cur().s!=='home'){S.stack=[{s:'home'}];S.tab='home'}draw();break;
   case'ptab':S.ptab=v;draw();break;
   case'toggleFoot':S.foot=S.foot?0:1;draw();break;
-  case'openFilter':S.sheet='filter:x';draw();break;
+  case'openFilter':S.sheet='filter:x';pushHist();draw();break;
   case'toggleFcat':S.fcat=S.fcat?0:1;draw();break;
-  case'openSort':S.sheet='sort:x';draw();break;
+  case'openSort':S.sheet='sort:x';pushHist();draw();break;
   case'setSort':S.sort=v;S.sheet=null;draw();break;
   case'clearFilters':S.filters=[];draw();break;
   case'toggleDone':{const cu=S.doneShow[v]??byId(v).showInNone;S.doneShow[v]=!cu;
@@ -1591,14 +1616,20 @@ document.getElementById('app').addEventListener('click',e=>{
   case'rbrand':S.drawer=0;S.brand=v;S.cat='전체';S.rlist='many';go('rlist');break;
   case'rlist':S.drawer=0;if(cur().s==='rlist'){S.rlist=v;draw()}else{S.rlist=v;go('rlist')}break;
   case'glist':S.drawer=0;if(cur().s==='glist'){S.glist=v;draw()}else{S.glist=v;go('glist')}break;
-  case'official':S.sheet='site:'+v;draw();break;
-  case'askPublish':S.sheet='pub:x';draw();break;
+  case'official':S.sheet='site:'+v;pushHist();draw();break;
+  case'askPublish':S.sheet='pub:x';pushHist();draw();break;
   case'doPublish':S.pubState='live';S.sheet=null;draw();say('발행했어요. 다들 카드가 올라가요');break;
-  case'unpublish':S.sheet='unpub:x';draw();break;
+  case'unpublish':S.sheet='unpub:x';pushHist();draw();break;
   case'doUnpublish':S.pubState='wait';S.sheet=null;draw();say('회수했어요. 정정 이력에 남겼습니다');break;
   case'saveContact':{const c=document.getElementById('contact');S.contact=c?c.value.trim():S.contact;S.sheet=null;draw();say('저장했어요');break}
   case'say':say(v);break;
  }
+});
+try{history.replaceState({d:1},'')}catch(e){}
+window.addEventListener('popstate',()=>{
+ navLock=1;
+ if(!popView()){ /* 최상단이면 그대로 두되 히스토리 유지 */ try{history.pushState({d:1},'')}catch(e){} }
+ setTimeout(()=>{navLock=0},60);
 });
 draw();
 </script>
