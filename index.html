@@ -60,16 +60,16 @@ input,textarea,select{font:inherit;font-size:16px;color:var(--ink);background:tr
 .body::-webkit-scrollbar{width:0}
 .pad{padding:0 20px}
 .sec{padding-top:30px}
-.h1{font-size:23px;font-weight:700;letter-spacing:-.04em;line-height:1.36}
-.h2{font-size:17px;font-weight:700;letter-spacing:-.035em;display:inline-flex;align-items:center;gap:8px}
+.h1{font-size:23px;font-weight:700;letter-spacing:-.04em;line-height:1.36;color:var(--ink)}
+.h2{font-size:17px;font-weight:700;letter-spacing:-.035em;display:inline-flex;align-items:center;gap:8px;color:var(--ink)}
 .h2::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--brand);flex-shrink:0}
 .h2.plain::before{display:none}
-.h3{font-size:14px;font-weight:600;letter-spacing:-.025em}
+.h3{font-size:14px;font-weight:600;letter-spacing:-.025em;color:var(--ink)}
 .sub{font-size:12.5px;color:var(--sub);line-height:1.75}
 .meta{font-size:11px;color:var(--meta)}
 .tiny{font-size:10.5px;color:var(--tiny)}
 .num{font-variant-numeric:tabular-nums}
-.card{background:#fff;border-radius:16px;box-shadow:0 1px 2px rgba(27,27,29,.04),0 5px 14px -8px rgba(27,27,29,.06);width:100%;display:block}
+.card{background:var(--surface);border:.5px solid var(--line);border-radius:14px;width:100%;display:block}
 .soft{background:var(--surface2);border-radius:14px;width:100%;display:block}
 .thumb{border-radius:11px;flex-shrink:0;box-shadow:inset 0 0 0 .5px rgba(27,27,29,.05)}
 .pname{font-size:13px;font-weight:500;line-height:1.42;letter-spacing:-.025em;color:var(--ink);
@@ -107,7 +107,7 @@ input,textarea,select{font:inherit;font-size:16px;color:var(--ink);background:tr
 .veil{position:absolute;inset:0;background:var(--glyph);display:flex;align-items:flex-end;z-index:20}
 .sheet{width:100%;background:var(--surface);border-radius:22px 22px 0 0;max-height:88%;overflow-y:auto;padding-bottom:20px}
 .grab{width:36px;height:4px;border-radius:2px;background:var(--line3);margin:11px auto 4px}
-.field{background:#fff;border:.5px solid var(--line);border-radius:10px;padding:12px 13px;font-size:13px;width:100%}
+.field{background:var(--surface);border:1px solid var(--line3);border-radius:10px;padding:12px 13px;font-size:16px;width:100%;color:var(--ink)}
 .field::placeholder{color:var(--tiny)}
 .opt{border:.5px solid var(--line3);background:var(--surface);border-radius:12px;padding:12px 15px;width:100%;
  display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
