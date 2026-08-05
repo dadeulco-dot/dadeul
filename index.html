@@ -1010,17 +1010,24 @@ V.deal=id=>{const p=byId(id);const st=ladder(p);
  <div style="background:var(--surface);box-shadow:0 -.5px 0 var(--line);padding:15px 18px 18px;flex-shrink:0">
  ${S.bought[p.id]?`<button class="btn ghost" data-a="report:${p.id}">더 싼 곳을 찾았어요</button>
  <div class="tiny" style="text-align:center;margin-top:9px">가격 보장에 등록해 두셨어요. 30일 동안 지켜볼게요.</div>`
- :`<button class="btn amber" data-a="leave:${p.id}">브랜드 판매처에서 구매하기</button>
- <div class="tiny" style="text-align:center;margin-top:10px;line-height:1.7">결제와 배송, 교환은 브랜드가 맡아요.<br>구매하신 뒤 돌아오셔서 가격 보장을 등록해 주세요.</div>`}</div>`};
+ :`<div style="background:var(--surface2);border-radius:11px;padding:11px 13px;margin-bottom:11px">
+  <div class="row" style="font-size:12px;padding:2px 0"><span style="color:var(--sub)">파는 곳</span>
+   <span style="font-weight:600">${p.brand} 공식몰</span></div>
+  <div class="row" style="font-size:12px;padding:2px 0"><span style="color:var(--sub)">결제·배송·교환</span>
+   <span style="font-weight:600">브랜드가 맡아요</span></div>
+  <div class="row" style="font-size:12px;padding:2px 0"><span style="color:var(--sub)">가격 보장</span>
+   <span style="font-weight:600">구매일로부터 30일</span></div></div>
+ <button class="btn amber" data-a="leave:${p.id}">${won(p.dealPrice)}에 사러 가기</button>
+ <div class="tiny" style="text-align:center;margin-top:10px;line-height:1.7">
+  판매처로 이동해요. 구매 후 돌아오셔서 휴대폰 번호만 남기시면 30일 가격 보장이 시작돼요.</div>`}</div>`};
 
 V.verify=id=>{const p=byId(id);return bar('가격 보장 받기')+`<div class="body">
  <div class="pad" style="padding-top:20px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">${ic('shield',20,'var(--brand)')}
  <span class="h1" style="font-size:19px">가격 보장 받기</span></div><div class="meta">${p.brand} ${p.name} · 협상가 ${won(p.dealPrice)}</div></div>
- <div class="pad" style="padding-top:15px"><div class="hint sub">주문번호만 남겨주시면 30일 동안 이 제품 가격을 대신 지켜볼게요.${S.user?'':' 차액을 돌려드리려면 연락받으실 곳이 필요해서, 이때 한 번만 연결해 주세요.'}</div></div>
- <div class="pad" style="padding-top:16px"><div class="meta" style="margin-bottom:6px">주문번호</div>
- <input class="field" placeholder="판매처 주문 내역에서 복사해 주세요">
- <div class="meta" style="margin:13px 0 6px">결제하신 금액</div>
- <input class="field num" placeholder="${p.dealPrice}"></div>
+ <div class="pad" style="padding-top:15px"><div class="hint sub">구매하실 때 쓰신 휴대폰 번호만 남겨주시면 30일 동안 이 제품 가격을 대신 지켜볼게요.</div></div>
+ <div class="pad" style="padding-top:16px"><div class="meta" style="margin-bottom:6px">구매하실 때 쓰신 휴대폰 번호</div>
+ <input class="field num" placeholder="010-0000-0000" value="${S.user&&S.user.ch==='phone'?S.user.id:''}">
+ <div class="tiny" style="margin-top:7px;line-height:1.65">브랜드 주문 내역과 맞춰보는 데에만 써요. 다른 곳에는 쓰지 않습니다.</div></div>
  <div class="pad" style="padding-top:18px;padding-bottom:26px"><button class="btn teal" data-a="doverify:${p.id}">보장 등록하기</button>
  <div class="tiny" style="text-align:center;margin-top:10px;line-height:1.7">협상이 끝난 뒤에도 30일 안에는<br>언제든 등록하실 수 있어요.</div></div></div>`};
 
@@ -1116,7 +1123,7 @@ V.me=()=>{
 
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:14px 15px">
  <div class="h3" style="font-size:12.5px;margin-bottom:6px">남기신 정보는 이것뿐이에요</div>
- <div class="meta" style="line-height:1.8">알림 받으실 연락처와 고르신 가격, 그리고 주문번호예요. 다른 곳에 쓰지 않고, 지워달라고 하시면 바로 지워드려요.</div>
+ <div class="meta" style="line-height:1.8">알림 받으실 연락처와 고르신 가격, 그리고 구매하실 때 쓰신 휴대폰 번호예요. 다른 곳에 쓰지 않고, 지워달라고 하시면 바로 지워드려요.</div>
  <button class="meta" style="margin-top:10px;color:var(--accent);font-weight:500" data-a="say:정보 삭제 요청이 접수됐어요">내 정보 지우기</button></div></div>
  </div>${tabs()}`};
 
@@ -1439,18 +1446,6 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <div class="sub" style="margin-top:8px">브랜드 쪽 설정에 따라 여기서 열리지 않을 수 있어요.<br>그럴 땐 새 창으로 열어드려요.</div>
  <button class="btn ghost" style="margin-top:16px" data-a="say:새 창으로 열었다고 가정할게요">새 창으로 열기</button></div>
  <div class="pad" style="padding-top:16px"><div class="hint meta">여기서 보시는 정보는 브랜드가 만든 것이에요. 다들이 정리한 제품 정보와 다를 수 있어요.</div></div></div></div>`;
- if(k==='leave')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
- <div class="grab"></div>
- <div class="pad" style="padding-top:12px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">브랜드 판매처로 이동해요</div>
- <div class="sub" style="margin-top:7px">다들은 물건을 직접 팔지 않아요. 결제와 배송, 교환과 환불은 모두 브랜드가 맡아요.</div></div>
- <div class="pad" style="padding-top:14px"><div class="card" style="padding:14px 15px;box-shadow:none;border:.5px solid var(--line)">
- ${[['파는 곳',p.brand+' 공식몰'],['협상가',won(p.dealPrice)],['보장 기간','구매일로부터 30일']]
- .map(([k2,v])=>`<div class="row" style="font-size:12.5px;padding:4px 0"><span style="color:var(--sub)">${k2}</span><span class="num">${v}</span></div>`).join('')}</div></div>
- <div class="pad" style="padding-top:14px"><div class="hint" style="display:flex;gap:9px">${ic('alert',16,'var(--bar2)')}
- <div style="font-size:12px;color:var(--ink3);line-height:1.75">구매를 마치시면 <b>다들로 돌아와 주문번호를 남겨주세요.</b> 그래야 30일 가격 보장을 받으실 수 있어요.</div></div></div>
- <div class="pad" style="padding-top:16px"><button class="btn amber" data-a="toVerify:${p.id}">판매처로 이동하기</button>
- <button class="btn ghost" style="margin-top:9px" data-a="closeSheet">조금 더 볼게요</button>
- <div class="tiny" style="text-align:center;margin-top:10px">다들이 받는 수수료는 판매가의 10%예요. 브랜드가 냅니다.</div></div></div></div>`;
  return''};
 
 function finish(){const q=S.pending;S.pending=null;S.sheet=null;
@@ -1551,7 +1546,6 @@ document.getElementById('app').addEventListener('click',e=>{
   case'docode':{const c=document.getElementById('contact');const val=c?c.value.trim():'';
    if(!val){say('번호를 적어주세요');break}S.user={ch:'phone',id:val};S.contact=val;S.sheet=null;finish();break}
   case'logout':S.user=null;S.sheet=null;say('로그아웃했어요');break;
-  case'toVerify':S.sheet=null;say('판매처로 이동했다고 가정할게요');setTimeout(()=>go('verify',v),900);break;
   case'leave':S.sheet='leave:'+v;pushHist();draw();break;
   case'closeSheet':S.sheet=null;draw();break;
   case'admin':S.drawer=0;S.atab='cand';go('admin');break;
