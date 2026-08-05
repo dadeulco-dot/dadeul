@@ -7,37 +7,52 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <title>다들 · DADEUL 프로토타입</title>
 <style>
+:root{
+ --ink:#1B1B1D; --ink2:#3A3A3D; --ink3:#4A4A4E;
+ --sub:#5F5F65; --meta:#76767D; --tiny:#8E8E96; --faint:#B0B0B8;
+ --surface:#FFFFFF; --surface2:#F6F6F4;
+ --line:#ECECEA; --line2:#F1F1EF; --line3:#E4E4E1;
+ --brand:#0A5F49; --brandUp:#2AA07E; --brandBg:#E3F1EC;
+ --accent:#B4552A; --accentBg:#FBEDE6;
+ --pos:#4E9B7F; --bar2:#9A9AA0; --bar3:#C9B896; --bar4:#A98A72;
+ --page:#F2F2F0; --panel:#FFFFFF;
+ --tGreen:linear-gradient(155deg,#EAF1EE,#D6E4DE);
+ --tSand:linear-gradient(155deg,#F5EFE7,#E5D9CB);
+ --tGray:linear-gradient(155deg,#F0F0EF,#DEDEDC);
+ --tWarm:linear-gradient(155deg,#F4EDE8,#E4D6CD);
+ --glyph:rgba(27,27,29,.34);
+}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
- -webkit-font-smoothing:antialiased;color:#1B1B1D;line-height:1.6;background:#F2F2F0;
+ -webkit-font-smoothing:antialiased;color:var(--ink);line-height:1.6;background:var(--page);
  display:flex;justify-content:center;padding:24px 12px;min-height:100vh;min-height:100dvh;
  overflow:hidden;overscroll-behavior:none}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;text-align:left}
-input{font:inherit}
+input,textarea,select{font:inherit;font-size:16px;color:var(--ink);background:transparent}
 .phone{width:100%;max-width:390px;height:min(812px,calc(100vh - 48px));
- height:min(812px,calc(100dvh - 48px));background:#FFFFFF;border-radius:32px;
+ height:min(812px,calc(100dvh - 48px));background:var(--surface);border-radius:32px;
  overflow:hidden;display:flex;flex-direction:column;position:relative;
- box-shadow:0 0 0 .5px #E9E9E7,0 20px 50px -12px rgba(27,27,29,.16)}
+ box-shadow:0 0 0 .5px var(--line3),0 20px 50px -12px rgba(27,27,29,.16)}
 
 /* 실제 모바일에서는 프레임을 없애고 화면을 꽉 채웁니다 */
 @media (max-width:520px){
- body{padding:0;background:#FFFFFF}
+ body{padding:0;background:var(--surface)}
  .phone{max-width:none;height:100vh;height:100dvh;border-radius:0;box-shadow:none}
  .tabs{padding-bottom:calc(14px + env(safe-area-inset-bottom))}
  .bar:first-child{padding-top:calc(14px + env(safe-area-inset-top))}
  .drawer,.veil{position:fixed}
 }
-.bar{background:#FFFFFF;box-shadow:0 .5px 0 #EFEFED;padding:16px 20px 14px;flex-shrink:0;z-index:5}
+.bar{background:var(--surface);box-shadow:0 .5px 0 var(--line);padding:16px 20px 14px;flex-shrink:0;z-index:5}
 .bar .line{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .bar h1{font-size:15px;font-weight:600;letter-spacing:-.03em}
 .body{flex:1;overflow-y:auto;position:relative;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
 .ptr{position:absolute;top:0;left:0;right:0;display:flex;align-items:flex-end;justify-content:center;
  pointer-events:none;z-index:9;overflow:hidden;height:0;opacity:0}
-.ptr i{display:block;width:24px;height:24px;margin-bottom:13px;border-radius:50%;border:2px solid #E4E4E1;
- border-top-color:#0A5F49;box-sizing:border-box}
+.ptr i{display:block;width:24px;height:24px;margin-bottom:13px;border-radius:50%;border:2px solid var(--line3);
+ border-top-color:var(--brand);box-sizing:border-box}
 .ptr.spin i{animation:sp .7s linear infinite}
-.skel{background:linear-gradient(90deg,#F0F0EE 25%,#F6F6F4 50%,#F0F0EE 75%);
+.skel{background:linear-gradient(90deg,var(--surface2) 25%,var(--surface2) 50%,var(--surface2) 75%);
  background-size:200% 100%;animation:sk 1.2s infinite;border-radius:8px}
 @keyframes sk{to{background-position:-200% 0}}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -47,38 +62,38 @@ input{font:inherit}
 .sec{padding-top:30px}
 .h1{font-size:23px;font-weight:700;letter-spacing:-.04em;line-height:1.36}
 .h2{font-size:17px;font-weight:700;letter-spacing:-.035em;display:inline-flex;align-items:center;gap:8px}
-.h2::before{content:"";width:3px;height:14px;border-radius:2px;background:#0A5F49;flex-shrink:0}
+.h2::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--brand);flex-shrink:0}
 .h2.plain::before{display:none}
 .h3{font-size:14px;font-weight:600;letter-spacing:-.025em}
-.sub{font-size:12.5px;color:#6B6B70;line-height:1.75}
-.meta{font-size:11px;color:#86868B}
-.tiny{font-size:10.5px;color:#A5A5AA}
+.sub{font-size:12.5px;color:var(--sub);line-height:1.75}
+.meta{font-size:11px;color:var(--meta)}
+.tiny{font-size:10.5px;color:var(--tiny)}
 .num{font-variant-numeric:tabular-nums}
 .card{background:#fff;border-radius:16px;box-shadow:0 1px 2px rgba(27,27,29,.04),0 5px 14px -8px rgba(27,27,29,.06);width:100%;display:block}
-.soft{background:#F6F6F4;border-radius:14px;width:100%;display:block}
+.soft{background:var(--surface2);border-radius:14px;width:100%;display:block}
 .thumb{border-radius:11px;flex-shrink:0;box-shadow:inset 0 0 0 .5px rgba(27,27,29,.05)}
-.pname{font-size:13px;font-weight:500;line-height:1.42;letter-spacing:-.025em;color:#1B1B1D;
+.pname{font-size:13px;font-weight:500;line-height:1.42;letter-spacing:-.025em;color:var(--ink);
  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
  height:calc(1.42em * 2);margin-top:3px}
 .pname1{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;height:auto}
 .btn{display:block;width:100%;border-radius:12px;padding:15px;text-align:center;font-size:15px;font-weight:600;letter-spacing:-.02em}
-.teal{background:#0A5F49;color:#FFFFFF}
-.dark{background:#1B1B1D;color:#FFFFFF}
-.amber{background:#B4552A;color:#FFFFFF}
-.ghost{border:1px solid #E4E4E1;color:#1B1B1D;font-weight:600;font-size:14px}
-.chip{font-size:12px;border-radius:8px;padding:8px 14px;white-space:nowrap;flex-shrink:0;color:#4A4A4E;background:#F3F3F1;font-weight:500;display:inline-flex;align-items:center;gap:4px}
-.chip.on{background:#0A5F49;color:#FFFFFF;font-weight:600}
-.chip.sel{background:#0A5F49;color:#FFFFFF;font-weight:500}
+.teal{background:var(--brand);color:var(--surface)}
+.dark{background:var(--ink);color:var(--surface)}
+.amber{background:var(--accent);color:var(--surface)}
+.ghost{border:1px solid var(--line3);color:var(--ink);font-weight:600;font-size:14px}
+.chip{font-size:12px;border-radius:8px;padding:8px 14px;white-space:nowrap;flex-shrink:0;color:var(--ink3);background:var(--surface2);font-weight:500;display:inline-flex;align-items:center;gap:4px}
+.chip.on{background:var(--brand);color:var(--surface);font-weight:600}
+.chip.sel{background:var(--brand);color:var(--surface);font-weight:500}
 .badge{font-size:10.5px;border-radius:5px;padding:3.5px 8px;display:inline-block;font-weight:600;letter-spacing:-.01em}
-.b-amber{color:#A34A22;background:#FBEDE6}
-.b-teal{color:#0A5F49;background:#E3F1EC}
-.b-gray{color:#4A4A4E;background:#F0F0EE}
+.b-amber{color:var(--accent);background:var(--accentBg)}
+.b-teal{color:var(--brand);background:var(--brandBg)}
+.b-gray{color:var(--ink3);background:var(--surface2)}
 .row{display:flex;justify-content:space-between;align-items:center}
-.track{height:5px;background:#F0F0EE;border-radius:3px;overflow:hidden}
-.fill{height:5px;background:#0A5F49;border-radius:3px}
-.tabs{background:#FFFFFF;box-shadow:0 -.5px 0 #EFEFED;display:flex;padding:8px 0 14px;flex-shrink:0}
-.tab{flex:1;text-align:center;color:#A5A5AA;font-size:10.5px;letter-spacing:-.01em;padding-top:2px}
-.tab.on{color:#0A5F49;font-weight:600}
+.track{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.fill{height:5px;background:var(--brand);border-radius:3px}
+.tabs{background:var(--surface);box-shadow:0 -.5px 0 var(--line);display:flex;padding:8px 0 14px;flex-shrink:0}
+.tab{flex:1;text-align:center;color:var(--tiny);font-size:10.5px;letter-spacing:-.01em;padding-top:2px}
+.tab.on{color:var(--brand);font-weight:600}
 .tab svg{display:block;margin:0 auto 2px}
 .scroller,.scroller2{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;
  scroll-snap-type:x proximity;scrollbar-width:none;scroll-padding-left:20px}
@@ -89,85 +104,59 @@ input{font:inherit}
 .scroller::after,.scroller2::after{content:"";flex:0 0 20px;height:1px}
 .scroller::-webkit-scrollbar,.scroller2::-webkit-scrollbar{height:0;display:none}
 .chiprow{margin-top:14px;margin-bottom:2px}
-.veil{position:absolute;inset:0;background:rgba(27,27,29,.34);display:flex;align-items:flex-end;z-index:20}
-.sheet{width:100%;background:#FFFFFF;border-radius:22px 22px 0 0;max-height:88%;overflow-y:auto;padding-bottom:20px}
-.grab{width:36px;height:4px;border-radius:2px;background:#DCDCDA;margin:11px auto 4px}
-.field{background:#fff;border:.5px solid #ECECEA;border-radius:10px;padding:12px 13px;font-size:13px;width:100%}
-.field::placeholder{color:#A5A5AA}
-.opt{border:.5px solid #E9E9E7;background:#FFFFFF;border-radius:12px;padding:12px 15px;width:100%;
+.veil{position:absolute;inset:0;background:var(--glyph);display:flex;align-items:flex-end;z-index:20}
+.sheet{width:100%;background:var(--surface);border-radius:22px 22px 0 0;max-height:88%;overflow-y:auto;padding-bottom:20px}
+.grab{width:36px;height:4px;border-radius:2px;background:var(--line3);margin:11px auto 4px}
+.field{background:#fff;border:.5px solid var(--line);border-radius:10px;padding:12px 13px;font-size:13px;width:100%}
+.field::placeholder{color:var(--tiny)}
+.opt{border:.5px solid var(--line3);background:var(--surface);border-radius:12px;padding:12px 15px;width:100%;
  display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.opt.on{border:1.5px solid #0A5F49;background:#EAF3F0}
-.toast{position:absolute;left:18px;right:18px;bottom:86px;background:#1B1B1D;color:#FFFFFF;border-radius:12px;
+.opt.on{border:1.5px solid var(--brand);background:var(--brandBg)}
+.toast{position:absolute;left:18px;right:18px;bottom:86px;background:var(--ink);color:var(--surface);border-radius:12px;
  padding:13px 15px;font-size:12.5px;z-index:30}
-.quote{border-left:2px solid #DCDCDA;padding-left:11px;font-size:12px;color:#4A4A4E;line-height:1.8}
-.hint{background:#F6F6F4;border-radius:11px;padding:12px 13px}
+.quote{border-left:2px solid var(--line3);padding-left:11px;font-size:12px;color:var(--ink3);line-height:1.8}
+.hint{background:var(--surface2);border-radius:11px;padding:12px 13px}
 @keyframes pin{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 .drawer{position:absolute;inset:0;z-index:25;display:flex}
-.dpanel{width:82%;max-width:300px;background:#FFFFFF;height:100%;overflow-y:auto;box-shadow:6px 0 24px -8px rgba(27,27,29,.18)}
+.dpanel{width:82%;max-width:300px;background:var(--surface);height:100%;overflow-y:auto;box-shadow:6px 0 24px -8px rgba(27,27,29,.18)}
 .dpanel::-webkit-scrollbar{width:0}
 .drow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;font-size:13.5px;letter-spacing:-.01em}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.ptab{flex:1;text-align:center;padding:13px 0;font-size:14px;font-weight:500;color:#86868B;border-bottom:2px solid transparent;letter-spacing:-.02em}
-.ptab.on{color:#0A5F49;font-weight:700;border-bottom-color:#0A5F49}
+.ptab{flex:1;text-align:center;padding:13px 0;font-size:14px;font-weight:500;color:var(--meta);border-bottom:2px solid transparent;letter-spacing:-.02em}
+.ptab.on{color:var(--brand);font-weight:700;border-bottom-color:var(--brand)}
 
 /* ── 다크 모드 (반드시 마지막에 위치) ── */
 @media (prefers-color-scheme:dark){
- html,body{background:#0C0C0D !important;color:#F2F2F0 !important}
- .phone{background:#131315 !important;box-shadow:0 0 0 .5px #2A2A2E,0 20px 50px -12px rgba(0,0,0,.6) !important}
- .bar{background:#131315 !important;box-shadow:0 .5px 0 #2A2A2E !important}
- .tabs{background:#131315 !important;box-shadow:0 -.5px 0 #2A2A2E !important}
- .card{background:#1A1A1D !important;border-color:#2C2C31 !important}
- .soft,.hint{background:#1E1E22 !important}
- .sheet{background:#141416 !important}
- .grab{background:#3A3A40 !important}
- .field{background:#1A1A1D !important;border-color:#33333A !important;color:#F2F2F0 !important}
- .field::placeholder{color:#6E6E75 !important}
- .chip{background:#26262B !important;color:#D4D4D8 !important}
- .chip.on{background:#0E7A5E !important;color:#fff !important}
- .chip.sel{background:#0E7A5E !important;color:#fff !important}
- .track{background:#2C2C31 !important}
- .toast{background:#F2F2F0 !important;color:#1B1B1D !important}
- .ghost{border-color:#3A3A40 !important;color:#EDEDEF !important}
- .teal{background:#0E7A5E !important;color:#fff !important}
- .opt{background:#1A1A1D !important;border-color:#33333A !important}
- .opt.on{background:#12352C !important;border-color:#2AA07E !important}
- .h2::before{background:#2AA07E !important}
- .h1,.h2,.h3,.pname{color:#F2F2F0 !important}
- .sub{color:#A8A8AE !important}
- .meta{color:#9A9AA1 !important}
- .tiny{color:#82828A !important}
- .num{color:inherit}
- .quote{border-color:#3A3A40 !important;color:#A8A8AE !important}
- .ptab{color:#9A9AA1 !important}
- .ptab.on{color:#2AA07E !important;border-bottom-color:#2AA07E !important}
- .tab{color:#82828A !important}
- .tab.on{color:#2AA07E !important}
- .badge{filter:none}
- .b-teal{color:#7FD9BA !important;background:#16302A !important}
- .b-amber{color:#E8A176 !important;background:#33231C !important}
- .b-gray{color:#B4B4BA !important;background:#26262B !important}
- .drawer .dpanel{background:#131315 !important;box-shadow:6px 0 24px -8px rgba(0,0,0,.7) !important}
- .drow{border-color:#2C2C31 !important}
- /* 인라인 하드코딩 보정 */
- [style*="color:#1B1B1D"]{color:#F2F2F0 !important}
- [style*="color:#3A3A3D"]{color:#DEDEE2 !important}
- [style*="color:#4A4A4E"]{color:#CACACF !important}
- [style*="color:#6B6B70"]{color:#A8A8AE !important}
- [style*="color:#86868B"]{color:#9A9AA1 !important}
- [style*="color:#9E9EA3"],[style*="color:#A5A5AA"]{color:#82828A !important}
- [style*="color:#C2C2C7"],[style*="color:#C8C8CC"]{color:#63636A !important}
- [style*="color:#0A5F49"]{color:#3FB894 !important}
- [style*="color:#B4552A"],[style*="color:#A34A22"]{color:#E8A176 !important}
- [style*="background:#FFFFFF"]{background:#1A1A1D !important}
- [style*="background:#F6F6F4"],[style*="background:#F3F3F1"],[style*="background:#F0F0EE"]{background:#1E1E22 !important}
- [style*="background:#F2F2F0"]{background:#26262B !important}
- [style*="background:#EAF3F0"],[style*="background:#E3F1EC"]{background:#16302A !important}
- [style*="background:#FBEDE6"]{background:#33231C !important}
- [style*="solid #E4E4E1"],[style*="solid #ECECEA"],[style*="solid #EFEFED"],
- [style*="solid #F1F1EF"],[style*="solid #DCDCDA"]{border-color:#2C2C31 !important}
- /* 흰 글씨는 유지 */
- [style*="color:#FFFFFF"],[style*="color:#fff"],[style*="color:rgba(255,255,255"]{color:#FFFFFF !important}
- .teal,.dark{color:#FFFFFF !important}
+ :root{
+  --ink:#F3F3F5; --ink2:#DCDCE0; --ink3:#C4C4CA;
+  --sub:#B0B0B8; --meta:#9E9EA6; --tiny:#8A8A93; --faint:#68686F;
+  --surface:#1B1B1F; --surface2:#25252A;
+  --line:#2E2E34; --line2:#2A2A30; --line3:#3A3A42;
+  --brand:#3FB894; --brandUp:#5FCFAE; --brandBg:#173A31;
+  --accent:#E8A176; --accentBg:#3A2820;
+  --pos:#5FCFAE; --bar2:#8A8A92; --bar3:#9A8B6E; --bar4:#8C7360;
+  --page:#0E0E10; --panel:#141417;
+  --tGreen:linear-gradient(155deg,#24352F,#1B2A25);
+  --tSand:linear-gradient(155deg,#33302A,#26231E);
+  --tGray:linear-gradient(155deg,#2B2B2F,#212125);
+  --tWarm:linear-gradient(155deg,#332C28,#26211E);
+  --glyph:rgba(243,243,245,.42);
+ }
+ body{background:var(--page)}
+ .phone{background:var(--panel);box-shadow:0 0 0 .5px var(--line),0 20px 50px -12px rgba(0,0,0,.6)}
+ .bar,.tabs{background:var(--panel)}
+ .sheet,.dpanel{background:var(--panel)}
+ .grab{background:var(--line3)}
+ .field::placeholder{color:var(--faint)}
+ .chip.on,.chip.sel{background:var(--brand);color:#0E0E10}
+ .teal{background:var(--brand);color:#0E1512}
+ .toast{background:var(--ink);color:var(--page)}
+ .b-teal{color:#8FE0C4;background:#173A31}
+ .b-amber{color:#F0B78F;background:#3A2820}
+ .b-gray{color:#B8B8BE;background:#2E2E34}
+ .skel{background:linear-gradient(90deg,#25252A 25%,#2E2E34 50%,#25252A 75%)}
+ .ptr i{border-color:var(--line3);border-top-color:var(--brand)}
+ .veil{background:rgba(0,0,0,.6)}
 }
 </style>
 </head>
@@ -197,25 +186,25 @@ const IP = {
  chev:'M6 15l6-6 6 6',
 };
 const ICL={back:'뒤로',search:'검색',bell:'알림',user:'내 정보',share:'공유',x:'닫기',next:'더 보기',arrow:'이동',ext:'새 창',info:'안내',alert:'주의',sliders:'필터',file:'기록',shield:'가격 보장',check:'완료',home:'홈',chat:'후기',tag:'협상',plus:'추가',chev:'접기'};
-const ic=(n,s=18,c='#86868B',w=1.7)=>`<svg role="img" aria-label="${ICL[n]||''}" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${IP[n].split('M').filter(Boolean).map(d=>`<path d="M${d}"/>`).join('')}</svg>`;
+const ic=(n,s=18,c='var(--meta)',w=1.7)=>`<svg role="img" aria-label="${ICL[n]||''}" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${IP[n].split('M').filter(Boolean).map(d=>`<path d="M${d}"/>`).join('')}</svg>`;
 const isDark=()=>typeof matchMedia!=='undefined'&&matchMedia('(prefers-color-scheme:dark)').matches;
-const mark=(s=20,c)=>{c=c||(isDark()?'#2AA07E':'#0A5F49');const u='k'+Math.random().toString(36).slice(2,7);return`<svg role="img" aria-label="다들" width="${s}" height="${s}" viewBox="0 0 64 64"><defs><clipPath id="${u}"><path d="M56 10 L48 10 A22 22 0 0 0 48 54 L56 54 Z"/></clipPath></defs><path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="none" stroke="${c}" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M55 11 L48 10.5 A22 22 0 0 0 48 53.5 L55 53 Z" fill="none" stroke="${c}" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/><g clip-path="url(#${u})"><path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="${c}"/></g></svg>`};
+const mark=(s=20,c)=>{c=c||(isDark()?'var(--brandUp)':'var(--brand)');const u='k'+Math.random().toString(36).slice(2,7);return`<svg role="img" aria-label="다들" width="${s}" height="${s}" viewBox="0 0 64 64"><defs><clipPath id="${u}"><path d="M56 10 L48 10 A22 22 0 0 0 48 54 L56 54 Z"/></clipPath></defs><path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="none" stroke="${c}" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M55 11 L48 10.5 A22 22 0 0 0 48 53.5 L55 53 Z" fill="none" stroke="${c}" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/><g clip-path="url(#${u})"><path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="${c}"/></g></svg>`};
 const GLY={
- pan:'<circle cx="27" cy="34" r="16.5" fill="#FFFFFF" fill-opacity=".66"/><circle cx="27" cy="34" r="16.5"/><circle cx="27" cy="34" r="10.5" stroke-opacity=".4"/><path d="M43.5 30.5L57.5 26.5" stroke-width="4.6"/><circle cx="21.5" cy="28" r="2.1" fill="#FFFFFF" fill-opacity=".9" stroke="none"/>',
- pot:'<path d="M16 29h32v12.5a6 6 0 0 1-6 6H22a6 6 0 0 1-6-6z" fill="#FFFFFF" fill-opacity=".66"/><path d="M16 29h32v12.5a6 6 0 0 1-6 6H22a6 6 0 0 1-6-6z"/><path d="M12.5 25h39" stroke-width="4.2"/><path d="M32 17.5v5.5"/><circle cx="32" cy="15" r="2.6" fill="#FFFFFF" fill-opacity=".9"/><path d="M16 34h-4.5M48 34h4.5"/><path d="M23 35v6" stroke-opacity=".3"/>',
- wok:'<path d="M11 26.5a21 21 0 0 0 42 0z" fill="#FFFFFF" fill-opacity=".66"/><path d="M11 26.5a21 21 0 0 0 42 0z"/><path d="M8 26.5h48" stroke-width="3.2"/><path d="M53.5 24l8-4" stroke-width="4.4"/><path d="M22 32a10 10 0 0 0 20 0" stroke-opacity=".38"/>',
- knife:'<path d="M20.5 38.5L44 15l5 5-23.5 23.5z" fill="#FFFFFF" fill-opacity=".66"/><path d="M20.5 38.5L44 15l5 5-23.5 23.5z"/><path d="M20.5 38.5l-7 7a3.6 3.6 0 0 0 5 5l7-7z" fill="#FFFFFF" fill-opacity=".92"/><path d="M27 32L44 15" stroke-opacity=".33"/>',
- tool:'<path d="M20 46L38 20" stroke-width="4.4"/><path d="M34 14c5-4 12-3 15 2s2 12-3 15z" fill="#FFFFFF" fill-opacity=".66"/><circle cx="19" cy="47" r="3.4" fill="#FFFFFF" fill-opacity=".9"/>',
- bake:'<path d="M14 30h36v12a5 5 0 0 1-5 5H19a5 5 0 0 1-5-5z" fill="#FFFFFF" fill-opacity=".66"/><path d="M14 30h36v12a5 5 0 0 1-5 5H19a5 5 0 0 1-5-5z"/><path d="M18 30c0-6 4-9 8-9M32 30c0-6 4-9 8-9" stroke-opacity=".45"/>',
- store:'<rect x="16" y="24" width="32" height="24" rx="4" fill="#FFFFFF" fill-opacity=".66"/><rect x="16" y="24" width="32" height="24" rx="4"/><path d="M12 20h40" stroke-width="4.2"/><path d="M26 20v-4h12v4" stroke-opacity=".5"/>',
- appl:'<rect x="16" y="16" width="32" height="34" rx="5" fill="#FFFFFF" fill-opacity=".66"/><rect x="16" y="16" width="32" height="34" rx="5"/><rect x="22" y="23" width="20" height="14" rx="3" stroke-opacity=".45"/><circle cx="40" cy="44" r="2.4"/>',
- dish:'<circle cx="32" cy="32" r="17" fill="#FFFFFF" fill-opacity=".66"/><circle cx="32" cy="32" r="17"/><circle cx="32" cy="32" r="10" stroke-opacity=".38"/>',
- misc:'<path d="M22 20h20l4 28H18z" fill="#FFFFFF" fill-opacity=".66"/><path d="M22 20h20l4 28H18z"/><path d="M26 20c0-4 2.7-6 6-6s6 2 6 6" stroke-opacity=".5"/>',
- grill:'<rect x="13"  y="21" width="38" height="22.5" rx="5.5" fill="#FFFFFF" fill-opacity=".66"/><rect x="13" y="21" width="38" height="22.5" rx="5.5"/><path d="M13.5 28.5h37M13.5 36h37" stroke-opacity=".38"/><path d="M9 26h4.5M50.5 26h4.5" stroke-width="3.6"/>'};
-const TINT={green:'linear-gradient(155deg,#EAF1EE,#D6E4DE)',sand:'linear-gradient(155deg,#F5EFE7,#E5D9CB)',gray:'linear-gradient(155deg,#F0F0EF,#DEDEDC)',warm:'linear-gradient(155deg,#F4EDE8,#E4D6CD)'};
+ pan:'<circle cx="27" cy="34" r="16.5" fill="var(--surface)" fill-opacity=".66"/><circle cx="27" cy="34" r="16.5"/><circle cx="27" cy="34" r="10.5" stroke-opacity=".4"/><path d="M43.5 30.5L57.5 26.5" stroke-width="4.6"/><circle cx="21.5" cy="28" r="2.1" fill="var(--surface)" fill-opacity=".9" stroke="none"/>',
+ pot:'<path d="M16 29h32v12.5a6 6 0 0 1-6 6H22a6 6 0 0 1-6-6z" fill="var(--surface)" fill-opacity=".66"/><path d="M16 29h32v12.5a6 6 0 0 1-6 6H22a6 6 0 0 1-6-6z"/><path d="M12.5 25h39" stroke-width="4.2"/><path d="M32 17.5v5.5"/><circle cx="32" cy="15" r="2.6" fill="var(--surface)" fill-opacity=".9"/><path d="M16 34h-4.5M48 34h4.5"/><path d="M23 35v6" stroke-opacity=".3"/>',
+ wok:'<path d="M11 26.5a21 21 0 0 0 42 0z" fill="var(--surface)" fill-opacity=".66"/><path d="M11 26.5a21 21 0 0 0 42 0z"/><path d="M8 26.5h48" stroke-width="3.2"/><path d="M53.5 24l8-4" stroke-width="4.4"/><path d="M22 32a10 10 0 0 0 20 0" stroke-opacity=".38"/>',
+ knife:'<path d="M20.5 38.5L44 15l5 5-23.5 23.5z" fill="var(--surface)" fill-opacity=".66"/><path d="M20.5 38.5L44 15l5 5-23.5 23.5z"/><path d="M20.5 38.5l-7 7a3.6 3.6 0 0 0 5 5l7-7z" fill="var(--surface)" fill-opacity=".92"/><path d="M27 32L44 15" stroke-opacity=".33"/>',
+ tool:'<path d="M20 46L38 20" stroke-width="4.4"/><path d="M34 14c5-4 12-3 15 2s2 12-3 15z" fill="var(--surface)" fill-opacity=".66"/><circle cx="19" cy="47" r="3.4" fill="var(--surface)" fill-opacity=".9"/>',
+ bake:'<path d="M14 30h36v12a5 5 0 0 1-5 5H19a5 5 0 0 1-5-5z" fill="var(--surface)" fill-opacity=".66"/><path d="M14 30h36v12a5 5 0 0 1-5 5H19a5 5 0 0 1-5-5z"/><path d="M18 30c0-6 4-9 8-9M32 30c0-6 4-9 8-9" stroke-opacity=".45"/>',
+ store:'<rect x="16" y="24" width="32" height="24" rx="4" fill="var(--surface)" fill-opacity=".66"/><rect x="16" y="24" width="32" height="24" rx="4"/><path d="M12 20h40" stroke-width="4.2"/><path d="M26 20v-4h12v4" stroke-opacity=".5"/>',
+ appl:'<rect x="16" y="16" width="32" height="34" rx="5" fill="var(--surface)" fill-opacity=".66"/><rect x="16" y="16" width="32" height="34" rx="5"/><rect x="22" y="23" width="20" height="14" rx="3" stroke-opacity=".45"/><circle cx="40" cy="44" r="2.4"/>',
+ dish:'<circle cx="32" cy="32" r="17" fill="var(--surface)" fill-opacity=".66"/><circle cx="32" cy="32" r="17"/><circle cx="32" cy="32" r="10" stroke-opacity=".38"/>',
+ misc:'<path d="M22 20h20l4 28H18z" fill="var(--surface)" fill-opacity=".66"/><path d="M22 20h20l4 28H18z"/><path d="M26 20c0-4 2.7-6 6-6s6 2 6 6" stroke-opacity=".5"/>',
+ grill:'<rect x="13"  y="21" width="38" height="22.5" rx="5.5" fill="var(--surface)" fill-opacity=".66"/><rect x="13" y="21" width="38" height="22.5" rx="5.5"/><path d="M13.5 28.5h37M13.5 36h37" stroke-opacity=".38"/><path d="M9 26h4.5M50.5 26h4.5" stroke-width="3.6"/>'};
+const TINT={green:'var(--tGreen)',sand:'var(--tSand)',gray:'var(--tGray)',warm:'var(--tWarm)'};
 const th=(x,s=46)=>{const t=typeof x==='string'?x:x.tint,c=typeof x==='string'?null:x.cat;
  return `<div class="thumb" style="width:${s}px;height:${s}px;background:${TINT[t]};display:flex;align-items:center;justify-content:center">`+
- (c?`<svg width="${Math.round(s*.6)}" height="${Math.round(s*.6)}" viewBox="0 0 64 64" fill="none" stroke="rgba(27,27,29,.36)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${GLY[c]}</svg>`:'')+`</div>`};
+ (c?`<svg width="${Math.round(s*.6)}" height="${Math.round(s*.6)}" viewBox="0 0 64 64" fill="none" stroke="var(--glyph)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${GLY[c]}</svg>`:'')+`</div>`};
 
 /* ── 데이터 ── */
 const CH={kakao:'카카오톡',naver:'네이버',phone:'휴대폰'};
@@ -378,8 +367,8 @@ const waitCount=p=>p.wait+(S.waits[p.id]?1:0);
 /* ── 조각 ── */
 const bar=(t,sh)=>`<div class="bar"><div class="line"><button data-a="back">${ic('back',20)}</button><h1>${t}</h1>${sh?ic('share',17):'<span style="width:17px"></span>'}</div></div>`;
 const tabs=()=>`<div class="tabs">${[['home','홈','home'],['reviews','후기','chat'],['me','내 정보','user']]
- .map(([k,l,i])=>`<button class="tab ${S.tab===k?'on':''}" data-a="${k==='home'?'goHome':'root:'+k}">${ic(i,21,S.tab===k?'#0A5F49':'#A5A5AA')}${l}</button>`).join('')}</div>`;
-const bellBtn=p=>`<span data-a="price:${p.id}" style="width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${S.waits[p.id]?'#0A5F49':'#EAF3F0'}">${S.waits[p.id]?ic('check',17,'#FFFFFF'):ic('bell',17,'#0A5F49')}</span>`;
+ .map(([k,l,i])=>`<button class="tab ${S.tab===k?'on':''}" data-a="${k==='home'?'goHome':'root:'+k}">${ic(i,21,S.tab===k?'var(--brand)':'var(--tiny)')}${l}</button>`).join('')}</div>`;
+const bellBtn=p=>`<span data-a="price:${p.id}" style="width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${S.waits[p.id]?'var(--brand)':'var(--brandBg)'}">${S.waits[p.id]?ic('check',17,'var(--surface)'):ic('bell',17,'var(--brand)')}</span>`;
 const rowItem=(p,right)=>`<div class="card" style="padding:12px 13px;margin-bottom:9px;display:flex;gap:11px;align-items:center">
  <div data-a="product:${p.id}" style="display:flex;gap:11px;align-items:center;flex:1;min-width:0;cursor:pointer">${th(p)}
  <div style="min-width:0;flex:1"><div class="h3 pname1">${p.brand} ${p.name}</div>
@@ -397,36 +386,36 @@ V.home=()=>{
  const gcard=x=>{const off=x.dealPrice?Math.round((1-x.dealPrice/x.price)*100):0;
   return `<div class="card" data-a="product:${x.id}" style="overflow:hidden;cursor:pointer">
   <div style="height:132px;background:${TINT[x.tint]};display:flex;align-items:center;justify-content:center;position:relative">
-   <svg width="66" height="66" viewBox="0 0 64 64" fill="none" stroke="rgba(27,27,29,.34)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${GLY[x.cat]}</svg>
+   <svg width="66" height="66" viewBox="0 0 64 64" fill="none" stroke="var(--glyph)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${GLY[x.cat]}</svg>
    ${x.deal==='open'?`<span class="badge b-amber" style="position:absolute;top:9px;left:9px">${x.endDays}일 남음</span>`:''}
    ${S.waits[x.id]?`<span class="badge b-teal" style="position:absolute;top:9px;right:9px">기다리는 중</span>`:''}</div>
   <div style="padding:12px 13px 14px">
-   <div style="font-size:11px;color:#86868B;font-weight:500;letter-spacing:-.01em">${x.brand}</div>
+   <div style="font-size:11px;color:var(--meta);font-weight:500;letter-spacing:-.01em">${x.brand}</div>
    <div class="pname">${x.name}</div>
    ${x.deal==='open'
     ?`<div style="margin-top:9px;display:flex;align-items:baseline;gap:5px">
-      <span class="num" style="font-size:13px;color:#B4552A;font-weight:700;letter-spacing:-.02em">${off}%</span>
+      <span class="num" style="font-size:13px;color:var(--accent);font-weight:700;letter-spacing:-.02em">${off}%</span>
       <span class="num" style="font-size:16px;font-weight:700;letter-spacing:-.04em">${won(x.dealPrice)}</span></div>
-      <div class="num" style="font-size:11px;color:#A5A5AA;text-decoration:line-through;margin-top:1px">${won(x.price)}</div>`
+      <div class="num" style="font-size:11px;color:var(--tiny);text-decoration:line-through;margin-top:1px">${won(x.price)}</div>`
     :`<div style="margin-top:9px"><span class="num" style="font-size:15px;font-weight:700;letter-spacing:-.035em">${won(x.price)}</span></div>
-      <div class="num" style="font-size:11px;color:#86868B;margin-top:3px">${x.deal==='gathering'?`${waitCount(x)}<span style="color:#C2C2C7"> / ${GOAL}명</span>`
+      <div class="num" style="font-size:11px;color:var(--meta);margin-top:3px">${x.deal==='gathering'?`${waitCount(x)}<span style="color:var(--faint)"> / ${GOAL}명</span>`
  :x.deal==='talking'?`${waitCount(x)}명 대기 중`
  :x.deal==='done'?`${x.rounds}회차 협상 완료`
  :x.deal==='postponed'?'다음 기회를 기다려요'
  :`${waitCount(x)}명이 기다려요`}</div>`}
-   <div style="margin-top:9px;padding-top:9px;border-top:.5px solid #F1F1EF;display:flex;align-items:center;gap:5px">
-    <span style="width:5px;height:5px;border-radius:3px;flex-shrink:0;background:${x.label==='대체로 만족'?'#0A5F49':x.label==='의견 갈림'?'#B4552A':x.label==='대체로 불만'?'#9A9AA0':'#D8D8D6'}"></span>
-    <span style="font-size:11px;color:${x.label==='표본 부족'?'#C2C2C7':'#6B6B70'};font-weight:500">${x.label}</span>
-    <span style="font-size:11px;color:#C2C2C7" class="num">· ${x.n}건</span></div></div></div>`};
+   <div style="margin-top:9px;padding-top:9px;border-top:.5px solid var(--line2);display:flex;align-items:center;gap:5px">
+    <span style="width:5px;height:5px;border-radius:3px;flex-shrink:0;background:${x.label==='대체로 만족'?'var(--brand)':x.label==='의견 갈림'?'var(--accent)':x.label==='대체로 불만'?'var(--bar2)':'var(--faint)'}"></span>
+    <span style="font-size:11px;color:${x.label==='표본 부족'?'var(--faint)':'var(--sub)'};font-weight:500">${x.label}</span>
+    <span style="font-size:11px;color:var(--faint)" class="num">· ${x.n}건</span></div></div></div>`};
  const sec=(k,t,d,arr)=>arr.length?`<div class="pad sec">
   <div class="row" style="margin-bottom:3px"><span class="h2">${t}</span>
-  ${arr.length?`<button style="display:flex;align-items:center;gap:2px;font-size:12px;color:#86868B;font-weight:500" data-a="glist:${k}"><span class="num">${arr.length}</span>개 전체 ${ic('next',13,'#C2C2C7')}</button>`:''}</div>
+  ${arr.length?`<button style="display:flex;align-items:center;gap:2px;font-size:12px;color:var(--meta);font-weight:500" data-a="glist:${k}"><span class="num">${arr.length}</span>개 전체 ${ic('next',13,'var(--faint)')}</button>`:''}</div>
   <div class="meta" style="margin-bottom:12px">${d}</div>
   <div class="grid">${arr.slice(0,4).map(gcard).join('')}</div></div>`:'';
 
  const mini=x=>`<div data-a="product:${x.id}" style="cursor:pointer;flex:0 0 108px">
   <div class="thumb" style="width:108px;height:84px;border-radius:12px;background:${TINT[x.tint]};display:flex;align-items:center;justify-content:center;position:relative">
-   <svg width="46" height="46" viewBox="0 0 64 64" fill="none" stroke="rgba(27,27,29,.34)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${GLY[x.cat]}</svg>
+   <svg width="46" height="46" viewBox="0 0 64 64" fill="none" stroke="var(--glyph)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${GLY[x.cat]}</svg>
    ${x.deal==='open'?`<span class="badge b-amber num" style="position:absolute;top:6px;left:6px;font-size:9.5px;padding:2px 6px">협상가 ${(x.dealPrice/10000).toFixed(1)}만</span>`:''}</div>
   <div class="pname" style="font-size:11.5px;margin-top:6px">${x.name}</div>
   <div class="tiny num" style="margin-top:2px">${won(x.deal==='open'?x.dealPrice:x.price)}</div></div>`;
@@ -435,9 +424,9 @@ V.home=()=>{
   return `<div class="pad sec">
   <div class="row" style="margin-bottom:3px">
    <span style="display:flex;align-items:center;gap:8px">
-   <svg width="20" height="20" viewBox="0 0 64 64" fill="none" stroke="#86868B" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${GLY[c.g]}</svg>
+   <svg width="20" height="20" viewBox="0 0 64 64" fill="none" stroke="var(--meta)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${GLY[c.g]}</svg>
    <span class="h2">${c.k}</span></span>
-   <button class="meta" data-a="cat:${c.k}" style="display:flex;align-items:center;gap:3px">전체 <span class="num">${ps.length}</span> ${ic('next',13,'#86868B')}</button></div>
+   <button class="meta" data-a="cat:${c.k}" style="display:flex;align-items:center;gap:3px">전체 <span class="num">${ps.length}</span> ${ic('next',13,'var(--meta)')}</button></div>
   <div class="meta" style="margin-bottom:11px">${c.subs.join(' · ')}</div>
   ${ps.length?`<div class="scroller2" style="margin:0 -18px 0 -20px">${ps.slice(0,8).map(mini).join('')}</div>`
   :`<div class="soft" style="padding:16px;text-align:center"><div class="meta">아직 모은 제품이 없어요</div></div>`}</div>`}).join('');
@@ -445,8 +434,8 @@ V.home=()=>{
  const brandView=[...new Set(P.map(x=>x.brand))].map(b=>{const ps=shuffle(P.filter(x=>x.brand===b));
   const c={open:0,talking:0,gathering:0,postponed:0,none:0};ps.forEach(x=>c[x.deal]++);
   const cats=[...new Set(ps.map(x=>SUB2CAT[x.sub]))];
-  const stat=[['open','협상 완료','#B4552A','#FBEDE6'],['talking','협상 중','#0A5F49','#E3F1EC'],
-              ['gathering','수요 모집','#0A5F49','#E3F1EC'],['postponed','미뤄둠','#6B6B70','#F0F0EE']];
+  const stat=[['open','협상 완료','var(--accent)','var(--accentBg)'],['talking','협상 중','var(--brand)','var(--brandBg)'],
+              ['gathering','수요 모집','var(--brand)','var(--brandBg)'],['postponed','미뤄둠','var(--sub)','var(--surface2)']];
   return `<div class="pad sec">
   <div class="card" style="padding:14px 15px;margin-bottom:11px">
    <div class="row" style="align-items:flex-start">
@@ -456,9 +445,9 @@ V.home=()=>{
     <button class="chip" data-a="brandSel:${b}" style="flex-shrink:0">전체 ${ps.length}</button></div>
    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px">
     ${stat.map(([k,t,fg,bg])=>{const n=c[k],has=n>0;
-     return `<div ${has?`data-a="brandStat:${b}:${k}" style="cursor:pointer;`:'style="'}background:${has?bg:'#F6F6F4'};border-radius:10px;padding:9px 6px;text-align:center">
-     <div class="num" style="font-size:17px;font-weight:600;letter-spacing:-.03em;color:${has?fg:'#C8C8CC'}">${n}</div>
-     <div style="font-size:10px;margin-top:2px;color:${has?fg:'#C8C8CC'};${has?'opacity:.85':''};white-space:nowrap">${t}</div></div>`}).join('')}</div></div>
+     return `<div ${has?`data-a="brandStat:${b}:${k}" style="cursor:pointer;`:'style="'}background:${has?bg:'var(--surface2)'};border-radius:10px;padding:9px 6px;text-align:center">
+     <div class="num" style="font-size:17px;font-weight:600;letter-spacing:-.03em;color:${has?fg:'var(--faint)'}">${n}</div>
+     <div style="font-size:10px;margin-top:2px;color:${has?fg:'var(--faint)'};${has?'opacity:.85':''};white-space:nowrap">${t}</div></div>`}).join('')}</div></div>
   <div class="scroller2" style="margin:0 -18px 0 -20px">${ps.slice(0,8).map(mini).join('')}</div></div>`}).join('');
 
  const label=S.brand?S.brand:(S.cat!=='전체'?S.cat:null);
@@ -467,32 +456,32 @@ V.home=()=>{
     <h1>${S.view==='cat'?'카테고리로 찾기':'브랜드로 찾기'}</h1><span style="width:19px"></span></div></div>`
   :`<div class="bar"><div class="line">
  <button data-a="openDrawer" style="display:flex;align-items:center;gap:8px">
-  <span style="display:block"><span style="display:block;width:17px;height:1.7px;background:#3A3A3D;border-radius:1px"></span>
-  <span style="display:block;width:17px;height:1.7px;background:#3A3A3D;border-radius:1px;margin-top:4px"></span>
-  <span style="display:block;width:12px;height:1.7px;background:#3A3A3D;border-radius:1px;margin-top:4px"></span></span></button>
- <button data-a="goHome" style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em;color:#1B1B1D">다들</span></button>
- <div style="display:flex;gap:14px"><button data-a="search">${ic('search',19)}</button><button data-a="noti" style="position:relative">${ic('bell',19)}${S.unread?`<span style="position:absolute;top:-1px;right:-2px;width:7px;height:7px;border-radius:4px;background:#B4552A"></span>`:''}</button></div></div></div>`;
+  <span style="display:block"><span style="display:block;width:17px;height:1.7px;background:var(--ink2);border-radius:1px"></span>
+  <span style="display:block;width:17px;height:1.7px;background:var(--ink2);border-radius:1px;margin-top:4px"></span>
+  <span style="display:block;width:12px;height:1.7px;background:var(--ink2);border-radius:1px;margin-top:4px"></span></span></button>
+ <button data-a="goHome" style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em;color:var(--ink)">다들</span></button>
+ <div style="display:flex;gap:14px"><button data-a="search">${ic('search',19)}</button><button data-a="noti" style="position:relative">${ic('bell',19)}${S.unread?`<span style="position:absolute;top:-1px;right:-2px;width:7px;height:7px;border-radius:4px;background:var(--accent)"></span>`:''}</button></div></div></div>`;
  return topbar+`
  <div class="body">
  ${S.view==='grid'&&!label?`<div class="pad" style="padding-top:18px">
   <div data-a="method" style="border-radius:16px;padding:22px 20px;cursor:pointer;position:relative;overflow:hidden;
-   background:linear-gradient(140deg,#0A5F49 0%,#0D7357 55%,#12876A 100%)">
+   background:linear-gradient(140deg,var(--brand) 0%,#0D7357 55%,#12876A 100%)">
    <div style="position:absolute;right:-26px;top:-22px;opacity:.13">
     <svg width="150" height="150" viewBox="0 0 64 64"><defs><clipPath id="hb"><path d="M56 10 L48 10 A22 22 0 0 0 48 54 L56 54 Z"/></clipPath></defs>
-    <path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="none" stroke="#fff" stroke-width="6"/>
-    <path d="M55 11 L48 10.5 A22 22 0 0 0 48 53.5 L55 53 Z" fill="none" stroke="#fff" stroke-width="6"/>
-    <g clip-path="url(#hb)"><path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="#fff"/></g></svg></div>
+    <path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="none" stroke="var(--surface)" stroke-width="6"/>
+    <path d="M55 11 L48 10.5 A22 22 0 0 0 48 53.5 L55 53 Z" fill="none" stroke="var(--surface)" stroke-width="6"/>
+    <g clip-path="url(#hb)"><path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="var(--surface)"/></g></svg></div>
    <div style="position:relative">
    <div style="font-size:11px;color:rgba(255,255,255,.7);letter-spacing:.06em;font-weight:600">DADEUL</div>
-   <div style="font-size:20px;font-weight:700;letter-spacing:-.04em;line-height:1.4;color:#fff;margin-top:7px">
+   <div style="font-size:20px;font-weight:700;letter-spacing:-.04em;line-height:1.4;color:var(--surface);margin-top:7px">
     후기로 고르고<br>모여서 깎아 삽니다</div>
    <div style="font-size:12px;color:rgba(255,255,255,.78);line-height:1.7;margin-top:9px">
     기다리는 분이 모이면 브랜드와 가격을 협상해요</div>
    <div style="display:inline-flex;align-items:center;gap:4px;margin-top:14px;background:rgba(255,255,255,.16);
-    border-radius:7px;padding:7px 12px;font-size:12px;font-weight:600;color:#fff">
-    어떻게 하나요 ${ic('next',13,'#fff')}</div></div></div></div>`:''}
+    border-radius:7px;padding:7px 12px;font-size:12px;font-weight:600;color:var(--surface)">
+    어떻게 하나요 ${ic('next',13,'var(--surface)')}</div></div></div></div>`:''}
  ${label?`<div class="pad" style="padding-top:14px"><div class="row">
-  <span class="chip sel" data-a="clearFilter">${label} ${ic('x',13,'#FFFFFF')}</span>
+  <span class="chip sel" data-a="clearFilter">${label} ${ic('x',13,'var(--surface)')}</span>
   <span class="meta num">${total}개</span></div></div>`:''}
  ${S.view==='cat'?catView+'<div style="height:26px"></div>':S.view==='brand'?brandView+'<div style="height:26px"></div>':`
  ${sec('open','지금 살 수 있어요','협상이 끝난 제품이에요. 판매처에서 바로 살 수 있어요',openL)}
@@ -512,8 +501,8 @@ V.home=()=>{
   <div class="h3" style="font-size:13px">브랜드로 찾기</div><div class="tiny" style="margin-top:3px">${new Set(P.map(x=>x.brand)).size}개 브랜드</div></div></div></div>`}
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" data-a="log" style="padding:16px 17px;cursor:pointer">
  <div class="h3" style="font-size:14px;margin-bottom:6px">이번 달에 ${P.filter(x=>['open','talking','postponed'].includes(x.deal)).length}번 이야기해서 ${P.filter(x=>x.deal==='open').length}번 됐어요</div>
- <div style="font-size:12.5px;color:#4A4A4E;line-height:1.75">안 된 것도 숫자 그대로 적어둬요. 무엇을 걸렀는지 보이지 않으면 고른 것도 못 믿으니까요.</div>
- <div style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:#0A5F49;font-weight:500">협상 기록 보기 ${ic('arrow',15,'#0A5F49')}</div></div></div>
+ <div style="font-size:12.5px;color:var(--ink3);line-height:1.75">안 된 것도 숫자 그대로 적어둬요. 무엇을 걸렀는지 보이지 않으면 고른 것도 못 믿으니까요.</div>
+ <div style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--brand);font-weight:500">협상 기록 보기 ${ic('arrow',15,'var(--brand)')}</div></div></div>
  </div>${tabs()}`};
 
 V.glist=()=>{
@@ -528,18 +517,18 @@ V.glist=()=>{
  const gcard=x=>{const off=x.dealPrice?Math.round((1-x.dealPrice/x.price)*100):0;
   return `<div class="card" data-a="product:${x.id}" style="overflow:hidden;cursor:pointer">
   <div style="height:110px;background:${TINT[x.tint]};display:flex;align-items:center;justify-content:center;position:relative">
-   <svg width="60" height="60" viewBox="0 0 64 64" fill="none" stroke="rgba(27,27,29,.34)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${GLY[x.cat]}</svg>
+   <svg width="60" height="60" viewBox="0 0 64 64" fill="none" stroke="var(--glyph)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${GLY[x.cat]}</svg>
    ${x.deal==='open'?`<span class="badge b-amber" style="position:absolute;top:9px;left:9px">${x.endDays}일 남음</span>`:''}
    ${S.waits[x.id]?`<span class="badge b-teal" style="position:absolute;top:9px;right:9px">기다리는 중</span>`:''}</div>
-  <div style="padding:12px 13px 14px"><div style="font-size:11px;color:#86868B;font-weight:500">${x.brand} · ${x.sub}</div>
+  <div style="padding:12px 13px 14px"><div style="font-size:11px;color:var(--meta);font-weight:500">${x.brand} · ${x.sub}</div>
    <div class="pname">${x.name}</div>
    ${x.deal==='open'
     ?`<div style="margin-top:8px;display:flex;align-items:baseline;gap:6px">
-      <span class="num" style="font-size:11px;color:#B4552A;font-weight:600">-${off}%</span>
+      <span class="num" style="font-size:11px;color:var(--accent);font-weight:600">-${off}%</span>
       <span class="num" style="font-size:15px;font-weight:600;letter-spacing:-.03em">${won(x.dealPrice)}</span></div>`
     :`<div style="margin-top:8px"><span class="num" style="font-size:14px;font-weight:600">${won(x.price)}</span></div>
       <div class="tiny num" style="margin-top:3px">${x.deal==='gathering'?`${waitCount(x)} / ${GOAL}명`:''}</div>`}
-   <div class="meta" style="margin-top:7px;padding-top:7px;border-top:.5px solid #EFEFED;${x.label==='표본 부족'?'color:#C2C2C7':''}">${x.label} · 후기 ${x.n}건</div></div></div>`};
+   <div class="meta" style="margin-top:7px;padding-top:7px;border-top:.5px solid var(--line);${x.label==='표본 부족'?'color:var(--faint)':''}">${x.label} · 후기 ${x.n}건</div></div></div>`};
  return `<div class="bar"><div class="line"><button data-a="back">${ic('back',20)}</button>
  <h1>${t}</h1><button data-a="search">${ic('search',18)}</button></div></div>
  <div class="body">
@@ -548,7 +537,7 @@ V.glist=()=>{
  ${Object.keys(M).map(x=>`<span class="chip ${k===x?'on':''}" data-a="glist:${x}">${M[x][0]} ${P.filter(y=>y.deal===x).length}</span>`).join('')}</div>
  <div class="pad" style="padding-top:14px"><div class="row" style="margin-bottom:12px">
  <span class="meta num">${arr.length}개</span>
- ${S.cat!=='전체'||S.brand?`<span class="chip sel" data-a="clearFilter">${S.brand||S.cat} ${ic('x',13,'#FFFFFF')}</span>`:''}</div>
+ ${S.cat!=='전체'||S.brand?`<span class="chip sel" data-a="clearFilter">${S.brand||S.cat} ${ic('x',13,'var(--surface)')}</span>`:''}</div>
  ${arr.length?`<div class="grid">${arr.map(gcard).join('')}</div>`
  :`<div style="padding:50px 0;text-align:center"><div class="h2">여기엔 아직 없어요</div>
    <div class="sub" style="margin-top:8px">다른 상태를 눌러보시거나<br>필터를 지워보세요.</div></div>`}</div>
@@ -595,7 +584,7 @@ V.rlist=()=>{
  <div class="scroller chiprow">${Object.keys(M).map(x=>`<span class="chip ${k===x?'on':''}" data-a="rlist:${x}">${M[x][0]}</span>`).join('')}</div>
  <div class="pad" style="padding-top:16px"><div class="row" style="margin-bottom:12px">
   <span class="meta num">${arr.length}개</span>
-  ${S.cat!=='전체'||S.brand?`<span class="chip sel" data-a="clearFilter">${S.brand||S.cat} ${ic('x',13,'#FFFFFF')}</span>`:''}</div>
+  ${S.cat!=='전체'||S.brand?`<span class="chip sel" data-a="clearFilter">${S.brand||S.cat} ${ic('x',13,'var(--surface)')}</span>`:''}</div>
  ${arr.length?arr.map(row).join('')
  :`<div style="padding:46px 0;text-align:center"><div class="h2">여기엔 아직 없어요</div>
    <div class="sub" style="margin-top:8px">다른 기준을 눌러보시거나<br>필터를 지워보세요.</div></div>`}</div>
@@ -614,19 +603,19 @@ V.reviews=()=>{
 
  const allView=`
  <div class="pad sec"><div class="row" style="margin-bottom:3px"><span class="h2">후기가 가장 많이 쌓인</span>
-  <button style="display:flex;align-items:center;gap:2px;font-size:12px;color:#86868B;font-weight:500" data-a="rlist:many">전체 ${ic('next',13,'#C2C2C7')}</button></div>
+  <button style="display:flex;align-items:center;gap:2px;font-size:12px;color:var(--meta);font-weight:500" data-a="rlist:many">전체 ${ic('next',13,'var(--faint)')}</button></div>
   <div class="meta" style="margin-bottom:12px">수집한 후기 건수 순</div>
   ${shuffle([...P].sort((a,b)=>b.n-a.n).slice(0,8)).slice(0,3).map(x=>line(x,`후기 ${x.n}건`)).join('')}</div>
  <div class="pad sec"><div class="row" style="margin-bottom:3px"><span class="h2">문제 언급이 가장 적은</span>
-  <button style="display:flex;align-items:center;gap:2px;font-size:12px;color:#86868B;font-weight:500" data-a="rlist:clean">전체 ${ic('next',13,'#C2C2C7')}</button></div>
+  <button style="display:flex;align-items:center;gap:2px;font-size:12px;color:var(--meta);font-weight:500" data-a="rlist:clean">전체 ${ic('next',13,'var(--faint)')}</button></div>
   <div class="meta" style="margin-bottom:12px">후기 50건 이상인 제품만 · 언급률 낮은 순</div>
   ${shuffle(P.filter(x=>x.n>=48&&x.label==='대체로 만족')).slice(0,3).map(x=>line(x,x.cons[0]?`문제 언급 ${Math.round(x.cons[0][1]/x.n*100)}%`:'문제 언급 없음')).join('')}</div>
  <div class="pad sec"><div class="row" style="margin-bottom:3px"><span class="h2">오래 쓴 사람이 많은</span>
-  <button style="display:flex;align-items:center;gap:2px;font-size:12px;color:#86868B;font-weight:500" data-a="rlist:long">전체 ${ic('next',13,'#C2C2C7')}</button></div>
+  <button style="display:flex;align-items:center;gap:2px;font-size:12px;color:var(--meta);font-weight:500" data-a="rlist:long">전체 ${ic('next',13,'var(--faint)')}</button></div>
   <div class="meta" style="margin-bottom:12px">6개월 넘게 쓰신 분이 많은 순</div>
   ${shuffle(P.filter(x=>x.longN>=40)).slice(0,3).map(x=>line(x,`6개월 이상 ${x.longN}명`)).join('')}</div>
  <div class="pad sec"><div class="row" style="margin-bottom:3px"><span class="h2">아직 판단하기 이른</span>
-  <button style="display:flex;align-items:center;gap:2px;font-size:12px;color:#86868B;font-weight:500" data-a="rlist:thin">전체 ${ic('next',13,'#C2C2C7')}</button></div>
+  <button style="display:flex;align-items:center;gap:2px;font-size:12px;color:var(--meta);font-weight:500" data-a="rlist:thin">전체 ${ic('next',13,'var(--faint)')}</button></div>
   <div class="meta" style="margin-bottom:12px">후기가 더 모여야 말씀드릴 수 있어요</div>
   ${shuffle(P.filter(x=>x.label==='표본 부족')).slice(0,2).map(x=>line(x,`후기 ${x.n}건`)).join('')}</div>
  <div class="pad sec"><div class="h2" style="margin-bottom:12px">주제별로 모아 봤어요</div>
@@ -634,7 +623,7 @@ V.reviews=()=>{
  .map(([t,sb])=>`<div class="card" data-a="list" style="padding:14px 15px;margin-bottom:9px;cursor:pointer"><div class="h3">${t}</div><div class="meta" style="margin-top:3px">${sb}</div></div>`).join('')}</div>`;
 
  const secHead=(t,d,go2)=>`<div class="row" style="margin-bottom:3px"><span class="h2">${t}</span>
-  <button style="display:flex;align-items:center;gap:2px;font-size:12px;color:#86868B;font-weight:500" data-a="${go2}">전체 ${ic('next',13,'#C2C2C7')}</button></div>
+  <button style="display:flex;align-items:center;gap:2px;font-size:12px;color:var(--meta);font-weight:500" data-a="${go2}">전체 ${ic('next',13,'var(--faint)')}</button></div>
   <div class="meta" style="margin-bottom:11px">${d}</div>`;
  const pick=(arr,fn,ex)=>{const c=arr.filter(x=>!ex||x.id!==ex.id).slice().sort(fn)[0];return c};
  const rate=x=>x.cons[0]?x.cons[0][1]/x.n:0;
@@ -652,7 +641,7 @@ V.reviews=()=>{
   <div class="scroller chiprow" style="margin-top:10px">${avail.map(x=>`<span class="chip ${cur===x.k?'on':''}" data-a="rpick:${x.k}">${x.k} ${CATN(x.k)}</span>`).join('')}</div>
   <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px">
    <div class="row"><span style="display:flex;align-items:center;gap:9px">
-    <svg width="22" height="22" viewBox="0 0 64 64" fill="none" stroke="#86868B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${GLY[c.g]}</svg>
+    <svg width="22" height="22" viewBox="0 0 64 64" fill="none" stroke="var(--meta)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${GLY[c.g]}</svg>
     <span style="font-size:17px;font-weight:600;letter-spacing:-.03em">${c.k}</span></span>
     <button class="chip" data-a="rcat:${c.k}">전체 ${ps.length}</button></div>
    <div class="meta" style="margin-top:9px;line-height:1.7">후기 ${ps.reduce((t,x)=>t+x.n,0).toLocaleString('ko-KR')}건 · ${subs.join(' · ')}</div></div></div>
@@ -672,7 +661,7 @@ V.reviews=()=>{
   const a=pick(ps,(x,y)=>y.n-x.n);
   const b=pick(ps.filter(x=>x.n>=48),(x,y)=>rate(x)-rate(y),a);
   const d=pick(ps.filter(x=>x.keep+x.drop>=10),(x,y)=>y.keep/(y.keep+y.drop)-x.keep/(x.keep+x.drop),a);
-  const bar=[['#0A5F49',g],['#C9B896',ps.length-g-bd],['#A98A72',bd]].filter(([,n])=>n>0);
+  const bar=[['var(--brand)',g],['var(--bar3)',ps.length-g-bd],['var(--bar4)',bd]].filter(([,n])=>n>0);
   return `
   <div class="scroller chiprow" style="margin-top:10px">${BR.map(x=>`<span class="chip ${cur===x?'on':''}" data-a="rpick:${x}">${x} ${P.filter(y=>y.brand===x).length}</span>`).join('')}</div>
   <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px">
@@ -681,9 +670,9 @@ V.reviews=()=>{
    <div class="meta" style="margin-top:7px">후기 ${tot.toLocaleString('ko-KR')}건 · ${[...new Set(ps.map(x=>SUB2CAT[x.sub]))].join(' · ')}</div>
    <div style="display:flex;height:7px;border-radius:4px;overflow:hidden;margin-top:12px">
     ${bar.map(([c2,n])=>`<div style="width:${n/ps.length*100}%;background:${c2}"></div>`).join('')}</div>
-   <div style="display:flex;gap:12px;margin-top:9px;font-size:11px;color:#6B6B70">
-    <span><b style="color:#0A5F49">${g}</b> 만족</span><span><b style="color:#9A9AA0">${ps.length-g-bd}</b> 갈림</span>
-    <span><b style="color:#A34A22">${bd}</b> 불만</span></div></div></div>
+   <div style="display:flex;gap:12px;margin-top:9px;font-size:11px;color:var(--sub)">
+    <span><b style="color:var(--brand)">${g}</b> 만족</span><span><b style="color:var(--bar2)">${ps.length-g-bd}</b> 갈림</span>
+    <span><b style="color:var(--accent)">${bd}</b> 불만</span></div></div></div>
   ${a?`<div class="pad sec">${secHead('후기가 가장 많아요','이 브랜드에서 사람들이 가장 많이 말한 제품',`rgo:brand:${cur}:many`)}${line(a,`후기 ${a.n}건`)}</div>`:''}
   ${b?`<div class="pad sec">${secHead('문제 언급이 가장 적어요','후기 50건 이상 중에서',`rgo:brand:${cur}:clean`)}${line(b,rate(b)?`문제 언급 ${Math.round(rate(b)*100)}%`:'문제 언급 없음')}</div>`:''}
   ${d?`<div class="pad sec">${secHead('계속 쓴다는 비율이 높아요','오래 쓰신 분 중에서',`rgo:brand:${cur}:keep`)}${line(d,`계속 쓴다 ${Math.round(d.keep/(d.keep+d.drop)*100)}%`)}</div>`:''}
@@ -693,16 +682,16 @@ V.reviews=()=>{
  return `<div class="bar"><div class="row" style="margin-bottom:12px">
  <span style="font-size:17px;font-weight:600;letter-spacing:-.03em">후기 모음</span>
  <button data-a="goHome" style="display:flex;align-items:center;gap:6px;opacity:.72">${mark(18)}
- <span style="font-size:14px;font-weight:600;letter-spacing:-.04em;color:#1B1B1D">다들</span></button></div>
- <button data-a="search" style="background:#F3F3F1;border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:8px;width:100%">
- ${ic('search',17)}<span style="font-size:13px;color:#A5A5AA">브랜드 · 제품명 · 궁금한 점</span></button></div>
+ <span style="font-size:14px;font-weight:600;letter-spacing:-.04em;color:var(--ink)">다들</span></button></div>
+ <button data-a="search" style="background:var(--surface2);border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:8px;width:100%">
+ ${ic('search',17)}<span style="font-size:13px;color:var(--tiny)">브랜드 · 제품명 · 궁금한 점</span></button></div>
  <div class="body">
  <div class="scroller chiprow">${AX.map(([k,t])=>`<span class="chip ${ax===k?'on':''}" data-a="rax:${k}">${t}</span>`).join('')}</div>
  ${ax==='all'?allView:ax==='cat'?catView:brandView}
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" data-a="method" style="padding:15px 16px;cursor:pointer">
  <div class="h3" style="font-size:14px">어떻게 판단하는지 궁금하세요</div>
  <div class="sub" style="margin-top:5px">다들이 쓰는 기준표를 그대로 공개해 두었어요. 같은 기준을 대면 누구나 같은 결론이 나와요.</div>
- <div style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:#0A5F49;font-weight:500">기준표 보기 ${ic('arrow',15,'#0A5F49')}</div></div></div>
+ <div style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--brand);font-weight:500">기준표 보기 ${ic('arrow',15,'var(--brand)')}</div></div></div>
  </div>${tabs()}`};
 
 const SORTS={n:['후기 많은 순',(a,b)=>b.n-a.n],
@@ -732,40 +721,40 @@ const searchHits=()=>{const k=S.q.trim();
  return h.sort(SORTS[S.sort][1])};
 
 const searchResults=()=>{const h=searchHits();
- if(h.length) return `<div class="pad" style="padding-top:13px"><div class="row"><span class="meta num">${h.length}개</span><button data-a="openSort" style="display:flex;align-items:center;gap:3px;font-size:12px;color:#3A3A3D;font-weight:600">${SORTS[S.sort][0]} ${ic('chev',14,'#86868B')}</button></div></div>
+ if(h.length) return `<div class="pad" style="padding-top:13px"><div class="row"><span class="meta num">${h.length}개</span><button data-a="openSort" style="display:flex;align-items:center;gap:3px;font-size:12px;color:var(--ink2);font-weight:600">${SORTS[S.sort][0]} ${ic('chev',14,'var(--meta)')}</button></div></div>
  <div class="pad" style="padding-top:12px">${h.map(p=>`<div class="card" style="padding:11px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:center">
- <span data-a="pick:${p.id}" style="width:20px;height:20px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${S.picks.includes(p.id)?'#0A5F49':'transparent'};border:${S.picks.includes(p.id)?'none':'1.5px solid #DCDCDA'}">${S.picks.includes(p.id)?ic('check',14,'#FFFFFF'):''}</span>
+ <span data-a="pick:${p.id}" style="width:20px;height:20px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${S.picks.includes(p.id)?'var(--brand)':'transparent'};border:${S.picks.includes(p.id)?'none':'1.5px solid var(--line3)'}">${S.picks.includes(p.id)?ic('check',14,'var(--surface)'):''}</span>
  <div data-a="product:${p.id}" style="display:flex;gap:10px;align-items:center;flex:1;min-width:0;cursor:pointer">${th(p,42)}
  <div style="min-width:0"><div class="h3 pname1" style="font-size:13px">${p.brand} ${p.name}</div>
  <div class="tiny" style="margin-top:1px">${p.label} · ${p.n}건 · <span class="num">${won(p.price)}</span></div></div></div></div>`).join('')}</div><div style="height:90px"></div>`;
  return `<div class="pad" style="padding-top:34px;text-align:center">
- <div style="width:56px;height:56px;border-radius:16px;background:#F0F0EE;display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px">${ic('search',26,'#A5A5AA')}</div>
+ <div style="width:56px;height:56px;border-radius:16px;background:var(--surface2);display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px">${ic('search',26,'var(--tiny)')}</div>
  <div class="h2">아직 못 모은 제품이에요</div>
  <div class="sub" style="margin-top:7px">다들은 후기 30건 이상 모인 제품부터 올려요.<br>요청해 주시면 다음 순서로 올려둘게요.</div></div>
  <div class="pad" style="padding-top:20px">${S.reqDone===S.q.trim()
- ?`<div style="background:#EAF3F0;border-radius:13px;padding:15px 16px;text-align:center">
-   <div class="h3" style="font-size:13.5px;color:#0A5F49;margin-bottom:5px">39번째로 요청하셨어요</div>
+ ?`<div style="background:var(--brandBg);border-radius:13px;padding:15px 16px;text-align:center">
+   <div class="h3" style="font-size:13.5px;color:var(--brand);margin-bottom:5px">39번째로 요청하셨어요</div>
    <div class="meta" style="line-height:1.75">요청이 많은 제품부터 모으고 있어요.<br>올라오면 가장 먼저 알려드려요.</div></div>
    <button class="btn ghost" style="margin-top:10px" data-a="loginSheet">알림 받을 곳 남기기</button>`
  :`<button class="btn teal" data-a="req">이 제품 후기 모아주세요</button>
    <div class="tiny" style="text-align:center;margin-top:9px">지금까지 38명이 이 제품을 찾으셨어요.</div>`}</div>
- <div class="pad sec" style="padding-bottom:40px"><div class="h3" style="color:#4A4A4E;margin-bottom:11px">비슷한 제품은 모아 두었어요</div>
+ <div class="pad sec" style="padding-bottom:40px"><div class="h3" style="color:var(--ink3);margin-bottom:11px">비슷한 제품은 모아 두었어요</div>
  ${shuffle(P).slice(0,2).map(p=>rowItem(p,bellBtn(p))).join('')}</div>`};
 
 V.search=()=>`
 <div class="bar"><div class="line"><button data-a="back">${ic('back',20)}</button>
-<div style="flex:1;background:#F3F3F1;border-radius:10px;padding:9px 11px;display:flex;align-items:center;gap:7px">${ic('search',15)}
-<input id="q" class="field" style="border:0;background:none;padding:0;font-size:12.5px" placeholder="찾으시는 제품을 적어주세요" value="${S.q}"></div></div></div>
+<div style="flex:1;background:var(--surface2);border-radius:10px;padding:9px 11px;display:flex;align-items:center;gap:7px">${ic('search',15)}
+<input id="q" class="field" style="border:0;background:none;padding:0;font-size:16px" placeholder="찾으시는 제품을 적어주세요" value="${S.q}"></div></div></div>
 <div class="body">
  <div class="pad" style="padding-top:13px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
- <button class="chip" data-a="openFilter" style="display:inline-flex;align-items:center;gap:5px;${S.filters.length?'background:#0A5F49;color:#FFFFFF':''}">
-  ${ic('sliders',13,S.filters.length?'#FFFFFF':'#4A4A4E')} 필터${S.filters.length?' '+S.filters.length:''}</button>
- ${S.filters.map(f=>`<span class="chip sel" data-a="filter:${f}">${f} ${ic('x',12,'#FFFFFF')}</span>`).join('')}
+ <button class="chip" data-a="openFilter" style="display:inline-flex;align-items:center;gap:5px;${S.filters.length?'background:var(--brand);color:var(--surface)':''}">
+  ${ic('sliders',13,S.filters.length?'var(--surface)':'var(--ink3)')} 필터${S.filters.length?' '+S.filters.length:''}</button>
+ ${S.filters.map(f=>`<span class="chip sel" data-a="filter:${f}">${f} ${ic('x',12,'var(--surface)')}</span>`).join('')}
  ${S.filters.length?`<button class="chip" data-a="clearFilters">모두 지우기</button>`:''}</div>
  <div id="results">${searchResults()}</div>
 </div>
-${S.picks.length?`<div style="position:absolute;left:18px;right:18px;bottom:22px;z-index:15"><button data-a="compare" style="background:#1B1B1D;border-radius:14px;padding:12px 15px;width:100%;display:flex;justify-content:space-between;align-items:center">
-<span style="font-size:12.5px;color:#FFFFFF">${S.picks.length}개 담음</span><span style="font-size:13px;font-weight:600;color:#FFFFFF">비교하기</span></button></div>`:''}`;
+${S.picks.length?`<div style="position:absolute;left:18px;right:18px;bottom:22px;z-index:15"><button data-a="compare" style="background:var(--ink);border-radius:14px;padding:12px 15px;width:100%;display:flex;justify-content:space-between;align-items:center">
+<span style="font-size:12.5px;color:var(--surface)">${S.picks.length}개 담음</span><span style="font-size:13px;font-weight:600;color:var(--surface)">비교하기</span></button></div>`:''}`;
 
 V.compare=()=>{const it=S.picks.map(byId);
  const rows=[['다들',p=>p.label],['모은 후기',p=>p.n+'건'],['지금 최저가',p=>won(p.price)],['확인된 최저가',p=>won(p.low)],
@@ -776,8 +765,8 @@ V.compare=()=>{const it=S.picks.map(byId);
  <div class="sub" style="margin-top:8px">같은 항목끼리 나란히 두었어요. 후기 수가 다르면 비율로 보시는 게 정확해요.</div></div>
  <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px">
  <div style="display:flex;gap:10px;margin-bottom:14px">${it.map(p=>`<div style="flex:1;text-align:center;min-width:0">${th(p,52)}
- <div class="h3" style="font-size:12px;margin-top:7px">${p.brand}</div><div class="pname" style="font-size:11px;color:#6B6B70;font-weight:400;margin-top:1px">${p.name}</div></div>`).join('')}</div>
- ${rows.map(([k,f],i)=>`<div style="padding-top:10px;margin-top:${i?10:0}px;${i?'border-top:.5px solid #EFEFED':''}">
+ <div class="h3" style="font-size:12px;margin-top:7px">${p.brand}</div><div class="pname" style="font-size:11px;color:var(--sub);font-weight:400;margin-top:1px">${p.name}</div></div>`).join('')}</div>
+ ${rows.map(([k,f],i)=>`<div style="padding-top:10px;margin-top:${i?10:0}px;${i?'border-top:.5px solid var(--line)':''}">
  <div class="tiny" style="margin-bottom:5px">${k}</div><div style="display:flex;gap:10px">
  ${it.map(p=>`<div style="flex:1;font-size:12px;font-weight:500;min-width:0;letter-spacing:-.01em">${f(p)}</div>`).join('')}</div></div>`).join('')}</div></div>
  <div class="pad sec" style="padding-bottom:26px">${it.map(p=>`<button class="btn ghost" style="margin-bottom:8px" data-a="product:${p.id}">${p.brand} ${p.name} 자세히 보기</button>`).join('')}</div></div>`};
@@ -792,19 +781,19 @@ V.list=()=>bar('후기 모음',1)+`<div class="body">
  ['세라 세라믹 코팅팬 26cm',8,57,'warm','의견 갈림 · 156건',0],['온담 세라믹 프라이팬 28cm',4,29,'gray','대체로 불만 · 132건',0]]
  .map(([n,m,w,t,s,b])=>`<div class="card" style="padding:13px 14px;margin-bottom:9px"><div style="display:flex;gap:11px;align-items:center">
  ${th(t)}<div style="min-width:0;flex:1"><div class="h3">${n}</div><div class="meta" style="margin-top:1px">${s}</div></div>
- <div style="text-align:right;flex-shrink:0"><div class="num" style="font-size:19px;font-weight:600;letter-spacing:-.03em;color:${b?'#0A5F49':'#1B1B1D'}">${m}</div>
+ <div style="text-align:right;flex-shrink:0"><div class="num" style="font-size:19px;font-weight:600;letter-spacing:-.03em;color:${b?'var(--brand)':'var(--ink)'}">${m}</div>
  <div class="tiny" style="margin-top:-2px">개월</div></div></div>
- <div class="track" style="margin-top:11px;height:4px"><div style="width:${w}%;height:4px;border-radius:2px;background:${b?'#0A5F49':'#9A9AA0'}"></div></div></div>`).join('')}
+ <div class="track" style="margin-top:11px;height:4px"><div style="width:${w}%;height:4px;border-radius:2px;background:${b?'var(--brand)':'var(--bar2)'}"></div></div></div>`).join('')}
  <div class="card" style="padding:13px 14px;opacity:.7;display:flex;gap:11px;align-items:center">${th('gray')}
  <div style="flex:1;min-width:0"><div class="h3">필로 티타늄 코팅 웍 30cm</div><div class="meta" style="margin-top:1px">표본 부족 · 후기 12건</div></div>
- <div style="font-size:12px;color:#A5A5AA;text-align:right;line-height:1.3">아직<br>모자라요</div></div></div>
+ <div style="font-size:12px;color:var(--tiny);text-align:right;line-height:1.3">아직<br>모자라요</div></div></div>
  <div class="pad sec"><div class="card" style="padding:16px 17px"><div class="h3" style="font-size:14px;margin-bottom:12px">이 숫자는 어떻게 나왔나요</div>
- ${[['찾은 후기','1,847건'],['제외한 후기','1,102건'],['모은 후기','745건']].map(([k,v])=>`<div class="row" style="padding:4px 0;font-size:12.5px"><span style="color:#6B6B70">${k}</span><span class="num" style="font-weight:600">${v}</span></div>`).join('')}
- <div class="meta" style="margin-top:12px;padding-top:12px;border-top:.5px solid #EFEFED">오픈마켓이나 자사몰 리뷰는 쓰지 않았어요. 협찬 표기가 있거나, 출시 직후에 몰린 글은 제외했어요.</div>
- <button data-a="excluded" style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12px;color:#0A5F49;font-weight:500">제외한 후기 보기 ${ic('arrow',15,'#0A5F49')}</button></div></div>
+ ${[['찾은 후기','1,847건'],['제외한 후기','1,102건'],['모은 후기','745건']].map(([k,v])=>`<div class="row" style="padding:4px 0;font-size:12.5px"><span style="color:var(--sub)">${k}</span><span class="num" style="font-weight:600">${v}</span></div>`).join('')}
+ <div class="meta" style="margin-top:12px;padding-top:12px;border-top:.5px solid var(--line)">오픈마켓·스마트스토어·자사몰 리뷰는 수집하지 않아요. 협찬 표기가 있거나 출시 직후에 몰린 글도 제외했습니다.</div>
+ <button data-a="excluded" style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12px;color:var(--brand);font-weight:500">제외한 후기 보기 ${ic('arrow',15,'var(--brand)')}</button></div></div>
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:16px 17px"><div class="h3" style="font-size:14px;margin-bottom:6px">이 중에 협상하고 있는 제품</div>
- <div style="font-size:12.5px;color:#4A4A4E;line-height:1.75">하로 인덕션 코팅팬을 ${waitCount(byId('p2'))}분이 기다리고 계세요. 100명이 되면 브랜드에 이야기하러 가요.</div>
- <div class="track" style="margin-top:12px;background:#E4E4E1"><div class="fill" style="width:${waitCount(byId('p2'))}%"></div></div></div></div></div>`;
+ <div style="font-size:12.5px;color:var(--ink3);line-height:1.75">하로 인덕션 코팅팬을 ${waitCount(byId('p2'))}분이 기다리고 계세요. 100명이 되면 브랜드에 이야기하러 가요.</div>
+ <div class="track" style="margin-top:12px;background:var(--line3)"><div class="fill" style="width:${waitCount(byId('p2'))}%"></div></div></div></div></div>`;
 
 V.excluded=()=>bar('제외한 후기')+`<div class="body">
  <div class="pad" style="padding-top:20px"><div class="h1">이런 글은 제외했어요</div>
@@ -812,78 +801,78 @@ V.excluded=()=>bar('제외한 후기')+`<div class="body">
  <div class="pad" style="padding-top:16px">${EXCL.map(([w,t,s])=>`<div class="card" style="padding:14px 15px;margin-bottom:9px">
  <div class="row" style="margin-bottom:9px"><span class="badge b-gray">${w}</span><span class="tiny">${s}</span></div>
  <div class="quote">${t}</div>
- <button data-a="say:원문 페이지로 이동해요" style="margin-top:10px;display:flex;align-items:center;gap:5px;font-size:11.5px;color:#0A5F49">${ic('ext',13,'#0A5F49')} 원문 보기</button></div>`).join('')}</div>
- <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:14px 15px"><div class="sub" style="color:#4A4A4E">제외한 글이 남긴 글보다 많은 날도 있어요. 그래도 이렇게 하는 게 맞다고 생각해요.</div></div></div></div>`;
+ <button data-a="say:원문 페이지로 이동해요" style="margin-top:10px;display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--brand)">${ic('ext',13,'var(--brand)')} 원문 보기</button></div>`).join('')}</div>
+ <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:14px 15px"><div class="sub" style="color:var(--ink3)">제외한 글이 남긴 글보다 많은 날도 있어요. 그래도 이렇게 하는 게 맞다고 생각해요.</div></div></div></div>`;
 
 V.method=()=>bar('판단 기준')+`<div class="body">
  <div class="pad" style="padding-top:20px"><div class="h1">기준표를 그대로<br>공개해 둘게요</div>
  <div class="sub" style="margin-top:8px">다들이 따로 판단하지 않아요. 후기에서 뽑은 숫자를 아래 표에 넣으면 결과가 나와요. 같은 기준을 대면 누구나 같은 결론에 닿아요.</div></div>
  <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px">
  ${[['유효 후기 30건 미만','표본 부족'],['문제 언급 15% 미만','대체로 만족'],['문제 언급 15~35%','의견 갈림'],['문제 언급 35% 이상','대체로 불만']]
- .map(([c,r],i)=>`<div class="row" style="padding:9px 0;${i?'border-top:.5px solid #EFEFED':''}"><span style="font-size:12.5px;color:#6B6B70">${c}</span><span class="h3" style="font-size:13px">${r}</span></div>`).join('')}</div></div>
+ .map(([c,r],i)=>`<div class="row" style="padding:9px 0;${i?'border-top:.5px solid var(--line)':''}"><span style="font-size:12.5px;color:var(--sub)">${c}</span><span class="h3" style="font-size:13px">${r}</span></div>`).join('')}</div></div>
  <div class="pad sec"><div class="h2" style="margin-bottom:11px">이런 글은 세지 않아요</div>
  ${[['협찬이라고 밝힌 글','고지 문구가 있으면 제외해요'],['출시 직후에 몰린 글','2주 안에 40% 넘게 몰리면 그 구간을 제외해요'],
  ['서로 너무 닮은 글','문장이 겹치면 묶어서 한 번만 세요'],['제품 이름이 없는 영상의 댓글','어느 모델 이야기인지 알 수 없어서요']]
  .map(([t,s])=>`<div class="card" style="padding:13px 14px;margin-bottom:8px"><div class="h3">${t}</div><div class="meta" style="margin-top:3px;line-height:1.7">${s}</div></div>`).join('')}</div>
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:15px 16px"><div class="h3" style="font-size:13.5px;margin-bottom:6px">사람이 보는 자리도 남겨뒀어요</div>
- <div class="sub" style="color:#4A4A4E">매주 무작위로 5개를 골라 직접 원문까지 확인해요. 몇 개를 봤고 몇 개를 고쳤는지 카드 아래에 적어둬요.</div></div></div></div>`;
+ <div class="sub" style="color:var(--ink3)">매주 무작위로 5개를 골라 직접 원문까지 확인해요. 몇 개를 봤고 몇 개를 고쳤는지 카드 아래에 적어둬요.</div></div></div></div>`;
 
 V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thin=p.label==='표본 부족';
  const foot=p.deal==='open'
- ?`<div class="row" style="margin-bottom:11px"><span class="meta">협상이 끝나 지금 살 수 있어요</span><span class="num" style="font-size:15px;font-weight:600;color:#B4552A">${won(p.dealPrice)}</span></div>
+ ?`<div class="row" style="margin-bottom:11px"><span class="meta">협상이 끝나 지금 살 수 있어요</span><span class="num" style="font-size:15px;font-weight:600;color:var(--accent)">${won(p.dealPrice)}</span></div>
    <button class="btn amber" data-a="deal:${p.id}">협상가로 사러 가기</button>`
  :(bad||thin)
- ?`<div style="background:#F6F6F4;border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11.5px;color:#6B6B70;line-height:1.55">
-   <b style="color:#3A3A3D">아직 순서가 아니에요</b> · ${thin?'후기가 더 모이면 다시 볼게요':'평가가 나아지면 협상도 열려요'}</div>
+ ?`<div style="background:var(--surface2);border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11.5px;color:var(--sub);line-height:1.55">
+   <b style="color:var(--ink2)">아직 순서가 아니에요</b> · ${thin?'후기가 더 모이면 다시 볼게요':'평가가 나아지면 협상도 열려요'}</div>
    <button class="btn teal" data-a="list">같은 조건의 팬 12종 비교</button>
    <button class="btn ghost" style="margin-top:9px" data-a="price:${p.id}">가격이 내려가면 알려주세요</button>`
  :p.deal==='talking'
- ?`<div style="background:#EAF3F0;border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11.5px;color:#0A5F49;line-height:1.55">
+ ?`<div style="background:var(--brandBg);border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11.5px;color:var(--brand);line-height:1.55">
    <b>브랜드와 이야기 중</b> · ${p.tDate} 시작 · 지금 등록하셔도 함께 들어가요</div>
    <div class="row" style="margin-bottom:11px"><span class="meta">지금 기다리는 분</span>
-   <span class="meta num"><b style="color:#1B1B1D">${waitCount(p)}명</b> · ${GOAL}명을 넘겼어요</span></div>
+   <span class="meta num"><b style="color:var(--ink)">${waitCount(p)}명</b> · ${GOAL}명을 넘겼어요</span></div>
    <button class="btn teal" data-a="price:${p.id}">${S.waits[p.id]?'등록하신 가격 바꾸기':'이 가격이면 살게요'}</button>`
  :p.deal==='postponed'
- ?`<div style="background:#F6F6F4;border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11.5px;color:#6B6B70;line-height:1.55">
-   <b style="color:#3A3A3D">이번엔 미뤄뒀어요</b> · ${p.pWhy} 조건이 나아지면 다시 이야기해 볼게요</div>
+ ?`<div style="background:var(--surface2);border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11.5px;color:var(--sub);line-height:1.55">
+   <b style="color:var(--ink2)">이번엔 미뤄뒀어요</b> · ${p.pWhy} 조건이 나아지면 다시 이야기해 볼게요</div>
    <button class="btn teal" data-a="price:${p.id}">${S.waits[p.id]?'등록하신 가격 바꾸기':'다시 열리면 알려주세요'}</button>
    <div class="tiny" style="text-align:center;margin-top:9px">등록은 그대로 두었어요.</div>`
  :p.deal==='done'
- ?`<div style="background:#F6F6F4;border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11.5px;color:#6B6B70;line-height:1.55">
-   <b style="color:#3A3A3D">${p.rounds}회차 협상이 끝났어요</b> · ${p.doneDate} 종료 · ${p.soldN}분이 사셨어요</div>
+ ?`<div style="background:var(--surface2);border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11.5px;color:var(--sub);line-height:1.55">
+   <b style="color:var(--ink2)">${p.rounds}회차 협상이 끝났어요</b> · ${p.doneDate} 종료 · ${p.soldN}분이 사셨어요</div>
    <button class="btn teal" data-a="price:${p.id}">${S.waits[p.id]?'등록하신 가격 바꾸기':'다음 회차 열리면 알려주세요'}</button>
    <div class="tiny" style="text-align:center;margin-top:9px">기다리는 분이 다시 모이면 협상을 열어요.</div>`
  :`<div class="row" style="margin-bottom:11px"><span class="meta">지금 기다리는 분</span>
-   <span class="meta num"><b style="color:#1B1B1D">${waitCount(p)}명</b> · ${GOAL}명이 모이면 협상 시작</span></div>
+   <span class="meta num"><b style="color:var(--ink)">${waitCount(p)}명</b> · ${GOAL}명이 모이면 협상 시작</span></div>
    <button class="btn teal" data-a="price:${p.id}">${S.waits[p.id]?'등록하신 가격 바꾸기':'이 가격이면 살게요'}</button>
    <div class="tiny" style="text-align:center;margin-top:9px">브랜드가 팔고 싶은 것 말고, 다들 사고 싶어 하는 것.</div>`;
 
  const INFO=`
  <div class="pad" style="padding-top:18px"><div class="card" style="padding:16px 17px">
  <div class="h3" style="font-size:14px;margin-bottom:11px">제품 정보</div>
- ${p.spec.map(([k,v],i)=>`<div class="row" style="padding:8px 0;${i?'border-top:.5px solid #F1F1EF':''}">
-  <span style="font-size:12.5px;color:#6B6B70">${k}</span><span style="font-size:12.5px;font-weight:500;text-align:right;max-width:62%;${v?'':'color:#C2C2C7'}">${v||'확인 중'}</span></div>`).join('')}
- <div class="row" style="padding:8px 0;border-top:.5px solid #F1F1EF">
-  <span style="font-size:12.5px;color:#6B6B70">식기세척기</span><span style="font-size:12.5px;font-weight:500">${p.dish?'사용 가능':'권장하지 않음'}</span></div>
- <div class="meta" style="margin-top:12px;padding-top:11px;border-top:.5px solid #F1F1EF;line-height:1.75">
+ ${p.spec.map(([k,v],i)=>`<div class="row" style="padding:8px 0;${i?'border-top:.5px solid var(--line2)':''}">
+  <span style="font-size:12.5px;color:var(--sub)">${k}</span><span style="font-size:12.5px;font-weight:500;text-align:right;max-width:62%;${v?'':'color:var(--faint)'}">${v||'확인 중'}</span></div>`).join('')}
+ <div class="row" style="padding:8px 0;border-top:.5px solid var(--line2)">
+  <span style="font-size:12.5px;color:var(--sub)">식기세척기</span><span style="font-size:12.5px;font-weight:500">${p.dish?'사용 가능':'권장하지 않음'}</span></div>
+ <div class="meta" style="margin-top:12px;padding-top:11px;border-top:.5px solid var(--line2);line-height:1.75">
   브랜드가 공개한 자료에서 값만 모아 정리했어요. 제품마다 공개된 항목이 달라서, 확인되지 않은 것은 비워 둡니다. ${p.checked} 확인</div></div></div>
  <div class="pad" style="padding-top:12px">
  <button class="btn ghost" data-a="official:${p.id}" style="display:flex;align-items:center;justify-content:center;gap:7px">
-  ${ic('ext',15,'#3A3A3D')} 브랜드 공식 페이지에서 상세히 보기</button></div>
+  ${ic('ext',15,'var(--ink2)')} 브랜드 공식 페이지에서 상세히 보기</button></div>
  <div class="pad sec" style="padding-bottom:20px"><div class="h3" style="font-size:14px;margin-bottom:11px">${p.brand}의 다른 제품</div>
- ${P.filter(x=>x.brand===p.brand&&x.id!==p.id).length?shuffle(P.filter(x=>x.brand===p.brand&&x.id!==p.id)).slice(0,3).map(x=>rowItem(x,ic('next',18,'#C8C8CC'))).join('')
+ ${P.filter(x=>x.brand===p.brand&&x.id!==p.id).length?shuffle(P.filter(x=>x.brand===p.brand&&x.id!==p.id)).slice(0,3).map(x=>rowItem(x,ic('next',18,'var(--faint)'))).join('')
   :`<div class="soft" style="padding:16px;text-align:center"><div class="meta">아직 이 브랜드의 다른 제품은 모으지 못했어요</div></div>`}</div>`;
 
  const REV=`
  <div class="pad" style="padding-top:18px"><div class="tiny" style="letter-spacing:.06em">다들</div>
- <div class="row" style="align-items:baseline;margin-top:4px"><span style="display:flex;align-items:center;gap:9px"><span style="width:8px;height:8px;border-radius:4px;background:${p.label==='대체로 만족'?'#0A5F49':p.label==='의견 갈림'?'#B4552A':p.label==='대체로 불만'?'#9A9AA0':'#D8D8D6'}"></span>
-<span style="font-size:27px;font-weight:700;letter-spacing:-.04em;${p.label==='표본 부족'?'color:#A5A5AA':''}">${p.label}</span></span>
- <span class="num" style="font-size:14px;color:#6B6B70">후기 ${p.n}건</span></div>
+ <div class="row" style="align-items:baseline;margin-top:4px"><span style="display:flex;align-items:center;gap:9px"><span style="width:8px;height:8px;border-radius:4px;background:${p.label==='대체로 만족'?'var(--brand)':p.label==='의견 갈림'?'var(--accent)':p.label==='대체로 불만'?'var(--bar2)':'var(--faint)'}"></span>
+<span style="font-size:27px;font-weight:700;letter-spacing:-.04em;${p.label==='표본 부족'?'color:var(--tiny)':''}">${p.label}</span></span>
+ <span class="num" style="font-size:14px;color:var(--sub)">후기 ${p.n}건</span></div>
  <div class="sub" style="margin-top:8px">${thin?'아직 후기가 충분히 모이지 않아 뭐라 말씀드리기 어려워요.':bad?'오래 쓰신 분들 사이에서 아쉽다는 말씀이 반복해서 나왔어요.':'오래 쓰신 분들 대부분이 계속 쓰고 계세요.'}</div></div>
- <div class="pad" style="padding-top:16px"><div style="background:#F6F6F4;border-radius:12px;padding:14px 15px">
- <div class="row" style="font-size:13px"><span style="color:#6B6B70">모은 후기</span><span class="num" style="font-weight:600">${p.incl}건</span></div>
- <div class="row" style="font-size:13px;margin-top:7px"><span style="color:#6B6B70">제외한 후기</span><span class="num" style="font-weight:600">${p.excl}건</span></div>
- <button data-a="excluded" style="margin-top:12px;display:flex;align-items:center;gap:6px;font-size:12px;color:#0A5F49;font-weight:500">${ic('ext',14,'#0A5F49')} 제외한 후기 보기</button></div></div>
+ <div class="pad" style="padding-top:16px"><div style="background:var(--surface2);border-radius:12px;padding:14px 15px">
+ <div class="row" style="font-size:13px"><span style="color:var(--sub)">모은 후기</span><span class="num" style="font-weight:600">${p.incl}건</span></div>
+ <div class="row" style="font-size:13px;margin-top:7px"><span style="color:var(--sub)">제외한 후기</span><span class="num" style="font-weight:600">${p.excl}건</span></div>
+ <button data-a="excluded" style="margin-top:12px;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--brand);font-weight:500">${ic('ext',14,'var(--brand)')} 제외한 후기 보기</button></div></div>
  ${(p.cons.length||(p.pros||[]).length)?(()=>{
   const pros=p.pros||[], cons=p.cons||[];
   const max=Math.max(...pros.map(x=>x[1]),...cons.map(x=>x[1]),1);
@@ -892,24 +881,24 @@ V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thi
    <div class="row" style="margin-bottom:10px"><span class="h3" style="font-size:13px">${title}</span>
     <span class="tiny num">${total}회</span></div>
    ${arr.map(([t,c])=>`<div style="margin-bottom:11px">
-    <div class="row" style="font-size:13px"><span>${t}</span><span class="num" style="color:#6B6B70">${c}회</span></div>
+    <div class="row" style="font-size:13px"><span>${t}</span><span class="num" style="color:var(--sub)">${c}회</span></div>
     <div class="track" style="margin-top:6px;height:3px"><div style="width:${c/max*100}%;height:3px;background:${color};border-radius:2px"></div></div></div>`).join('')}</div>`:'';
   return `<div class="pad sec"><div class="h3" style="font-size:14px;margin-bottom:4px">여러 번 나온 이야기</div>
    <div class="meta" style="margin-bottom:14px">막대 길이는 양쪽을 같은 기준으로 그렸어요</div>
-   ${grp('좋다고 하신 점',pros,pros.reduce((a,x)=>a+x[1],0),'#4E9B7F')}
-   ${grp('아쉽다고 하신 점',cons,cons.reduce((a,x)=>a+x[1],0),'#9A9AA0')}</div>`;
+   ${grp('좋다고 하신 점',pros,pros.reduce((a,x)=>a+x[1],0),'var(--pos)')}
+   ${grp('아쉽다고 하신 점',cons,cons.reduce((a,x)=>a+x[1],0),'var(--bar2)')}</div>`;
  })():''}
  <div class="pad sec"><div class="row" style="align-items:baseline"><span class="h3" style="font-size:14px">6개월 넘게 쓰신 분들</span><span class="tiny num">${p.longN}명</span></div>
- <div style="display:flex;gap:10px;margin-top:12px">${[['계속 쓰고 계세요',p.keep],['정리하셨어요',p.drop]].map(([k,v])=>`<div style="flex:1;padding:12px 13px;border:.5px solid #ECECEA;border-radius:16px;background:#fff">
+ <div style="display:flex;gap:10px;margin-top:12px">${[['계속 쓰고 계세요',p.keep],['정리하셨어요',p.drop]].map(([k,v])=>`<div style="flex:1;padding:12px 13px;border:.5px solid var(--line);border-radius:16px;background:var(--surface)">
  <div class="tiny">${k}</div><div class="num" style="font-size:21px;font-weight:600;margin-top:3px">${v}</div></div>`).join('')}</div>
  <div class="meta" style="margin-top:10px">정리하신 이유 1위 — ${p.dropWhy}</div></div>
  <div class="pad sec"><div class="card" style="padding:15px 16px">
  <div class="h3" style="margin-bottom:9px">이런 분께는 조금 아쉬울 수 있어요</div>
- <div style="font-size:13px;color:#6B6B70;line-height:1.85">${bad?'· 인덕션을 주로 쓰시는 경우<br>· 매일 센 불로 조리하시는 경우':'· 가벼운 조리도구를 찾으시는 경우<br>· 손목이 약하신 경우'}</div>
+ <div style="font-size:13px;color:var(--sub);line-height:1.85">${bad?'· 인덕션을 주로 쓰시는 경우<br>· 매일 센 불로 조리하시는 경우':'· 가벼운 조리도구를 찾으시는 경우<br>· 손목이 약하신 경우'}</div>
  <div class="h3" style="margin:14px 0 9px">이런 분께는 잘 맞아요</div>
- <div style="font-size:13px;color:#6B6B70;line-height:1.85">${bad?'· 가스레인지에서 주 2~3회 쓰시는 경우<br>· 1년쯤 쓰고 바꿀 생각이신 경우':'· 오래 두고 쓰실 생각이신 경우<br>· 인덕션과 가스를 함께 쓰시는 경우'}</div></div></div>
- <div class="pad sec"><div style="background:#EAF3F0;border-radius:12px;padding:13px 15px;display:flex;gap:9px">
- ${ic('shield',17,'#0A5F49')}<div style="font-size:12px;color:#0A5F49;line-height:1.7">오픈마켓이나 자사몰 리뷰는 쓰지 않았어요. 판매자가 정렬이나 삭제를 정할 수 있는 자리라서요.</div></div></div>
+ <div style="font-size:13px;color:var(--sub);line-height:1.85">${bad?'· 가스레인지에서 주 2~3회 쓰시는 경우<br>· 1년쯤 쓰고 바꿀 생각이신 경우':'· 오래 두고 쓰실 생각이신 경우<br>· 인덕션과 가스를 함께 쓰시는 경우'}</div></div></div>
+ <div class="pad sec"><div style="background:var(--brandBg);border-radius:12px;padding:13px 15px;display:flex;gap:9px">
+ ${ic('shield',17,'var(--brand)')}<div style="font-size:12px;color:var(--brand);line-height:1.7">어느 한쪽에도 기울지 않기 위해, 오픈마켓·스마트스토어·자사몰 리뷰는 수집하지 않아요.</div></div></div>
  <div class="pad sec" style="padding-bottom:20px"><div class="tiny" style="line-height:1.75">고친 자리 · 2026.07.18 오래 쓰신 분 후기 22건을 더 넣어 다시 계산했어요<br>사람이 본 날 · 2026.07.21</div></div>`;
 
  return bar(p.brand,1)+`<div class="body">
@@ -919,40 +908,40 @@ V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thi
  <div class="pad" style="padding-top:16px">
  <div style="display:flex;align-items:center;gap:6px">
   <span class="tiny">${SUB2CAT[p.sub]||''} · ${p.sub}</span>
-  ${p.rounds?`<span style="font-size:10.5px;font-weight:600;color:#0A5F49;background:#E3F1EC;border-radius:5px;padding:2.5px 7px">협상 ${p.rounds}회차</span>`:''}</div>
+  ${p.rounds?`<span style="font-size:10.5px;font-weight:600;color:var(--brand);background:var(--brandBg);border-radius:5px;padding:2.5px 7px">협상 ${p.rounds}회차</span>`:''}</div>
  <div style="display:flex;gap:10px;align-items:flex-start;margin-top:5px">
   <div style="flex:1;min-width:0;font-size:18px;font-weight:700;letter-spacing:-.035em;line-height:1.4">${p.name}</div>
-  <button data-a="rbrand:${p.brand}" style="flex-shrink:0;background:#F3F3F1;border-radius:8px;
-   padding:6px 11px;font-size:12.5px;font-weight:600;letter-spacing:-.02em;color:#3A3A3D;
+  <button data-a="rbrand:${p.brand}" style="flex-shrink:0;background:var(--surface2);border-radius:8px;
+   padding:6px 11px;font-size:12.5px;font-weight:600;letter-spacing:-.02em;color:var(--ink2);
    max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px">${p.brand}</button></div>
  <div style="display:flex;align-items:baseline;gap:8px;margin-top:9px">
- ${p.deal==='open'?`<span class="num" style="font-size:12px;color:#A5A5AA;text-decoration:line-through">${won(p.price)}</span>
-  <span class="num" style="font-size:22px;font-weight:600;color:#B4552A;letter-spacing:-.03em">${won(p.dealPrice)}</span>
+ ${p.deal==='open'?`<span class="num" style="font-size:12px;color:var(--tiny);text-decoration:line-through">${won(p.price)}</span>
+  <span class="num" style="font-size:22px;font-weight:600;color:var(--accent);letter-spacing:-.03em">${won(p.dealPrice)}</span>
   <span class="badge b-amber num">-${Math.round((1-p.dealPrice/p.price)*100)}%</span>`
  :`<span class="num" style="font-size:20px;font-weight:600;letter-spacing:-.03em">${won(p.price)}</span><span class="tiny">지금 온라인 최저가</span>`}</div>
  <div class="meta" style="margin-top:8px">다들 · ${p.label} · 후기 ${p.n}건</div></div>
- <div style="display:flex;margin-top:14px;padding:0 18px;border-bottom:.5px solid #ECECEA">
+ <div style="display:flex;margin-top:14px;padding:0 18px;border-bottom:.5px solid var(--line)">
  <button class="ptab ${S.ptab==='rev'?'on':''}" data-a="ptab:rev">다들 후기</button>
  <button class="ptab ${S.ptab==='info'?'on':''}" data-a="ptab:info">제품 정보</button></div>
  ${S.ptab==='rev'?REV:INFO}
  </div>
- <div style="background:#FFFFFF;box-shadow:0 -.5px 0 #ECECEA;padding:14px 18px 18px;flex-shrink:0">${foot}</div>`};
+ <div style="background:var(--surface);box-shadow:0 -.5px 0 var(--line);padding:14px 18px 18px;flex-shrink:0">${foot}</div>`};
 
 V.drawer=()=>{
  const BRANDS=[...new Set(P.map(x=>x.brand))];
  const ST=[['open','지금 살 수 있어요'],['talking','곧 살 수 있어요'],['gathering','수요가 모이는 중'],
            ['none','아직 순서가 아니에요'],['postponed','이번엔 미뤄뒀어요'],['done','협상이 끝난 제품']];
- const arw=on=>`<span style="display:inline-block;transform:rotate(${on?90:0}deg);transition:transform .18s">${ic('next',15,'#C8C8CC')}</span>`;
- const head=(kk,t,n)=>`<div class="drow" data-a="toggleSec:${kk}" style="cursor:pointer;padding:14px 0;border-top:.5px solid #EFEFED">
+ const arw=on=>`<span style="display:inline-block;transform:rotate(${on?90:0}deg);transition:transform .18s">${ic('next',15,'var(--faint)')}</span>`;
+ const head=(kk,t,n)=>`<div class="drow" data-a="toggleSec:${kk}" style="cursor:pointer;padding:14px 0;border-top:.5px solid var(--line)">
   <span style="font-weight:600;font-size:14px">${t}</span>
   <span style="display:flex;align-items:center;gap:7px">${n!==undefined?`<span class="tiny num">${n}</span>`:''}${arw(S.sec===kk)}</span></div>`;
  const sub=(a,t,n,on)=>`<div class="drow" data-a="${a}" style="padding:8px 0 8px 14px;cursor:pointer">
-  <span style="font-size:12.5px;${on?'font-weight:600;color:#0A5F49':(n===0?'color:#C2C2C7':'color:#4A4A4E')}">${t}</span>
-  ${n!==undefined?`<span class="tiny num" style="${n?'':'color:#C8C8CC'}">${n}</span>`:''}</div>`;
+  <span style="font-size:12.5px;${on?'font-weight:600;color:var(--brand)':(n===0?'color:var(--faint)':'color:var(--ink3)')}">${t}</span>
+  ${n!==undefined?`<span class="tiny num" style="${n?'':'color:var(--faint)'}">${n}</span>`:''}</div>`;
 
  return `<div class="drawer" data-a="closeDrawer"><div class="dpanel" data-stop>
- <div style="padding:18px 18px 12px;box-shadow:0 .5px 0 #ECECEA">
- <div class="row"><div style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em;color:#1B1B1D">다들</span></div>
+ <div style="padding:18px 18px 12px;box-shadow:0 .5px 0 var(--line)">
+ <div class="row"><div style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em;color:var(--ink)">다들</span></div>
  <button data-a="closeDrawer">${ic('x',19)}</button></div>
  <div class="meta" style="margin-top:7px">${S.user?CH[S.user.ch]+'으로 연결됨':'아직 연결하지 않으셨어요'}</div></div>
 
@@ -966,13 +955,13 @@ V.drawer=()=>{
  ${S.sec==='cat'?`${sub('view:cat','전체 보기')}
   ${CATS.map(c=>{const on=S.opencat===c.k;
    return `<div><div class="drow" data-a="toggleCat:${c.k}" style="padding:8px 0 8px 14px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:8px;font-size:12.5px;${on?'font-weight:600;color:#0A5F49':'color:#4A4A4E'}">
-    <svg width="16" height="16" viewBox="0 0 64 64" fill="none" stroke="${on?'#0A5F49':'#9E9EA3'}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">${GLY[c.g]}</svg>
+    <span style="display:flex;align-items:center;gap:8px;font-size:12.5px;${on?'font-weight:600;color:var(--brand)':'color:var(--ink3)'}">
+    <svg width="16" height="16" viewBox="0 0 64 64" fill="none" stroke="${on?'var(--brand)':'var(--tiny)'}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">${GLY[c.g]}</svg>
     ${c.k}</span><span style="display:flex;align-items:center;gap:6px"><span class="tiny num">${CATN(c.k)}</span>${arw(on)}</span></div>
     ${on?`<div style="padding:0 0 6px 38px">${c.subs.map(sb=>{const n=P.filter(x=>x.sub===sb).length;
      return `<div class="drow" data-a="cat:${sb}" style="padding:6px 0;cursor:pointer">
-      <span style="font-size:12px;color:${S.cat===sb?'#0A5F49':(n?'#4A4A4E':'#C2C2C7')};${S.cat===sb?'font-weight:600':''}">${sb}</span>
-      <span class="tiny num" style="${n?'':'color:#C8C8CC'}">${n}</span></div>`}).join('')}</div>`:''}</div>`}).join('')}`:''}
+      <span style="font-size:12px;color:${S.cat===sb?'var(--brand)':(n?'var(--ink3)':'var(--faint)')};${S.cat===sb?'font-weight:600':''}">${sb}</span>
+      <span class="tiny num" style="${n?'':'color:var(--faint)'}">${n}</span></div>`}).join('')}</div>`:''}</div>`}).join('')}`:''}
 
  ${head('brand','브랜드',BRANDS.length)}
  ${S.sec==='brand'?`${sub('view:brand','전체 보기')}
@@ -980,7 +969,7 @@ V.drawer=()=>{
 
  ${[['후기 모음','root:reviews'],['다들의 약속','rules'],['협상 기록','log'],
     ['판단 기준','method'],['내 정보','root:me'],['운영 콘솔','admin']]
-   .map(([t,a])=>`<div class="drow" data-a="${a}" style="cursor:pointer;padding:14px 0;border-top:.5px solid #EFEFED">
+   .map(([t,a])=>`<div class="drow" data-a="${a}" style="cursor:pointer;padding:14px 0;border-top:.5px solid var(--line)">
     <span style="font-weight:600;font-size:14px">${t}</span></div>`).join('')}
  </div>
  </div><div style="flex:1" data-a="closeDrawer"></div></div>`};
@@ -992,40 +981,40 @@ V.deal=id=>{const p=byId(id);const st=ladder(p);
  <div style="font-size:16px;font-weight:600;letter-spacing:-.02em">${p.brand} ${p.name}</div>
  <div class="meta" style="margin-top:3px">${p.endDays}일 남음</div></div></div>
  <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px">
- ${[['지금 온라인 최저가',won(p.price)],['확인된 최저가',won(p.low)]].map(([k,v])=>`<div class="row" style="font-size:12px;padding:3px 0"><span style="color:#6B6B70">${k}</span><span class="num">${v}</span></div>`).join('')}
+ ${[['지금 온라인 최저가',won(p.price)],['확인된 최저가',won(p.low)]].map(([k,v])=>`<div class="row" style="font-size:12px;padding:3px 0"><span style="color:var(--sub)">${k}</span><span class="num">${v}</span></div>`).join('')}
  <div class="tiny" style="margin-top:1px">${p.lowNote}</div>
- <div class="row" style="align-items:baseline;padding-top:12px;margin-top:11px;border-top:.5px solid #ECECEA">
- <span class="h3" style="font-size:14px">이번 협상가</span><span class="num" style="font-size:27px;font-weight:700;color:#B4552A;letter-spacing:-.045em">${won(p.dealPrice)}</span></div>
- <div class="row" style="font-size:12px;margin-top:6px"><span style="color:#6B6B70">실제로 아끼시는 금액</span>
- <span class="num" style="color:#B4552A">${won(p.price-p.dealPrice)} · ${Math.round((1-p.dealPrice/p.price)*100)}%</span></div></div></div>
+ <div class="row" style="align-items:baseline;padding-top:12px;margin-top:11px;border-top:.5px solid var(--line)">
+ <span class="h3" style="font-size:14px">이번 협상가</span><span class="num" style="font-size:27px;font-weight:700;color:var(--accent);letter-spacing:-.045em">${won(p.dealPrice)}</span></div>
+ <div class="row" style="font-size:12px;margin-top:6px"><span style="color:var(--sub)">실제로 아끼시는 금액</span>
+ <span class="num" style="color:var(--accent)">${won(p.price-p.dealPrice)} · ${Math.round((1-p.dealPrice/p.price)*100)}%</span></div></div></div>
  <div class="pad sec"><div class="row" style="margin-bottom:11px"><span class="h3" style="font-size:14px">다들 · ${p.label}</span>
- <button class="meta" style="color:#0A5F49" data-a="product:${p.id}">후기 전체 보기</button></div>
+ <button class="meta" style="color:var(--brand)" data-a="product:${p.id}">후기 전체 보기</button></div>
  <div class="meta" style="margin-bottom:9px">이 제품에서 여러 번 나온 이야기예요</div>
  ${(p.pros||[]).length?`<div class="tiny" style="margin-bottom:4px">좋다고 하신 점</div>
- <div style="font-size:13px;color:#4A4A4E;line-height:1.9;margin-bottom:11px">${p.pros.map(([t,c])=>`<div class="row"><span>${t}</span><span class="num" style="color:#A5A5AA">${c}회</span></div>`).join('')}</div>`:''}
+ <div style="font-size:13px;color:var(--ink3);line-height:1.9;margin-bottom:11px">${p.pros.map(([t,c])=>`<div class="row"><span>${t}</span><span class="num" style="color:var(--tiny)">${c}회</span></div>`).join('')}</div>`:''}
  <div class="tiny" style="margin-bottom:4px">아쉽다고 하신 점</div>
- <div style="font-size:13px;color:#4A4A4E;line-height:1.9">${p.cons.map(([t,c])=>`<div class="row"><span>${t}</span><span class="num" style="color:#A5A5AA">${c}회</span></div>`).join('')}</div></div>
+ <div style="font-size:13px;color:var(--ink3);line-height:1.9">${p.cons.map(([t,c])=>`<div class="row"><span>${t}</span><span class="num" style="color:var(--tiny)">${c}회</span></div>`).join('')}</div></div>
  <div class="pad sec"><div class="h3" style="font-size:14px;margin-bottom:5px">어떻게 이 가격이 됐나요</div>
  <div class="meta" style="margin-bottom:12px;line-height:1.75">${waitCount(p)}분이 각자 살 만한 가격을 골라주셨어요. 그 표를 들고 브랜드를 만났고, 브랜드가 ${won(p.dealPrice)} 자리를 골랐어요.</div>
  <div class="card" style="padding:12px 14px">${st.map(s=>{const hit=Math.abs(s.price-p.dealPrice)<900;
- return `<div class="row" style="font-size:12px;${hit?'padding:6px 8px;margin:3px -8px;background:#FBEDE6;border-radius:7px;color:#A34A22;font-weight:600':'padding:3px 0;color:'+(s.ok?'#6B6B70':'#A5A5AA')}">
+ return `<div class="row" style="font-size:12px;${hit?'padding:6px 8px;margin:3px -8px;background:var(--accentBg);border-radius:7px;color:var(--accent);font-weight:600':'padding:3px 0;color:'+(s.ok?'var(--sub)':'var(--tiny)')}">
  <span class="num">${won(s.price)}</span><span class="num">${s.people}명${hit?' · 여기서 성사':(s.ok?' · 협상 가능':'')}</span></div>`}).join('')}</div>
  <div class="meta" style="margin-top:11px;line-height:1.75">더 낮은 가격을 고르신 분들은 이번엔 빠지세요. 다음 협상 때 다시 알려드릴게요.</div></div>
- <div class="pad sec"><div style="background:#EAF3F0;border-radius:12px;padding:13px 15px;display:flex;gap:9px">${ic('shield',17,'#0A5F49')}
+ <div class="pad sec"><div style="background:var(--brandBg);border-radius:12px;padding:13px 15px;display:flex;gap:9px">${ic('shield',17,'var(--brand)')}
  <div><div class="h3" style="margin-bottom:3px">30일 최저가 보장</div>
- <div style="font-size:12px;color:#0A5F49;line-height:1.7">더 싼 곳을 발견하시면 알려주세요. 차액은 브랜드가 지급해요. 다들은 대신 청구하고 결과를 알려드려요.</div></div></div></div>
- <div class="pad sec"><div style="background:#F6F6F4;border-radius:12px;padding:12px 15px">
- <div class="row" style="font-size:12px;color:#4A4A4E"><span>다들이 받는 수수료</span><span class="num">판매가의 10% · 브랜드 부담</span></div>
+ <div style="font-size:12px;color:var(--brand);line-height:1.7">더 싼 곳을 발견하시면 알려주세요. 차액은 브랜드가 지급해요. 다들은 대신 청구하고 결과를 알려드려요.</div></div></div></div>
+ <div class="pad sec"><div style="background:var(--surface2);border-radius:12px;padding:12px 15px">
+ <div class="row" style="font-size:12px;color:var(--ink3)"><span>다들이 받는 수수료</span><span class="num">판매가의 10% · 브랜드 부담</span></div>
  <div class="tiny" style="margin-top:5px;line-height:1.7">인플루언서 공구는 보통 15~30%를 받아요. 저희가 덜 받는 만큼 협상가가 내려가요.</div></div></div>
  <div style="height:20px"></div></div>
- <div style="background:#FFFFFF;box-shadow:0 -.5px 0 #ECECEA;padding:15px 18px 18px;flex-shrink:0">
+ <div style="background:var(--surface);box-shadow:0 -.5px 0 var(--line);padding:15px 18px 18px;flex-shrink:0">
  ${S.bought[p.id]?`<button class="btn ghost" data-a="report:${p.id}">더 싼 곳을 찾았어요</button>
  <div class="tiny" style="text-align:center;margin-top:9px">가격 보장에 등록해 두셨어요. 30일 동안 지켜볼게요.</div>`
  :`<button class="btn amber" data-a="leave:${p.id}">브랜드 판매처에서 구매하기</button>
  <div class="tiny" style="text-align:center;margin-top:10px;line-height:1.7">결제와 배송, 교환은 브랜드가 맡아요.<br>구매하신 뒤 돌아오셔서 가격 보장을 등록해 주세요.</div>`}</div>`};
 
 V.verify=id=>{const p=byId(id);return bar('가격 보장 받기')+`<div class="body">
- <div class="pad" style="padding-top:20px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">${ic('shield',20,'#0A5F49')}
+ <div class="pad" style="padding-top:20px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">${ic('shield',20,'var(--brand)')}
  <span class="h1" style="font-size:19px">가격 보장 받기</span></div><div class="meta">${p.brand} ${p.name} · 협상가 ${won(p.dealPrice)}</div></div>
  <div class="pad" style="padding-top:15px"><div class="hint sub">주문번호만 남겨주시면 30일 동안 이 제품 가격을 대신 지켜볼게요.${S.user?'':' 차액을 돌려드리려면 연락받으실 곳이 필요해서, 이때 한 번만 연결해 주세요.'}</div></div>
  <div class="pad" style="padding-top:16px"><div class="meta" style="margin-bottom:6px">주문번호</div>
@@ -1050,13 +1039,13 @@ V.done=(kind,id)=>{const C={
  reported:['신고 접수됐어요','이틀 안에 확인해서 알려드릴게요. 확인되면 함께 사신 분들께도 모두 알려드려요.','차액은 브랜드가 지급해요. 다들이 대신 청구할게요.']}[kind];
  return `<div class="bar"><div class="line"><span style="width:20px"></span><h1>다들</h1><span style="width:17px"></span></div></div>
  <div class="body"><div class="pad" style="padding-top:60px;text-align:center">
- <div style="width:62px;height:62px;border-radius:20px;background:#E3F1EC;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px">${ic('check',30,'#0A5F49',2.2)}</div>
+ <div style="width:62px;height:62px;border-radius:20px;background:var(--brandBg);display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px">${ic('check',30,'var(--brand)',2.2)}</div>
  <div class="h1" style="font-size:20px">${C[0]}</div><div class="sub" style="margin-top:9px">${C[1]}</div></div>
- <div class="pad" style="padding-top:22px"><div class="soft" style="padding:14px 15px"><div class="sub" style="color:#4A4A4E">${C[2]}</div></div></div>
+ <div class="pad" style="padding-top:22px"><div class="soft" style="padding:14px 15px"><div class="sub" style="color:var(--ink3)">${C[2]}</div></div></div>
  <div class="pad" style="padding-top:20px">
  <button class="btn teal" data-a="rlist:many">비슷한 제품 더 보기</button>
  <button class="btn ghost" style="margin-top:9px" data-a="root:me">내 정보에서 확인하기</button>
- <button class="btn ghost" style="margin-top:9px;border:none;color:#86868B" data-a="goHome">홈으로</button></div>
+ <button class="btn ghost" style="margin-top:9px;border:none;color:var(--meta)" data-a="goHome">홈으로</button></div>
  ${id?`<div class="pad sec" style="padding-bottom:26px"><div class="h3" style="font-size:14px;margin-bottom:11px">이런 제품도 기다리고 계세요</div>
  ${shuffle(P.filter(x=>x.id!==id&&(x.deal==='gathering'||x.deal==='talking'))).slice(0,2)
   .map(x=>`<div class="card" style="padding:12px 13px;margin-bottom:9px;display:flex;gap:11px;align-items:center">
@@ -1068,11 +1057,11 @@ V.done=(kind,id)=>{const C={
 
 V.me=()=>{
  const waiting=Object.keys(S.waits).length, guard=P.filter(x=>S.bought[x.id]);
- const tg=(k,t,d)=>`<div class="row" style="padding:11px 0;${k!=='open'?'border-top:.5px solid #EFEFED':''}">
+ const tg=(k,t,d)=>`<div class="row" style="padding:11px 0;${k!=='open'?'border-top:.5px solid var(--line)':''}">
   <div style="padding-right:12px"><div style="font-size:13px;font-weight:500;letter-spacing:-.01em">${t}</div>
   <div class="tiny" style="margin-top:2px">${d}</div></div>
-  <span data-a="toggle:${k}" style="width:42px;height:24px;border-radius:12px;flex-shrink:0;position:relative;background:${S.noti[k]?'#0A5F49':'#DCDCDA'}">
-  <span style="position:absolute;top:3px;left:${S.noti[k]?21:3}px;width:18px;height:18px;border-radius:9px;background:#fff"></span></span></div>`;
+  <span data-a="toggle:${k}" style="width:42px;height:24px;border-radius:12px;flex-shrink:0;position:relative;background:${S.noti[k]?'var(--brand)':'var(--line3)'}">
+  <span style="position:absolute;top:3px;left:${S.noti[k]?21:3}px;width:18px;height:18px;border-radius:9px;background:var(--surface)"></span></span></div>`;
  return `<div class="bar"><div class="h1" style="font-size:19px">내 정보</div>
  <div class="meta" style="margin-top:3px">회원가입 없이, 알림 받으실 곳만 두고 있어요</div></div>
  <div class="body">
@@ -1085,11 +1074,11 @@ V.me=()=>{
  <div class="row"><div><div class="tiny">${S.user?CH[S.user.ch]+'으로 연결됨':'알림 받는 곳'}</div>
  <div style="font-size:15px;font-weight:600;letter-spacing:-.02em;margin-top:3px">${S.user?S.user.id:'아직 연결하지 않으셨어요'}</div></div>
  <button class="chip" data-a="${S.user?'editContact':'loginSheet'}">${S.user?'수정':'연결'}</button></div>
- <div class="row" style="margin-top:14px;padding-top:13px;border-top:.5px solid #EFEFED;text-align:center">
+ <div class="row" style="margin-top:14px;padding-top:13px;border-top:.5px solid var(--line);text-align:center">
  <div style="flex:1" data-a="root:home"><div class="num" style="font-size:19px;font-weight:600">${waiting}</div><div class="tiny" style="margin-top:1px">기다리는 것</div></div>
- <div style="width:.5px;background:#EFEFED;align-self:stretch"></div>
+ <div style="width:.5px;background:var(--line);align-self:stretch"></div>
  <div style="flex:1"><div class="num" style="font-size:19px;font-weight:600">${guard.length}</div><div class="tiny" style="margin-top:1px">구매한 것</div></div>
- <div style="width:.5px;background:#EFEFED;align-self:stretch"></div>
+ <div style="width:.5px;background:var(--line);align-self:stretch"></div>
  <div style="flex:1" data-a="noti"><div class="num" style="font-size:19px;font-weight:600">${S.unread}</div><div class="tiny" style="margin-top:1px">새 알림</div></div></div></div></div>
 
  <div class="pad sec"><div class="h2" style="margin-bottom:3px">구매 내역</div>
@@ -1098,9 +1087,9 @@ V.me=()=>{
   <div style="display:flex;gap:11px;align-items:center">${th(x,44)}
   <div style="min-width:0;flex:1"><div class="h3 pname1" style="font-size:13.5px">${x.brand} ${x.name}</div>
   <div class="meta num" style="margin-top:2px">${won(x.dealPrice)} · 7.28 구매</div></div></div>
-  <div class="row" style="margin-top:11px;padding-top:11px;border-top:.5px solid #EFEFED">
+  <div class="row" style="margin-top:11px;padding-top:11px;border-top:.5px solid var(--line)">
   <span class="badge b-teal">30일 보장 중 · 22일 남음</span>
-  <button class="meta" style="color:#0A5F49;font-weight:500" data-a="report:${x.id}">더 싼 곳 알리기</button></div></div>`).join('')
+  <button class="meta" style="color:var(--brand);font-weight:500" data-a="report:${x.id}">더 싼 곳 알리기</button></div></div>`).join('')
  :`<div class="card" style="padding:20px 16px;text-align:center"><div class="sub">아직 구매하신 내역이 없어요.<br>협상이 열리면 여기에 모아 보여드릴게요.</div>
   <button class="btn ghost" style="margin-top:14px" data-a="root:home">열린 협상 보러 가기</button></div>`}</div>
 
@@ -1109,7 +1098,7 @@ V.me=()=>{
  ${waiting?P.filter(x=>S.waits[x.id]).map(x=>`<div class="card" data-a="product:${x.id}" style="padding:13px 14px;margin-bottom:9px;display:flex;gap:11px;align-items:center;cursor:pointer">
   ${th(x,44)}<div style="min-width:0;flex:1"><div class="h3 pname1" style="font-size:13.5px">${x.brand} ${x.name}</div>
   <div class="meta num" style="margin-top:2px">내 가격 ${won(S.waits[x.id])} · ${x.deal==='open'?'협상 열림':x.deal==='talking'?'브랜드와 이야기 중':x.deal==='postponed'?'이번엔 미뤄뒀어요':waitCount(x)+' / '+GOAL+'명'}</div></div>
-  ${ic('next',17,'#C8C8CC')}</div>`).join('')
+  ${ic('next',17,'var(--faint)')}</div>`).join('')
  :`<div class="card" style="padding:20px 16px;text-align:center"><div class="sub">아직 기다리시는 게 없어요.<br>마음에 드는 가격을 골라두시면 여기에 모아 보여드릴게요.</div>
   <button class="btn ghost" style="margin-top:14px" data-a="root:home">협상 둘러보기</button></div>`}</div>
 
@@ -1122,29 +1111,29 @@ V.me=()=>{
 
  <div class="pad sec"><div class="card" style="padding:4px 16px">
  ${[['다들의 약속','rules'],['협상 기록','log'],['판단 기준','method'],['알림 내역','noti']].concat(S.user?[['연결 해제','logout']]:[])
- .map(([t,a],i)=>`<div class="row" data-a="${a}" style="padding:14px 0;${i?'border-top:.5px solid #EFEFED':''};cursor:pointer">
+ .map(([t,a],i)=>`<div class="row" data-a="${a}" style="padding:14px 0;${i?'border-top:.5px solid var(--line)':''};cursor:pointer">
   <span style="font-size:13.5px;letter-spacing:-.01em">${t}</span></div>`).join('')}</div></div>
 
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:14px 15px">
  <div class="h3" style="font-size:12.5px;margin-bottom:6px">남기신 정보는 이것뿐이에요</div>
  <div class="meta" style="line-height:1.8">알림 받으실 연락처와 고르신 가격, 그리고 주문번호예요. 다른 곳에 쓰지 않고, 지워달라고 하시면 바로 지워드려요.</div>
- <button class="meta" style="margin-top:10px;color:#A34A22;font-weight:500" data-a="say:정보 삭제 요청이 접수됐어요">내 정보 지우기</button></div></div>
+ <button class="meta" style="margin-top:10px;color:var(--accent);font-weight:500" data-a="say:정보 삭제 요청이 접수됐어요">내 정보 지우기</button></div></div>
  </div>${tabs()}`};
 
 V.noti=()=>bar('알림')+`<div class="body"><div class="pad" style="padding-top:20px">
  <div class="card" style="padding:16px 17px;margin-bottom:12px">
  <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px">${mark(17)}<span class="meta">2시간 전</span></div>
  <div class="h2" style="font-size:15px;margin-bottom:8px">조금만 더 기다려주실래요</div>
- <div style="font-size:12.5px;color:#4A4A4E;line-height:1.85"><b style="color:#1B1B1D">무이 통3중 스테인리스 냄비 20cm</b> 협상이 이번에는 잘 마무리되지 않았어요. 가격 조건이 저희가 생각한 만큼 맞지 않아서, 지금 여는 건 의미가 없다고 봤어요.</div>
- <div style="background:#FFFFFF;border-radius:12px;padding:12px 13px;margin-top:13px">
- <div class="row" style="font-size:12px;padding:2px 0"><span style="color:#6B6B70">기다리신 분</span><span class="num">54명</span></div>
- <div class="row" style="font-size:12px;padding:2px 0"><span style="color:#6B6B70">고르신 가격</span><span class="num">44,000원</span></div></div>
- <div style="font-size:12.5px;color:#4A4A4E;line-height:1.85;margin-top:13px">등록은 그대로 두었어요. 조건이 나아지면 다시 이야기해 보고, 그때 제일 먼저 알려드릴게요.</div>
+ <div style="font-size:12.5px;color:var(--ink3);line-height:1.85"><b style="color:var(--ink)">무이 통3중 스테인리스 냄비 20cm</b> 협상이 이번에는 잘 마무리되지 않았어요. 가격 조건이 저희가 생각한 만큼 맞지 않아서, 지금 여는 건 의미가 없다고 봤어요.</div>
+ <div style="background:var(--surface);border-radius:12px;padding:12px 13px;margin-top:13px">
+ <div class="row" style="font-size:12px;padding:2px 0"><span style="color:var(--sub)">기다리신 분</span><span class="num">54명</span></div>
+ <div class="row" style="font-size:12px;padding:2px 0"><span style="color:var(--sub)">고르신 가격</span><span class="num">44,000원</span></div></div>
+ <div style="font-size:12.5px;color:var(--ink3);line-height:1.85;margin-top:13px">등록은 그대로 두었어요. 조건이 나아지면 다시 이야기해 보고, 그때 제일 먼저 알려드릴게요.</div>
  <button class="btn ghost" style="margin-top:14px" data-a="list">비슷한 제품 보러 가기</button></div>
  <div class="card" data-a="deal:p1" style="padding:15px 16px;margin-bottom:12px;cursor:pointer">
  <div class="meta" style="margin-bottom:8px">3일 전</div>
  <div class="h2" style="font-size:14px;margin-bottom:6px">기다리시던 제품, 협상이 열렸어요</div>
- <div style="font-size:12.5px;color:#4A4A4E;line-height:1.85"><b style="color:#1B1B1D">무이 스테인리스 3중 팬 28cm</b>이 33,800원에 열렸어요. 고르신 가격보다 2,000원 낮아요.</div></div>
+ <div style="font-size:12.5px;color:var(--ink3);line-height:1.85"><b style="color:var(--ink)">무이 스테인리스 3중 팬 28cm</b>이 33,800원에 열렸어요. 고르신 가격보다 2,000원 낮아요.</div></div>
  <div class="soft" style="padding:13px 14px;margin-bottom:26px"><div class="meta" style="line-height:1.8">협상 소식은 기다리고 계신 분께만 보내드려요. 부담스러우시면 언제든 꺼두실 수 있어요.</div></div>
  </div></div>`;
 
@@ -1152,13 +1141,13 @@ V.log=()=>bar('협상 기록',1)+`<div class="body">
  <div class="pad" style="padding-top:18px"><div class="h1">몇 번 이야기하고<br>몇 번 미뤘는지</div>
  <div class="sub" style="margin-top:8px">잘된 것만 보여드리면 무엇을 걸렀는지 알 수가 없잖아요. 매달 숫자 그대로 적어둘게요.</div></div>
  <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px"><div class="h3" style="margin-bottom:12px">2026년 7월</div>
- <div style="display:flex;text-align:center">${[[String(P.filter(x=>['open','talking','postponed'].includes(x.deal)).length),'이야기 나눴어요',0],[String(P.filter(x=>x.deal==='open').length),'잘 됐어요',1],[String(P.filter(x=>x.deal==='postponed').length),'미뤄뒀어요',0]].map(([v,l,g],i)=>`${i?'<div style="width:.5px;background:#EFEFED;margin:2px 0"></div>':''}
- <div style="flex:1"><div class="num" style="font-size:20px;font-weight:600;letter-spacing:-.03em;color:${g?'#0A5F49':'#1B1B1D'}">${v}</div>
- <div style="font-size:10.5px;color:#86868B;margin-top:1px">${l}</div></div>`).join('')}</div>
- <div style="margin-top:13px;padding-top:12px;border-top:.5px solid #EFEFED"><div class="tiny" style="margin-bottom:6px">미뤄둔 이유</div>
+ <div style="display:flex;text-align:center">${[[String(P.filter(x=>['open','talking','postponed'].includes(x.deal)).length),'이야기 나눴어요',0],[String(P.filter(x=>x.deal==='open').length),'잘 됐어요',1],[String(P.filter(x=>x.deal==='postponed').length),'미뤄뒀어요',0]].map(([v,l,g],i)=>`${i?'<div style="width:.5px;background:var(--line);margin:2px 0"></div>':''}
+ <div style="flex:1"><div class="num" style="font-size:20px;font-weight:600;letter-spacing:-.03em;color:${g?'var(--brand)':'var(--ink)'}">${v}</div>
+ <div style="font-size:10.5px;color:var(--meta);margin-top:1px">${l}</div></div>`).join('')}</div>
+ <div style="margin-top:13px;padding-top:12px;border-top:.5px solid var(--line)"><div class="tiny" style="margin-bottom:6px">미뤄둔 이유</div>
  ${[['가격 조건이 맞지 않아서',4],['다들의 평가가 아직 낮아서',3],['시점이 맞지 않아서',1],['저희 원칙과 맞지 않아서',1]]
- .map(([k,v])=>`<div class="row" style="padding:3px 0;font-size:11.5px;color:#6B6B70"><span>${k}</span><span class="num">${v}</span></div>`).join('')}</div></div></div>
- <div class="pad sec"><div class="h3" style="color:#4A4A4E;margin-bottom:11px">이번 달 잘 된 협상</div>
+ .map(([k,v])=>`<div class="row" style="padding:3px 0;font-size:11.5px;color:var(--sub)"><span>${k}</span><span class="num">${v}</span></div>`).join('')}</div></div></div>
+ <div class="pad sec"><div class="h3" style="color:var(--ink3);margin-bottom:11px">이번 달 잘 된 협상</div>
  ${P.filter(x=>x.deal==='open').slice(0,2).map((x,i)=>[x.id,
  `${waitCount(x)}분의 마음을 전해드렸더니 맞춰주셨어요. 30일 가격 보장도 함께 약속받았어요.`,
  ['7.14','7.06'][i]]).map(([id,s,d])=>{const p=byId(id);
@@ -1167,14 +1156,14 @@ V.log=()=>bar('협상 기록',1)+`<div class="body">
  <div class="h3 pname1">${p.brand} ${p.name}</div><div class="meta" style="margin-top:3px;line-height:1.75">${s}</div></div>`}).join('')}</div>
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:14px 15px">
  <div class="h3" style="font-size:12.5px;margin-bottom:6px">미뤄둔 협상은 왜 안 적나요</div>
- <div class="meta" style="line-height:1.8">이야기가 잘 안 된 건 저희와 브랜드 사이의 일이라, 자세한 사정까지 적지는 않으려고 해요. 대신 <b style="color:#1B1B1D">기다리고 계신 분께는 개별로 꼭 알려드려요.</b></div></div>
+ <div class="meta" style="line-height:1.8">이야기가 잘 안 된 건 저희와 브랜드 사이의 일이라, 자세한 사정까지 적지는 않으려고 해요. 대신 <b style="color:var(--ink)">기다리고 계신 분께는 개별로 꼭 알려드려요.</b></div></div>
  <button class="btn ghost" style="margin-top:12px" data-a="rules">다들의 약속 보기</button></div></div>`;
 
 V.rules=()=>bar('다들의 약속')+`<div class="body">
  <div class="pad" style="padding-top:18px"><div class="h1">다들이 스스로에게<br>하는 약속이에요</div>
  <div class="sub" style="margin-top:8px">지키기 쉬운 것만 적으면 약속이 아니겠죠. 어기면 어겼다고 여기에 적어둘게요.</div></div>
  <div class="pad" style="padding-top:16px">${PROM.map(([t,s],i)=>`<div class="card" style="padding:14px 15px;margin-bottom:8px;display:flex;gap:9px">
- <span class="num" style="font-size:11px;font-weight:600;color:#0A5F49;flex-shrink:0;padding-top:1px">${String(i+1).padStart(2,'0')}</span>
+ <span class="num" style="font-size:11px;font-weight:600;color:var(--brand);flex-shrink:0;padding-top:1px">${String(i+1).padStart(2,'0')}</span>
  <div><div class="h3">${t}</div><div class="meta" style="margin-top:3px;line-height:1.75">${s}</div></div></div>`).join('')}</div>
  <div class="pad sec" style="padding-bottom:26px"><div class="tiny" style="line-height:1.8">최종 갱신 2026.07.22 · 예전 버전 보기<br>다들의 평가는 제품 하나하나에 대한 것이에요. 브랜드 전체를 평가하지는 않아요.</div></div></div>`;
 
@@ -1186,21 +1175,21 @@ V.admin=()=>{
  <div class="sub" style="margin-top:8px">네 가지 신호를 점수로 매겨 AI가 골라 왔어요. 승인하신 것만 수집이 돌아가요.</div></div>
  <div class="pad" style="padding-top:14px"><div class="hint meta" style="line-height:1.8">
  검색량 추이 · 최근 리뷰 영상 수 · 지식iN 문제 질문 수 · 다들에 들어온 요청 수를 합산해요.
- <b style="color:#1B1B1D">요청 수에 가장 큰 가중치</b>를 둡니다. 유저가 직접 찾은 제품이 가장 확실한 수요라서요.</div></div>
+ <b style="color:var(--ink)">요청 수에 가장 큰 가중치</b>를 둡니다. 유저가 직접 찾은 제품이 가장 확실한 수요라서요.</div></div>
  <div class="pad" style="padding-top:14px">
  ${CAND.map(c=>`<div class="card" style="padding:14px 15px;margin-bottom:9px;${c.block?'opacity:.55':''}">
   <div class="row" style="align-items:flex-start">
    <div style="min-width:0;flex:1"><div class="tiny">${c.b}${c.req?' · 유저 요청 있음':''}</div>
    <div class="h3" style="font-size:14px;margin-top:2px">${c.n}</div></div>
    ${c.block?'<span class="badge b-gray">제외</span>'
-   :`<span data-a="appr:${c.id}" style="width:24px;height:24px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${S.appr[c.id]?'#0A5F49':'transparent'};border:${S.appr[c.id]?'none':'1.5px solid #DCDCDA'}">${S.appr[c.id]?ic('check',15,'#FFFFFF'):''}</span>`}</div>
+   :`<span data-a="appr:${c.id}" style="width:24px;height:24px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${S.appr[c.id]?'var(--brand)':'transparent'};border:${S.appr[c.id]?'none':'1.5px solid var(--line3)'}">${S.appr[c.id]?ic('check',15,'var(--surface)'):''}</span>`}</div>
   <div style="display:flex;align-items:center;gap:9px;margin:11px 0">
-   <div class="track" style="flex:1;height:4px"><div style="height:4px;border-radius:2px;width:${c.sc}%;background:${c.sc>=75?'#0A5F49':'#9A9AA0'}"></div></div>
+   <div class="track" style="flex:1;height:4px"><div style="height:4px;border-radius:2px;width:${c.sc}%;background:${c.sc>=75?'var(--brand)':'var(--bar2)'}"></div></div>
    <span class="num" style="font-size:12px;font-weight:600">${c.sc}</span></div>
   ${c.block?`<div class="meta">${c.block}</div>`
   :`<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px 10px">
-   ${c.sig.map(([k,v])=>`<div class="row" style="font-size:11px;color:#6B6B70"><span>${k}</span><span class="num" style="font-weight:600;color:#1B1B1D">${v}</span></div>`).join('')}</div>
-   <div class="meta" style="margin-top:10px;padding-top:9px;border-top:.5px solid #F1F1EF">${c.est}</div>`}</div>`).join('')}</div>
+   ${c.sig.map(([k,v])=>`<div class="row" style="font-size:11px;color:var(--sub)"><span>${k}</span><span class="num" style="font-weight:600;color:var(--ink)">${v}</span></div>`).join('')}</div>
+   <div class="meta" style="margin-top:10px;padding-top:9px;border-top:.5px solid var(--line2)">${c.est}</div>`}</div>`).join('')}</div>
  <div class="pad" style="padding-top:6px;padding-bottom:26px">
  <button class="btn teal" style="opacity:${nAppr?1:.4}" data-a="runJob">${nAppr?nAppr+'개 승인하고 수집 시작':'승인할 후보를 골라주세요'}</button>
  <div class="tiny" style="text-align:center;margin-top:9px">모델명과 별칭은 승인 뒤에 확인 화면에서 고치실 수 있어요.</div></div>`;
@@ -1212,13 +1201,13 @@ V.admin=()=>{
  ${JOBS.map(j=>`<div class="card" style="padding:14px 15px;margin-bottom:9px">
   <div class="row" style="margin-bottom:11px"><span class="h3" style="font-size:13.5px">${j.n}</span>
   <span class="badge ${j.st===4?'b-teal':'b-gray'}">${STAGES[j.st]}</span></div>
-  <div style="display:flex;gap:4px;margin-bottom:11px">${STAGES.map((_,i)=>`<div style="flex:1;height:3px;border-radius:2px;background:${i<=j.st?'#0A5F49':'#F0F0EE'}"></div>`).join('')}</div>
+  <div style="display:flex;gap:4px;margin-bottom:11px">${STAGES.map((_,i)=>`<div style="flex:1;height:3px;border-radius:2px;background:${i<=j.st?'var(--brand)':'var(--surface2)'}"></div>`).join('')}</div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
   ${[['모은 것',j.got],['제외',j.excl],['쓸 것',j.val]].map(([k,v])=>`<div><div class="num" style="font-size:15px;font-weight:600">${v||'—'}</div><div class="tiny">${k}</div></div>`).join('')}</div>
-  ${j.lab?`<div class="meta" style="margin-top:11px;padding-top:10px;border-top:.5px solid #F1F1EF">규칙표 적용 결과 · <b style="color:#1B1B1D">${j.lab}</b></div>`:''}</div>`).join('')}</div>
+  ${j.lab?`<div class="meta" style="margin-top:11px;padding-top:10px;border-top:.5px solid var(--line2)">규칙표 적용 결과 · <b style="color:var(--ink)">${j.lab}</b></div>`:''}</div>`).join('')}</div>
  <div class="pad" style="padding-top:6px;padding-bottom:26px"><div class="soft" style="padding:14px 15px">
  <div class="h3" style="font-size:12.5px;margin-bottom:6px">막히면 여기서 멈춰요</div>
- <div class="meta" style="line-height:1.8">유효 후기가 30건에 못 미치면 라벨을 붙이지 않고 <b style="color:#1B1B1D">표본 부족</b>으로 올립니다. 억지로 판단하지 않는 게 규칙이에요.</div></div></div>`;
+ <div class="meta" style="line-height:1.8">유효 후기가 30건에 못 미치면 라벨을 붙이지 않고 <b style="color:var(--ink)">표본 부족</b>으로 올립니다. 억지로 판단하지 않는 게 규칙이에요.</div></div></div>`;
 
  const aud=`
  <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">이번 주 표본 감사</div>
@@ -1228,32 +1217,32 @@ V.admin=()=>{
   <div class="row" style="margin-bottom:9px"><span class="tiny">${a.src}</span>
   ${S.aud[i]===undefined?'':`<span class="badge ${S.aud[i]?'b-teal':'b-amber'}">${S.aud[i]?'통과':'수정함'}</span>`}</div>
   <div class="quote">${a.q}</div>
-  <div style="background:#FFFFFF;border-radius:10px;padding:10px 12px;margin-top:10px">
+  <div style="background:var(--surface);border-radius:10px;padding:10px 12px;margin-top:10px">
    <div class="tiny" style="margin-bottom:3px">AI가 뽑은 것</div>
    <div class="num" style="font-size:12px;letter-spacing:-.01em">${a.ex}</div></div>
-  ${a.fix?`<div class="meta" style="margin-top:8px;color:#A34A22">사람 의견 · ${a.fix}</div>`:''}
+  ${a.fix?`<div class="meta" style="margin-top:8px;color:var(--accent)">사람 의견 · ${a.fix}</div>`:''}
   ${S.aud[i]===undefined?`<div style="display:flex;gap:8px;margin-top:12px">
    <button class="btn ghost" style="flex:1" data-a="audit:${i}:1">맞아요</button>
    <button class="btn ghost" style="flex:1" data-a="audit:${i}:0">고칠게요</button></div>`:''}</div>`).join('')}</div>
  <div class="pad" style="padding-top:6px;padding-bottom:26px"><div class="soft" style="padding:14px 15px">
  <div class="meta" style="line-height:1.8">${Object.keys(S.aud).length}건 검토 · ${Object.values(S.aud).filter(x=>!x).length}건 수정 —
- 이 숫자가 다들 카드 아래에 <b style="color:#1B1B1D">사람이 본 날</b>로 적힙니다.</div></div></div>`;
+ 이 숫자가 다들 카드 아래에 <b style="color:var(--ink)">사람이 본 날</b>로 적힙니다.</div></div></div>`;
 
  const pub=`
  <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">발행 대기</div>
  <div class="sub" style="margin-top:8px">규칙표가 붙인 라벨이에요. 올리기 전에 한 번만 확인해 주세요.</div></div>
  <div class="pad" style="padding-top:14px"><div class="card" style="padding:16px 17px">
  <div class="tiny">하로</div><div class="h3" style="font-size:14.5px;margin-top:2px">세라믹 코팅팬 26cm</div>
- <div class="row" style="align-items:baseline;margin-top:12px;padding-top:12px;border-top:.5px solid #F1F1EF">
+ <div class="row" style="align-items:baseline;margin-top:12px;padding-top:12px;border-top:.5px solid var(--line2)">
  <span style="font-size:22px;font-weight:600;letter-spacing:-.03em">대체로 만족</span><span class="num meta">후기 241건</span></div>
  <div class="meta" style="margin-top:7px">문제 언급 11.6% · 기준 15% 미만 → 대체로 만족</div>
- <div style="margin-top:12px;padding-top:11px;border-top:.5px solid #F1F1EF">
- ${[['3~4개월에 코팅이 약해져요',18],['손잡이가 뜨거워져요',12],['광고보다 얕아요',7]].map(([t,c])=>`<div class="row" style="font-size:12px;padding:3px 0"><span>${t}</span><span class="num" style="color:#6B6B70">${c}회</span></div>`).join('')}</div>
- <div class="meta" style="margin-top:11px;padding-top:10px;border-top:.5px solid #F1F1EF">모은 것 412 · 제외 171 · 쓴 것 241</div></div></div>
+ <div style="margin-top:12px;padding-top:11px;border-top:.5px solid var(--line2)">
+ ${[['3~4개월에 코팅이 약해져요',18],['손잡이가 뜨거워져요',12],['광고보다 얕아요',7]].map(([t,c])=>`<div class="row" style="font-size:12px;padding:3px 0"><span>${t}</span><span class="num" style="color:var(--sub)">${c}회</span></div>`).join('')}</div>
+ <div class="meta" style="margin-top:11px;padding-top:10px;border-top:.5px solid var(--line2)">모은 것 412 · 제외 171 · 쓴 것 241</div></div></div>
  <div class="pad" style="padding-top:14px;padding-bottom:26px">
  ${S.pubState==='live'
- ?`<div style="background:#EAF3F0;border-radius:12px;padding:13px 14px;margin-bottom:12px">
-   <div class="h3" style="font-size:13px;margin-bottom:4px;color:#0A5F49">발행됨 · 2026.07.24</div>
+ ?`<div style="background:var(--brandBg);border-radius:12px;padding:13px 14px;margin-bottom:12px">
+   <div class="h3" style="font-size:13px;margin-bottom:4px;color:var(--brand)">발행됨 · 2026.07.24</div>
    <div class="meta" style="line-height:1.7">지금 사이트에 올라가 있어요. 문제가 있으면 회수해서 발행 전으로 되돌릴 수 있어요.</div></div>
    <button class="btn ghost" data-a="unpublish">회수하고 발행 전으로 되돌리기</button>
    <div class="tiny" style="text-align:center;margin-top:10px;line-height:1.7">회수하면 카드가 즉시 내려가고,<br>회수 사실과 사유가 정정 이력에 남아요.</div>`
@@ -1273,10 +1262,10 @@ V.admin=()=>{
   <div class="row" style="align-items:flex-start"><div style="min-width:0;flex:1">
   <div class="tiny">${j.b} · ${j.grade}</div><div class="h3" style="font-size:13.5px;margin-top:2px">${j.n}</div></div>
   <span class="badge ${j.st===5?'b-teal':j.st===6?'b-amber':'b-gray'}">${ST[j.st]}</span></div>
-  <div style="display:flex;gap:3px;margin:11px 0">${ST.slice(0,6).map((_,i)=>`<div style="flex:1;height:3px;border-radius:2px;background:${j.st===6?'#E0D8C6':i<=j.st?'#0A5F49':'#F0F0EE'}"></div>`).join('')}</div>
-  <div class="row" style="font-size:11.5px;color:#6B6B70;padding:2px 0"><span>모인 수요</span><span class="num" style="color:#1B1B1D;font-weight:600">${j.wait}명</span></div>
-  <div class="row" style="font-size:11.5px;color:#6B6B70;padding:2px 0"><span>최근 기록</span><span style="text-align:right;max-width:62%">${j.last}</span></div>
-  <div style="margin-top:10px;padding-top:9px;border-top:.5px solid #F1F1EF;font-size:12px">
+  <div style="display:flex;gap:3px;margin:11px 0">${ST.slice(0,6).map((_,i)=>`<div style="flex:1;height:3px;border-radius:2px;background:${j.st===6?'var(--line3)':i<=j.st?'var(--brand)':'var(--surface2)'}"></div>`).join('')}</div>
+  <div class="row" style="font-size:11.5px;color:var(--sub);padding:2px 0"><span>모인 수요</span><span class="num" style="color:var(--ink);font-weight:600">${j.wait}명</span></div>
+  <div class="row" style="font-size:11.5px;color:var(--sub);padding:2px 0"><span>최근 기록</span><span style="text-align:right;max-width:62%">${j.last}</span></div>
+  <div style="margin-top:10px;padding-top:9px;border-top:.5px solid var(--line2);font-size:12px">
   <span class="tiny">다음 할 일</span><div style="margin-top:2px;font-weight:500">${j.next}</div></div>
   <div style="display:flex;gap:8px;margin-top:12px">
   <button class="btn ghost" style="flex:1;padding:10px;font-size:12.5px" data-a="say:제안서 초안을 만들었어요">제안서 초안</button>
@@ -1284,7 +1273,7 @@ V.admin=()=>{
  <div class="pad" style="padding-top:6px;padding-bottom:26px"><div class="soft" style="padding:14px 15px">
  <div class="h3" style="font-size:12.5px;margin-bottom:6px">제안서에 자동으로 들어가는 것</div>
  <div class="meta" style="line-height:1.8">가격 구간별 수요 곡선 · 예상 거래액 · 지난 회차 실현율 · 30일 가격 보장 조항 · 수수료 10% 고지.
- <b style="color:#1B1B1D">숫자는 전부 파이프라인에서 자동으로 채워집니다.</b></div></div></div>`;
+ <b style="color:var(--ink)">숫자는 전부 파이프라인에서 자동으로 채워집니다.</b></div></div></div>`;
 
  const kpi=`
  <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">지표</div>
@@ -1293,24 +1282,24 @@ V.admin=()=>{
  <div class="tiny" style="letter-spacing:.04em">이번 주 대기 등록</div>
  <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px">
  <span class="num" style="font-size:30px;font-weight:600;letter-spacing:-.04em">42</span>
- <span class="num" style="font-size:12px;color:#0A5F49;font-weight:600">+11</span></div>
+ <span class="num" style="font-size:12px;color:var(--brand);font-weight:600">+11</span></div>
  <div style="display:flex;align-items:flex-end;gap:5px;height:52px;margin-top:14px">
  ${[14,19,17,26,23,31,42].map((v,i)=>`<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%">
-  <div style="height:${v/42*100}%;background:${i===6?'#0A5F49':'#E9E9E7'};border-radius:3px 3px 0 0"></div></div>`).join('')}</div>
+  <div style="height:${v/42*100}%;background:${i===6?'var(--brand)':'var(--line3)'};border-radius:3px 3px 0 0"></div></div>`).join('')}</div>
  <div class="tiny" style="margin-top:6px">최근 7주 · 12주까지 누적 150건이 목표</div></div></div>
  <div class="pad" style="padding-top:12px"><div class="card" style="padding:6px 16px">
  ${[['대기 등록 전환율','5.2%','목표 5% 넘김',1],['검색 실패율','38%','50% 넘으면 콘텐츠 우선',1],
    ['4주 재방문율','21%','목표 25% 미달',0],['구매 인증률','—','첫 협상 이후 측정',null],
    ['판정 통과율','64%','비추천 비율 하한 30% 유지 중',1]]
- .map(([k,v,note,ok],i)=>`<div style="padding:12px 0;${i?'border-top:.5px solid #F1F1EF':''}">
-  <div class="row"><span style="font-size:12.5px;color:#4A4A4E">${k}</span>
-  <span class="num" style="font-size:14px;font-weight:600;color:${ok===0?'#A34A22':'#1B1B1D'}">${v}</span></div>
+ .map(([k,v,note,ok],i)=>`<div style="padding:12px 0;${i?'border-top:.5px solid var(--line2)':''}">
+  <div class="row"><span style="font-size:12.5px;color:var(--ink3)">${k}</span>
+  <span class="num" style="font-size:14px;font-weight:600;color:${ok===0?'var(--accent)':'var(--ink)'}">${v}</span></div>
   <div class="tiny" style="margin-top:2px">${note}</div></div>`).join('')}</div></div>
  <div class="pad sec"><div class="h3" style="font-size:14px;margin-bottom:11px">못 찾고 돌아간 검색어</div>
  <div class="card" style="padding:6px 16px">
- ${[['무쇠 스킬렛',38],['압력솥',24],['에어프라이어',19],['도마',12]].map(([k,v],i)=>`<div class="row" style="padding:11px 0;${i?'border-top:.5px solid #F1F1EF':''}">
-  <span style="font-size:12.5px">${k}</span><span class="num" style="font-size:12px;color:#6B6B70">${v}명</span></div>`).join('')}</div>
- <div class="meta" style="margin-top:10px;line-height:1.8">이 목록이 다음 주 후보의 <b style="color:#1B1B1D">가장 큰 가중치</b>로 들어가요.</div></div>
+ ${[['무쇠 스킬렛',38],['압력솥',24],['에어프라이어',19],['도마',12]].map(([k,v],i)=>`<div class="row" style="padding:11px 0;${i?'border-top:.5px solid var(--line2)':''}">
+  <span style="font-size:12.5px">${k}</span><span class="num" style="font-size:12px;color:var(--sub)">${v}명</span></div>`).join('')}</div>
+ <div class="meta" style="margin-top:10px;line-height:1.8">이 목록이 다음 주 후보의 <b style="color:var(--ink)">가장 큰 가중치</b>로 들어가요.</div></div>
  <div style="height:26px"></div>`;
 
  const doneV=(()=>{const ds=P.filter(x=>x.deal==='done');
@@ -1318,7 +1307,7 @@ V.admin=()=>{
   <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">협상이 끝난 제품</div>
   <div class="sub" style="margin-top:8px">판매가 끝난 제품이에요. 후기 모음에는 계속 남아 있고, 홈의 「아직 순서가 아니에요」에 다시 올릴지 고르실 수 있어요.</div></div>
   <div class="pad" style="padding-top:14px"><div class="hint meta" style="line-height:1.8">
-  노출을 켜면 유저가 <b style="color:#3A3A3D">다음 회차를 기다리며 대기 등록</b>할 수 있어요. 수요가 다시 모이면 재협상 후보가 됩니다.</div></div>
+  노출을 켜면 유저가 <b style="color:var(--ink2)">다음 회차를 기다리며 대기 등록</b>할 수 있어요. 수요가 다시 모이면 재협상 후보가 됩니다.</div></div>
   <div class="pad" style="padding-top:14px">
   ${ds.length?ds.map(x=>`<div class="card" style="padding:14px 15px;margin-bottom:9px">
    <div style="display:flex;gap:11px;align-items:center">${th(x,44)}
@@ -1326,19 +1315,19 @@ V.admin=()=>{
     <div class="h3" style="font-size:13.5px;margin-top:1px">${x.name}</div></div>
     <span class="badge b-teal">${x.rounds}회차</span></div>
    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;text-align:center">
-   ${[['판매 수',x.soldN+'개'],['협상가',won(x.dealPrice)],['종료',x.doneDate]].map(([k2,v])=>`<div style="background:#F6F6F4;border-radius:9px;padding:9px 6px">
+   ${[['판매 수',x.soldN+'개'],['협상가',won(x.dealPrice)],['종료',x.doneDate]].map(([k2,v])=>`<div style="background:var(--surface2);border-radius:9px;padding:9px 6px">
     <div class="num" style="font-size:13px;font-weight:700">${v}</div><div class="tiny" style="margin-top:2px">${k2}</div></div>`).join('')}</div>
-   <div class="row" style="margin-top:12px;padding-top:11px;border-top:.5px solid #F1F1EF">
+   <div class="row" style="margin-top:12px;padding-top:11px;border-top:.5px solid var(--line2)">
     <div><div style="font-size:12.5px;font-weight:600">홈에 다시 노출</div>
      <div class="tiny" style="margin-top:2px">「아직 순서가 아니에요」 섹션</div></div>
-    <span data-a="toggleDone:${x.id}" style="width:42px;height:24px;border-radius:12px;flex-shrink:0;position:relative;background:${S.doneShow[x.id]??x.showInNone?'#0A5F49':'#DCDCDA'}">
-    <span style="position:absolute;top:3px;left:${(S.doneShow[x.id]??x.showInNone)?21:3}px;width:18px;height:18px;border-radius:9px;background:#fff"></span></span></div></div>`).join('')
+    <span data-a="toggleDone:${x.id}" style="width:42px;height:24px;border-radius:12px;flex-shrink:0;position:relative;background:${S.doneShow[x.id]??x.showInNone?'var(--brand)':'var(--line3)'}">
+    <span style="position:absolute;top:3px;left:${(S.doneShow[x.id]??x.showInNone)?21:3}px;width:18px;height:18px;border-radius:9px;background:var(--surface)"></span></span></div></div>`).join('')
   :`<div class="card" style="padding:22px 16px;text-align:center"><div class="sub">아직 끝난 협상이 없어요.</div></div>`}</div>
   <div style="height:26px"></div>`;
  })();
 
  return bar('운영 콘솔')+`
- <div style="display:flex;gap:2px;padding:0 14px;border-bottom:.5px solid #ECECEA;background:#FFFFFF;overflow-x:auto">
+ <div style="display:flex;gap:2px;padding:0 14px;border-bottom:.5px solid var(--line);background:var(--surface);overflow-x:auto">
  ${T.map(([k,l])=>`<button class="ptab ${S.atab===k?'on':''}" style="flex:0 0 auto;padding:12px 13px;white-space:nowrap" data-a="atab:${k}">${l}</button>`).join('')}</div>
  <div class="body"><div class="pad" style="padding-top:14px"><div class="hint tiny" style="line-height:1.7">프로토타입 화면이에요. 실제로는 관리자 권한 계정으로 로그인해 데스크톱 화면에서 쓰시게 돼요.</div></div>${{cand,job,aud,pub,nego,done:doneV,kpi}[S.atab]}</div>`};
 
@@ -1351,16 +1340,16 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <div class="pad" style="padding-bottom:14px"><div class="hint row"><span class="meta">지금 온라인 최저가</span>
  <span class="num" style="font-size:14px;font-weight:600">${won(p.price)}</span></div></div>
  <div class="pad">${st.map((s,i)=>`<button class="opt ${S.tmp===s.price?'on':''}" data-a="pick2:${s.price}">
- <span style="display:flex;align-items:baseline;gap:9px;min-width:0"><span class="num" style="font-size:15px;${S.tmp===s.price?'font-weight:600;color:#0A5F49':''}">${won(s.price)}</span>
+ <span style="display:flex;align-items:baseline;gap:9px;min-width:0"><span class="num" style="font-size:15px;${S.tmp===s.price?'font-weight:600;color:var(--brand)':''}">${won(s.price)}</span>
  <span class="tiny" style="white-space:nowrap">${s.mid?'확인된 최저가':i===st.length-1?'여기까지 골라주실 수 있어요':'-'+Math.round((1-s.price/p.price)*100)+'%'}</span></span>
  <span style="display:flex;align-items:center;gap:6px;flex-shrink:0">
-  ${s.ok?`<span style="font-size:10px;font-weight:600;color:#0A5F49;background:#E3F1EC;border-radius:5px;padding:2px 6px">협상 가능</span>`:''}
-  <span class="num" style="font-size:12px;color:${s.ok?'#0A5F49':'#6B6B70'};font-weight:${s.ok?600:400}">${s.people}명</span></span></button>`).join('')}</div>
+  ${s.ok?`<span style="font-size:10px;font-weight:600;color:var(--brand);background:var(--brandBg);border-radius:5px;padding:2px 6px">협상 가능</span>`:''}
+  <span class="num" style="font-size:12px;color:${s.ok?'var(--brand)':'var(--sub)'};font-weight:${s.ok?600:400}">${s.people}명</span></span></button>`).join('')}</div>
  <div class="pad" style="padding-top:10px"><div class="meta" style="line-height:1.7">
- 한 가격에 <b style="color:#1B1B1D">${GOAL}명</b>이 모이면 그 가격으로 브랜드를 만나요.
- ${dealPoint(p)?`지금은 <b style="color:#0A5F49">${won(dealPoint(p).price)}</b>까지 이야기할 수 있어요.`:`아직 ${GOAL}명을 넘긴 가격이 없어요.`}</div></div>
- <div class="pad" style="padding-top:8px"><div class="hint" style="display:flex;gap:9px">${ic('info',16,'#9A9AA0')}
- <div style="font-size:12px;color:#4A4A4E;line-height:1.75">고르신 가격보다 <b>더 싸게 열리면 자동으로 포함</b>돼요. 다만 너무 낮게 고르시면 이번 협상에서는 빠지실 수 있어요.</div></div></div>
+ 한 가격에 <b style="color:var(--ink)">${GOAL}명</b>이 모이면 그 가격으로 브랜드를 만나요.
+ ${dealPoint(p)?`지금은 <b style="color:var(--brand)">${won(dealPoint(p).price)}</b>까지 이야기할 수 있어요.`:`아직 ${GOAL}명을 넘긴 가격이 없어요.`}</div></div>
+ <div class="pad" style="padding-top:8px"><div class="hint" style="display:flex;gap:9px">${ic('info',16,'var(--bar2)')}
+ <div style="font-size:12px;color:var(--ink3);line-height:1.75">고르신 가격보다 <b>더 싸게 열리면 자동으로 포함</b>돼요. 다만 너무 낮게 고르시면 이번 협상에서는 빠지실 수 있어요.</div></div></div>
  <div class="pad" style="padding-top:16px"><button class="btn teal" style="opacity:${S.tmp?1:.4}" data-a="toLogin:${p.id}">${S.tmp?won(S.tmp)+'에 등록하기':'가격을 골라주세요'}</button>
  <div class="tiny" style="text-align:center;margin-top:9px">등록은 구매가 아니에요. 언제든 취소하실 수 있어요.</div></div></div></div>`}
  if(k==='login')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
@@ -1370,10 +1359,10 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <div class="sub" style="margin-top:7px">협상이 열리거나 미뤄질 때만 딱 한 번 보내드려요.<br>기기를 바꾸셔도 기다리시던 게 그대로 따라와요.</div></div>
  <div class="pad" style="padding-top:20px">
  <button class="btn" style="background:#FEE500;color:#191600" data-a="oauth:kakao">카카오톡으로 계속하기</button>
- <button class="btn" style="background:#03C75A;color:#fff;margin-top:9px" data-a="oauth:naver">네이버로 계속하기</button>
+ <button class="btn" style="background:#03C75A;color:var(--surface);margin-top:9px" data-a="oauth:naver">네이버로 계속하기</button>
  <button class="btn ghost" style="margin-top:9px" data-a="toCode">휴대폰 번호로 계속하기</button></div>
  <div class="pad" style="padding-top:16px"><div class="hint meta">받는 건 연락처 하나뿐이에요. 이름도 주소도 받지 않고, 알림 보낼 때만 씁니다.</div></div>
- <div class="pad" style="padding-top:12px"><button class="btn ghost" data-a="closeSheet" style="border:none;color:#86868B">다음에 할게요</button></div></div></div>`;
+ <div class="pad" style="padding-top:12px"><button class="btn ghost" data-a="closeSheet" style="border:none;color:var(--meta)">다음에 할게요</button></div></div></div>`;
  if(k==='code')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
  <div class="grab"></div>
  <div class="pad" style="padding-top:10px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">휴대폰 번호로 시작하기</div>
@@ -1381,7 +1370,7 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <div class="pad" style="padding-top:14px"><div class="meta" style="margin-bottom:6px">휴대폰 번호</div>
  <input id="contact" class="field" placeholder="010-0000-0000" value="${S.contact}">
  <div class="meta" style="margin:13px 0 6px">인증번호</div>
- <div style="display:flex;gap:8px"><input class="field num" placeholder="6자리" style="flex:1">
+ <div style="display:flex;gap:8px"><input class="field num" placeholder="6자리" style="flex:1;font-size:16px">
  <button class="chip" style="padding:0 14px" data-a="say:인증번호를 보냈어요">받기</button></div></div>
  <div class="pad" style="padding-top:16px"><button class="btn teal" data-a="docode">확인</button>
  <button class="btn ghost" style="margin-top:9px" data-a="toLoginSheet">다른 방법으로 하기</button></div></div></div>`;
@@ -1396,9 +1385,9 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <div class="grab"></div>
  <div class="pad" style="padding-top:12px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">이대로 발행할까요</div>
  <div class="sub" style="margin-top:7px">발행하면 다들 카드가 사이트에 올라가고, 브랜드도 볼 수 있게 돼요.</div></div>
- <div class="pad" style="padding-top:14px"><div class="card" style="padding:14px 15px;box-shadow:none;border:.5px solid #ECECEA">
+ <div class="pad" style="padding-top:14px"><div class="card" style="padding:14px 15px;box-shadow:none;border:.5px solid var(--line)">
  <div class="tiny">하로</div><div class="h3" style="font-size:14px;margin-top:2px">세라믹 코팅팬 26cm</div>
- <div class="row" style="align-items:baseline;margin-top:11px;padding-top:11px;border-top:.5px solid #F1F1EF">
+ <div class="row" style="align-items:baseline;margin-top:11px;padding-top:11px;border-top:.5px solid var(--line2)">
  <span style="font-size:18px;font-weight:600;letter-spacing:-.03em">대체로 만족</span><span class="num meta">후기 241건</span></div>
  <div class="meta" style="margin-top:6px">문제 언급 11.6% · 기준 15% 미만</div></div></div>
  <div class="pad" style="padding-top:14px"><div class="hint meta" style="line-height:1.75">
@@ -1426,8 +1415,8 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
   <button class="row" data-a="toggleFcat" style="width:100%;padding-bottom:${S.fcat?9:0}px">
    <span style="display:flex;align-items:center;gap:7px">
     <span class="h3" style="font-size:13px">카테고리</span>
-    ${S.filters.filter(f=>CATS.some(c=>c.k===f)).length?`<span style="font-size:10.5px;font-weight:600;color:#FFFFFF;background:#0A5F49;border-radius:20px;padding:2px 7px">${S.filters.filter(f=>CATS.some(c=>c.k===f)).length}</span>`:''}</span>
-   <span style="display:block;transform:rotate(${S.fcat?0:180}deg);transition:transform .2s">${ic('chev',16,'#86868B')}</span></button>
+    ${S.filters.filter(f=>CATS.some(c=>c.k===f)).length?`<span style="font-size:10.5px;font-weight:600;color:var(--surface);background:var(--brand);border-radius:20px;padding:2px 7px">${S.filters.filter(f=>CATS.some(c=>c.k===f)).length}</span>`:''}</span>
+   <span style="display:block;transform:rotate(${S.fcat?0:180}deg);transition:transform .2s">${ic('chev',16,'var(--meta)')}</span></button>
   ${S.fcat?`<div style="display:flex;gap:7px;flex-wrap:wrap">
    ${CATS.map(c=>`<button class="chip ${S.filters.includes(c.k)?'on':''}" data-a="filter:${c.k}">${c.k}</button>`).join('')}</div>`:''}</div>
  <div class="pad" style="padding-top:22px"><button class="btn teal" data-a="closeSheet">${searchHits().length}개 보기</button></div></div></div>`;
@@ -1435,17 +1424,17 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <div class="grab"></div>
  <div class="pad" style="padding-top:12px"><span style="font-size:18px;font-weight:700;letter-spacing:-.035em">정렬</span></div>
  <div class="pad" style="padding-top:12px">
- ${Object.keys(SORTS).map((kk,i)=>`<button class="row" data-a="setSort:${kk}" style="width:100%;padding:14px 0;${i?'border-top:.5px solid #EFEFED':''}">
-  <span style="font-size:14px;${S.sort===kk?'font-weight:700;color:#0A5F49':'color:#3A3A3D'}">${SORTS[kk][0]}</span>
-  ${S.sort===kk?ic('check',17,'#0A5F49'):''}</button>`).join('')}</div>
+ ${Object.keys(SORTS).map((kk,i)=>`<button class="row" data-a="setSort:${kk}" style="width:100%;padding:14px 0;${i?'border-top:.5px solid var(--line)':''}">
+  <span style="font-size:14px;${S.sort===kk?'font-weight:700;color:var(--brand)':'color:var(--ink2)'}">${SORTS[kk][0]}</span>
+  ${S.sort===kk?ic('check',17,'var(--brand)'):''}</button>`).join('')}</div>
  <div style="height:12px"></div></div></div>`;
  if(k==='site')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop style="height:78%">
  <div class="grab"></div>
  <div class="pad" style="padding-top:8px;padding-bottom:12px"><div class="row">
  <div style="min-width:0"><div class="h3" style="font-size:13px">${p.brand} 공식몰</div><div class="tiny num">${p.site}</div></div>
  <button class="chip" data-a="closeSheet">닫기</button></div></div>
- <div style="margin:0 18px;background:#fff;border-radius:14px;padding:40px 20px;text-align:center;box-shadow:inset 0 0 0 .5px #ECECEA">
- <div style="opacity:.5">${ic('ext',30,'#86868B')}</div>
+ <div style="margin:0 18px;background:var(--surface);border-radius:14px;padding:40px 20px;text-align:center;box-shadow:inset 0 0 0 .5px var(--line)">
+ <div style="opacity:.5">${ic('ext',30,'var(--meta)')}</div>
  <div class="h3" style="margin-top:12px">브랜드 페이지를 불러오는 중이에요</div>
  <div class="sub" style="margin-top:8px">브랜드 쪽 설정에 따라 여기서 열리지 않을 수 있어요.<br>그럴 땐 새 창으로 열어드려요.</div>
  <button class="btn ghost" style="margin-top:16px" data-a="say:새 창으로 열었다고 가정할게요">새 창으로 열기</button></div>
@@ -1454,11 +1443,11 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <div class="grab"></div>
  <div class="pad" style="padding-top:12px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">브랜드 판매처로 이동해요</div>
  <div class="sub" style="margin-top:7px">다들은 물건을 직접 팔지 않아요. 결제와 배송, 교환과 환불은 모두 브랜드가 맡아요.</div></div>
- <div class="pad" style="padding-top:14px"><div class="card" style="padding:14px 15px;box-shadow:none;border:.5px solid #ECECEA">
+ <div class="pad" style="padding-top:14px"><div class="card" style="padding:14px 15px;box-shadow:none;border:.5px solid var(--line)">
  ${[['파는 곳',p.brand+' 공식몰'],['협상가',won(p.dealPrice)],['보장 기간','구매일로부터 30일']]
- .map(([k2,v])=>`<div class="row" style="font-size:12.5px;padding:4px 0"><span style="color:#6B6B70">${k2}</span><span class="num">${v}</span></div>`).join('')}</div></div>
- <div class="pad" style="padding-top:14px"><div class="hint" style="display:flex;gap:9px">${ic('alert',16,'#9A9AA0')}
- <div style="font-size:12px;color:#4A4A4E;line-height:1.75">구매를 마치시면 <b>다들로 돌아와 주문번호를 남겨주세요.</b> 그래야 30일 가격 보장을 받으실 수 있어요.</div></div></div>
+ .map(([k2,v])=>`<div class="row" style="font-size:12.5px;padding:4px 0"><span style="color:var(--sub)">${k2}</span><span class="num">${v}</span></div>`).join('')}</div></div>
+ <div class="pad" style="padding-top:14px"><div class="hint" style="display:flex;gap:9px">${ic('alert',16,'var(--bar2)')}
+ <div style="font-size:12px;color:var(--ink3);line-height:1.75">구매를 마치시면 <b>다들로 돌아와 주문번호를 남겨주세요.</b> 그래야 30일 가격 보장을 받으실 수 있어요.</div></div></div>
  <div class="pad" style="padding-top:16px"><button class="btn amber" data-a="toVerify:${p.id}">판매처로 이동하기</button>
  <button class="btn ghost" style="margin-top:9px" data-a="closeSheet">조금 더 볼게요</button>
  <div class="tiny" style="text-align:center;margin-top:10px">다들이 받는 수수료는 판매가의 10%예요. 브랜드가 냅니다.</div></div></div></div>`;
