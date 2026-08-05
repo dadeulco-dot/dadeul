@@ -45,7 +45,7 @@ input,textarea,select{font:inherit;font-size:16px;color:var(--ink);background:tr
 }
 .bar{background:var(--surface);box-shadow:0 .5px 0 var(--line);padding:16px 20px 14px;flex-shrink:0;z-index:5}
 .bar .line{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.bar h1{font-size:15px;font-weight:600;letter-spacing:-.03em}
+.bar h1{font-size:16px;font-weight:700;letter-spacing:-.03em;color:var(--ink)}
 .body{flex:1;overflow-y:auto;position:relative;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
 .ptr{position:absolute;top:0;left:0;right:0;display:flex;align-items:flex-end;justify-content:center;
  pointer-events:none;z-index:9;overflow:hidden;height:0;opacity:0}
@@ -61,30 +61,30 @@ input,textarea,select{font:inherit;font-size:16px;color:var(--ink);background:tr
 .pad{padding:0 20px}
 .sec{padding-top:30px}
 .h1{font-size:23px;font-weight:700;letter-spacing:-.04em;line-height:1.36;color:var(--ink)}
-.h2{font-size:17px;font-weight:700;letter-spacing:-.035em;display:inline-flex;align-items:center;gap:8px;color:var(--ink)}
+.h2{font-size:17px;font-weight:700;letter-spacing:-.03em;display:inline-flex;align-items:center;gap:8px;color:var(--ink)}
 .h2::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--brand);flex-shrink:0}
 .h2.plain::before{display:none}
-.h3{font-size:14px;font-weight:600;letter-spacing:-.025em;color:var(--ink)}
-.sub{font-size:12.5px;color:var(--sub);line-height:1.75}
-.meta{font-size:11px;color:var(--meta)}
-.tiny{font-size:10.5px;color:var(--tiny)}
+.h3{font-size:14px;font-weight:600;letter-spacing:-.02em;color:var(--ink)}
+.sub{font-size:13px;color:var(--sub);line-height:1.7}
+.meta{font-size:12px;color:var(--meta);line-height:1.6}
+.tiny{font-size:11px;color:var(--tiny);line-height:1.55}
 .num{font-variant-numeric:tabular-nums}
 .card{background:var(--surface);border:.5px solid var(--line);border-radius:14px;width:100%;display:block}
 .soft{background:var(--surface2);border-radius:14px;width:100%;display:block}
 .thumb{border-radius:11px;flex-shrink:0;box-shadow:inset 0 0 0 .5px rgba(27,27,29,.05)}
-.pname{font-size:13px;font-weight:500;line-height:1.42;letter-spacing:-.025em;color:var(--ink);
+.pname{font-size:13px;font-weight:500;line-height:1.42;letter-spacing:-.02em;color:var(--ink);
  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
  height:calc(1.42em * 2);margin-top:3px}
 .pname1{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;height:auto}
-.btn{display:block;width:100%;border-radius:12px;padding:15px;text-align:center;font-size:15px;font-weight:600;letter-spacing:-.02em}
+.btn{display:block;width:100%;border-radius:12px;padding:15px;text-align:center;font-size:15px;font-weight:700;letter-spacing:-.02em}
 .teal{background:var(--brand);color:var(--surface)}
 .dark{background:var(--ink);color:var(--surface)}
 .amber{background:var(--accent);color:var(--surface)}
-.ghost{border:1px solid var(--line3);color:var(--ink);font-weight:600;font-size:14px}
-.chip{font-size:12px;border-radius:8px;padding:8px 14px;white-space:nowrap;flex-shrink:0;color:var(--ink3);background:var(--surface2);font-weight:500;display:inline-flex;align-items:center;gap:4px}
+.ghost{border:1px solid var(--line3);color:var(--ink);font-weight:600;font-size:15px}
+.chip{font-size:12px;border-radius:8px;padding:8px 14px;letter-spacing:-.01em;white-space:nowrap;flex-shrink:0;color:var(--ink3);background:var(--surface2);font-weight:500;display:inline-flex;align-items:center;gap:4px}
 .chip.on{background:var(--brand);color:var(--surface);font-weight:600}
 .chip.sel{background:var(--brand);color:var(--surface);font-weight:500}
-.badge{font-size:10.5px;border-radius:5px;padding:3.5px 8px;display:inline-block;font-weight:600;letter-spacing:-.01em}
+.badge{font-size:11px;border-radius:5px;padding:3.5px 8px;display:inline-block;font-weight:600;letter-spacing:-.01em}
 .b-amber{color:var(--accent);background:var(--accentBg)}
 .b-teal{color:var(--brand);background:var(--brandBg)}
 .b-gray{color:var(--ink3);background:var(--surface2)}
@@ -92,7 +92,7 @@ input,textarea,select{font:inherit;font-size:16px;color:var(--ink);background:tr
 .track{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
 .fill{height:5px;background:var(--brand);border-radius:3px}
 .tabs{background:var(--surface);box-shadow:0 -.5px 0 var(--line);display:flex;padding:8px 0 14px;flex-shrink:0}
-.tab{flex:1;text-align:center;color:var(--tiny);font-size:10.5px;letter-spacing:-.01em;padding-top:2px}
+.tab{flex:1;text-align:center;color:var(--tiny);font-size:11px;font-weight:500;letter-spacing:-.02em;padding-top:2px}
 .tab.on{color:var(--brand);font-weight:600}
 .tab svg{display:block;margin:0 auto 2px}
 .scroller,.scroller2{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;
@@ -100,6 +100,11 @@ input,textarea,select{font:inherit;font-size:16px;color:var(--ink);background:tr
 .scroller{gap:8px;padding:2px 0 4px 20px}
 .scroller2{gap:11px;padding:2px 0 4px 20px}
 .scroller>*,.scroller2>*{flex:0 0 auto;scroll-snap-align:start}
+.scroller>.chip{justify-content:center;text-align:center}
+.swrap{position:relative}
+.swrap::after{content:"";position:absolute;top:0;right:0;bottom:0;width:26px;pointer-events:none;
+ background:linear-gradient(90deg,transparent,var(--panel));opacity:0;transition:opacity .2s}
+.swrap.more::after{opacity:1}
 /* flex+overflow에서 마지막 padding-right가 먹지 않아 스페이서로 대체 */
 .scroller::after,.scroller2::after{content:"";flex:0 0 20px;height:1px}
 .scroller::-webkit-scrollbar,.scroller2::-webkit-scrollbar{height:0;display:none}
@@ -126,7 +131,7 @@ input,textarea,select{font:inherit;font-size:16px;color:var(--ink);background:tr
 .dpanel::-webkit-scrollbar{width:0}
 .drow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;font-size:13.5px;letter-spacing:-.01em}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.ptab{flex:1;text-align:center;padding:13px 0;font-size:14px;font-weight:500;color:var(--meta);border-bottom:2px solid transparent;letter-spacing:-.02em}
+.ptab{flex:1;text-align:center;padding:13px 0;font-size:14px;font-weight:600;color:var(--meta);border-bottom:2px solid transparent;letter-spacing:-.02em}
 .ptab.on{color:var(--brand);font-weight:700;border-bottom-color:var(--brand)}
 
 /* ── 다크 모드 (반드시 마지막에 위치) ── */
@@ -187,9 +192,10 @@ const IP = {
  sliders:'M4 7h10M18 7h2M4 17h4M12 17h8M16 4v6M8 14v6',
  file:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6',
  plus:'M12 5v14M5 12h14',
+ scale:'M5 20h6M5 20V9M5 9l-2 4a2.5 2.5 0 0 0 4 0zM15 20h6M18 20V5M18 9l-2 4a2.5 2.5 0 0 0 4 0zM5 9l13-4',
  chev:'M6 15l6-6 6 6',
 };
-const ICL={back:'뒤로',search:'검색',bell:'알림',user:'내 정보',share:'공유',x:'닫기',next:'더 보기',arrow:'이동',ext:'새 창',info:'안내',alert:'주의',sliders:'필터',file:'기록',shield:'가격 보장',check:'완료',home:'홈',chat:'후기',tag:'협상',plus:'추가',chev:'접기'};
+const ICL={back:'뒤로',search:'검색',bell:'알림',user:'내 정보',share:'공유',x:'닫기',next:'더 보기',arrow:'이동',ext:'새 창',info:'안내',alert:'주의',sliders:'필터',file:'기록',shield:'가격 보장',check:'완료',home:'홈',chat:'후기',tag:'협상',plus:'추가',chev:'접기',scale:'비교'};
 const ic=(n,s=18,c='var(--meta)',w=1.7)=>`<svg role="img" aria-label="${ICL[n]||''}" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${IP[n].split('M').filter(Boolean).map(d=>`<path d="M${d}"/>`).join('')}</svg>`;
 const isDark=()=>typeof matchMedia!=='undefined'&&matchMedia('(prefers-color-scheme:dark)').matches;
 const mark=(s=20,c)=>{c=c||(isDark()?'var(--brandUp)':'var(--brand)');const u='k'+Math.random().toString(36).slice(2,7);return`<svg role="img" aria-label="다들" width="${s}" height="${s}" viewBox="0 0 64 64"><defs><clipPath id="${u}"><path d="M56 10 L48 10 A22 22 0 0 0 48 54 L56 54 Z"/></clipPath></defs><path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="none" stroke="${c}" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M55 11 L48 10.5 A22 22 0 0 0 48 53.5 L55 53 Z" fill="none" stroke="${c}" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/><g clip-path="url(#${u})"><path d="M9 11 L16 10.5 A22 22 0 0 1 16 53.5 L9 53 Z" fill="${c}"/></g></svg>`};
@@ -213,16 +219,16 @@ const th=(x,s=46)=>{const t=typeof x==='string'?x:x.tint,c=typeof x==='string'?n
 /* ── 데이터 ── */
 const CH={kakao:'카카오톡',naver:'네이버',phone:'휴대폰'};
 const CATS=[
- {k:'조리팬',   g:'pan',   subs:['프라이팬','웍','궁중팬','계란말이팬','그릴팬','전골팬']},
- {k:'냄비·솥',  g:'pot',   subs:['편수냄비','양수냄비','전골냄비','압력솥','밥솥·곰솥','주전자']},
- {k:'무쇠·주물',g:'grill', subs:['무쇠팬','더치오븐','그리들','석쇠·불판']},
- {k:'칼·도마',  g:'knife', subs:['셰프나이프','과도','빵칼','가위','도마','숫돌']},
- {k:'조리도구', g:'tool',  subs:['뒤집개','국자','집게','거품기','계량도구','채반·볼']},
- {k:'베이킹',   g:'bake',  subs:['오븐팬','케이크틀','머핀틀','밀대','실리콘몰드']},
- {k:'보관용기', g:'store', subs:['밀폐용기','유리용기','진공용기','저장병','도시락']},
- {k:'주방가전', g:'appl',  subs:['에어프라이어','전기포트','토스터','블렌더','식기건조기']},
- {k:'식기·컵',  g:'dish',  subs:['접시','볼·공기','머그','유리컵','수저']},
- {k:'주방잡화', g:'misc',  subs:['앞치마','행주·수세미','장갑','수납선반','휴지통']},
+ {k:'조리팬',   d:'주방용품', g:'pan',   subs:['프라이팬','웍','궁중팬','계란말이팬','그릴팬','전골팬']},
+ {k:'냄비·솥', d:'주방용품', g:'pot',   subs:['편수냄비','양수냄비','전골냄비','압력솥','밥솥·곰솥','주전자']},
+ {k:'무쇠·주물', d:'주방용품',g:'grill', subs:['무쇠팬','더치오븐','그리들','석쇠·불판']},
+ {k:'칼·도마', d:'주방용품', g:'knife', subs:['셰프나이프','과도','빵칼','가위','도마','숫돌']},
+ {k:'조리도구', d:'주방용품', g:'tool',  subs:['뒤집개','국자','집게','거품기','계량도구','채반·볼']},
+ {k:'베이킹', d:'주방용품',   g:'bake',  subs:['오븐팬','케이크틀','머핀틀','밀대','실리콘몰드']},
+ {k:'보관용기', d:'주방용품', g:'store', subs:['밀폐용기','유리용기','진공용기','저장병','도시락']},
+ {k:'주방가전', d:'주방용품', g:'appl',  subs:['에어프라이어','전기포트','토스터','블렌더','식기건조기']},
+ {k:'식기·컵', d:'주방용품', g:'dish',  subs:['접시','볼·공기','머그','유리컵','수저']},
+ {k:'주방잡화', d:'주방용품', g:'misc',  subs:['앞치마','행주·수세미','장갑','수납선반','휴지통']},
 ];
 const P=[
 {id:"p1",brand:"하로",checked:"2026.05.16",name:"인덕션 코팅팬 28cm",sub:"프라이팬",cat:"pan",tint:"green",label:"대체로 만족",n:229,price:39800,low:33300,lowNote:"2026.03 자사몰 세일 · 9일간 유지",deal:"talking",wait:178,target:100,induction:1,dish:0,incl:229,excl:182,longN:88,keep:72,drop:16,dropWhy:"3~4개월에 코팅이 약해져요 (9건)",cons:[["3~4개월에 코팅이 약해져요", 26], ["손잡이가 뜨거워져요", 18], ["광고보다 얕아요", 10]],site:"haro.co.kr/p1",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]],tDate:"7.19",pros:[["세척이 편해요", 54], ["가벼워서 다루기 쉬워요", 38], ["열이 고르게 퍼져요", 31]]},
@@ -289,6 +295,11 @@ let SEED=Date.now();
 const reshuffle=()=>{SEED=Date.now()+Math.floor(Math.random()*99999)};
 const shuffle=a=>{const r=a.slice();for(let i=r.length-1;i>0;i--){
  const x=Math.sin(SEED+i)*10000,j=Math.floor((x-Math.floor(x))*(i+1));[r[i],r[j]]=[r[j],r[i]]}return r};
+const DOMS=[
+ {k:'주방용품',g:'pot',on:1},
+ {k:'뷰티',    g:'store',on:0},
+ {k:'패션',    g:'misc',on:0},
+];
 const SUB2CAT={};CATS.forEach(c=>c.subs.forEach(x=>SUB2CAT[x]=c.k));
 const CATN=k=>P.filter(x=>SUB2CAT[x.sub]===k).length;
 
@@ -349,7 +360,7 @@ const AUDIT=[
 ];
 
 /* ── 상태 ── */
-const S={stack:[{s:'home'}],tab:'home',unread:2,foot:1,sort:'n',fcat:0,doneShow:{},pubState:'wait',reqDone:null,view:'grid',sec:null,opencat:null,glist:null,rlist:null,rax:'all',rpick:null,atab:'cand',appr:{},aud:{},mine:0,cat:'전체',brand:null,drawer:0,ptab:'rev',user:null,pending:null,noti:{open:1,post:1,drop:1,week:0},sheet:null,q:'',filters:[],picks:[],waits:{},bought:{},contact:'',tmp:null,toast:null};
+const S={stack:[{s:'home'}],tab:'home',unread:2,foot:1,lsort:'verdict',lmore:0,lcat:null,lrecent:[],cdom:'주방용품',cq:'',csort:'cnt',sort:'n',fcat:0,doneShow:{},pubState:'wait',reqDone:null,view:'grid',sec:null,opencat:null,glist:null,rlist:null,rax:'all',rpick:null,atab:'cand',appr:{},aud:{},mine:0,cat:'전체',brand:null,drawer:0,ptab:'rev',user:null,pending:null,noti:{open:1,post:1,drop:1,week:0},sheet:null,q:'',filters:[],picks:[],waits:{},bought:{},contact:'',tmp:null,toast:null};
 const cur=()=>S.stack[S.stack.length-1];
 let navLock=0;
 const pushHist=()=>{if(navLock)return;try{history.pushState({d:S.stack.length},'')}catch(e){}};
@@ -367,10 +378,21 @@ const back=()=>{if(S.drawer||S.sheet||S.stack.length>1){navLock=1;
 const root=(s)=>{S.stack=[{s}];S.tab=s;draw()};
 const say=m=>{S.toast=m;draw();setTimeout(()=>{S.toast=null;draw()},2200)};
 const waitCount=p=>p.wait+(S.waits[p.id]?1:0);
+const CHO='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ';
+const toCho=t=>[...t].map(ch=>{const c=ch.charCodeAt(0)-0xAC00;
+ return (c>=0&&c<11172)?CHO[Math.floor(c/588)]:ch}).join('');
+// 부분 일치 또는 초성 일치 (한 글자부터 동작)
+const match=(text,q)=>{if(!q)return true;
+ const t=text.toLowerCase(), k=q.toLowerCase();
+ if(t.includes(k))return true;
+ if([...k].every(ch=>CHO.includes(ch)))return toCho(t).includes(k);
+ return false};
+const rateOf=p=>p.cons&&p.cons[0]?p.cons[0][1]/p.n:0;
+const keepOf=p=>(p.keep+p.drop)?p.keep/(p.keep+p.drop):0;
 
 /* ── 조각 ── */
 const bar=(t,sh)=>`<div class="bar"><div class="line"><button data-a="back">${ic('back',20)}</button><h1>${t}</h1>${sh?ic('share',17):'<span style="width:17px"></span>'}</div></div>`;
-const tabs=()=>`<div class="tabs">${[['home','홈','home'],['reviews','후기','chat'],['me','내 정보','user']]
+const tabs=()=>`<div class="tabs">${[['home','홈','home'],['reviews','후기','chat'],['cmp','비교','scale'],['me','내 정보','user']]
  .map(([k,l,i])=>`<button class="tab ${S.tab===k?'on':''}" data-a="${k==='home'?'goHome':'root:'+k}">${ic(i,21,S.tab===k?'var(--brand)':'var(--tiny)')}${l}</button>`).join('')}</div>`;
 const bellBtn=p=>`<span data-a="price:${p.id}" style="width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${S.waits[p.id]?'var(--brand)':'var(--brandBg)'}">${S.waits[p.id]?ic('check',17,'var(--surface)'):ic('bell',17,'var(--brand)')}</span>`;
 const rowItem=(p,right)=>`<div class="card" style="padding:12px 13px;margin-bottom:9px;display:flex;gap:11px;align-items:center">
@@ -394,14 +416,14 @@ V.home=()=>{
    ${x.deal==='open'?`<span class="badge b-amber" style="position:absolute;top:9px;left:9px">${x.endDays}일 남음</span>`:''}
    ${S.waits[x.id]?`<span class="badge b-teal" style="position:absolute;top:9px;right:9px">기다리는 중</span>`:''}</div>
   <div style="padding:12px 13px 14px">
-   <div style="font-size:11px;color:var(--meta);font-weight:500;letter-spacing:-.01em">${x.brand}</div>
+   <div style="font-size:11px;color:var(--meta);font-weight:500;letter-spacing:-.02em">${x.brand}</div>
    <div class="pname">${x.name}</div>
    ${x.deal==='open'
     ?`<div style="margin-top:9px;display:flex;align-items:baseline;gap:5px">
       <span class="num" style="font-size:13px;color:var(--accent);font-weight:700;letter-spacing:-.02em">${off}%</span>
-      <span class="num" style="font-size:16px;font-weight:700;letter-spacing:-.04em">${won(x.dealPrice)}</span></div>
+      <span class="num" style="font-size:15px;font-weight:700;letter-spacing:-.04em">${won(x.dealPrice)}</span></div>
       <div class="num" style="font-size:11px;color:var(--tiny);text-decoration:line-through;margin-top:1px">${won(x.price)}</div>`
-    :`<div style="margin-top:9px"><span class="num" style="font-size:15px;font-weight:700;letter-spacing:-.035em">${won(x.price)}</span></div>
+    :`<div style="margin-top:9px"><span class="num" style="font-size:15px;font-weight:700;letter-spacing:-.03em">${won(x.price)}</span></div>
       <div class="num" style="font-size:11px;color:var(--meta);margin-top:3px">${x.deal==='gathering'?`${waitCount(x)}<span style="color:var(--faint)"> / ${GOAL}명</span>`
  :x.deal==='talking'?`${waitCount(x)}명 대기 중`
  :x.deal==='done'?`${x.rounds}회차 협상 완료`
@@ -420,8 +442,8 @@ V.home=()=>{
  const mini=x=>`<div data-a="product:${x.id}" style="cursor:pointer;flex:0 0 108px">
   <div class="thumb" style="width:108px;height:84px;border-radius:12px;background:${TINT[x.tint]};display:flex;align-items:center;justify-content:center;position:relative">
    <svg width="46" height="46" viewBox="0 0 64 64" fill="none" stroke="var(--glyph)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${GLY[x.cat]}</svg>
-   ${x.deal==='open'?`<span class="badge b-amber num" style="position:absolute;top:6px;left:6px;font-size:9.5px;padding:2px 6px">협상가 ${(x.dealPrice/10000).toFixed(1)}만</span>`:''}</div>
-  <div class="pname" style="font-size:11.5px;margin-top:6px">${x.name}</div>
+   ${x.deal==='open'?`<span class="badge b-amber num" style="position:absolute;top:6px;left:6px;font-size:10px;padding:2px 6px">협상가 ${(x.dealPrice/10000).toFixed(1)}만</span>`:''}</div>
+  <div class="pname" style="font-size:11px;margin-top:6px">${x.name}</div>
   <div class="tiny num" style="margin-top:2px">${won(x.deal==='open'?x.dealPrice:x.price)}</div></div>`;
 
  const catView=CATS.map(c=>{const ps=shuffle(P.filter(x=>SUB2CAT[x.sub]===c.k));
@@ -444,7 +466,7 @@ V.home=()=>{
   <div class="card" style="padding:14px 15px;margin-bottom:11px">
    <div class="row" style="align-items:flex-start">
     <div style="min-width:0;flex:1">
-     <div style="font-size:16px;font-weight:600;letter-spacing:-.03em">${b}</div>
+     <div style="font-size:15px;font-weight:600;letter-spacing:-.03em">${b}</div>
      <div class="tiny" style="margin-top:3px">${cats.join(' · ')}</div></div>
     <button class="chip" data-a="brandSel:${b}" style="flex-shrink:0">전체 ${ps.length}</button></div>
    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px">
@@ -463,11 +485,11 @@ V.home=()=>{
   <span style="display:block"><span style="display:block;width:17px;height:1.7px;background:var(--ink2);border-radius:1px"></span>
   <span style="display:block;width:17px;height:1.7px;background:var(--ink2);border-radius:1px;margin-top:4px"></span>
   <span style="display:block;width:12px;height:1.7px;background:var(--ink2);border-radius:1px;margin-top:4px"></span></span></button>
- <button data-a="goHome" style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em;color:var(--ink)">다들</span></button>
+ <button data-a="goHome" style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:17px;font-weight:600;letter-spacing:-.04em;color:var(--ink)">다들</span></button>
  <div style="display:flex;gap:14px"><button data-a="search">${ic('search',19)}</button><button data-a="noti" style="position:relative">${ic('bell',19)}${S.unread?`<span style="position:absolute;top:-1px;right:-2px;width:7px;height:7px;border-radius:4px;background:var(--accent)"></span>`:''}</button></div></div></div>`;
  return topbar+`
  <div class="body">
- ${S.view==='grid'&&!label?`<div class="pad" style="padding-top:18px">
+ ${S.view==='grid'&&!label?`<div class="pad" style="padding-top:20px">
   <div data-a="method" style="border-radius:16px;padding:22px 20px;cursor:pointer;position:relative;overflow:hidden;
    background:linear-gradient(140deg,var(--brand) 0%,#0D7357 55%,#12876A 100%)">
    <div style="position:absolute;right:-26px;top:-22px;opacity:.13">
@@ -484,7 +506,7 @@ V.home=()=>{
    <div style="display:inline-flex;align-items:center;gap:4px;margin-top:14px;background:rgba(255,255,255,.16);
     border-radius:7px;padding:7px 12px;font-size:12px;font-weight:600;color:var(--surface)">
     어떻게 하나요 ${ic('next',13,'var(--surface)')}</div></div></div></div>`:''}
- ${label?`<div class="pad" style="padding-top:14px"><div class="row">
+ ${label?`<div class="pad" style="padding-top:12px"><div class="row">
   <span class="chip sel" data-a="clearFilter">${label} ${ic('x',13,'var(--surface)')}</span>
   <span class="meta num">${total}개</span></div></div>`:''}
  ${S.view==='cat'?catView+'<div style="height:26px"></div>':S.view==='brand'?brandView+'<div style="height:26px"></div>':`
@@ -493,7 +515,7 @@ V.home=()=>{
  ${sec('gathering','수요가 모이는 중','한 가격에 100명이 모이면 협상을 시작해요',gathL)}
  ${sec('none','아직 순서가 아니에요','후기는 모았지만 협상은 아직이에요',noneL)}
  ${sec('postponed','이번엔 미뤄뒀어요','안 된 것도 남겨둘게요. 등록은 그대로 있어요',postL)}
- ${total?'':`<div class="pad" style="padding-top:50px;text-align:center">
+ ${total?'':`<div class="pad" style="padding-top:56px;text-align:center">
   <div class="h2">이 갈래는 아직 준비 중이에요</div>
   <div class="sub" style="margin-top:8px">모은 제품이 쌓이면 여기에 올려둘게요.<br>찾으시는 제품이 있으면 알려주세요.</div>
   <div style="padding:0 20px"><button class="btn teal" style="margin-top:16px" data-a="search">제품 찾아보기</button>
@@ -505,8 +527,8 @@ V.home=()=>{
   <div class="h3" style="font-size:13px">브랜드로 찾기</div><div class="tiny" style="margin-top:3px">${new Set(P.map(x=>x.brand)).size}개 브랜드</div></div></div></div>`}
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" data-a="log" style="padding:16px 17px;cursor:pointer">
  <div class="h3" style="font-size:14px;margin-bottom:6px">이번 달에 ${P.filter(x=>['open','talking','postponed'].includes(x.deal)).length}번 이야기해서 ${P.filter(x=>x.deal==='open').length}번 됐어요</div>
- <div style="font-size:12.5px;color:var(--ink3);line-height:1.75">안 된 것도 숫자 그대로 적어둬요. 무엇을 걸렀는지 보이지 않으면 고른 것도 못 믿으니까요.</div>
- <div style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--brand);font-weight:500">협상 기록 보기 ${ic('arrow',15,'var(--brand)')}</div></div></div>
+ <div style="font-size:12px;color:var(--ink3);line-height:1.75">안 된 것도 숫자 그대로 적어둬요. 무엇을 걸렀는지 보이지 않으면 고른 것도 못 믿으니까요.</div>
+ <div style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12px;color:var(--brand);font-weight:500">협상 기록 보기 ${ic('arrow',15,'var(--brand)')}</div></div></div>
  </div>${tabs()}`};
 
 V.glist=()=>{
@@ -537,9 +559,9 @@ V.glist=()=>{
  <h1>${t}</h1><button data-a="search">${ic('search',18)}</button></div></div>
  <div class="body">
  <div class="pad" style="padding-top:16px"><div class="meta">${d}</div></div>
- <div class="scroller chiprow">
- ${Object.keys(M).map(x=>`<span class="chip ${k===x?'on':''}" data-a="glist:${x}">${M[x][0]} ${P.filter(y=>y.deal===x).length}</span>`).join('')}</div>
- <div class="pad" style="padding-top:14px"><div class="row" style="margin-bottom:12px">
+ <div class="swrap"><div class="scroller chiprow">
+ ${Object.keys(M).map(x=>`<span class="chip ${k===x?'on':''}" data-a="glist:${x}">${M[x][0]} ${P.filter(y=>y.deal===x).length}</span>`).join('')}</div></div>
+ <div class="pad" style="padding-top:12px"><div class="row" style="margin-bottom:12px">
  <span class="meta num">${arr.length}개</span>
  ${S.cat!=='전체'||S.brand?`<span class="chip sel" data-a="clearFilter">${S.brand||S.cat} ${ic('x',13,'var(--surface)')}</span>`:''}</div>
  ${arr.length?`<div class="grid">${arr.map(gcard).join('')}</div>`
@@ -581,11 +603,11 @@ V.rlist=()=>{
  return `<div class="bar"><div class="line"><button data-a="back">${ic('back',20)}</button>
  <h1>${scope||'후기 모음'}</h1><button data-a="search">${ic('search',18)}</button></div></div>
  <div class="body">
- <div class="pad" style="padding-top:18px">
+ <div class="pad" style="padding-top:20px">
  ${scope?`<div class="tiny" style="margin-bottom:4px">${S.brand?'브랜드':'카테고리'} · ${scope}</div>`:''}
  <div class="h1" style="font-size:19px">${t}</div>
  <div class="sub" style="margin-top:7px">${d}${scope?` · ${scope} 안에서만 봅니다`:''}</div></div>
- <div class="scroller chiprow">${Object.keys(M).map(x=>`<span class="chip ${k===x?'on':''}" data-a="rlist:${x}">${M[x][0]}</span>`).join('')}</div>
+ <div class="swrap"><div class="scroller chiprow">${Object.keys(M).map(x=>`<span class="chip ${k===x?'on':''}" data-a="rlist:${x}">${M[x][0]}</span>`).join('')}</div></div>
  <div class="pad" style="padding-top:16px"><div class="row" style="margin-bottom:12px">
   <span class="meta num">${arr.length}개</span>
   ${S.cat!=='전체'||S.brand?`<span class="chip sel" data-a="clearFilter">${S.brand||S.cat} ${ic('x',13,'var(--surface)')}</span>`:''}</div>
@@ -622,9 +644,16 @@ V.reviews=()=>{
   <button style="display:flex;align-items:center;gap:2px;font-size:12px;color:var(--meta);font-weight:500" data-a="rlist:thin">전체 ${ic('next',13,'var(--faint)')}</button></div>
   <div class="meta" style="margin-bottom:12px">후기가 더 모여야 말씀드릴 수 있어요</div>
   ${shuffle(P.filter(x=>x.label==='표본 부족')).slice(0,2).map(x=>line(x,`후기 ${x.n}건`)).join('')}</div>
- <div class="pad sec"><div class="h2" style="margin-bottom:12px">주제별로 모아 봤어요</div>
- ${[['코팅팬 12종 · 문제를 겪은 분들은 언제 겪었나','후기 1,847건 · 7월 22일 갱신'],['인덕션에서 정말 잘 되는 냄비 9종','후기 962건 · 7월 19일 갱신']]
- .map(([t,sb])=>`<div class="card" data-a="list" style="padding:14px 15px;margin-bottom:9px;cursor:pointer"><div class="h3">${t}</div><div class="meta" style="margin-top:3px">${sb}</div></div>`).join('')}</div>`;
+ <div class="pad sec"><div class="h2" style="margin-bottom:3px">갈래끼리 비교해 보기</div>
+ <div class="meta" style="margin-bottom:12px">평가 · 가격 · 문제 언급 · 계속 쓰는 비율로 줄 세워 봐요</div>
+ ${CATS.filter(c=>CATN(c.k)>=3).slice(0,4).map(c=>{const ps=P.filter(x=>SUB2CAT[x.sub]===c.k);
+  const gd=ps.filter(x=>x.label==='대체로 만족').length;
+  return `<div class="card" data-a="list:${c.k}" style="padding:14px 15px;margin-bottom:9px;cursor:pointer">
+  <div class="row"><span style="display:flex;align-items:center;gap:9px;min-width:0">
+   <svg width="20" height="20" viewBox="0 0 64 64" fill="none" stroke="var(--meta)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${GLY[c.g]}</svg>
+   <span style="min-width:0"><span class="h3" style="display:block;font-size:14px">${c.k} ${ps.length}종 비교</span>
+   <span class="meta" style="display:block;margin-top:2px">후기 ${ps.reduce((a,x)=>a+x.n,0).toLocaleString('ko-KR')}건 · 대체로 만족 ${gd}종</span></span></span>
+   ${ic('next',17,'var(--faint)')}</div></div>`}).join('')}</div>`;
 
  const secHead=(t,d,go2)=>`<div class="row" style="margin-bottom:3px"><span class="h2">${t}</span>
   <button style="display:flex;align-items:center;gap:2px;font-size:12px;color:var(--meta);font-weight:500" data-a="${go2}">전체 ${ic('next',13,'var(--faint)')}</button></div>
@@ -642,7 +671,7 @@ V.reviews=()=>{
   const e=ps.find(x=>x.label==='표본 부족');
   const subs=c.subs.filter(sb=>P.some(x=>x.sub===sb));
   return `
-  <div class="scroller chiprow" style="margin-top:10px">${avail.map(x=>`<span class="chip ${cur===x.k?'on':''}" data-a="rpick:${x.k}">${x.k} ${CATN(x.k)}</span>`).join('')}</div>
+  <div class="swrap"><div class="scroller chiprow" style="margin-top:10px">${avail.map(x=>`<span class="chip ${cur===x.k?'on':''}" data-a="rpick:${x.k}">${x.k} ${CATN(x.k)}</span>`).join('')}</div></div>
   <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px">
    <div class="row"><span style="display:flex;align-items:center;gap:9px">
     <svg width="22" height="22" viewBox="0 0 64 64" fill="none" stroke="var(--meta)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${GLY[c.g]}</svg>
@@ -667,7 +696,7 @@ V.reviews=()=>{
   const d=pick(ps.filter(x=>x.keep+x.drop>=10),(x,y)=>y.keep/(y.keep+y.drop)-x.keep/(x.keep+x.drop),a);
   const bar=[['var(--brand)',g],['var(--bar3)',ps.length-g-bd],['var(--bar4)',bd]].filter(([,n])=>n>0);
   return `
-  <div class="scroller chiprow" style="margin-top:10px">${BR.map(x=>`<span class="chip ${cur===x?'on':''}" data-a="rpick:${x}">${x} ${P.filter(y=>y.brand===x).length}</span>`).join('')}</div>
+  <div class="swrap"><div class="scroller chiprow" style="margin-top:10px">${BR.map(x=>`<span class="chip ${cur===x?'on':''}" data-a="rpick:${x}">${x} ${P.filter(y=>y.brand===x).length}</span>`).join('')}</div></div>
   <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px">
    <div class="row"><span style="font-size:17px;font-weight:600;letter-spacing:-.03em">${cur}</span>
     <button class="chip" data-a="rbrand:${cur}">전체 ${ps.length}</button></div>
@@ -683,19 +712,18 @@ V.reviews=()=>{
   <div class="pad" style="padding-top:20px"><button class="btn ghost" data-a="rbrand:${cur}">${cur} 전체 ${ps.length}개 보기</button></div>`;
  })();
 
- return `<div class="bar"><div class="row" style="margin-bottom:12px">
- <span style="font-size:17px;font-weight:600;letter-spacing:-.03em">후기 모음</span>
- <button data-a="goHome" style="display:flex;align-items:center;gap:6px;opacity:.72">${mark(18)}
- <span style="font-size:14px;font-weight:600;letter-spacing:-.04em;color:var(--ink)">다들</span></button></div>
- <button data-a="search" style="background:var(--surface2);border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:8px;width:100%">
- ${ic('search',17)}<span style="font-size:13px;color:var(--tiny)">브랜드 · 제품명 · 궁금한 점</span></button></div>
+ return `<div class="bar">
+ <div class="h1" style="font-size:19px">후기 모음</div>
+ <div class="meta" style="margin-top:4px;margin-bottom:12px">흩어진 후기를 모아 다들 뭐라고 했는지 정리했어요</div>
+ <button data-a="search" style="background:var(--surface2);border-radius:11px;padding:11px 13px;display:flex;align-items:center;gap:8px;width:100%">
+ ${ic('search',16)}<span style="font-size:13px;color:var(--tiny)">브랜드 · 제품명 · 궁금한 점</span></button></div>
  <div class="body">
- <div class="scroller chiprow">${AX.map(([k,t])=>`<span class="chip ${ax===k?'on':''}" data-a="rax:${k}">${t}</span>`).join('')}</div>
+ <div class="swrap"><div class="scroller chiprow">${AX.map(([k,t])=>`<span class="chip ${ax===k?'on':''}" data-a="rax:${k}">${t}</span>`).join('')}</div></div>
  ${ax==='all'?allView:ax==='cat'?catView:brandView}
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" data-a="method" style="padding:15px 16px;cursor:pointer">
  <div class="h3" style="font-size:14px">어떻게 판단하는지 궁금하세요</div>
  <div class="sub" style="margin-top:5px">다들이 쓰는 기준표를 그대로 공개해 두었어요. 같은 기준을 대면 누구나 같은 결론이 나와요.</div>
- <div style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--brand);font-weight:500">기준표 보기 ${ic('arrow',15,'var(--brand)')}</div></div></div>
+ <div style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12px;color:var(--brand);font-weight:500">기준표 보기 ${ic('arrow',15,'var(--brand)')}</div></div></div>
  </div>${tabs()}`};
 
 const SORTS={n:['후기 많은 순',(a,b)=>b.n-a.n],
@@ -720,24 +748,24 @@ const applyFilters=arr=>{
  return arr;                                                // 그룹끼리는 AND
 };
 const searchHits=()=>{const k=S.q.trim();
- let h=k?P.filter(p=>(p.brand+p.name+p.sub).includes(k)||(k.includes('인덕션')&&p.induction)):P.slice();
+ let h=k?P.filter(p=>match(p.brand+' '+p.name+' '+p.sub,k)||(k.includes('인덕션')&&p.induction)):P.slice();
  h=applyFilters(h);
  return h.sort(SORTS[S.sort][1])};
 
 const searchResults=()=>{const h=searchHits();
- if(h.length) return `<div class="pad" style="padding-top:13px"><div class="row"><span class="meta num">${h.length}개</span><button data-a="openSort" style="display:flex;align-items:center;gap:3px;font-size:12px;color:var(--ink2);font-weight:600">${SORTS[S.sort][0]} ${ic('chev',14,'var(--meta)')}</button></div></div>
+ if(h.length) return `<div class="pad" style="padding-top:12px"><div class="row"><span class="meta num">${h.length}개</span><button data-a="openSort" style="display:flex;align-items:center;gap:3px;font-size:12px;color:var(--ink2);font-weight:600">${SORTS[S.sort][0]} ${ic('chev',14,'var(--meta)')}</button></div></div>
  <div class="pad" style="padding-top:12px">${h.map(p=>`<div class="card" style="padding:11px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:center">
  <span data-a="pick:${p.id}" style="width:20px;height:20px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${S.picks.includes(p.id)?'var(--brand)':'transparent'};border:${S.picks.includes(p.id)?'none':'1.5px solid var(--line3)'}">${S.picks.includes(p.id)?ic('check',14,'var(--surface)'):''}</span>
  <div data-a="product:${p.id}" style="display:flex;gap:10px;align-items:center;flex:1;min-width:0;cursor:pointer">${th(p,42)}
  <div style="min-width:0"><div class="h3 pname1" style="font-size:13px">${p.brand} ${p.name}</div>
  <div class="tiny" style="margin-top:1px">${p.label} · ${p.n}건 · <span class="num">${won(p.price)}</span></div></div></div></div>`).join('')}</div><div style="height:90px"></div>`;
- return `<div class="pad" style="padding-top:34px;text-align:center">
+ return `<div class="pad" style="padding-top:32px;text-align:center">
  <div style="width:56px;height:56px;border-radius:16px;background:var(--surface2);display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px">${ic('search',26,'var(--tiny)')}</div>
  <div class="h2">아직 못 모은 제품이에요</div>
  <div class="sub" style="margin-top:7px">다들은 후기 30건 이상 모인 제품부터 올려요.<br>요청해 주시면 다음 순서로 올려둘게요.</div></div>
  <div class="pad" style="padding-top:20px">${S.reqDone===S.q.trim()
  ?`<div style="background:var(--brandBg);border-radius:13px;padding:15px 16px;text-align:center">
-   <div class="h3" style="font-size:13.5px;color:var(--brand);margin-bottom:5px">39번째로 요청하셨어요</div>
+   <div class="h3" style="font-size:14px;color:var(--brand);margin-bottom:5px">39번째로 요청하셨어요</div>
    <div class="meta" style="line-height:1.75">요청이 많은 제품부터 모으고 있어요.<br>올라오면 가장 먼저 알려드려요.</div></div>
    <button class="btn ghost" style="margin-top:10px" data-a="loginSheet">알림 받을 곳 남기기</button>`
  :`<button class="btn teal" data-a="req">이 제품 후기 모아주세요</button>
@@ -748,9 +776,9 @@ const searchResults=()=>{const h=searchHits();
 V.search=()=>`
 <div class="bar"><div class="line"><button data-a="back">${ic('back',20)}</button>
 <div style="flex:1;background:var(--surface2);border-radius:10px;padding:9px 11px;display:flex;align-items:center;gap:7px">${ic('search',15)}
-<input id="q" class="field" style="border:0;background:none;padding:0;font-size:16px" placeholder="찾으시는 제품을 적어주세요" value="${S.q}"></div></div></div>
+<input id="q" class="field" style="border:0;background:none;padding:0;font-size:15px" placeholder="찾으시는 제품을 적어주세요" value="${S.q}"></div></div></div>
 <div class="body">
- <div class="pad" style="padding-top:13px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+ <div class="pad" style="padding-top:12px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
  <button class="chip" data-a="openFilter" style="display:inline-flex;align-items:center;gap:5px;${S.filters.length?'background:var(--brand);color:var(--surface)':''}">
   ${ic('sliders',13,S.filters.length?'var(--surface)':'var(--ink3)')} 필터${S.filters.length?' '+S.filters.length:''}</button>
  ${S.filters.map(f=>`<span class="chip sel" data-a="filter:${f}">${f} ${ic('x',12,'var(--surface)')}</span>`).join('')}
@@ -758,46 +786,186 @@ V.search=()=>`
  <div id="results">${searchResults()}</div>
 </div>
 ${S.picks.length?`<div style="position:absolute;left:18px;right:18px;bottom:22px;z-index:15"><button data-a="compare" style="background:var(--ink);border-radius:14px;padding:12px 15px;width:100%;display:flex;justify-content:space-between;align-items:center">
-<span style="font-size:12.5px;color:var(--surface)">${S.picks.length}개 담음</span><span style="font-size:13px;font-weight:600;color:var(--surface)">비교하기</span></button></div>`:''}`;
+<span style="font-size:12px;color:var(--surface)">${S.picks.length}개 담음</span><span style="font-size:13px;font-weight:600;color:var(--surface)">비교하기</span></button></div>`:''}`;
 
 V.compare=()=>{const it=S.picks.map(byId);
  const rows=[['다들',p=>p.label],['모은 후기',p=>p.n+'건'],['지금 최저가',p=>won(p.price)],['확인된 최저가',p=>won(p.low)],
  ['오래 쓴 분 중 계속 씀',p=>Math.round(p.keep/(p.keep+p.drop)*100)+'%'],['가장 많이 나온 말',p=>p.cons[0]?p.cons[0][0]:'—'],
  ['인덕션',p=>p.induction?'가능':'안 됨'],['식기세척기',p=>p.dish?'가능':'안 됨']];
  return bar('비교하기')+`<div class="body">
- <div class="pad" style="padding-top:18px"><div class="h1">담아두신 ${it.length}개예요</div>
+ <div class="pad" style="padding-top:20px"><div class="h1">담아두신 ${it.length}개예요</div>
  <div class="sub" style="margin-top:8px">같은 항목끼리 나란히 두었어요. 후기 수가 다르면 비율로 보시는 게 정확해요.</div></div>
  <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px">
  <div style="display:flex;gap:10px;margin-bottom:14px">${it.map(p=>`<div style="flex:1;text-align:center;min-width:0">${th(p,52)}
- <div class="h3" style="font-size:12px;margin-top:7px">${p.brand}</div><div class="pname" style="font-size:11px;color:var(--sub);font-weight:400;margin-top:1px">${p.name}</div></div>`).join('')}</div>
+ <div class="h3" style="font-size:12px;margin-top:7px">${p.brand}</div><div class="pname" style="font-size:11px;color:var(--sub);font-weight:500;margin-top:1px">${p.name}</div></div>`).join('')}</div>
  ${rows.map(([k,f],i)=>`<div style="padding-top:10px;margin-top:${i?10:0}px;${i?'border-top:.5px solid var(--line)':''}">
  <div class="tiny" style="margin-bottom:5px">${k}</div><div style="display:flex;gap:10px">
- ${it.map(p=>`<div style="flex:1;font-size:12px;font-weight:500;min-width:0;letter-spacing:-.01em">${f(p)}</div>`).join('')}</div></div>`).join('')}</div></div>
+ ${it.map(p=>`<div style="flex:1;font-size:12px;font-weight:500;min-width:0;letter-spacing:-.02em">${f(p)}</div>`).join('')}</div></div>`).join('')}</div></div>
  <div class="pad sec" style="padding-bottom:26px">${it.map(p=>`<button class="btn ghost" style="margin-bottom:8px" data-a="product:${p.id}">${p.brand} ${p.name} 자세히 보기</button>`).join('')}</div></div>`};
 
-V.list=()=>bar('후기 모음',1)+`<div class="body">
- <div class="pad" style="padding-top:20px"><div class="tiny" style="letter-spacing:.03em">코팅 프라이팬 · 12종</div>
- <div class="h1" style="font-size:23px;margin-top:5px">문제를 겪은 분들은,<br>언제 겪었나</div>
- <div class="sub" style="margin-top:9px">후기에서 "문제가 생겼다"고 하신 시점만 모아 봤어요. 제품 수명이 아니라, 겪으신 분들의 시점이에요.</div></div>
- <div class="scroller chiprow" style="margin-top:16px">${['문제 늦게 생긴 순','가격순','인덕션만'].map((c,i)=>`<span class="chip ${i?'':'on'}">${c}</span>`).join('')}</div>
- <div class="pad" style="padding-top:16px">
- ${[['하로 인덕션 코팅팬 28cm',14,100,'green','대체로 만족 · 241건',1],['필로 티타늄 코팅팬 28cm',11,79,'sand','대체로 만족 · 188건',0],
- ['세라 세라믹 코팅팬 26cm',8,57,'warm','의견 갈림 · 156건',0],['온담 세라믹 프라이팬 28cm',4,29,'gray','대체로 불만 · 132건',0]]
- .map(([n,m,w,t,s,b])=>`<div class="card" style="padding:13px 14px;margin-bottom:9px"><div style="display:flex;gap:11px;align-items:center">
- ${th(t)}<div style="min-width:0;flex:1"><div class="h3">${n}</div><div class="meta" style="margin-top:1px">${s}</div></div>
- <div style="text-align:right;flex-shrink:0"><div class="num" style="font-size:19px;font-weight:600;letter-spacing:-.03em;color:${b?'var(--brand)':'var(--ink)'}">${m}</div>
- <div class="tiny" style="margin-top:-2px">개월</div></div></div>
- <div class="track" style="margin-top:11px;height:4px"><div style="width:${w}%;height:4px;border-radius:2px;background:${b?'var(--brand)':'var(--bar2)'}"></div></div></div>`).join('')}
- <div class="card" style="padding:13px 14px;opacity:.7;display:flex;gap:11px;align-items:center">${th('gray')}
- <div style="flex:1;min-width:0"><div class="h3">필로 티타늄 코팅 웍 30cm</div><div class="meta" style="margin-top:1px">표본 부족 · 후기 12건</div></div>
- <div style="font-size:12px;color:var(--tiny);text-align:right;line-height:1.3">아직<br>모자라요</div></div></div>
+V.cmp=()=>{
+ const MIN=3;
+ const dom=S.cdom||'주방용품';
+ const q=(S.cq||'').trim();
+ const inDom=CATS.filter(c=>(c.d||'주방용품')===dom);
+ const hit=q?inDom.filter(c=>match(c.k,q)||c.subs.some(x=>match(x,q))):inDom;
+ const rvN=k=>P.filter(x=>SUB2CAT[x.sub]===k).reduce((a,x)=>a+x.n,0);
+ const csort=S.csort||'cnt';
+ const ready=hit.filter(c=>CATN(c.k)>=MIN).sort((a,b)=>
+  csort==='rev'?rvN(b.k)-rvN(a.k):CATN(b.k)-CATN(a.k));
+ const soon=hit.filter(c=>CATN(c.k)<MIN);
+ const recent=(S.lrecent||[]).filter(k=>CATS.some(c=>c.k===k&&(c.d||'주방용품')===dom&&CATN(k)>=MIN)).slice(0,4);
+
+ const row=(c,i2)=>{const ps=P.filter(x=>SUB2CAT[x.sub]===c.k);
+  const seg=[[ps.filter(x=>x.label==='대체로 만족').length,'var(--brand)'],
+             [ps.filter(x=>x.label==='의견 갈림').length,'var(--accent)'],
+             [ps.filter(x=>x.label==='대체로 불만').length,'var(--bar2)'],
+             [ps.filter(x=>x.label==='표본 부족').length,'var(--line3)']];
+  return `<div class="row" data-a="list:${c.k}" style="padding:13px 0;${i2?'border-top:.5px solid var(--line2)':''};cursor:pointer">
+   <span style="display:flex;align-items:center;gap:11px;min-width:0;flex:1">
+    <svg width="21" height="21" viewBox="0 0 64 64" fill="none" stroke="var(--meta)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">${GLY[c.g]}</svg>
+    <span style="min-width:0;flex:1">
+     <span style="display:block;font-size:14px;font-weight:600;letter-spacing:-.02em">${c.k} <span class="num" style="color:var(--meta);font-weight:500">${ps.length}종</span></span>
+     <span style="display:flex;height:4px;border-radius:3px;overflow:hidden;margin-top:6px;width:100%;max-width:150px">
+      ${seg.filter(([n])=>n).map(([n,cl])=>`<span style="width:${n/ps.length*100}%;background:${cl}"></span>`).join('')}</span></span></span>
+   <span class="tiny num" style="flex-shrink:0;margin-right:6px">후기 ${ps.reduce((a,x)=>a+x.n,0).toLocaleString('ko-KR')}</span>
+   ${ic('next',17,'var(--faint)')}</div>`};
+
+ return `<div class="bar">
+ <div class="h1" style="font-size:19px">제품 비교</div>
+ <div class="meta" style="margin-top:4px;margin-bottom:12px">평가 · 가격 · 문제 언급 · 계속 쓰는 비율로 줄 세워 봐요</div>
+ <button data-a="cmpSearch" style="background:var(--surface2);border-radius:11px;padding:11px 13px;display:flex;align-items:center;gap:8px;width:100%">
+  ${ic('search',16)}<span style="font-size:13px;color:${q?'var(--ink)':'var(--tiny)'}">${q||'갈래나 제품 종류를 적어보세요'}</span>
+  ${q?`<span style="margin-left:auto" data-a="cmpClear">${ic('x',15,'var(--meta)')}</span>`:''}</button></div>
+ <div class="body">
+ ${DOMS.filter(d=>d.on).length>1?`<div class="swrap"><div class="scroller chiprow">
+ ${DOMS.filter(d=>d.on).map(d=>`<span class="chip ${dom===d.k?'on':''}" data-a="cdom:${d.k}">${d.k}</span>`).join('')}</div></div>`:''}
+
+ ${recent.length&&!q?`<div class="pad" style="padding-top:16px">
+  <div class="tiny" style="margin-bottom:8px">최근에 보신 갈래</div>
+  <div style="display:flex;gap:7px;flex-wrap:wrap">
+  ${recent.map(k=>`<button class="chip" data-a="list:${k}">${k} ${CATN(k)}종</button>`).join('')}</div></div>`:''}
+
+ ${ready.length?`<div class="pad sec">
+  ${q?`<div class="meta" style="margin-bottom:10px"><b class="num" style="color:var(--ink)">${ready.length}</b>개 갈래를 찾았어요</div>`
+    :`<div class="row" style="margin-bottom:12px"><span class="h2">비교할 수 있는 갈래</span>
+      <span style="display:flex;gap:5px">
+      ${[['cnt','제품 많은 순'],['rev','후기 많은 순']].map(([k2,t2])=>
+        `<button class="chip ${csort===k2?'on':''}" style="font-size:11px;padding:6px 10px" data-a="csort:${k2}">${t2}</button>`).join('')}</span></div>`}
+  <div class="card" style="padding:2px 15px">${ready.map(row).join('')}</div></div>`
+ :`<div class="pad" style="padding-top:56px;text-align:center">
+   <div class="h2">${q?'그런 갈래는 아직 없어요':'아직 비교할 갈래가 없어요'}</div>
+   <div class="sub" style="margin-top:8px">${q?'다른 말로 찾아보시거나<br>전체 목록에서 골라보세요':'제품이 모이면 여기에 올려둘게요'}</div>
+   ${q?`<div style="padding:0 20px"><button class="btn ghost" style="margin-top:16px" data-a="cmpClear">전체 갈래 보기</button></div>`:''}</div>`}
+
+ ${soon.length&&!q?`<div class="pad sec" style="padding-bottom:26px">
+  <div class="h3" style="font-size:13px;color:var(--sub);margin-bottom:4px">아직 비교하기 이른 갈래</div>
+  <div class="meta" style="margin-bottom:11px">${MIN}종은 모여야 견줘볼 만해요</div>
+  <div style="display:flex;gap:7px;flex-wrap:wrap">
+  ${soon.map(c=>`<span class="chip" style="opacity:.55">${c.k} ${CATN(c.k)}종</span>`).join('')}</div></div>`:'<div style="height:26px"></div>'}
+ </div>${tabs()}`};
+
+V.cmpSearch=()=>{
+ const q=(S.cq||'').trim();
+ const all=CATS.filter(c=>(c.d||'주방용품')===(S.cdom||'주방용품'));
+ const cats=q?all.filter(c=>match(c.k,q)):[];
+ const subs=q?all.flatMap(c=>c.subs.filter(x=>match(x,q)).map(x=>[x,c])):[];
+ return `<div class="bar"><div class="line"><button data-a="back">${ic('back',20)}</button>
+ <div style="flex:1;background:var(--surface2);border-radius:10px;padding:9px 11px;display:flex;align-items:center;gap:7px">${ic('search',15)}
+ <input id="cq" class="field" style="border:0;background:none;padding:0" placeholder="갈래나 제품 종류" value="${S.cq||''}"></div></div></div>
+ <div class="body"><div id="cres">${cmpResults()}</div></div>`};
+
+const cmpResults=()=>{
+ const q=(S.cq||'').trim();
+ const all=CATS.filter(c=>(c.d||'주방용품')===(S.cdom||'주방용품'));
+ const cats=q?all.filter(c=>match(c.k,q)):[];
+ const subs=q?all.flatMap(c=>c.subs.filter(x=>match(x,q)).map(x=>[x,c])):[];
+ return `
+ ${!q?`<div class="pad" style="padding-top:20px"><div class="tiny" style="margin-bottom:9px">이런 갈래가 있어요</div>
+  <div style="display:flex;gap:7px;flex-wrap:wrap">${all.filter(c=>CATN(c.k)>=3).map(c=>`<button class="chip" data-a="list:${c.k}">${c.k}</button>`).join('')}</div></div>`
+ :`${cats.length?`<div class="pad" style="padding-top:20px"><div class="tiny" style="margin-bottom:9px">갈래</div>
+   <div class="card" style="padding:2px 15px">${cats.map((c,i)=>`<div class="row" data-a="list:${c.k}" style="padding:13px 0;${i?'border-top:.5px solid var(--line2)':''};cursor:pointer">
+   <span style="font-size:14px;font-weight:600">${c.k} <span class="num" style="color:var(--meta);font-weight:500">${CATN(c.k)}종</span></span>${ic('next',17,'var(--faint)')}</div>`).join('')}</div></div>`:''}
+  ${subs.length?`<div class="pad sec"><div class="tiny" style="margin-bottom:9px">이 종류가 들어 있는 갈래</div>
+   <div class="card" style="padding:2px 15px">${subs.map(([x,c],i)=>`<div class="row" data-a="list:${c.k}" style="padding:13px 0;${i?'border-top:.5px solid var(--line2)':''};cursor:pointer">
+   <span style="min-width:0"><span style="display:block;font-size:14px;font-weight:600">${x}</span>
+   <span class="tiny" style="display:block;margin-top:1px">${c.k}에서 비교</span></span>${ic('next',17,'var(--faint)')}</div>`).join('')}</div></div>`:''}
+  ${!cats.length&&!subs.length?`<div class="pad" style="padding-top:56px;text-align:center">
+   <div class="h2">찾으시는 갈래가 없어요</div><div class="sub" style="margin-top:8px">다른 말로 찾아보시겠어요?</div></div>`:''}`}
+ <div style="height:26px"></div>`};
+
+V.list=()=>{
+ const LS={
+  verdict:['다들 평가 순','다들이 모은 후기로 매긴 순서예요',
+   (a,b)=>{const o={'대체로 만족':0,'의견 갈림':1,'대체로 불만':2,'표본 부족':3};
+    return (o[a.label]-o[b.label])||(b.n-a.n)},
+   x=>x.label, x=>x.label==='대체로 만족'],
+  price:['가격 낮은 순','지금 온라인 최저가 기준이에요',
+   (a,b)=>a.price-b.price, x=>won(x.price), x=>false],
+  clean:['문제 언급 적은 순','후기 대비 비율로 봤어요',
+   (a,b)=>rateOf(a)-rateOf(b), x=>Math.round(rateOf(x)*100)+'%', x=>rateOf(x)<0.12],
+  long:['오래 쓴 분 많은 순','6개월 넘게 쓰신 분 수예요',
+   (a,b)=>b.longN-a.longN, x=>x.longN+'명', x=>x.longN>=60],
+  keep:['계속 쓴다는 비율 순','오래 쓰신 분 중 지금도 쓰는 비율이에요',
+   (a,b)=>keepOf(b)-keepOf(a), x=>Math.round(keepOf(x)*100)+'%', x=>keepOf(x)>=0.7],
+ };
+ const k=S.lsort||'verdict', [t,d,fn,val,good]=LS[k];
+ const cat=S.lcat||'조리팬';
+ const all=P.filter(x=>SUB2CAT[x.sub]===cat);
+ const arr=all.slice().sort((a,b)=>{
+  if(a.label==='표본 부족'&&b.label!=='표본 부족')return 1;      // 표본 부족은 항상 뒤로
+  if(b.label==='표본 부족'&&a.label!=='표본 부족')return -1;
+  return fn(a,b)});
+ const shown=S.lmore?arr:arr.slice(0,6);
+ const maxv=Math.max(...arr.filter(x=>x.label!=='표본 부족').map(x=>{
+  const v=k==='price'?x.price:k==='clean'?rateOf(x):k==='long'?x.longN:k==='keep'?keepOf(x):1;return v||0}),1);
+ const barW=x=>{
+  if(x.label==='표본 부족')return 0;
+  const v=k==='price'?x.price:k==='clean'?rateOf(x):k==='long'?x.longN:k==='keep'?keepOf(x):1;
+  const r=(v||0)/maxv;
+  return Math.max(6,Math.round((k==='price'||k==='clean'?1-r*0.75:r)*100));
+ };
+ const cnt=lab=>all.filter(x=>x.label===lab).length;
+ return `<div class="bar"><div class="line"><button data-a="back">${ic('back',20)}</button>
+ <h1>${cat} 비교</h1><button data-a="search">${ic('search',18)}</button></div></div>
+ <div class="body">
+ <div class="pad" style="padding-top:20px"><div class="tiny" style="letter-spacing:.03em">${cat} · ${all.length}종</div>
+ <div class="h1" style="font-size:23px;margin-top:5px">다들 뭐라고 했나,<br>비교해 봐요</div>
+ <div class="sub" style="margin-top:9px">같은 갈래 제품을 우리 기준으로 줄 세웠어요. 무엇으로 정렬했는지 카드마다 함께 보여드려요.</div></div>
+
+ <div class="pad" style="padding-top:16px"><div class="card" style="padding:14px 15px">
+  <div class="h3" style="font-size:13px;margin-bottom:11px">이 갈래의 다들 평가</div>
+  <div style="display:flex;height:8px;border-radius:5px;overflow:hidden">
+  ${[['대체로 만족','var(--brand)'],['의견 갈림','var(--accent)'],['대체로 불만','var(--bar2)'],['표본 부족','var(--line3)']]
+   .filter(([l])=>cnt(l)).map(([l,c])=>`<div style="width:${cnt(l)/all.length*100}%;background:${c}"></div>`).join('')}</div>
+  <div style="display:flex;gap:12px;margin-top:9px;flex-wrap:wrap;font-size:11px;color:var(--sub)">
+  ${[['대체로 만족','var(--brand)'],['의견 갈림','var(--accent)'],['대체로 불만','var(--bar2)'],['표본 부족','var(--line3)']]
+   .filter(([l])=>cnt(l)).map(([l,c])=>`<span><b style="color:${c}">${cnt(l)}</b> ${l}</span>`).join('')}</div></div></div>
+
+ <div class="swrap"><div class="scroller chiprow" style="margin-top:16px">
+ ${Object.keys(LS).map(x=>`<span class="chip ${k===x?'on':''}" data-a="lsort:${x}">${LS[x][0]}</span>`).join('')}</div></div>
+ <div class="pad" style="padding-top:6px"><div class="meta">${d}</div></div>
+
+ <div class="pad" style="padding-top:12px">
+ ${shown.map(x=>{const thin=x.label==='표본 부족';
+  return `<div class="card" data-a="product:${x.id}" style="padding:13px 14px;margin-bottom:9px;cursor:pointer;${thin?'opacity:.65':''}">
+  <div style="display:flex;gap:11px;align-items:center">${th(x,44)}
+   <div style="min-width:0;flex:1"><div class="h3 pname1" style="font-size:14px">${x.brand} ${x.name}</div>
+   <div class="meta" style="margin-top:2px">${x.label} · 후기 ${x.n}건</div></div>
+   <div style="text-align:right;flex-shrink:0">
+   ${thin?`<div style="font-size:11px;color:var(--tiny);line-height:1.3">아직<br>모자라요</div>`
+   :`<div class="num" style="font-size:15px;font-weight:700;letter-spacing:-.03em;color:${good(x)?'var(--brand)':'var(--ink)'}">${val(x)}</div>`}</div></div>
+  ${thin?'':`<div class="track" style="margin-top:11px;height:4px"><div style="width:${barW(x)}%;height:4px;border-radius:2px;background:${good(x)?'var(--brand)':'var(--bar2)'}"></div></div>`}</div>`}).join('')}
+ ${arr.length>6&&!S.lmore?`<button class="btn ghost" data-a="lmore">나머지 ${arr.length-6}종 더 보기</button>`:''}</div>
+
  <div class="pad sec"><div class="card" style="padding:16px 17px"><div class="h3" style="font-size:14px;margin-bottom:12px">이 숫자는 어떻게 나왔나요</div>
- ${[['찾은 후기','1,847건'],['제외한 후기','1,102건'],['모은 후기','745건']].map(([k,v])=>`<div class="row" style="padding:4px 0;font-size:12.5px"><span style="color:var(--sub)">${k}</span><span class="num" style="font-weight:600">${v}</span></div>`).join('')}
+ ${[['찾은 후기',(all.reduce((a,x)=>a+x.n+x.excl,0)).toLocaleString('ko-KR')+'건'],
+    ['제외한 후기',all.reduce((a,x)=>a+x.excl,0).toLocaleString('ko-KR')+'건'],
+    ['모은 후기',all.reduce((a,x)=>a+x.n,0).toLocaleString('ko-KR')+'건']]
+  .map(([kk,v])=>`<div class="row" style="padding:4px 0;font-size:12px"><span style="color:var(--sub)">${kk}</span><span class="num" style="font-weight:600">${v}</span></div>`).join('')}
  <div class="meta" style="margin-top:12px;padding-top:12px;border-top:.5px solid var(--line)">오픈마켓·스마트스토어·자사몰 리뷰는 수집하지 않아요. 협찬 표기가 있거나 출시 직후에 몰린 글도 제외했습니다.</div>
  <button data-a="excluded" style="margin-top:11px;display:flex;align-items:center;gap:5px;font-size:12px;color:var(--brand);font-weight:500">제외한 후기 보기 ${ic('arrow',15,'var(--brand)')}</button></div></div>
- <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:16px 17px"><div class="h3" style="font-size:14px;margin-bottom:6px">이 중에 협상하고 있는 제품</div>
- <div style="font-size:12.5px;color:var(--ink3);line-height:1.75">하로 인덕션 코팅팬을 ${waitCount(byId('p2'))}분이 기다리고 계세요. 100명이 되면 브랜드에 이야기하러 가요.</div>
- <div class="track" style="margin-top:12px;background:var(--line3)"><div class="fill" style="width:${waitCount(byId('p2'))}%"></div></div></div></div></div>`;
+ <div style="height:26px"></div></div>`};
 
 V.excluded=()=>bar('제외한 후기')+`<div class="body">
  <div class="pad" style="padding-top:20px"><div class="h1">이런 글은 제외했어요</div>
@@ -805,7 +973,7 @@ V.excluded=()=>bar('제외한 후기')+`<div class="body">
  <div class="pad" style="padding-top:16px">${EXCL.map(([w,t,s])=>`<div class="card" style="padding:14px 15px;margin-bottom:9px">
  <div class="row" style="margin-bottom:9px"><span class="badge b-gray">${w}</span><span class="tiny">${s}</span></div>
  <div class="quote">${t}</div>
- <button data-a="say:원문 페이지로 이동해요" style="margin-top:10px;display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--brand)">${ic('ext',13,'var(--brand)')} 원문 보기</button></div>`).join('')}</div>
+ <button data-a="say:원문 페이지로 이동해요" style="margin-top:10px;display:flex;align-items:center;gap:5px;font-size:11px;color:var(--brand)">${ic('ext',13,'var(--brand)')} 원문 보기</button></div>`).join('')}</div>
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:14px 15px"><div class="sub" style="color:var(--ink3)">제외한 글이 남긴 글보다 많은 날도 있어요. 그래도 이렇게 하는 게 맞다고 생각해요.</div></div></div></div>`;
 
 V.method=()=>bar('판단 기준')+`<div class="body">
@@ -813,12 +981,12 @@ V.method=()=>bar('판단 기준')+`<div class="body">
  <div class="sub" style="margin-top:8px">다들이 따로 판단하지 않아요. 후기에서 뽑은 숫자를 아래 표에 넣으면 결과가 나와요. 같은 기준을 대면 누구나 같은 결론에 닿아요.</div></div>
  <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px">
  ${[['유효 후기 30건 미만','표본 부족'],['문제 언급 15% 미만','대체로 만족'],['문제 언급 15~35%','의견 갈림'],['문제 언급 35% 이상','대체로 불만']]
- .map(([c,r],i)=>`<div class="row" style="padding:9px 0;${i?'border-top:.5px solid var(--line)':''}"><span style="font-size:12.5px;color:var(--sub)">${c}</span><span class="h3" style="font-size:13px">${r}</span></div>`).join('')}</div></div>
+ .map(([c,r],i)=>`<div class="row" style="padding:9px 0;${i?'border-top:.5px solid var(--line)':''}"><span style="font-size:12px;color:var(--sub)">${c}</span><span class="h3" style="font-size:13px">${r}</span></div>`).join('')}</div></div>
  <div class="pad sec"><div class="h2" style="margin-bottom:11px">이런 글은 세지 않아요</div>
  ${[['협찬이라고 밝힌 글','고지 문구가 있으면 제외해요'],['출시 직후에 몰린 글','2주 안에 40% 넘게 몰리면 그 구간을 제외해요'],
  ['서로 너무 닮은 글','문장이 겹치면 묶어서 한 번만 세요'],['제품 이름이 없는 영상의 댓글','어느 모델 이야기인지 알 수 없어서요']]
  .map(([t,s])=>`<div class="card" style="padding:13px 14px;margin-bottom:8px"><div class="h3">${t}</div><div class="meta" style="margin-top:3px;line-height:1.7">${s}</div></div>`).join('')}</div>
- <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:15px 16px"><div class="h3" style="font-size:13.5px;margin-bottom:6px">사람이 보는 자리도 남겨뒀어요</div>
+ <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:15px 16px"><div class="h3" style="font-size:14px;margin-bottom:6px">사람이 보는 자리도 남겨뒀어요</div>
  <div class="sub" style="color:var(--ink3)">매주 무작위로 5개를 골라 직접 원문까지 확인해요. 몇 개를 봤고 몇 개를 고쳤는지 카드 아래에 적어둬요.</div></div></div></div>`;
 
 V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thin=p.label==='표본 부족';
@@ -826,23 +994,23 @@ V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thi
  ?`<div class="row" style="margin-bottom:11px"><span class="meta">협상이 끝나 지금 살 수 있어요</span><span class="num" style="font-size:15px;font-weight:600;color:var(--accent)">${won(p.dealPrice)}</span></div>
    <button class="btn amber" data-a="deal:${p.id}">협상가로 사러 가기</button>`
  :(bad||thin)
- ?`<div style="background:var(--surface2);border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11.5px;color:var(--sub);line-height:1.55">
+ ?`<div style="background:var(--surface2);border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11px;color:var(--sub);line-height:1.55">
    <b style="color:var(--ink2)">아직 순서가 아니에요</b> · ${thin?'후기가 더 모이면 다시 볼게요':'평가가 나아지면 협상도 열려요'}</div>
-   <button class="btn teal" data-a="list">같은 조건의 팬 12종 비교</button>
+   <button class="btn teal" data-a="list:${SUB2CAT[p.sub]||''}">같은 ${SUB2CAT[p.sub]||'제품'} ${P.filter(x=>SUB2CAT[x.sub]===SUB2CAT[p.sub]).length}종 비교</button>
    <button class="btn ghost" style="margin-top:9px" data-a="price:${p.id}">가격이 내려가면 알려주세요</button>`
  :p.deal==='talking'
- ?`<div style="background:var(--brandBg);border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11.5px;color:var(--brand);line-height:1.55">
+ ?`<div style="background:var(--brandBg);border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11px;color:var(--brand);line-height:1.55">
    <b>브랜드와 이야기 중</b> · ${p.tDate} 시작 · 지금 등록하셔도 함께 들어가요</div>
    <div class="row" style="margin-bottom:11px"><span class="meta">지금 기다리는 분</span>
    <span class="meta num"><b style="color:var(--ink)">${waitCount(p)}명</b> · ${GOAL}명을 넘겼어요</span></div>
    <button class="btn teal" data-a="price:${p.id}">${S.waits[p.id]?'등록하신 가격 바꾸기':'이 가격이면 살게요'}</button>`
  :p.deal==='postponed'
- ?`<div style="background:var(--surface2);border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11.5px;color:var(--sub);line-height:1.55">
+ ?`<div style="background:var(--surface2);border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11px;color:var(--sub);line-height:1.55">
    <b style="color:var(--ink2)">이번엔 미뤄뒀어요</b> · ${p.pWhy} 조건이 나아지면 다시 이야기해 볼게요</div>
    <button class="btn teal" data-a="price:${p.id}">${S.waits[p.id]?'등록하신 가격 바꾸기':'다시 열리면 알려주세요'}</button>
    <div class="tiny" style="text-align:center;margin-top:9px">등록은 그대로 두었어요.</div>`
  :p.deal==='done'
- ?`<div style="background:var(--surface2);border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11.5px;color:var(--sub);line-height:1.55">
+ ?`<div style="background:var(--surface2);border-radius:9px;padding:8px 11px;margin-bottom:10px;font-size:11px;color:var(--sub);line-height:1.55">
    <b style="color:var(--ink2)">${p.rounds}회차 협상이 끝났어요</b> · ${p.doneDate} 종료 · ${p.soldN}분이 사셨어요</div>
    <button class="btn teal" data-a="price:${p.id}">${S.waits[p.id]?'등록하신 가격 바꾸기':'다음 회차 열리면 알려주세요'}</button>
    <div class="tiny" style="text-align:center;margin-top:9px">기다리는 분이 다시 모이면 협상을 열어요.</div>`
@@ -852,12 +1020,12 @@ V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thi
    <div class="tiny" style="text-align:center;margin-top:9px">브랜드가 팔고 싶은 것 말고, 다들 사고 싶어 하는 것.</div>`;
 
  const INFO=`
- <div class="pad" style="padding-top:18px"><div class="card" style="padding:16px 17px">
+ <div class="pad" style="padding-top:20px"><div class="card" style="padding:16px 17px">
  <div class="h3" style="font-size:14px;margin-bottom:11px">제품 정보</div>
  ${p.spec.map(([k,v],i)=>`<div class="row" style="padding:8px 0;${i?'border-top:.5px solid var(--line2)':''}">
-  <span style="font-size:12.5px;color:var(--sub)">${k}</span><span style="font-size:12.5px;font-weight:500;text-align:right;max-width:62%;${v?'':'color:var(--faint)'}">${v||'확인 중'}</span></div>`).join('')}
+  <span style="font-size:12px;color:var(--sub)">${k}</span><span style="font-size:12px;font-weight:500;text-align:right;max-width:62%;${v?'':'color:var(--faint)'}">${v||'확인 중'}</span></div>`).join('')}
  <div class="row" style="padding:8px 0;border-top:.5px solid var(--line2)">
-  <span style="font-size:12.5px;color:var(--sub)">식기세척기</span><span style="font-size:12.5px;font-weight:500">${p.dish?'사용 가능':'권장하지 않음'}</span></div>
+  <span style="font-size:12px;color:var(--sub)">식기세척기</span><span style="font-size:12px;font-weight:500">${p.dish?'사용 가능':'권장하지 않음'}</span></div>
  <div class="meta" style="margin-top:12px;padding-top:11px;border-top:.5px solid var(--line2);line-height:1.75">
   브랜드가 공개한 자료에서 값만 모아 정리했어요. 제품마다 공개된 항목이 달라서, 확인되지 않은 것은 비워 둡니다. ${p.checked} 확인</div></div></div>
  <div class="pad" style="padding-top:12px">
@@ -868,7 +1036,7 @@ V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thi
   :`<div class="soft" style="padding:16px;text-align:center"><div class="meta">아직 이 브랜드의 다른 제품은 모으지 못했어요</div></div>`}</div>`;
 
  const REV=`
- <div class="pad" style="padding-top:18px"><div class="tiny" style="letter-spacing:.06em">다들</div>
+ <div class="pad" style="padding-top:20px"><div class="tiny" style="letter-spacing:.06em">다들</div>
  <div class="row" style="align-items:baseline;margin-top:4px"><span style="display:flex;align-items:center;gap:9px"><span style="width:8px;height:8px;border-radius:4px;background:${p.label==='대체로 만족'?'var(--brand)':p.label==='의견 갈림'?'var(--accent)':p.label==='대체로 불만'?'var(--bar2)':'var(--faint)'}"></span>
 <span style="font-size:27px;font-weight:700;letter-spacing:-.04em;${p.label==='표본 부족'?'color:var(--tiny)':''}">${p.label}</span></span>
  <span class="num" style="font-size:14px;color:var(--sub)">후기 ${p.n}건</span></div>
@@ -894,7 +1062,7 @@ V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thi
  })():''}
  <div class="pad sec"><div class="row" style="align-items:baseline"><span class="h3" style="font-size:14px">6개월 넘게 쓰신 분들</span><span class="tiny num">${p.longN}명</span></div>
  <div style="display:flex;gap:10px;margin-top:12px">${[['계속 쓰고 계세요',p.keep],['정리하셨어요',p.drop]].map(([k,v])=>`<div style="flex:1;padding:12px 13px;border:.5px solid var(--line);border-radius:16px;background:var(--surface)">
- <div class="tiny">${k}</div><div class="num" style="font-size:21px;font-weight:600;margin-top:3px">${v}</div></div>`).join('')}</div>
+ <div class="tiny">${k}</div><div class="num" style="font-size:20px;font-weight:600;margin-top:3px">${v}</div></div>`).join('')}</div>
  <div class="meta" style="margin-top:10px">정리하신 이유 1위 — ${p.dropWhy}</div></div>
  <div class="pad sec"><div class="card" style="padding:15px 16px">
  <div class="h3" style="margin-bottom:9px">이런 분께는 조금 아쉬울 수 있어요</div>
@@ -903,6 +1071,11 @@ V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thi
  <div style="font-size:13px;color:var(--sub);line-height:1.85">${bad?'· 가스레인지에서 주 2~3회 쓰시는 경우<br>· 1년쯤 쓰고 바꿀 생각이신 경우':'· 오래 두고 쓰실 생각이신 경우<br>· 인덕션과 가스를 함께 쓰시는 경우'}</div></div></div>
  <div class="pad sec"><div style="background:var(--brandBg);border-radius:12px;padding:13px 15px;display:flex;gap:9px">
  ${ic('shield',17,'var(--brand)')}<div style="font-size:12px;color:var(--brand);line-height:1.7">어느 한쪽에도 기울지 않기 위해, 오픈마켓·스마트스토어·자사몰 리뷰는 수집하지 않아요.</div></div></div>
+ <div class="pad sec"><div class="card" data-a="list:${SUB2CAT[p.sub]||''}" style="padding:15px 16px;cursor:pointer">
+ <div class="row"><div style="min-width:0;flex:1">
+  <div class="h3" style="font-size:14px">같은 ${SUB2CAT[p.sub]||'제품'} ${P.filter(x=>SUB2CAT[x.sub]===SUB2CAT[p.sub]).length}종 비교해 보기</div>
+  <div class="meta" style="margin-top:4px;line-height:1.7">평가 · 가격 · 문제 언급 · 계속 쓰는 비율로 줄 세워 봐요</div></div>
+  ${ic('next',18,'var(--faint)')}</div></div></div>
  <div class="pad sec" style="padding-bottom:20px"><div class="tiny" style="line-height:1.75">고친 자리 · 2026.07.18 오래 쓰신 분 후기 22건을 더 넣어 다시 계산했어요<br>사람이 본 날 · 2026.07.21</div></div>`;
 
  return bar(p.brand,1)+`<div class="body">
@@ -912,15 +1085,15 @@ V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thi
  <div class="pad" style="padding-top:16px">
  <div style="display:flex;align-items:center;gap:6px">
   <span class="tiny">${SUB2CAT[p.sub]||''} · ${p.sub}</span>
-  ${p.rounds?`<span style="font-size:10.5px;font-weight:600;color:var(--brand);background:var(--brandBg);border-radius:5px;padding:2.5px 7px">협상 ${p.rounds}회차</span>`:''}</div>
+  ${p.rounds?`<span style="font-size:10px;font-weight:600;color:var(--brand);background:var(--brandBg);border-radius:5px;padding:2.5px 7px">협상 ${p.rounds}회차</span>`:''}</div>
  <div style="display:flex;gap:10px;align-items:flex-start;margin-top:5px">
-  <div style="flex:1;min-width:0;font-size:18px;font-weight:700;letter-spacing:-.035em;line-height:1.4">${p.name}</div>
+  <div style="flex:1;min-width:0;font-size:17px;font-weight:700;letter-spacing:-.03em;line-height:1.4">${p.name}</div>
   <button data-a="rbrand:${p.brand}" style="flex-shrink:0;background:var(--surface2);border-radius:8px;
-   padding:6px 11px;font-size:12.5px;font-weight:600;letter-spacing:-.02em;color:var(--ink2);
+   padding:6px 11px;font-size:12px;font-weight:600;letter-spacing:-.02em;color:var(--ink2);
    max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px">${p.brand}</button></div>
  <div style="display:flex;align-items:baseline;gap:8px;margin-top:9px">
  ${p.deal==='open'?`<span class="num" style="font-size:12px;color:var(--tiny);text-decoration:line-through">${won(p.price)}</span>
-  <span class="num" style="font-size:22px;font-weight:600;color:var(--accent);letter-spacing:-.03em">${won(p.dealPrice)}</span>
+  <span class="num" style="font-size:23px;font-weight:600;color:var(--accent);letter-spacing:-.03em">${won(p.dealPrice)}</span>
   <span class="badge b-amber num">-${Math.round((1-p.dealPrice/p.price)*100)}%</span>`
  :`<span class="num" style="font-size:20px;font-weight:600;letter-spacing:-.03em">${won(p.price)}</span><span class="tiny">지금 온라인 최저가</span>`}</div>
  <div class="meta" style="margin-top:8px">다들 · ${p.label} · 후기 ${p.n}건</div></div>
@@ -940,12 +1113,12 @@ V.drawer=()=>{
   <span style="font-weight:600;font-size:14px">${t}</span>
   <span style="display:flex;align-items:center;gap:7px">${n!==undefined?`<span class="tiny num">${n}</span>`:''}${arw(S.sec===kk)}</span></div>`;
  const sub=(a,t,n,on)=>`<div class="drow" data-a="${a}" style="padding:8px 0 8px 14px;cursor:pointer">
-  <span style="font-size:12.5px;${on?'font-weight:600;color:var(--brand)':(n===0?'color:var(--faint)':'color:var(--ink3)')}">${t}</span>
+  <span style="font-size:12px;${on?'font-weight:600;color:var(--brand)':(n===0?'color:var(--faint)':'color:var(--ink3)')}">${t}</span>
   ${n!==undefined?`<span class="tiny num" style="${n?'':'color:var(--faint)'}">${n}</span>`:''}</div>`;
 
  return `<div class="drawer" data-a="closeDrawer"><div class="dpanel" data-stop>
  <div style="padding:18px 18px 12px;box-shadow:0 .5px 0 var(--line)">
- <div class="row"><div style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:18px;font-weight:600;letter-spacing:-.045em;color:var(--ink)">다들</span></div>
+ <div class="row"><div style="display:flex;align-items:center;gap:7px">${mark(22)}<span style="font-size:17px;font-weight:600;letter-spacing:-.04em;color:var(--ink)">다들</span></div>
  <button data-a="closeDrawer">${ic('x',19)}</button></div>
  <div class="meta" style="margin-top:7px">${S.user?CH[S.user.ch]+'으로 연결됨':'아직 연결하지 않으셨어요'}</div></div>
 
@@ -959,7 +1132,7 @@ V.drawer=()=>{
  ${S.sec==='cat'?`${sub('view:cat','전체 보기')}
   ${CATS.map(c=>{const on=S.opencat===c.k;
    return `<div><div class="drow" data-a="toggleCat:${c.k}" style="padding:8px 0 8px 14px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:8px;font-size:12.5px;${on?'font-weight:600;color:var(--brand)':'color:var(--ink3)'}">
+    <span style="display:flex;align-items:center;gap:8px;font-size:12px;${on?'font-weight:600;color:var(--brand)':'color:var(--ink3)'}">
     <svg width="16" height="16" viewBox="0 0 64 64" fill="none" stroke="${on?'var(--brand)':'var(--tiny)'}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">${GLY[c.g]}</svg>
     ${c.k}</span><span style="display:flex;align-items:center;gap:6px"><span class="tiny num">${CATN(c.k)}</span>${arw(on)}</span></div>
     ${on?`<div style="padding:0 0 6px 38px">${c.subs.map(sb=>{const n=P.filter(x=>x.sub===sb).length;
@@ -971,7 +1144,7 @@ V.drawer=()=>{
  ${S.sec==='brand'?`${sub('view:brand','전체 보기')}
   ${BRANDS.map(b=>sub('brandSel:'+b,b,P.filter(x=>x.brand===b).length,S.brand===b)).join('')}`:''}
 
- ${[['후기 모음','root:reviews'],['다들의 약속','rules'],['협상 기록','log'],
+ ${[['후기 모음','root:reviews'],['제품 비교','root:cmp'],['다들의 약속','rules'],['협상 기록','log'],
     ['판단 기준','method'],['내 정보','root:me'],['운영 콘솔','admin']]
    .map(([t,a])=>`<div class="drow" data-a="${a}" style="cursor:pointer;padding:14px 0;border-top:.5px solid var(--line)">
     <span style="font-weight:600;font-size:14px">${t}</span></div>`).join('')}
@@ -982,13 +1155,13 @@ V.deal=id=>{const p=byId(id);const st=ladder(p);
  return bar('다들 협상',1)+`<div class="body">
  <div class="pad" style="padding-top:16px;display:flex;gap:14px">${th(p,58)}<div style="min-width:0">
  <div style="display:flex;gap:6px;margin-bottom:3px"><span class="badge b-amber">협상 완료 · 지금 구매 가능</span><span class="badge b-teal">6회차 브랜드</span></div>
- <div style="font-size:16px;font-weight:600;letter-spacing:-.02em">${p.brand} ${p.name}</div>
+ <div style="font-size:15px;font-weight:600;letter-spacing:-.02em">${p.brand} ${p.name}</div>
  <div class="meta" style="margin-top:3px">${p.endDays}일 남음</div></div></div>
  <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px">
  ${[['지금 온라인 최저가',won(p.price)],['확인된 최저가',won(p.low)]].map(([k,v])=>`<div class="row" style="font-size:12px;padding:3px 0"><span style="color:var(--sub)">${k}</span><span class="num">${v}</span></div>`).join('')}
  <div class="tiny" style="margin-top:1px">${p.lowNote}</div>
  <div class="row" style="align-items:baseline;padding-top:12px;margin-top:11px;border-top:.5px solid var(--line)">
- <span class="h3" style="font-size:14px">이번 협상가</span><span class="num" style="font-size:27px;font-weight:700;color:var(--accent);letter-spacing:-.045em">${won(p.dealPrice)}</span></div>
+ <span class="h3" style="font-size:14px">이번 협상가</span><span class="num" style="font-size:27px;font-weight:700;color:var(--accent);letter-spacing:-.04em">${won(p.dealPrice)}</span></div>
  <div class="row" style="font-size:12px;margin-top:6px"><span style="color:var(--sub)">실제로 아끼시는 금액</span>
  <span class="num" style="color:var(--accent)">${won(p.price-p.dealPrice)} · ${Math.round((1-p.dealPrice/p.price)*100)}%</span></div></div></div>
  <div class="pad sec"><div class="row" style="margin-bottom:11px"><span class="h3" style="font-size:14px">다들 · ${p.label}</span>
@@ -1028,11 +1201,11 @@ V.deal=id=>{const p=byId(id);const st=ladder(p);
 V.verify=id=>{const p=byId(id);return bar('가격 보장 받기')+`<div class="body">
  <div class="pad" style="padding-top:20px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">${ic('shield',20,'var(--brand)')}
  <span class="h1" style="font-size:19px">가격 보장 받기</span></div><div class="meta">${p.brand} ${p.name} · 협상가 ${won(p.dealPrice)}</div></div>
- <div class="pad" style="padding-top:15px"><div class="hint sub">구매하실 때 쓰신 휴대폰 번호만 남겨주시면 30일 동안 이 제품 가격을 대신 지켜볼게요.</div></div>
+ <div class="pad" style="padding-top:16px"><div class="hint sub">구매하실 때 쓰신 휴대폰 번호만 남겨주시면 30일 동안 이 제품 가격을 대신 지켜볼게요.</div></div>
  <div class="pad" style="padding-top:16px"><div class="meta" style="margin-bottom:6px">구매하실 때 쓰신 휴대폰 번호</div>
  <input class="field num" placeholder="010-0000-0000" value="${S.user&&S.user.ch==='phone'?S.user.id:''}">
  <div class="tiny" style="margin-top:7px;line-height:1.65">브랜드 주문 내역과 맞춰보는 데에만 써요. 다른 곳에는 쓰지 않습니다.</div></div>
- <div class="pad" style="padding-top:18px;padding-bottom:26px"><button class="btn teal" data-a="doverify:${p.id}">보장 등록하기</button>
+ <div class="pad" style="padding-top:20px;padding-bottom:26px"><button class="btn teal" data-a="doverify:${p.id}">보장 등록하기</button>
  <div class="tiny" style="text-align:center;margin-top:10px;line-height:1.7">협상이 끝난 뒤에도 30일 안에는<br>언제든 등록하실 수 있어요.</div></div></div>`};
 
 V.report=id=>{const p=byId(id);return bar('더 싼 곳 알려주기')+`<div class="body">
@@ -1041,7 +1214,7 @@ V.report=id=>{const p=byId(id);return bar('더 싼 곳 알려주기')+`<div clas
  <div class="pad" style="padding-top:16px"><div class="meta" style="margin-bottom:6px">판매 페이지 주소</div><input class="field" placeholder="https://">
  <div class="meta" style="margin:13px 0 6px">확인하신 가격</div><input class="field num" placeholder="29,900"></div>
  <div class="pad" style="padding-top:16px"><div class="hint meta">같은 상품 · 국내 정품 · 배송비 포함 · 하루 이상 유지된 가격이 대상이에요. 병행수입과 개인 판매는 제외하고 봅니다.</div></div>
- <div class="pad" style="padding-top:18px;padding-bottom:26px"><button class="btn teal" data-a="doreport:${p.id}">알려주기</button>
+ <div class="pad" style="padding-top:20px;padding-bottom:26px"><button class="btn teal" data-a="doreport:${p.id}">알려주기</button>
  <div class="tiny" style="text-align:center;margin-top:10px;line-height:1.65">확인까지 이틀쯤 걸려요.<br>확인되면 함께 사신 분들께도 알려드려요.</div></div></div>`};
 
 V.done=(kind,id)=>{const C={
@@ -1049,10 +1222,10 @@ V.done=(kind,id)=>{const C={
  verified:['보장 등록됐어요','30일 동안 이 제품 가격을 대신 지켜볼게요. 더 싼 곳이 나오면 바로 알려드려요.','혹시 먼저 발견하시면 신고해 주셔도 좋아요.'],
  reported:['신고 접수됐어요','이틀 안에 확인해서 알려드릴게요. 확인되면 함께 사신 분들께도 모두 알려드려요.','차액은 브랜드가 지급해요. 다들이 대신 청구할게요.']}[kind];
  return `<div class="bar"><div class="line"><span style="width:20px"></span><h1>다들</h1><span style="width:17px"></span></div></div>
- <div class="body"><div class="pad" style="padding-top:60px;text-align:center">
+ <div class="body"><div class="pad" style="padding-top:56px;text-align:center">
  <div style="width:62px;height:62px;border-radius:20px;background:var(--brandBg);display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px">${ic('check',30,'var(--brand)',2.2)}</div>
  <div class="h1" style="font-size:20px">${C[0]}</div><div class="sub" style="margin-top:9px">${C[1]}</div></div>
- <div class="pad" style="padding-top:22px"><div class="soft" style="padding:14px 15px"><div class="sub" style="color:var(--ink3)">${C[2]}</div></div></div>
+ <div class="pad" style="padding-top:20px"><div class="soft" style="padding:14px 15px"><div class="sub" style="color:var(--ink3)">${C[2]}</div></div></div>
  <div class="pad" style="padding-top:20px">
  <button class="btn teal" data-a="rlist:many">비슷한 제품 더 보기</button>
  <button class="btn ghost" style="margin-top:9px" data-a="root:me">내 정보에서 확인하기</button>
@@ -1069,14 +1242,14 @@ V.done=(kind,id)=>{const C={
 V.me=()=>{
  const waiting=Object.keys(S.waits).length, guard=P.filter(x=>S.bought[x.id]);
  const tg=(k,t,d)=>`<div class="row" style="padding:11px 0;${k!=='open'?'border-top:.5px solid var(--line)':''}">
-  <div style="padding-right:12px"><div style="font-size:13px;font-weight:500;letter-spacing:-.01em">${t}</div>
+  <div style="padding-right:12px"><div style="font-size:13px;font-weight:500;letter-spacing:-.02em">${t}</div>
   <div class="tiny" style="margin-top:2px">${d}</div></div>
   <span data-a="toggle:${k}" style="width:42px;height:24px;border-radius:12px;flex-shrink:0;position:relative;background:${S.noti[k]?'var(--brand)':'var(--line3)'}">
   <span style="position:absolute;top:3px;left:${S.noti[k]?21:3}px;width:18px;height:18px;border-radius:9px;background:var(--surface)"></span></span></div>`;
  return `<div class="bar"><div class="h1" style="font-size:19px">내 정보</div>
- <div class="meta" style="margin-top:3px">회원가입 없이, 알림 받으실 곳만 두고 있어요</div></div>
+ <div class="meta" style="margin-top:4px">회원가입 없이, 알림 받으실 곳만 두고 있어요</div></div>
  <div class="body">
- <div class="pad" style="padding-top:18px">${S.user?'':`<div class="card" style="padding:18px 17px;margin-bottom:12px">
+ <div class="pad" style="padding-top:20px">${S.user?'':`<div class="card" style="padding:18px 17px;margin-bottom:12px">
  <div class="h2" style="font-size:15px">연결해 두시면 어디서든 이어져요</div>
  <div class="sub" style="margin-top:7px">기다리시던 것과 구매 내역이 그대로 따라와요.</div>
  <button class="btn" style="background:#FEE500;color:#191600;margin-top:14px" data-a="oauth:kakao">카카오톡으로 계속하기</button>
@@ -1096,7 +1269,7 @@ V.me=()=>{
  <div class="meta" style="margin-bottom:12px">협상으로 사신 것들이에요. 보장 기간 동안 가격을 지켜봅니다</div>
  ${guard.length?guard.map(x=>`<div class="card" style="padding:13px 14px;margin-bottom:9px">
   <div style="display:flex;gap:11px;align-items:center">${th(x,44)}
-  <div style="min-width:0;flex:1"><div class="h3 pname1" style="font-size:13.5px">${x.brand} ${x.name}</div>
+  <div style="min-width:0;flex:1"><div class="h3 pname1" style="font-size:14px">${x.brand} ${x.name}</div>
   <div class="meta num" style="margin-top:2px">${won(x.dealPrice)} · 7.28 구매</div></div></div>
   <div class="row" style="margin-top:11px;padding-top:11px;border-top:.5px solid var(--line)">
   <span class="badge b-teal">30일 보장 중 · 22일 남음</span>
@@ -1107,7 +1280,7 @@ V.me=()=>{
  <div class="pad sec"><div class="h2" style="margin-bottom:3px">기다리는 것</div>
  <div class="meta" style="margin-bottom:12px">협상이 열리면 가장 먼저 알려드릴게요</div>
  ${waiting?P.filter(x=>S.waits[x.id]).map(x=>`<div class="card" data-a="product:${x.id}" style="padding:13px 14px;margin-bottom:9px;display:flex;gap:11px;align-items:center;cursor:pointer">
-  ${th(x,44)}<div style="min-width:0;flex:1"><div class="h3 pname1" style="font-size:13.5px">${x.brand} ${x.name}</div>
+  ${th(x,44)}<div style="min-width:0;flex:1"><div class="h3 pname1" style="font-size:14px">${x.brand} ${x.name}</div>
   <div class="meta num" style="margin-top:2px">내 가격 ${won(S.waits[x.id])} · ${x.deal==='open'?'협상 열림':x.deal==='talking'?'브랜드와 이야기 중':x.deal==='postponed'?'이번엔 미뤄뒀어요':waitCount(x)+' / '+GOAL+'명'}</div></div>
   ${ic('next',17,'var(--faint)')}</div>`).join('')
  :`<div class="card" style="padding:20px 16px;text-align:center"><div class="sub">아직 기다리시는 게 없어요.<br>마음에 드는 가격을 골라두시면 여기에 모아 보여드릴게요.</div>
@@ -1123,10 +1296,10 @@ V.me=()=>{
  <div class="pad sec"><div class="card" style="padding:4px 16px">
  ${[['다들의 약속','rules'],['협상 기록','log'],['판단 기준','method'],['알림 내역','noti']].concat(S.user?[['연결 해제','logout']]:[])
  .map(([t,a],i)=>`<div class="row" data-a="${a}" style="padding:14px 0;${i?'border-top:.5px solid var(--line)':''};cursor:pointer">
-  <span style="font-size:13.5px;letter-spacing:-.01em">${t}</span></div>`).join('')}</div></div>
+  <span style="font-size:14px;letter-spacing:-.02em">${t}</span></div>`).join('')}</div></div>
 
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:14px 15px">
- <div class="h3" style="font-size:12.5px;margin-bottom:6px">남기신 정보는 이것뿐이에요</div>
+ <div class="h3" style="font-size:12px;margin-bottom:6px">남기신 정보는 이것뿐이에요</div>
  <div class="meta" style="line-height:1.8">알림 받으실 연락처와 고르신 가격, 그리고 구매하실 때 쓰신 휴대폰 번호예요. 다른 곳에 쓰지 않고, 지워달라고 하시면 바로 지워드려요.</div>
  <button class="meta" style="margin-top:10px;color:var(--accent);font-weight:500" data-a="say:정보 삭제 요청이 접수됐어요">내 정보 지우기</button></div></div>
  </div>${tabs()}`};
@@ -1135,29 +1308,29 @@ V.noti=()=>bar('알림')+`<div class="body"><div class="pad" style="padding-top:
  <div class="card" style="padding:16px 17px;margin-bottom:12px">
  <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px">${mark(17)}<span class="meta">2시간 전</span></div>
  <div class="h2" style="font-size:15px;margin-bottom:8px">조금만 더 기다려주실래요</div>
- <div style="font-size:12.5px;color:var(--ink3);line-height:1.85"><b style="color:var(--ink)">무이 통3중 스테인리스 냄비 20cm</b> 협상이 이번에는 잘 마무리되지 않았어요. 가격 조건이 저희가 생각한 만큼 맞지 않아서, 지금 여는 건 의미가 없다고 봤어요.</div>
+ <div style="font-size:12px;color:var(--ink3);line-height:1.85"><b style="color:var(--ink)">무이 통3중 스테인리스 냄비 20cm</b> 협상이 이번에는 잘 마무리되지 않았어요. 가격 조건이 저희가 생각한 만큼 맞지 않아서, 지금 여는 건 의미가 없다고 봤어요.</div>
  <div style="background:var(--surface);border-radius:12px;padding:12px 13px;margin-top:13px">
  <div class="row" style="font-size:12px;padding:2px 0"><span style="color:var(--sub)">기다리신 분</span><span class="num">54명</span></div>
  <div class="row" style="font-size:12px;padding:2px 0"><span style="color:var(--sub)">고르신 가격</span><span class="num">44,000원</span></div></div>
- <div style="font-size:12.5px;color:var(--ink3);line-height:1.85;margin-top:13px">등록은 그대로 두었어요. 조건이 나아지면 다시 이야기해 보고, 그때 제일 먼저 알려드릴게요.</div>
+ <div style="font-size:12px;color:var(--ink3);line-height:1.85;margin-top:13px">등록은 그대로 두었어요. 조건이 나아지면 다시 이야기해 보고, 그때 제일 먼저 알려드릴게요.</div>
  <button class="btn ghost" style="margin-top:14px" data-a="list">비슷한 제품 보러 가기</button></div>
  <div class="card" data-a="deal:p1" style="padding:15px 16px;margin-bottom:12px;cursor:pointer">
  <div class="meta" style="margin-bottom:8px">3일 전</div>
  <div class="h2" style="font-size:14px;margin-bottom:6px">기다리시던 제품, 협상이 열렸어요</div>
- <div style="font-size:12.5px;color:var(--ink3);line-height:1.85"><b style="color:var(--ink)">무이 스테인리스 3중 팬 28cm</b>이 33,800원에 열렸어요. 고르신 가격보다 2,000원 낮아요.</div></div>
+ <div style="font-size:12px;color:var(--ink3);line-height:1.85"><b style="color:var(--ink)">무이 스테인리스 3중 팬 28cm</b>이 33,800원에 열렸어요. 고르신 가격보다 2,000원 낮아요.</div></div>
  <div class="soft" style="padding:13px 14px;margin-bottom:26px"><div class="meta" style="line-height:1.8">협상 소식은 기다리고 계신 분께만 보내드려요. 부담스러우시면 언제든 꺼두실 수 있어요.</div></div>
  </div></div>`;
 
 V.log=()=>bar('협상 기록',1)+`<div class="body">
- <div class="pad" style="padding-top:18px"><div class="h1">몇 번 이야기하고<br>몇 번 미뤘는지</div>
+ <div class="pad" style="padding-top:20px"><div class="h1">몇 번 이야기하고<br>몇 번 미뤘는지</div>
  <div class="sub" style="margin-top:8px">잘된 것만 보여드리면 무엇을 걸렀는지 알 수가 없잖아요. 매달 숫자 그대로 적어둘게요.</div></div>
  <div class="pad" style="padding-top:16px"><div class="card" style="padding:15px 16px"><div class="h3" style="margin-bottom:12px">2026년 7월</div>
  <div style="display:flex;text-align:center">${[[String(P.filter(x=>['open','talking','postponed'].includes(x.deal)).length),'이야기 나눴어요',0],[String(P.filter(x=>x.deal==='open').length),'잘 됐어요',1],[String(P.filter(x=>x.deal==='postponed').length),'미뤄뒀어요',0]].map(([v,l,g],i)=>`${i?'<div style="width:.5px;background:var(--line);margin:2px 0"></div>':''}
  <div style="flex:1"><div class="num" style="font-size:20px;font-weight:600;letter-spacing:-.03em;color:${g?'var(--brand)':'var(--ink)'}">${v}</div>
- <div style="font-size:10.5px;color:var(--meta);margin-top:1px">${l}</div></div>`).join('')}</div>
+ <div style="font-size:10px;color:var(--meta);margin-top:1px">${l}</div></div>`).join('')}</div>
  <div style="margin-top:13px;padding-top:12px;border-top:.5px solid var(--line)"><div class="tiny" style="margin-bottom:6px">미뤄둔 이유</div>
  ${[['가격 조건이 맞지 않아서',4],['다들의 평가가 아직 낮아서',3],['시점이 맞지 않아서',1],['저희 원칙과 맞지 않아서',1]]
- .map(([k,v])=>`<div class="row" style="padding:3px 0;font-size:11.5px;color:var(--sub)"><span>${k}</span><span class="num">${v}</span></div>`).join('')}</div></div></div>
+ .map(([k,v])=>`<div class="row" style="padding:3px 0;font-size:11px;color:var(--sub)"><span>${k}</span><span class="num">${v}</span></div>`).join('')}</div></div></div>
  <div class="pad sec"><div class="h3" style="color:var(--ink3);margin-bottom:11px">이번 달 잘 된 협상</div>
  ${P.filter(x=>x.deal==='open').slice(0,2).map((x,i)=>[x.id,
  `${waitCount(x)}분의 마음을 전해드렸더니 맞춰주셨어요. 30일 가격 보장도 함께 약속받았어요.`,
@@ -1166,12 +1339,12 @@ V.log=()=>bar('협상 기록',1)+`<div class="body">
  <span class="badge b-amber num">-${Math.round((1-p.dealPrice/p.price)*100)}%</span><span class="tiny">${d}</span></div>
  <div class="h3 pname1">${p.brand} ${p.name}</div><div class="meta" style="margin-top:3px;line-height:1.75">${s}</div></div>`}).join('')}</div>
  <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:14px 15px">
- <div class="h3" style="font-size:12.5px;margin-bottom:6px">미뤄둔 협상은 왜 안 적나요</div>
+ <div class="h3" style="font-size:12px;margin-bottom:6px">미뤄둔 협상은 왜 안 적나요</div>
  <div class="meta" style="line-height:1.8">이야기가 잘 안 된 건 저희와 브랜드 사이의 일이라, 자세한 사정까지 적지는 않으려고 해요. 대신 <b style="color:var(--ink)">기다리고 계신 분께는 개별로 꼭 알려드려요.</b></div></div>
  <button class="btn ghost" style="margin-top:12px" data-a="rules">다들의 약속 보기</button></div></div>`;
 
 V.rules=()=>bar('다들의 약속')+`<div class="body">
- <div class="pad" style="padding-top:18px"><div class="h1">다들이 스스로에게<br>하는 약속이에요</div>
+ <div class="pad" style="padding-top:20px"><div class="h1">다들이 스스로에게<br>하는 약속이에요</div>
  <div class="sub" style="margin-top:8px">지키기 쉬운 것만 적으면 약속이 아니겠죠. 어기면 어겼다고 여기에 적어둘게요.</div></div>
  <div class="pad" style="padding-top:16px">${PROM.map(([t,s],i)=>`<div class="card" style="padding:14px 15px;margin-bottom:8px;display:flex;gap:9px">
  <span class="num" style="font-size:11px;font-weight:600;color:var(--brand);flex-shrink:0;padding-top:1px">${String(i+1).padStart(2,'0')}</span>
@@ -1182,12 +1355,12 @@ V.admin=()=>{
  const T=[['cand','후보'],['job','수집'],['aud','감사'],['pub','발행'],['nego','협상'],['done','완료'],['kpi','지표']];
  const nAppr=Object.values(S.appr).filter(Boolean).length;
  const cand=`
- <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">이번 주 후보 ${CAND.length}개</div>
+ <div class="pad" style="padding-top:20px"><div class="h1" style="font-size:19px">이번 주 후보 ${CAND.length}개</div>
  <div class="sub" style="margin-top:8px">네 가지 신호를 점수로 매겨 AI가 골라 왔어요. 승인하신 것만 수집이 돌아가요.</div></div>
- <div class="pad" style="padding-top:14px"><div class="hint meta" style="line-height:1.8">
+ <div class="pad" style="padding-top:12px"><div class="hint meta" style="line-height:1.8">
  검색량 추이 · 최근 리뷰 영상 수 · 지식iN 문제 질문 수 · 다들에 들어온 요청 수를 합산해요.
  <b style="color:var(--ink)">요청 수에 가장 큰 가중치</b>를 둡니다. 유저가 직접 찾은 제품이 가장 확실한 수요라서요.</div></div>
- <div class="pad" style="padding-top:14px">
+ <div class="pad" style="padding-top:12px">
  ${CAND.map(c=>`<div class="card" style="padding:14px 15px;margin-bottom:9px;${c.block?'opacity:.55':''}">
   <div class="row" style="align-items:flex-start">
    <div style="min-width:0;flex:1"><div class="tiny">${c.b}${c.req?' · 유저 요청 있음':''}</div>
@@ -1206,31 +1379,31 @@ V.admin=()=>{
  <div class="tiny" style="text-align:center;margin-top:9px">모델명과 별칭은 승인 뒤에 확인 화면에서 고치실 수 있어요.</div></div>`;
 
  const job=`
- <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">수집 현황</div>
+ <div class="pad" style="padding-top:20px"><div class="h1" style="font-size:19px">수집 현황</div>
  <div class="sub" style="margin-top:8px">밤사이 자동으로 돌아요. 사장님이 하실 일은 표본 감사와 발행 승인뿐이에요.</div></div>
- <div class="pad" style="padding-top:14px">
+ <div class="pad" style="padding-top:12px">
  ${JOBS.map(j=>`<div class="card" style="padding:14px 15px;margin-bottom:9px">
-  <div class="row" style="margin-bottom:11px"><span class="h3" style="font-size:13.5px">${j.n}</span>
+  <div class="row" style="margin-bottom:11px"><span class="h3" style="font-size:14px">${j.n}</span>
   <span class="badge ${j.st===4?'b-teal':'b-gray'}">${STAGES[j.st]}</span></div>
   <div style="display:flex;gap:4px;margin-bottom:11px">${STAGES.map((_,i)=>`<div style="flex:1;height:3px;border-radius:2px;background:${i<=j.st?'var(--brand)':'var(--surface2)'}"></div>`).join('')}</div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
   ${[['모은 것',j.got],['제외',j.excl],['쓸 것',j.val]].map(([k,v])=>`<div><div class="num" style="font-size:15px;font-weight:600">${v||'—'}</div><div class="tiny">${k}</div></div>`).join('')}</div>
   ${j.lab?`<div class="meta" style="margin-top:11px;padding-top:10px;border-top:.5px solid var(--line2)">규칙표 적용 결과 · <b style="color:var(--ink)">${j.lab}</b></div>`:''}</div>`).join('')}</div>
  <div class="pad" style="padding-top:6px;padding-bottom:26px"><div class="soft" style="padding:14px 15px">
- <div class="h3" style="font-size:12.5px;margin-bottom:6px">막히면 여기서 멈춰요</div>
+ <div class="h3" style="font-size:12px;margin-bottom:6px">막히면 여기서 멈춰요</div>
  <div class="meta" style="line-height:1.8">유효 후기가 30건에 못 미치면 라벨을 붙이지 않고 <b style="color:var(--ink)">표본 부족</b>으로 올립니다. 억지로 판단하지 않는 게 규칙이에요.</div></div></div>`;
 
  const aud=`
- <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">이번 주 표본 감사</div>
+ <div class="pad" style="padding-top:20px"><div class="h1" style="font-size:19px">이번 주 표본 감사</div>
  <div class="sub" style="margin-top:8px">전체를 다 보진 못하니 무작위로 5건만 원문과 맞춰봐요. 결과는 사이트에 그대로 공개해요.</div></div>
- <div class="pad" style="padding-top:14px">
+ <div class="pad" style="padding-top:12px">
  ${AUDIT.map((a,i)=>`<div class="card" style="padding:14px 15px;margin-bottom:9px">
   <div class="row" style="margin-bottom:9px"><span class="tiny">${a.src}</span>
   ${S.aud[i]===undefined?'':`<span class="badge ${S.aud[i]?'b-teal':'b-amber'}">${S.aud[i]?'통과':'수정함'}</span>`}</div>
   <div class="quote">${a.q}</div>
   <div style="background:var(--surface);border-radius:10px;padding:10px 12px;margin-top:10px">
    <div class="tiny" style="margin-bottom:3px">AI가 뽑은 것</div>
-   <div class="num" style="font-size:12px;letter-spacing:-.01em">${a.ex}</div></div>
+   <div class="num" style="font-size:12px;letter-spacing:-.02em">${a.ex}</div></div>
   ${a.fix?`<div class="meta" style="margin-top:8px;color:var(--accent)">사람 의견 · ${a.fix}</div>`:''}
   ${S.aud[i]===undefined?`<div style="display:flex;gap:8px;margin-top:12px">
    <button class="btn ghost" style="flex:1" data-a="audit:${i}:1">맞아요</button>
@@ -1240,17 +1413,17 @@ V.admin=()=>{
  이 숫자가 다들 카드 아래에 <b style="color:var(--ink)">사람이 본 날</b>로 적힙니다.</div></div></div>`;
 
  const pub=`
- <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">발행 대기</div>
+ <div class="pad" style="padding-top:20px"><div class="h1" style="font-size:19px">발행 대기</div>
  <div class="sub" style="margin-top:8px">규칙표가 붙인 라벨이에요. 올리기 전에 한 번만 확인해 주세요.</div></div>
- <div class="pad" style="padding-top:14px"><div class="card" style="padding:16px 17px">
- <div class="tiny">하로</div><div class="h3" style="font-size:14.5px;margin-top:2px">세라믹 코팅팬 26cm</div>
+ <div class="pad" style="padding-top:12px"><div class="card" style="padding:16px 17px">
+ <div class="tiny">하로</div><div class="h3" style="font-size:14px;margin-top:2px">세라믹 코팅팬 26cm</div>
  <div class="row" style="align-items:baseline;margin-top:12px;padding-top:12px;border-top:.5px solid var(--line2)">
- <span style="font-size:22px;font-weight:600;letter-spacing:-.03em">대체로 만족</span><span class="num meta">후기 241건</span></div>
+ <span style="font-size:23px;font-weight:600;letter-spacing:-.03em">대체로 만족</span><span class="num meta">후기 241건</span></div>
  <div class="meta" style="margin-top:7px">문제 언급 11.6% · 기준 15% 미만 → 대체로 만족</div>
  <div style="margin-top:12px;padding-top:11px;border-top:.5px solid var(--line2)">
  ${[['3~4개월에 코팅이 약해져요',18],['손잡이가 뜨거워져요',12],['광고보다 얕아요',7]].map(([t,c])=>`<div class="row" style="font-size:12px;padding:3px 0"><span>${t}</span><span class="num" style="color:var(--sub)">${c}회</span></div>`).join('')}</div>
  <div class="meta" style="margin-top:11px;padding-top:10px;border-top:.5px solid var(--line2)">모은 것 412 · 제외 171 · 쓴 것 241</div></div></div>
- <div class="pad" style="padding-top:14px;padding-bottom:26px">
+ <div class="pad" style="padding-top:12px;padding-bottom:26px">
  ${S.pubState==='live'
  ?`<div style="background:var(--brandBg);border-radius:12px;padding:13px 14px;margin-bottom:12px">
    <div class="h3" style="font-size:13px;margin-bottom:4px;color:var(--brand)">발행됨 · 2026.07.24</div>
@@ -1262,37 +1435,37 @@ V.admin=()=>{
    <div class="tiny" style="text-align:center;margin-top:10px;line-height:1.7">발행하면 정정 이력이 함께 켜져요.<br>나중에 라벨이 바뀌면 언제 왜 바뀌었는지 자동으로 남아요.</div>`}</div>`;
 
  const nego=`
- <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">협상 관리</div>
+ <div class="pad" style="padding-top:20px"><div class="h1" style="font-size:19px">협상 관리</div>
  <div class="sub" style="margin-top:8px">브랜드별 진행 단계와 다음에 할 일을 여기서 옮겨요.</div></div>
- <div class="pad" style="padding-top:14px">
+ <div class="pad" style="padding-top:12px">
  ${[{b:'무이',n:'스테인리스 3중 팬 28cm',st:5,wait:421,last:'7.14 계약 완료 · 30일 보장',next:'협상 종료 후 정산 대조',grade:'파트너 · 6회차'},
     {b:'세라',n:'다마스커스 셰프나이프 20cm',st:2,wait:31,last:'7.24 제안서 발송',next:'회신 없으면 7.31 재연락',grade:'신규'},
     {b:'무이',n:'통3중 스테인리스 냄비 20cm',st:6,wait:54,last:'6.28 조건 불일치로 보류',next:'9월 재제안 예정',grade:'파트너 · 6회차'}]
  .map(j=>{const ST=['수요 집계','제안서 준비','제안 발송','회신 대기','조건 협의','계약·오픈','보류'];
  return `<div class="card" style="padding:14px 15px;margin-bottom:9px">
   <div class="row" style="align-items:flex-start"><div style="min-width:0;flex:1">
-  <div class="tiny">${j.b} · ${j.grade}</div><div class="h3" style="font-size:13.5px;margin-top:2px">${j.n}</div></div>
+  <div class="tiny">${j.b} · ${j.grade}</div><div class="h3" style="font-size:14px;margin-top:2px">${j.n}</div></div>
   <span class="badge ${j.st===5?'b-teal':j.st===6?'b-amber':'b-gray'}">${ST[j.st]}</span></div>
   <div style="display:flex;gap:3px;margin:11px 0">${ST.slice(0,6).map((_,i)=>`<div style="flex:1;height:3px;border-radius:2px;background:${j.st===6?'var(--line3)':i<=j.st?'var(--brand)':'var(--surface2)'}"></div>`).join('')}</div>
-  <div class="row" style="font-size:11.5px;color:var(--sub);padding:2px 0"><span>모인 수요</span><span class="num" style="color:var(--ink);font-weight:600">${j.wait}명</span></div>
-  <div class="row" style="font-size:11.5px;color:var(--sub);padding:2px 0"><span>최근 기록</span><span style="text-align:right;max-width:62%">${j.last}</span></div>
+  <div class="row" style="font-size:11px;color:var(--sub);padding:2px 0"><span>모인 수요</span><span class="num" style="color:var(--ink);font-weight:600">${j.wait}명</span></div>
+  <div class="row" style="font-size:11px;color:var(--sub);padding:2px 0"><span>최근 기록</span><span style="text-align:right;max-width:62%">${j.last}</span></div>
   <div style="margin-top:10px;padding-top:9px;border-top:.5px solid var(--line2);font-size:12px">
   <span class="tiny">다음 할 일</span><div style="margin-top:2px;font-weight:500">${j.next}</div></div>
   <div style="display:flex;gap:8px;margin-top:12px">
-  <button class="btn ghost" style="flex:1;padding:10px;font-size:12.5px" data-a="say:제안서 초안을 만들었어요">제안서 초안</button>
-  <button class="btn ghost" style="flex:1;padding:10px;font-size:12.5px" data-a="say:단계를 옮겼어요">단계 옮기기</button></div></div>`}).join('')}</div>
+  <button class="btn ghost" style="flex:1;padding:10px;font-size:12px" data-a="say:제안서 초안을 만들었어요">제안서 초안</button>
+  <button class="btn ghost" style="flex:1;padding:10px;font-size:12px" data-a="say:단계를 옮겼어요">단계 옮기기</button></div></div>`}).join('')}</div>
  <div class="pad" style="padding-top:6px;padding-bottom:26px"><div class="soft" style="padding:14px 15px">
- <div class="h3" style="font-size:12.5px;margin-bottom:6px">제안서에 자동으로 들어가는 것</div>
+ <div class="h3" style="font-size:12px;margin-bottom:6px">제안서에 자동으로 들어가는 것</div>
  <div class="meta" style="line-height:1.8">가격 구간별 수요 곡선 · 예상 거래액 · 지난 회차 실현율 · 30일 가격 보장 조항 · 수수료 10% 고지.
  <b style="color:var(--ink)">숫자는 전부 파이프라인에서 자동으로 채워집니다.</b></div></div></div>`;
 
  const kpi=`
- <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">지표</div>
+ <div class="pad" style="padding-top:20px"><div class="h1" style="font-size:19px">지표</div>
  <div class="sub" style="margin-top:8px">가장 위의 숫자 하나만 보시면 돼요. 나머지는 그 숫자를 만드는 것들이에요.</div></div>
- <div class="pad" style="padding-top:14px"><div class="card" style="padding:16px 17px">
+ <div class="pad" style="padding-top:12px"><div class="card" style="padding:16px 17px">
  <div class="tiny" style="letter-spacing:.04em">이번 주 대기 등록</div>
  <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px">
- <span class="num" style="font-size:30px;font-weight:600;letter-spacing:-.04em">42</span>
+ <span class="num" style="font-size:27px;font-weight:600;letter-spacing:-.04em">42</span>
  <span class="num" style="font-size:12px;color:var(--brand);font-weight:600">+11</span></div>
  <div style="display:flex;align-items:flex-end;gap:5px;height:52px;margin-top:14px">
  ${[14,19,17,26,23,31,42].map((v,i)=>`<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%">
@@ -1303,33 +1476,33 @@ V.admin=()=>{
    ['4주 재방문율','21%','목표 25% 미달',0],['구매 인증률','—','첫 협상 이후 측정',null],
    ['판정 통과율','64%','비추천 비율 하한 30% 유지 중',1]]
  .map(([k,v,note,ok],i)=>`<div style="padding:12px 0;${i?'border-top:.5px solid var(--line2)':''}">
-  <div class="row"><span style="font-size:12.5px;color:var(--ink3)">${k}</span>
+  <div class="row"><span style="font-size:12px;color:var(--ink3)">${k}</span>
   <span class="num" style="font-size:14px;font-weight:600;color:${ok===0?'var(--accent)':'var(--ink)'}">${v}</span></div>
   <div class="tiny" style="margin-top:2px">${note}</div></div>`).join('')}</div></div>
  <div class="pad sec"><div class="h3" style="font-size:14px;margin-bottom:11px">못 찾고 돌아간 검색어</div>
  <div class="card" style="padding:6px 16px">
  ${[['무쇠 스킬렛',38],['압력솥',24],['에어프라이어',19],['도마',12]].map(([k,v],i)=>`<div class="row" style="padding:11px 0;${i?'border-top:.5px solid var(--line2)':''}">
-  <span style="font-size:12.5px">${k}</span><span class="num" style="font-size:12px;color:var(--sub)">${v}명</span></div>`).join('')}</div>
+  <span style="font-size:12px">${k}</span><span class="num" style="font-size:12px;color:var(--sub)">${v}명</span></div>`).join('')}</div>
  <div class="meta" style="margin-top:10px;line-height:1.8">이 목록이 다음 주 후보의 <b style="color:var(--ink)">가장 큰 가중치</b>로 들어가요.</div></div>
  <div style="height:26px"></div>`;
 
  const doneV=(()=>{const ds=P.filter(x=>x.deal==='done');
   return `
-  <div class="pad" style="padding-top:18px"><div class="h1" style="font-size:19px">협상이 끝난 제품</div>
+  <div class="pad" style="padding-top:20px"><div class="h1" style="font-size:19px">협상이 끝난 제품</div>
   <div class="sub" style="margin-top:8px">판매가 끝난 제품이에요. 후기 모음에는 계속 남아 있고, 홈의 「아직 순서가 아니에요」에 다시 올릴지 고르실 수 있어요.</div></div>
-  <div class="pad" style="padding-top:14px"><div class="hint meta" style="line-height:1.8">
+  <div class="pad" style="padding-top:12px"><div class="hint meta" style="line-height:1.8">
   노출을 켜면 유저가 <b style="color:var(--ink2)">다음 회차를 기다리며 대기 등록</b>할 수 있어요. 수요가 다시 모이면 재협상 후보가 됩니다.</div></div>
-  <div class="pad" style="padding-top:14px">
+  <div class="pad" style="padding-top:12px">
   ${ds.length?ds.map(x=>`<div class="card" style="padding:14px 15px;margin-bottom:9px">
    <div style="display:flex;gap:11px;align-items:center">${th(x,44)}
     <div style="min-width:0;flex:1"><div class="tiny">${x.brand} · ${x.sub}</div>
-    <div class="h3" style="font-size:13.5px;margin-top:1px">${x.name}</div></div>
+    <div class="h3" style="font-size:14px;margin-top:1px">${x.name}</div></div>
     <span class="badge b-teal">${x.rounds}회차</span></div>
    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;text-align:center">
    ${[['판매 수',x.soldN+'개'],['협상가',won(x.dealPrice)],['종료',x.doneDate]].map(([k2,v])=>`<div style="background:var(--surface2);border-radius:9px;padding:9px 6px">
     <div class="num" style="font-size:13px;font-weight:700">${v}</div><div class="tiny" style="margin-top:2px">${k2}</div></div>`).join('')}</div>
    <div class="row" style="margin-top:12px;padding-top:11px;border-top:.5px solid var(--line2)">
-    <div><div style="font-size:12.5px;font-weight:600">홈에 다시 노출</div>
+    <div><div style="font-size:12px;font-weight:600">홈에 다시 노출</div>
      <div class="tiny" style="margin-top:2px">「아직 순서가 아니에요」 섹션</div></div>
     <span data-a="toggleDone:${x.id}" style="width:42px;height:24px;border-radius:12px;flex-shrink:0;position:relative;background:${S.doneShow[x.id]??x.showInNone?'var(--brand)':'var(--line3)'}">
     <span style="position:absolute;top:3px;left:${(S.doneShow[x.id]??x.showInNone)?21:3}px;width:18px;height:18px;border-radius:9px;background:var(--surface)"></span></span></div></div>`).join('')
@@ -1340,13 +1513,13 @@ V.admin=()=>{
  return bar('운영 콘솔')+`
  <div style="display:flex;gap:2px;padding:0 14px;border-bottom:.5px solid var(--line);background:var(--surface);overflow-x:auto">
  ${T.map(([k,l])=>`<button class="ptab ${S.atab===k?'on':''}" style="flex:0 0 auto;padding:12px 13px;white-space:nowrap" data-a="atab:${k}">${l}</button>`).join('')}</div>
- <div class="body"><div class="pad" style="padding-top:14px"><div class="hint tiny" style="line-height:1.7">프로토타입 화면이에요. 실제로는 관리자 권한 계정으로 로그인해 데스크톱 화면에서 쓰시게 돼요.</div></div>${{cand,job,aud,pub,nego,done:doneV,kpi}[S.atab]}</div>`};
+ <div class="body"><div class="pad" style="padding-top:12px"><div class="hint tiny" style="line-height:1.7">프로토타입 화면이에요. 실제로는 관리자 권한 계정으로 로그인해 데스크톱 화면에서 쓰시게 돼요.</div></div>${{cand,job,aud,pub,nego,done:doneV,kpi}[S.atab]}</div>`};
 
 /* ── 시트 ── */
 const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const p=byId(id)||P[0];
  if(k==='price'){const st=ladder(p);return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
  <div class="grabzone"><div class="grab"></div></div>
- <div class="pad" style="padding-top:10px;padding-bottom:14px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">이 가격이면 살게요</div>
+ <div class="pad" style="padding-top:12px;padding-bottom:14px"><div style="font-size:17px;font-weight:600;letter-spacing:-.02em">이 가격이면 살게요</div>
  <div class="meta" style="margin-top:4px">${p.brand} ${p.name}</div></div>
  <div class="pad" style="padding-bottom:14px"><div class="hint row"><span class="meta">지금 온라인 최저가</span>
  <span class="num" style="font-size:14px;font-weight:600">${won(p.price)}</span></div></div>
@@ -1356,17 +1529,17 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <span style="display:flex;align-items:center;gap:6px;flex-shrink:0">
   ${s.ok?`<span style="font-size:10px;font-weight:600;color:var(--brand);background:var(--brandBg);border-radius:5px;padding:2px 6px">협상 가능</span>`:''}
   <span class="num" style="font-size:12px;color:${s.ok?'var(--brand)':'var(--sub)'};font-weight:${s.ok?600:400}">${s.people}명</span></span></button>`).join('')}</div>
- <div class="pad" style="padding-top:10px"><div class="meta" style="line-height:1.7">
+ <div class="pad" style="padding-top:12px"><div class="meta" style="line-height:1.7">
  한 가격에 <b style="color:var(--ink)">${GOAL}명</b>이 모이면 그 가격으로 브랜드를 만나요.
  ${dealPoint(p)?`지금은 <b style="color:var(--brand)">${won(dealPoint(p).price)}</b>까지 이야기할 수 있어요.`:`아직 ${GOAL}명을 넘긴 가격이 없어요.`}</div></div>
- <div class="pad" style="padding-top:8px"><div class="hint" style="display:flex;gap:9px">${ic('info',16,'var(--bar2)')}
+ <div class="pad" style="padding-top:6px"><div class="hint" style="display:flex;gap:9px">${ic('info',16,'var(--bar2)')}
  <div style="font-size:12px;color:var(--ink3);line-height:1.75">고르신 가격보다 <b>더 싸게 열리면 자동으로 포함</b>돼요. 다만 너무 낮게 고르시면 이번 협상에서는 빠지실 수 있어요.</div></div></div>
  <div class="pad" style="padding-top:16px"><button class="btn teal" style="opacity:${S.tmp?1:.4}" data-a="toLogin:${p.id}">${S.tmp?won(S.tmp)+'에 등록하기':'가격을 골라주세요'}</button>
  <div class="tiny" style="text-align:center;margin-top:9px">등록은 구매가 아니에요. 언제든 취소하실 수 있어요.</div></div></div></div>`}
  if(k==='login')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
  <div class="grabzone"><div class="grab"></div></div>
- <div class="pad" style="padding-top:14px;text-align:center">${mark(34)}
- <div style="font-size:18px;font-weight:600;letter-spacing:-.025em;margin-top:10px">잠깐만요, 어디로 알려드릴까요</div>
+ <div class="pad" style="padding-top:12px;text-align:center">${mark(34)}
+ <div style="font-size:17px;font-weight:600;letter-spacing:-.02em;margin-top:10px">잠깐만요, 어디로 알려드릴까요</div>
  <div class="sub" style="margin-top:7px">협상이 열리거나 미뤄질 때만 딱 한 번 보내드려요.<br>기기를 바꾸셔도 기다리시던 게 그대로 따라와요.</div></div>
  <div class="pad" style="padding-top:20px">
  <button class="btn" style="background:#FEE500;color:#191600" data-a="oauth:kakao">카카오톡으로 계속하기</button>
@@ -1376,64 +1549,64 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <div class="pad" style="padding-top:12px"><button class="btn ghost" data-a="closeSheet" style="border:none;color:var(--meta)">다음에 할게요</button></div></div></div>`;
  if(k==='code')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
  <div class="grabzone"><div class="grab"></div></div>
- <div class="pad" style="padding-top:10px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">휴대폰 번호로 시작하기</div>
+ <div class="pad" style="padding-top:12px"><div style="font-size:17px;font-weight:600;letter-spacing:-.02em">휴대폰 번호로 시작하기</div>
  <div class="sub" style="margin-top:6px">번호를 넣으시면 인증번호를 보내드려요. 비밀번호는 따로 만들지 않으셔도 돼요.</div></div>
- <div class="pad" style="padding-top:14px"><div class="meta" style="margin-bottom:6px">휴대폰 번호</div>
+ <div class="pad" style="padding-top:12px"><div class="meta" style="margin-bottom:6px">휴대폰 번호</div>
  <input id="contact" class="field" placeholder="010-0000-0000" value="${S.contact}">
  <div class="meta" style="margin:13px 0 6px">인증번호</div>
- <div style="display:flex;gap:8px"><input class="field num" placeholder="6자리" style="flex:1;font-size:16px">
+ <div style="display:flex;gap:8px"><input class="field num" placeholder="6자리" style="flex:1;font-size:15px">
  <button class="chip" style="padding:0 14px" data-a="say:인증번호를 보냈어요">받기</button></div></div>
  <div class="pad" style="padding-top:16px"><button class="btn teal" data-a="docode">확인</button>
  <button class="btn ghost" style="margin-top:9px" data-a="toLoginSheet">다른 방법으로 하기</button></div></div></div>`;
  if(k==='edit')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
  <div class="grabzone"><div class="grab"></div></div>
- <div class="pad" style="padding-top:10px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">알림 받으실 곳</div>
+ <div class="pad" style="padding-top:12px"><div style="font-size:17px;font-weight:600;letter-spacing:-.02em">알림 받으실 곳</div>
  <div class="sub" style="margin-top:6px">협상 소식이 있을 때만 보내드려요. 회원가입은 없어요.</div></div>
- <div class="pad" style="padding-top:14px"><input id="contact" class="field" placeholder="010-0000-0000 또는 이메일 주소" value="${S.contact}"></div>
+ <div class="pad" style="padding-top:12px"><input id="contact" class="field" placeholder="010-0000-0000 또는 이메일 주소" value="${S.contact}"></div>
  <div class="pad" style="padding-top:16px"><button class="btn teal" data-a="saveContact">저장하기</button>
  <button class="btn ghost" style="margin-top:9px" data-a="closeSheet">닫기</button></div></div></div>`;
  if(k==='pub')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
  <div class="grabzone"><div class="grab"></div></div>
- <div class="pad" style="padding-top:12px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">이대로 발행할까요</div>
+ <div class="pad" style="padding-top:12px"><div style="font-size:17px;font-weight:600;letter-spacing:-.02em">이대로 발행할까요</div>
  <div class="sub" style="margin-top:7px">발행하면 다들 카드가 사이트에 올라가고, 브랜드도 볼 수 있게 돼요.</div></div>
- <div class="pad" style="padding-top:14px"><div class="card" style="padding:14px 15px;box-shadow:none;border:.5px solid var(--line)">
+ <div class="pad" style="padding-top:12px"><div class="card" style="padding:14px 15px;box-shadow:none;border:.5px solid var(--line)">
  <div class="tiny">하로</div><div class="h3" style="font-size:14px;margin-top:2px">세라믹 코팅팬 26cm</div>
  <div class="row" style="align-items:baseline;margin-top:11px;padding-top:11px;border-top:.5px solid var(--line2)">
- <span style="font-size:18px;font-weight:600;letter-spacing:-.03em">대체로 만족</span><span class="num meta">후기 241건</span></div>
+ <span style="font-size:17px;font-weight:600;letter-spacing:-.03em">대체로 만족</span><span class="num meta">후기 241건</span></div>
  <div class="meta" style="margin-top:6px">문제 언급 11.6% · 기준 15% 미만</div></div></div>
- <div class="pad" style="padding-top:14px"><div class="hint meta" style="line-height:1.75">
+ <div class="pad" style="padding-top:12px"><div class="hint meta" style="line-height:1.75">
  발행 뒤에도 회수해서 발행 전으로 되돌릴 수 있어요. 회수 사실은 정정 이력에 남아요.</div></div>
  <div class="pad" style="padding-top:16px"><button class="btn teal" data-a="doPublish">발행하기</button>
  <button class="btn ghost" style="margin-top:9px" data-a="closeSheet">더 볼게요</button></div></div></div>`;
  if(k==='unpub')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
  <div class="grabzone"><div class="grab"></div></div>
- <div class="pad" style="padding-top:12px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">회수할까요</div>
+ <div class="pad" style="padding-top:12px"><div style="font-size:17px;font-weight:600;letter-spacing:-.02em">회수할까요</div>
  <div class="sub" style="margin-top:7px">카드가 즉시 내려가고 발행 전 단계로 돌아가요. 회수했다는 사실과 사유가 정정 이력에 남아요.</div></div>
- <div class="pad" style="padding-top:14px"><div class="meta" style="margin-bottom:6px">회수 사유</div>
+ <div class="pad" style="padding-top:12px"><div class="meta" style="margin-bottom:6px">회수 사유</div>
  <input class="field" placeholder="예: 추출 오류 발견, 표본 재검토 필요"></div>
  <div class="pad" style="padding-top:16px"><button class="btn teal" data-a="doUnpublish">회수하기</button>
  <button class="btn ghost" style="margin-top:9px" data-a="closeSheet">그대로 둘게요</button></div></div></div>`;
  if(k==='filter')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
  <div class="grabzone"><div class="grab"></div></div>
  <div class="pad" style="padding-top:12px"><div class="row">
-  <span style="font-size:18px;font-weight:700;letter-spacing:-.035em">필터</span>
+  <span style="font-size:17px;font-weight:700;letter-spacing:-.03em">필터</span>
   ${S.filters.length?`<button class="chip" data-a="clearFilters">모두 지우기</button>`:''}</div></div>
- ${FGRP.filter(g=>g[0]!=='cat').map(([key,title,map])=>`<div class="pad" style="padding-top:18px">
+ ${FGRP.filter(g=>g[0]!=='cat').map(([key,title,map])=>`<div class="pad" style="padding-top:20px">
    <div class="h3" style="font-size:13px;margin-bottom:9px">${title}</div>
    <div style="display:flex;gap:7px;flex-wrap:wrap">
    ${Object.keys(map).map(f=>`<button class="chip ${S.filters.includes(f)?'on':''}" data-a="filter:${f}">${f}</button>`).join('')}</div></div>`).join('')}
- <div class="pad" style="padding-top:18px">
+ <div class="pad" style="padding-top:20px">
   <button class="row" data-a="toggleFcat" style="width:100%;padding-bottom:${S.fcat?9:0}px">
    <span style="display:flex;align-items:center;gap:7px">
     <span class="h3" style="font-size:13px">카테고리</span>
-    ${S.filters.filter(f=>CATS.some(c=>c.k===f)).length?`<span style="font-size:10.5px;font-weight:600;color:var(--surface);background:var(--brand);border-radius:20px;padding:2px 7px">${S.filters.filter(f=>CATS.some(c=>c.k===f)).length}</span>`:''}</span>
+    ${S.filters.filter(f=>CATS.some(c=>c.k===f)).length?`<span style="font-size:10px;font-weight:600;color:var(--surface);background:var(--brand);border-radius:20px;padding:2px 7px">${S.filters.filter(f=>CATS.some(c=>c.k===f)).length}</span>`:''}</span>
    <span style="display:block;transform:rotate(${S.fcat?0:180}deg);transition:transform .2s">${ic('chev',16,'var(--meta)')}</span></button>
   ${S.fcat?`<div style="display:flex;gap:7px;flex-wrap:wrap">
    ${CATS.map(c=>`<button class="chip ${S.filters.includes(c.k)?'on':''}" data-a="filter:${c.k}">${c.k}</button>`).join('')}</div>`:''}</div>
- <div class="pad" style="padding-top:22px"><button class="btn teal" data-a="closeSheet">${searchHits().length}개 보기</button></div></div></div>`;
+ <div class="pad" style="padding-top:20px"><button class="btn teal" data-a="closeSheet">${searchHits().length}개 보기</button></div></div></div>`;
  if(k==='sort')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
  <div class="grabzone"><div class="grab"></div></div>
- <div class="pad" style="padding-top:12px"><span style="font-size:18px;font-weight:700;letter-spacing:-.035em">정렬</span></div>
+ <div class="pad" style="padding-top:12px"><span style="font-size:17px;font-weight:700;letter-spacing:-.03em">정렬</span></div>
  <div class="pad" style="padding-top:12px">
  ${Object.keys(SORTS).map((kk,i)=>`<button class="row" data-a="setSort:${kk}" style="width:100%;padding:14px 0;${i?'border-top:.5px solid var(--line)':''}">
   <span style="font-size:14px;${S.sort===kk?'font-weight:700;color:var(--brand)':'color:var(--ink2)'}">${SORTS[kk][0]}</span>
@@ -1441,7 +1614,7 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <div style="height:12px"></div></div></div>`;
  if(k==='site')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop style="height:78%">
  <div class="grabzone"><div class="grab"></div></div>
- <div class="pad" style="padding-top:8px;padding-bottom:12px"><div class="row">
+ <div class="pad" style="padding-top:6px;padding-bottom:12px"><div class="row">
  <div style="min-width:0"><div class="h3" style="font-size:13px">${p.brand} 공식몰</div><div class="tiny num">${p.site}</div></div>
  <button class="chip" data-a="closeSheet">닫기</button></div></div>
  <div style="margin:0 18px;background:var(--surface);border-radius:14px;padding:40px 20px;text-align:center;box-shadow:inset 0 0 0 .5px var(--line)">
@@ -1471,6 +1644,25 @@ function refresh(){
   const nb=document.querySelector('.body'); if(nb)nb.scrollTop=0;
   say('새로 불러왔어요');
  },620);
+}
+
+function equalizeChips(){
+ document.querySelectorAll('.scroller').forEach(sc=>{
+  const chips=[...sc.children].filter(el=>el.classList.contains('chip'));
+  if(chips.length<2)return;
+  chips.forEach(c=>{c.style.minWidth='';c.style.width=''});
+  const cap=Math.round(sc.clientWidth*0.56);
+  let max=0; chips.forEach(c=>{max=Math.max(max,Math.ceil(c.getBoundingClientRect().width))});
+  const w=Math.min(max,cap);
+  chips.forEach(c=>{c.style.minWidth=w+'px'});
+  // 다음 칩이 살짝 보이도록 여백 보정
+  const wrap=sc.parentElement;
+  if(wrap&&wrap.classList.contains('swrap')){
+   const more=sc.scrollWidth-sc.clientWidth>4;
+   wrap.classList.toggle('more',more);
+   sc.onscroll=()=>{wrap.classList.toggle('more',sc.scrollWidth-sc.scrollLeft-sc.clientWidth>4)};
+  }
+ });
 }
 
 function bindSheet(){
@@ -1556,11 +1748,25 @@ function draw(){const c=cur();
  document.getElementById('app').innerHTML=html.replace('<div class="body">','<div class="body"><div class="ptr"><i></i></div>')+(S.drawer?V.drawer():'')+sheetHTML()+(S.toast?`<div class="toast">${S.toast}</div>`:'');
  const q=document.getElementById('q');
  if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length);
-  q.oninput=e=>{S.q=e.target.value;document.getElementById('results').innerHTML=searchResults()}}
+  let qIme=0;
+  q.addEventListener('compositionstart',()=>{qIme=1});
+  q.addEventListener('compositionend',e=>{qIme=0;S.q=e.target.value;
+   const r=document.getElementById('results');if(r)r.innerHTML=searchResults()});
+  q.oninput=e=>{S.q=e.target.value;if(qIme)return;
+   const r=document.getElementById('results');if(r)r.innerHTML=searchResults()}}
+ const cq=document.getElementById('cq');
+ if(cq){cq.focus();cq.setSelectionRange(cq.value.length,cq.value.length);
+  let cIme=0;
+  cq.addEventListener('compositionstart',()=>{cIme=1});
+  cq.addEventListener('compositionend',e=>{cIme=0;S.cq=e.target.value;
+   const r=document.getElementById('cres');if(r)r.innerHTML=cmpResults()});
+  cq.oninput=e=>{S.cq=e.target.value;if(cIme)return;
+   const r=document.getElementById('cres');if(r)r.innerHTML=cmpResults()}}
  const ct=document.getElementById('contact');
  if(ct)ct.oninput=e=>{S.contact=e.target.value};
  bindPull();
  bindSheet();
+ equalizeChips();
 }
 
 document.getElementById('app').addEventListener('click',e=>{
@@ -1574,7 +1780,9 @@ document.getElementById('app').addEventListener('click',e=>{
   case'root':S.drawer=0;S.sheet=null;S.stack=[{s:v}];S.tab=v;draw();break;
   case'noti':S.drawer=0;S.unread=0;go('noti');break;
   case'search':S.drawer=0;go('search');break;
-  case'list':S.drawer=0;go('list');break;
+  case'list':{S.drawer=0;S.lsort='verdict';S.lmore=0;S.lcat=v||'조리팬';
+   S.lrecent=[S.lcat,...(S.lrecent||[]).filter(x=>x!==S.lcat)].slice(0,3);
+   go('list');break}
   case'excluded':S.drawer=0;go('excluded');break;
   case'method':S.drawer=0;go('method');break;
   case'log':S.drawer=0;go('log');break;
@@ -1627,6 +1835,12 @@ document.getElementById('app').addEventListener('click',e=>{
   case'brandSel':S.brand=v||null;S.cat='전체';S.view='grid';S.drawer=0;
    if(cur().s!=='home'){S.stack=[{s:'home'}];S.tab='home'}draw();break;
   case'ptab':S.ptab=v;draw();break;
+  case'csort':S.csort=v;draw();break;
+  case'cdom':S.cdom=v;S.cq='';draw();break;
+  case'cmpSearch':go('cmpSearch');break;
+  case'cmpClear':S.cq='';draw();break;
+  case'lsort':S.lsort=v;S.lmore=0;draw();break;
+  case'lmore':S.lmore=1;draw();break;
   case'toggleFoot':S.foot=S.foot?0:1;draw();break;
   case'openFilter':S.sheet='filter:x';pushHist();draw();break;
   case'toggleFcat':S.fcat=S.fcat?0:1;draw();break;
