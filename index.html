@@ -105,7 +105,11 @@ input,textarea,select{font:inherit;font-size:16px;color:var(--ink);background:tr
 .scroller::-webkit-scrollbar,.scroller2::-webkit-scrollbar{height:0;display:none}
 .chiprow{margin-top:14px;margin-bottom:2px}
 .veil{position:absolute;inset:0;background:var(--glyph);display:flex;align-items:flex-end;z-index:20}
-.sheet{width:100%;background:var(--surface);border-radius:22px 22px 0 0;max-height:88%;overflow-y:auto;padding-bottom:20px}
+.sheet{width:100%;background:var(--surface);border-radius:22px 22px 0 0;max-height:88%;overflow-y:auto;padding-bottom:20px;
+ will-change:transform;touch-action:pan-y}
+.sheet.snap{transition:transform .24s cubic-bezier(.2,.7,.3,1)}
+.grab{width:36px;height:4px;border-radius:2px;background:var(--line3);margin:11px auto 4px}
+.grabzone{padding:2px 0 6px;cursor:grab}
 .grab{width:36px;height:4px;border-radius:2px;background:var(--line3);margin:11px auto 4px}
 .field{background:var(--surface);border:1px solid var(--line3);border-radius:10px;padding:12px 13px;font-size:16px;width:100%;color:var(--ink)}
 .field::placeholder{color:var(--tiny)}
@@ -1341,7 +1345,7 @@ V.admin=()=>{
 /* ── 시트 ── */
 const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const p=byId(id)||P[0];
  if(k==='price'){const st=ladder(p);return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
- <div class="grab"></div>
+ <div class="grabzone"><div class="grab"></div></div>
  <div class="pad" style="padding-top:10px;padding-bottom:14px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">이 가격이면 살게요</div>
  <div class="meta" style="margin-top:4px">${p.brand} ${p.name}</div></div>
  <div class="pad" style="padding-bottom:14px"><div class="hint row"><span class="meta">지금 온라인 최저가</span>
@@ -1360,7 +1364,7 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <div class="pad" style="padding-top:16px"><button class="btn teal" style="opacity:${S.tmp?1:.4}" data-a="toLogin:${p.id}">${S.tmp?won(S.tmp)+'에 등록하기':'가격을 골라주세요'}</button>
  <div class="tiny" style="text-align:center;margin-top:9px">등록은 구매가 아니에요. 언제든 취소하실 수 있어요.</div></div></div></div>`}
  if(k==='login')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
- <div class="grab"></div>
+ <div class="grabzone"><div class="grab"></div></div>
  <div class="pad" style="padding-top:14px;text-align:center">${mark(34)}
  <div style="font-size:18px;font-weight:600;letter-spacing:-.025em;margin-top:10px">잠깐만요, 어디로 알려드릴까요</div>
  <div class="sub" style="margin-top:7px">협상이 열리거나 미뤄질 때만 딱 한 번 보내드려요.<br>기기를 바꾸셔도 기다리시던 게 그대로 따라와요.</div></div>
@@ -1371,7 +1375,7 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <div class="pad" style="padding-top:16px"><div class="hint meta">받는 건 연락처 하나뿐이에요. 이름도 주소도 받지 않고, 알림 보낼 때만 씁니다.</div></div>
  <div class="pad" style="padding-top:12px"><button class="btn ghost" data-a="closeSheet" style="border:none;color:var(--meta)">다음에 할게요</button></div></div></div>`;
  if(k==='code')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
- <div class="grab"></div>
+ <div class="grabzone"><div class="grab"></div></div>
  <div class="pad" style="padding-top:10px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">휴대폰 번호로 시작하기</div>
  <div class="sub" style="margin-top:6px">번호를 넣으시면 인증번호를 보내드려요. 비밀번호는 따로 만들지 않으셔도 돼요.</div></div>
  <div class="pad" style="padding-top:14px"><div class="meta" style="margin-bottom:6px">휴대폰 번호</div>
@@ -1382,14 +1386,14 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <div class="pad" style="padding-top:16px"><button class="btn teal" data-a="docode">확인</button>
  <button class="btn ghost" style="margin-top:9px" data-a="toLoginSheet">다른 방법으로 하기</button></div></div></div>`;
  if(k==='edit')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
- <div class="grab"></div>
+ <div class="grabzone"><div class="grab"></div></div>
  <div class="pad" style="padding-top:10px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">알림 받으실 곳</div>
  <div class="sub" style="margin-top:6px">협상 소식이 있을 때만 보내드려요. 회원가입은 없어요.</div></div>
  <div class="pad" style="padding-top:14px"><input id="contact" class="field" placeholder="010-0000-0000 또는 이메일 주소" value="${S.contact}"></div>
  <div class="pad" style="padding-top:16px"><button class="btn teal" data-a="saveContact">저장하기</button>
  <button class="btn ghost" style="margin-top:9px" data-a="closeSheet">닫기</button></div></div></div>`;
  if(k==='pub')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
- <div class="grab"></div>
+ <div class="grabzone"><div class="grab"></div></div>
  <div class="pad" style="padding-top:12px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">이대로 발행할까요</div>
  <div class="sub" style="margin-top:7px">발행하면 다들 카드가 사이트에 올라가고, 브랜드도 볼 수 있게 돼요.</div></div>
  <div class="pad" style="padding-top:14px"><div class="card" style="padding:14px 15px;box-shadow:none;border:.5px solid var(--line)">
@@ -1402,7 +1406,7 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <div class="pad" style="padding-top:16px"><button class="btn teal" data-a="doPublish">발행하기</button>
  <button class="btn ghost" style="margin-top:9px" data-a="closeSheet">더 볼게요</button></div></div></div>`;
  if(k==='unpub')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
- <div class="grab"></div>
+ <div class="grabzone"><div class="grab"></div></div>
  <div class="pad" style="padding-top:12px"><div style="font-size:18px;font-weight:600;letter-spacing:-.025em">회수할까요</div>
  <div class="sub" style="margin-top:7px">카드가 즉시 내려가고 발행 전 단계로 돌아가요. 회수했다는 사실과 사유가 정정 이력에 남아요.</div></div>
  <div class="pad" style="padding-top:14px"><div class="meta" style="margin-bottom:6px">회수 사유</div>
@@ -1410,7 +1414,7 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
  <div class="pad" style="padding-top:16px"><button class="btn teal" data-a="doUnpublish">회수하기</button>
  <button class="btn ghost" style="margin-top:9px" data-a="closeSheet">그대로 둘게요</button></div></div></div>`;
  if(k==='filter')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
- <div class="grab"></div>
+ <div class="grabzone"><div class="grab"></div></div>
  <div class="pad" style="padding-top:12px"><div class="row">
   <span style="font-size:18px;font-weight:700;letter-spacing:-.035em">필터</span>
   ${S.filters.length?`<button class="chip" data-a="clearFilters">모두 지우기</button>`:''}</div></div>
@@ -1428,7 +1432,7 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
    ${CATS.map(c=>`<button class="chip ${S.filters.includes(c.k)?'on':''}" data-a="filter:${c.k}">${c.k}</button>`).join('')}</div>`:''}</div>
  <div class="pad" style="padding-top:22px"><button class="btn teal" data-a="closeSheet">${searchHits().length}개 보기</button></div></div></div>`;
  if(k==='sort')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
- <div class="grab"></div>
+ <div class="grabzone"><div class="grab"></div></div>
  <div class="pad" style="padding-top:12px"><span style="font-size:18px;font-weight:700;letter-spacing:-.035em">정렬</span></div>
  <div class="pad" style="padding-top:12px">
  ${Object.keys(SORTS).map((kk,i)=>`<button class="row" data-a="setSort:${kk}" style="width:100%;padding:14px 0;${i?'border-top:.5px solid var(--line)':''}">
@@ -1436,7 +1440,7 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
   ${S.sort===kk?ic('check',17,'var(--brand)'):''}</button>`).join('')}</div>
  <div style="height:12px"></div></div></div>`;
  if(k==='site')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop style="height:78%">
- <div class="grab"></div>
+ <div class="grabzone"><div class="grab"></div></div>
  <div class="pad" style="padding-top:8px;padding-bottom:12px"><div class="row">
  <div style="min-width:0"><div class="h3" style="font-size:13px">${p.brand} 공식몰</div><div class="tiny num">${p.site}</div></div>
  <button class="chip" data-a="closeSheet">닫기</button></div></div>
@@ -1467,6 +1471,47 @@ function refresh(){
   const nb=document.querySelector('.body'); if(nb)nb.scrollTop=0;
   say('새로 불러왔어요');
  },620);
+}
+
+function bindSheet(){
+ const sh=document.querySelector('.sheet'); if(!sh)return;
+ let y0=null, dy=0, fromTop=false;
+ const grab=sh.querySelector('.grabzone');
+ const reset=()=>{sh.classList.add('snap');sh.style.transform='';y0=null;dy=0};
+ const start=e=>{
+  const t=e.touches?e.touches[0]:e;
+  // 손잡이를 잡았거나, 시트가 맨 위까지 스크롤된 상태일 때만
+  fromTop = (grab&&grab.contains(e.target)) || sh.scrollTop<=0;
+  if(!fromTop){y0=null;return}
+  y0=t.clientY; dy=0; sh.classList.remove('snap');
+ };
+ const move=e=>{
+  if(y0===null)return;
+  const t=e.touches?e.touches[0]:e;
+  dy=t.clientY-y0;
+  if(dy<=0){sh.style.transform='';return}
+  sh.style.transform='translateY('+dy+'px)';
+ };
+ const end=()=>{
+  if(y0===null)return;
+  const h=sh.offsetHeight||400;
+  if(dy>Math.min(150,h*0.28)){                 // 충분히 내렸으면 닫기
+   sh.classList.add('snap');
+   sh.style.transform='translateY(100%)';
+   setTimeout(()=>{back()},200);
+  } else reset();
+  y0=null;
+ };
+ sh.addEventListener('touchstart',start,{passive:true});
+ sh.addEventListener('touchmove',move,{passive:true});
+ sh.addEventListener('touchend',end,{passive:true});
+ sh.addEventListener('touchcancel',end,{passive:true});
+ // PC 확인용
+ if(grab){
+  grab.addEventListener('mousedown',e=>{start(e);
+   const mm=ev=>move(ev), mu=()=>{end();document.removeEventListener('mousemove',mm);document.removeEventListener('mouseup',mu)};
+   document.addEventListener('mousemove',mm);document.addEventListener('mouseup',mu);});
+ }
 }
 
 function bindPull(){
@@ -1515,6 +1560,7 @@ function draw(){const c=cur();
  const ct=document.getElementById('contact');
  if(ct)ct.oninput=e=>{S.contact=e.target.value};
  bindPull();
+ bindSheet();
 }
 
 document.getElementById('app').addEventListener('click',e=>{
@@ -1546,7 +1592,7 @@ document.getElementById('app').addEventListener('click',e=>{
   case'docode':{const c=document.getElementById('contact');const val=c?c.value.trim():'';
    if(!val){say('번호를 적어주세요');break}S.user={ch:'phone',id:val};S.contact=val;S.sheet=null;finish();break}
   case'logout':S.user=null;S.sheet=null;say('로그아웃했어요');break;
-  case'leave':S.sheet='leave:'+v;pushHist();draw();break;
+  case'leave':S.sheet=null;say('판매처로 이동했다고 가정할게요');setTimeout(()=>go('verify',v),900);break;
   case'closeSheet':S.sheet=null;draw();break;
   case'admin':S.drawer=0;S.atab='cand';go('admin');break;
   case'atab':S.atab=v;draw();break;
