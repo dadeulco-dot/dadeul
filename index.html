@@ -385,10 +385,12 @@ const AUDIT=[
 /* ── 상태 ── */
 const S={stack:[{s:'home'}],tab:'home',unread:2,foot:1,ktab:'core',lsort:'verdict',lmore:0,lcat:null,lrecent:[],cdom:'주방용품',cq:'',csort:'cnt',sort:'n',fcat:0,doneShow:{},pubState:'wait',reqDone:null,view:'grid',sec:null,opencat:null,glist:null,rlist:null,rax:'all',rpick:null,atab:'cand',appr:{},aud:{},mine:0,cat:'전체',brand:null,drawer:0,ptab:'rev',user:null,pending:null,noti:{open:1,post:1,drop:1,week:0},sheet:null,q:'',filters:[],picks:[],waits:{},bought:{},contact:'',tmp:null,toast:null};
 const cur=()=>S.stack[S.stack.length-1];
-let navLock=0;
+let navLock=0;      // pushState 억제
+let skipPop=0;      // 코드로 back()을 부른 경우 popstate 1회 무시
 const pushHist=()=>{if(navLock)return;try{history.pushState({d:S.stack.length},'')}catch(e){}};
-// 시트/드로어를 코드로 닫을 때 히스토리 한 칸 회수
-const popHist=()=>{navLock=1;try{history.back()}catch(e){};setTimeout(()=>{navLock=0},60)};
+// 시트/드로어를 코드로 닫았을 때, 쌓아둔 히스토리 한 칸만 조용히 회수한다.
+// popstate가 뒤따라 오지만 skipPop 때문에 화면은 건드리지 않는다.
+const popHist=()=>{skipPop++;try{history.back()}catch(e){skipPop=Math.max(0,skipPop-1)}};
 const shutSheet=()=>{if(S.sheet){S.sheet=null;popHist()}};
 const go=(s2,id)=>{const b=document.querySelector('.body');
  if(b)S.stack[S.stack.length-1].top=b.scrollTop;
@@ -398,9 +400,8 @@ const popView=()=>{if(S.drawer){S.drawer=0;draw();return true}
  if(S.stack.length>1){S.stack.pop();draw();
   const t=cur().top||0,b=document.querySelector('.body');if(b)b.scrollTop=t;return true}
  return false};
-const back=()=>{if(S.drawer||S.sheet||S.stack.length>1){navLock=1;
- try{history.back()}catch(e){popView()}
- setTimeout(()=>{navLock=0},60)}};
+const back=()=>{if(S.drawer||S.sheet||S.stack.length>1){
+ try{history.back()}catch(e){popView()}}};
 const root=(s)=>{S.stack=[{s}];S.tab=s;draw()};
 const say=m=>{S.toast=m;draw();setTimeout(()=>{S.toast=null;draw()},2200)};
 const waitCount=p=>p.wait+(S.waits[p.id]?1:0);
@@ -2182,8 +2183,9 @@ document.getElementById('app').addEventListener('click',e=>{
 });
 try{history.replaceState({d:1},'')}catch(e){}
 window.addEventListener('popstate',()=>{
+ if(skipPop>0){skipPop--;return;}          // 코드로 부른 back — 화면은 그대로
  navLock=1;
- if(!popView()){ /* 최상단이면 그대로 두되 히스토리 유지 */ try{history.pushState({d:1},'')}catch(e){} }
+ if(!popView()){ try{history.pushState({d:1},'')}catch(e){} }
  setTimeout(()=>{navLock=0},60);
 });
 draw();
