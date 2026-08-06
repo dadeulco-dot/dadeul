@@ -72,7 +72,7 @@ input,textarea,select{font:inherit;font-size:16px;color:var(--ink);background:tr
 .card{background:var(--surface);border:.5px solid var(--line);border-radius:14px;width:100%;display:block}
 .soft{background:var(--surface2);border-radius:14px;width:100%;display:block}
 .thumb{border-radius:11px;flex-shrink:0;box-shadow:inset 0 0 0 .5px rgba(27,27,29,.05)}
-.pname{font-size:13px;font-weight:500;line-height:1.42;letter-spacing:-.02em;color:var(--ink);
+.pname{font-size:13px;font-weight:500;line-height:1.42;letter-spacing:-.03em;word-break:keep-all;text-wrap:balance;color:var(--ink);
  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
  height:calc(1.42em * 2);margin-top:3px}
 .pname1{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;height:auto}
@@ -95,8 +95,13 @@ input,textarea,select{font:inherit;font-size:16px;color:var(--ink);background:tr
 .tab{flex:1;text-align:center;color:var(--tiny);font-size:11px;font-weight:500;letter-spacing:-.02em;padding-top:2px}
 .tab.on{color:var(--brand);font-weight:600}
 .tab svg{display:block;margin:0 auto 2px}
-.scroller,.scroller2{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;
- scroll-snap-type:x proximity;scrollbar-width:none;scroll-padding-left:20px}
+.hscroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+ touch-action:pan-x;overscroll-behavior-x:contain}
+.hscroll>*{flex:0 0 auto}
+.hscroll::-webkit-scrollbar{height:0;display:none}
+.scroller,.scroller2{display:flex;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
+ scroll-snap-type:x proximity;scrollbar-width:none;scroll-padding-left:20px;
+ touch-action:pan-x;overscroll-behavior-x:contain}
 .scroller{gap:8px;padding:2px 0 4px 20px}
 .scroller2{gap:11px;padding:2px 0 4px 20px}
 .scroller>*,.scroller2>*{flex:0 0 auto;scroll-snap-align:start}
@@ -237,14 +242,14 @@ const CATS=[
 ];
 const P=[
 {id:"p1",brand:"하로",checked:"2026.05.16",name:"인덕션 코팅팬 28cm",sub:"프라이팬",cat:"pan",tint:"green",label:"대체로 만족",n:229,price:39800,low:33300,lowNote:"2026.03 자사몰 세일 · 9일간 유지",deal:"talking",wait:178,target:100,induction:1,dish:0,incl:229,excl:182,longN:88,keep:72,drop:16,dropWhy:"3~4개월에 코팅이 약해져요 (9건)",cons:[["3~4개월에 코팅이 약해져요", 26], ["손잡이가 뜨거워져요", 18], ["광고보다 얕아요", 10]],site:"haro.co.kr/p1",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]],tDate:"7.19",pros:[["세척이 편해요", 54], ["가벼워서 다루기 쉬워요", 38], ["열이 고르게 퍼져요", 31]],neg:23,pos_n:172,neu:34,rate:0.1},
-{id:"p2",brand:"온담",checked:"2026.05.23",name:"세라믹 프라이팬 28cm",sub:"프라이팬",cat:"pan",tint:"gray",label:"대체로 만족",n:133,price:34900,low:30300,lowNote:"2026.05 자사몰 세일 · 11일간 유지",deal:"done",wait:159,target:100,induction:1,dish:1,incl:133,excl:81,longN:42,keep:26,drop:16,dropWhy:"3~4개월에 코팅이 약해져요 (9건)",cons:[["3~4개월에 코팅이 약해져요", 15], ["손잡이가 뜨거워져요", 10], ["광고보다 얕아요", 6]],site:"ondam.co.kr/p2",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]],pros:[["가벼워서 다루기 쉬워요", 29], ["손잡이가 안 뜨거워요", 18], ["눌어붙지 않아요", 13]],doneDate:"6.16",soldN:250,showInNone:true,rounds:1,dealPrice:28400,neg:11,pos_n:99,neu:23,rate:0.083},
+{id:"p2",brand:"온담",checked:"2026.05.23",name:"세라믹 프라이팬 28cm",sub:"프라이팬",cat:"pan",tint:"gray",label:"대체로 만족",n:133,price:34900,low:30300,lowNote:"2026.05 자사몰 세일 · 11일간 유지",deal:"done",wait:159,target:100,induction:1,dish:1,incl:133,excl:81,longN:42,keep:26,drop:16,dropWhy:"3~4개월에 코팅이 약해져요 (9건)",cons:[["3~4개월에 코팅이 약해져요", 15], ["손잡이가 뜨거워져요", 10], ["광고보다 얕아요", 6]],site:"ondam.co.kr/p2",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]],pros:[["가벼워서 다루기 쉬워요", 29], ["손잡이가 안 뜨거워요", 18], ["눌어붙지 않아요", 13]],doneDate:"6.16",soldN:250,showInNone:true,rounds:1,dealPrice:28400,neg:11,pos_n:99,neu:23,rate:0.083,buyUrl:"https://ondam.co.kr/deal/p2",linkOk:false,linkChk:"08.03 5:05"},
 {id:"p3",brand:"무이",checked:"2026.05.17",name:"스테인리스 3중 팬 28cm",sub:"프라이팬",cat:"pan",tint:"green",label:"대체로 불만",n:166,price:39800,low:33200,lowNote:"2026.01 자사몰 세일 · 14일간 유지",deal:"none",wait:248,target:100,induction:1,dish:0,incl:166,excl:76,longN:39,keep:24,drop:15,dropWhy:"3~4개월에 코팅이 약해져요 (9건)",cons:[["3~4개월에 코팅이 약해져요", 19], ["손잡이가 뜨거워져요", 13], ["광고보다 얕아요", 7]],site:"mui.co.kr/p3",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]],pros:[["열이 고르게 퍼져요", 9], ["세척이 편해요", 6], ["손잡이가 안 뜨거워요", 4]],doneDate:"6.19",soldN:161,showInNone:true,rounds:1,dealPrice:31200,neg:68,pos_n:64,neu:34,rate:0.41},
-{id:"p4",brand:"노바",checked:"2026.07.20",name:"티타늄 코팅팬 26cm",sub:"프라이팬",cat:"pan",tint:"sand",label:"대체로 만족",n:122,price:31000,low:26800,lowNote:"2026.02 자사몰 세일 · 15일간 유지",deal:"done",wait:201,target:100,induction:1,dish:0,incl:122,excl:86,longN:25,keep:12,drop:13,dropWhy:"3~4개월에 코팅이 약해져요 (7건)",cons:[["3~4개월에 코팅이 약해져요", 14], ["손잡이가 뜨거워져요", 9], ["광고보다 얕아요", 5]],site:"nova.co.kr/p4",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]],pros:[["손잡이가 안 뜨거워요", 18], ["열이 고르게 퍼져요", 14], ["세척이 편해요", 10]],doneDate:"6.14",soldN:182,showInNone:false,rounds:1,dealPrice:25100,neg:9,pos_n:71,neu:42,rate:0.074},
+{id:"p4",brand:"노바",checked:"2026.07.20",name:"티타늄 코팅팬 26cm",sub:"프라이팬",cat:"pan",tint:"sand",label:"대체로 만족",n:122,price:31000,low:26800,lowNote:"2026.02 자사몰 세일 · 15일간 유지",deal:"done",wait:201,target:100,induction:1,dish:0,incl:122,excl:86,longN:25,keep:12,drop:13,dropWhy:"3~4개월에 코팅이 약해져요 (7건)",cons:[["3~4개월에 코팅이 약해져요", 14], ["손잡이가 뜨거워져요", 9], ["광고보다 얕아요", 5]],site:"nova.co.kr/p4",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]],pros:[["손잡이가 안 뜨거워요", 18], ["열이 고르게 퍼져요", 14], ["세척이 편해요", 10]],doneDate:"6.14",soldN:182,showInNone:false,rounds:1,dealPrice:25100,neg:9,pos_n:71,neu:42,rate:0.074,buyUrl:"https://nova.co.kr/deal/p4",linkOk:true,linkChk:"08.01 5:04"},
 {id:"p5",brand:"프리모",checked:"2026.07.22",name:"다이아몬드 코팅팬 24cm",sub:"프라이팬",cat:"pan",tint:"warm",label:"대체로 만족",n:251,price:27500,low:23700,lowNote:"2026.01 자사몰 세일 · 10일간 유지",deal:"gathering",wait:49,target:100,induction:1,dish:0,incl:251,excl:132,longN:75,keep:55,drop:20,dropWhy:"3~4개월에 코팅이 약해져요 (12건)",cons:[["3~4개월에 코팅이 약해져요", 29], ["손잡이가 뜨거워져요", 19], ["광고보다 얕아요", 11]],site:"primo.co.kr/p5",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]],pros:[["눌어붙지 않아요", 50], ["열이 고르게 퍼져요", 37], ["가벼워서 다루기 쉬워요", 20]],neg:22,pos_n:162,neu:67,rate:0.088},
 {id:"p6",brand:"필로",checked:"2026.07.14",name:"티타늄 코팅 웍 30cm",sub:"웍",cat:"wok",tint:"sand",label:"대체로 불만",n:222,price:52000,low:46000,lowNote:"2026.05 자사몰 세일 · 8일간 유지",deal:"none",wait:10,target:100,induction:1,dish:0,incl:222,excl:150,longN:79,keep:54,drop:25,dropWhy:"무거워서 손목에 부담이 돼요 (15건)",cons:[["무거워서 손목에 부담이 돼요", 20], ["예열이 오래 걸려요", 12], ["길들이기가 필요해요", 8]],site:"filo.co.kr/p6",spec:[["재질", "탄소강"], ["크기", "30cm"], ["무게", "1,240g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "1년"]],pros:[["불 조절이 잘 돼요", 5], ["볶음이 잘 돼요", 3], ["쓸수록 길들여져요", 2]],neg:113,pos_n:89,neu:20,rate:0.509},
 {id:"p7",brand:"한스틸",checked:"2026.07.21",name:"탄소강 웍 32cm",sub:"웍",cat:"wok",tint:"gray",label:"대체로 만족",n:240,price:68000,low:56800,lowNote:"2026.04 자사몰 세일 · 8일간 유지",deal:"postponed",wait:68,target:100,induction:1,dish:1,incl:240,excl:175,longN:94,keep:55,drop:39,dropWhy:"무거워서 손목에 부담이 돼요 (23건)",cons:[["무거워서 손목에 부담이 돼요", 22], ["예열이 오래 걸려요", 14], ["길들이기가 필요해요", 9]],site:"hansteel.co.kr/p7",spec:[["재질", "탄소강"], ["크기", "30cm"], ["무게", "1,240g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "1년"]],pWhy:"시점이 맞지 않아서",pDate:"6.27",pros:[["불 조절이 잘 돼요", 45], ["볶음이 잘 돼요", 31], ["용량이 넉넉해요", 19]],neg:13,pos_n:152,neu:75,rate:0.054},
 {id:"p8",brand:"담온",checked:"2026.06.18",name:"궁중팬 28cm",sub:"궁중팬",cat:"wok",tint:"warm",label:"의견 갈림",n:207,price:44000,low:36400,lowNote:"2026.04 자사몰 세일 · 9일간 유지",deal:"hold",wait:45,target:100,induction:1,dish:0,incl:207,excl:104,longN:65,keep:46,drop:19,dropWhy:"무거워서 손목에 부담이 돼요 (11건)",cons:[["무거워서 손목에 부담이 돼요", 18], ["예열이 오래 걸려요", 12], ["길들이기가 필요해요", 7]],site:"damon.co.kr/p8",spec:[["재질", "탄소강"], ["크기", "30cm"], ["무게", "1,240g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "1년"]],pros:[["불 조절이 잘 돼요", 17], ["용량이 넉넉해요", 12], ["바닥이 튼튼해요", 6]],neg:52,pos_n:118,neu:37,rate:0.251,holdWhy:"열원에 따라 평이 갈려요"},
-{id:"p9",brand:"노바",checked:"2026.07.19",name:"논스틱 계란말이팬 18cm",sub:"계란말이팬",cat:"pan",tint:"green",label:"대체로 만족",n:123,price:22000,low:19700,lowNote:"2026.01 자사몰 세일 · 11일간 유지",deal:"done",wait:264,target:100,induction:1,dish:1,incl:123,excl:79,longN:36,keep:26,drop:10,dropWhy:"3~4개월에 코팅이 약해져요 (6건)",cons:[["3~4개월에 코팅이 약해져요", 14], ["손잡이가 뜨거워져요", 9], ["광고보다 얕아요", 5]],site:"nova.co.kr/p9",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]],dealPrice:18300,endDays:8,pros:[["눌어붙지 않아요", 23], ["열이 고르게 퍼져요", 17], ["손잡이가 안 뜨거워요", 10]],rounds:1,doneDate:"7.16",soldN:214,showInNone:true,neg:8,pos_n:85,neu:30,rate:0.065},
+{id:"p9",brand:"노바",checked:"2026.07.19",name:"논스틱 계란말이팬 18cm",sub:"계란말이팬",cat:"pan",tint:"green",label:"대체로 만족",n:123,price:22000,low:19700,lowNote:"2026.01 자사몰 세일 · 11일간 유지",deal:"done",wait:264,target:100,induction:1,dish:1,incl:123,excl:79,longN:36,keep:26,drop:10,dropWhy:"3~4개월에 코팅이 약해져요 (6건)",cons:[["3~4개월에 코팅이 약해져요", 14], ["손잡이가 뜨거워져요", 9], ["광고보다 얕아요", 5]],site:"nova.co.kr/p9",spec:[["재질", "알루미늄 + 논스틱 코팅"], ["크기", "28cm"], ["무게", "870g"], ["열원", "가스·인덕션"], ["제조", "중국"], ["보증", "6개월"]],dealPrice:18300,endDays:8,pros:[["눌어붙지 않아요", 23], ["열이 고르게 퍼져요", 17], ["손잡이가 안 뜨거워요", 10]],rounds:1,doneDate:"7.16",soldN:214,showInNone:true,neg:8,pos_n:85,neu:30,rate:0.065,buyUrl:"https://nova.co.kr/deal/p9",linkOk:true,linkChk:"08.03 3:03"},
 {id:"p10",brand:"코르나",checked:"2026.07.17",name:"주물 그릴팬 24cm",sub:"그릴팬",cat:"grill",tint:"warm",label:"대체로 만족",n:320,price:58000,low:51000,lowNote:"2026.05 자사몰 세일 · 10일간 유지",deal:"gathering",wait:46,target:100,induction:1,dish:0,incl:320,excl:163,longN:75,keep:39,drop:36,dropWhy:"무거워요 (21건)",cons:[["무거워요", 34], ["시즈닝이 손이 가요", 24], ["보관이 불편해요", 13]],site:"korna.co.kr/p10",spec:[["재질", "주철"], ["크기", "26cm"], ["무게", "2,340g"], ["열원", "가스·인덕션·직화"], ["제조", "중국"], ["보증", "1년"]],pros:[["묵직해서 안정적이에요", 49], ["구이 색이 잘 나요", 39], ["쓸수록 길들여져요", 26]],rounds:1,neg:20,pos_n:208,neu:92,rate:0.062},
 {id:"p11",brand:"무이",checked:"2026.07.10",name:"통3중 스테인리스 냄비 20cm",sub:"편수냄비",cat:"pot",tint:"green",label:"표본 부족",n:12,price:47000,low:39500,lowNote:"2026.01 자사몰 세일 · 11일간 유지",deal:"pending",wait:54,target:100,induction:1,dish:1,incl:12,excl:4,longN:2,keep:0,drop:2,dropWhy:"- (14건)",cons:[],site:"mui.co.kr/p11",spec:[["재질", "스테인리스 통3중"], ["용량", "3.0L"], ["무게", "1,480g"], ["열원", "가스·인덕션·오븐"], ["제조", "한국"], ["보증", "2년"]],rounds:1,neg:1,pos_n:8,neu:3,rate:0.083},
 {id:"p12",brand:"미리내",checked:"2026.06.12",name:"법랑 편수냄비 18cm",sub:"편수냄비",cat:"pot",tint:"sand",label:"대체로 만족",n:276,price:38000,low:34500,lowNote:"2026.02 자사몰 세일 · 8일간 유지",deal:"talking",wait:166,target:100,induction:1,dish:1,incl:276,excl:209,longN:70,keep:47,drop:23,dropWhy:"바닥이 잘 눌어요 (13건)",cons:[["바닥이 잘 눌어요", 27], ["손잡이가 뜨거워져요", 18], ["뚜껑 김이 새요", 9]],site:"mirinae.co.kr/p12",spec:[["재질", "스테인리스 통3중"], ["용량", "3.0L"], ["무게", "1,480g"], ["열원", "가스·인덕션·오븐"], ["제조", "한국"], ["보증", "2년"]],tDate:"7.25",pros:[["보온이 오래가요", 52], ["뚜껑이 잘 맞아요", 40], ["인덕션에서 잘 돼요", 25]],neg:25,pos_n:197,neu:54,rate:0.091},
@@ -266,7 +271,7 @@ const P=[
 {id:"p28",brand:"우드림",checked:"2026.07.18",name:"비장탄 뒤집개",sub:"뒤집개",cat:"tool",tint:"warm",label:"대체로 만족",n:186,price:12000,low:10800,lowNote:"2026.04 자사몰 세일 · 9일간 유지",deal:"gathering",wait:69,target:100,induction:0,dish:1,incl:186,excl:141,longN:57,keep:38,drop:19,dropWhy:"손잡이가 헐거워져요 (11건)",cons:[["손잡이가 헐거워져요", 10], ["열에 약해요", 6], ["세척이 번거로워요", 4]],site:"woodream.co.kr/p28",spec:[["재질", "스테인리스"], ["길이", "30cm"], ["무게", "120g"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]],pros:[["손에 잘 맞아요", 17], ["튼튼해서 잘 안 휘어요", 11], ["세척이 편해요", 7]],neg:11,pos_n:138,neu:37,rate:0.059},
 {id:"p29",brand:"필로",checked:"2026.05.23",name:"스테인리스 국자",sub:"국자",cat:"tool",tint:"gray",label:"표본 부족",n:12,price:9800,low:8300,lowNote:"2026.01 자사몰 세일 · 11일간 유지",deal:"pending",wait:58,target:100,induction:0,dish:0,incl:12,excl:7,longN:3,keep:1,drop:2,dropWhy:"- (5건)",cons:[],site:"hansteel.co.kr/p29",spec:[["재질", "스테인리스"], ["길이", "30cm"], ["무게", "120g"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]],pWhy:"저희 원칙과 맞지 않아서",pDate:"6.19",neg:5,pos_n:4,neu:3,rate:0.417},
 {id:"p30",brand:"노바",checked:"2026.05.20",name:"실리콘 집게 30cm",sub:"집게",cat:"tool",tint:"green",label:"대체로 만족",n:82,price:11500,low:9700,lowNote:"2026.05 자사몰 세일 · 13일간 유지",deal:"gathering",wait:36,target:100,induction:0,dish:1,incl:82,excl:31,longN:20,keep:16,drop:4,dropWhy:"손잡이가 헐거워져요 (2건)",cons:[["손잡이가 헐거워져요", 4], ["열에 약해요", 3], ["세척이 번거로워요", 3]],site:"nova.co.kr/p30",spec:[["재질", "스테인리스"], ["길이", "30cm"], ["무게", "120g"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]],pros:[["열에 강해요", 6], ["튼튼해서 잘 안 휘어요", 4], ["세척이 편해요", 3]],neg:9,pos_n:54,neu:19,rate:0.11},
-{id:"p31",brand:"무이",checked:"2026.05.18",name:"스테인리스 거품기",sub:"거품기",cat:"tool",tint:"gray",label:"대체로 만족",n:317,price:13000,low:11600,lowNote:"2026.01 자사몰 세일 · 9일간 유지",deal:"done",wait:126,target:100,induction:0,dish:1,incl:317,excl:199,longN:97,keep:52,drop:45,dropWhy:"손잡이가 헐거워져요 (27건)",cons:[["손잡이가 헐거워져요", 17], ["열에 약해요", 11], ["세척이 번거로워요", 7]],site:"hansteel.co.kr/p31",spec:[["재질", "스테인리스"], ["길이", "30cm"], ["무게", "120g"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]],dealPrice:10800,endDays:5,pros:[["세척이 편해요", 34], ["열에 강해요", 21], ["수납이 편해요", 16]],rounds:2,doneDate:"7.14",soldN:171,showInNone:false,neg:33,pos_n:218,neu:66,rate:0.104},
+{id:"p31",brand:"무이",checked:"2026.05.18",name:"스테인리스 거품기",sub:"거품기",cat:"tool",tint:"gray",label:"대체로 만족",n:317,price:13000,low:11600,lowNote:"2026.01 자사몰 세일 · 9일간 유지",deal:"done",wait:126,target:100,induction:0,dish:1,incl:317,excl:199,longN:97,keep:52,drop:45,dropWhy:"손잡이가 헐거워져요 (27건)",cons:[["손잡이가 헐거워져요", 17], ["열에 약해요", 11], ["세척이 번거로워요", 7]],site:"hansteel.co.kr/p31",spec:[["재질", "스테인리스"], ["길이", "30cm"], ["무게", "120g"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]],dealPrice:10800,endDays:5,pros:[["세척이 편해요", 34], ["열에 강해요", 21], ["수납이 편해요", 16]],rounds:2,doneDate:"7.14",soldN:171,showInNone:false,neg:33,pos_n:218,neu:66,rate:0.104,buyUrl:"https://hansteel.co.kr/deal/p31",linkOk:true,linkChk:"08.01 4:03"},
 {id:"p32",brand:"노바",checked:"2026.05.18",name:"계량컵 계량스푼 세트",sub:"계량도구",cat:"tool",tint:"green",label:"대체로 불만",n:304,price:15000,low:13400,lowNote:"2026.01 자사몰 세일 · 7일간 유지",deal:"none",wait:59,target:100,induction:0,dish:0,incl:304,excl:163,longN:104,keep:46,drop:58,dropWhy:"손잡이가 헐거워져요 (34건)",cons:[["손잡이가 헐거워져요", 16], ["열에 약해요", 11], ["세척이 번거로워요", 7]],site:"nova.co.kr/p32",spec:[["재질", "스테인리스"], ["길이", "30cm"], ["무게", "120g"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]],pros:[["세척이 편해요", 4], ["손에 잘 맞아요", 2], ["열에 강해요", 2]],neg:165,pos_n:113,neu:26,rate:0.543},
 {id:"p33",brand:"담온",checked:"2026.06.25",name:"스테인리스 볼 5종 세트",sub:"채반·볼",cat:"tool",tint:"gray",label:"대체로 만족",n:276,price:34000,low:28200,lowNote:"2026.05 자사몰 세일 · 13일간 유지",deal:"gathering",wait:45,target:100,induction:0,dish:1,incl:276,excl:124,longN:63,keep:50,drop:13,dropWhy:"손잡이가 헐거워져요 (7건)",cons:[["손잡이가 헐거워져요", 14], ["열에 약해요", 10], ["세척이 번거로워요", 6]],site:"hansteel.co.kr/p33",spec:[["재질", "스테인리스"], ["길이", "30cm"], ["무게", "120g"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]],pros:[["세척이 편해요", 18], ["수납이 편해요", 11], ["손에 잘 맞아요", 8]],neg:28,pos_n:178,neu:70,rate:0.101},
 {id:"p34",brand:"베이크한",checked:"2026.07.14",name:"논스틱 오븐팬 2호",sub:"오븐팬",cat:"bake",tint:"sand",label:"대체로 불만",n:223,price:28000,low:23500,lowNote:"2026.04 자사몰 세일 · 12일간 유지",deal:"none",wait:56,target:100,induction:0,dish:0,incl:223,excl:125,longN:52,keep:32,drop:20,dropWhy:"코팅이 벗겨져요 (12건)",cons:[["코팅이 벗겨져요", 13], ["열이 고르지 않아요", 9], ["분리가 잘 안 돼요", 5]],site:"bakehan.co.kr/p34",spec:[["재질", "탄소강 + 논스틱"], ["크기", "2호"], ["무게", "480g"], ["내열", "230도"], ["제조", "한국"], ["보증", "6개월"]],pros:[["분리가 잘 돼요", 4], ["크기가 적당해요", 3], ["세척이 편해요", 2]],rounds:2,neg:114,pos_n:83,neu:26,rate:0.511},
@@ -289,7 +294,7 @@ const P=[
 {id:"p51",brand:"미리내",checked:"2026.07.14",name:"도자 머그 2p",sub:"머그",cat:"dish",tint:"sand",label:"대체로 불만",n:100,price:24000,low:19800,lowNote:"2026.02 자사몰 세일 · 11일간 유지",deal:"none",wait:16,target:100,induction:0,dish:1,incl:100,excl:63,longN:29,keep:21,drop:8,dropWhy:"이가 잘 나가요 (4건)",cons:[["이가 잘 나가요", 5], ["전자레인지 사용이 안 돼요", 3], ["무거워요", 3]],site:"mirinae.co.kr/p51",spec:[["재질", "도자기"], ["구성", "4인 세트"], ["전자레인지", "가능"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]],pros:[["가볍고 튼튼해요", 3], ["색이 예뻐요", 2], ["겹쳐 두기 좋아요", 1]],neg:56,pos_n:30,neu:14,rate:0.56},
 {id:"p52",brand:"노바",checked:"2026.07.22",name:"내열 유리컵 6p",sub:"유리컵",cat:"dish",tint:"green",label:"대체로 만족",n:267,price:28000,low:25600,lowNote:"2026.05 자사몰 세일 · 15일간 유지",deal:"gathering",wait:24,target:100,induction:0,dish:0,incl:267,excl:172,longN:97,keep:67,drop:30,dropWhy:"이가 잘 나가요 (18건)",cons:[["이가 잘 나가요", 15], ["전자레인지 사용이 안 돼요", 10], ["무거워요", 6]],site:"nova.co.kr/p52",spec:[["재질", "도자기"], ["구성", "4인 세트"], ["전자레인지", "가능"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]],pros:[["색이 예뻐요", 23], ["이가 잘 안 나가요", 16], ["겹쳐 두기 좋아요", 13]],neg:11,pos_n:162,neu:94,rate:0.041},
 {id:"p53",brand:"한스틸",checked:"2026.07.19",name:"스테인리스 수저 4벌",sub:"수저",cat:"dish",tint:"gray",label:"표본 부족",n:12,price:36000,low:31300,lowNote:"2026.04 자사몰 세일 · 7일간 유지",deal:"pending",wait:6,target:100,induction:0,dish:0,incl:12,excl:9,longN:2,keep:0,drop:2,dropWhy:"- (16건)",cons:[],site:"hansteel.co.kr/p53",spec:[["재질", "도자기"], ["구성", "4인 세트"], ["전자레인지", "가능"], ["식기세척기", "가능"], ["제조", "한국"], ["보증", null]],neg:3,pos_n:6,neu:3,rate:0.25},
-{id:"p54",brand:"우드림",checked:"2026.07.18",name:"리넨 앞치마",sub:"앞치마",cat:"misc",tint:"warm",label:"대체로 만족",n:223,price:34000,low:28900,lowNote:"2026.04 자사몰 세일 · 10일간 유지",deal:"open",wait:214,target:100,induction:0,dish:1,incl:223,excl:147,longN:63,keep:36,drop:27,dropWhy:"금방 해져요 (16건)",cons:[["금방 해져요", 11], ["냄새가 배요", 7], ["크기가 애매해요", 4]],site:"woodream.co.kr/p54",spec:[["재질", "리넨"], ["크기", "프리"], ["세탁", "기계세탁 가능"], ["제조", "한국"], ["보증", null]],dealPrice:27000,endDays:12,pros:[["크기가 딱 맞아요", 17], ["튼튼해서 오래 써요", 12], ["마감이 깔끔해요", 9]],rounds:1,neg:20,pos_n:147,neu:56,rate:0.09},
+{id:"p54",brand:"우드림",checked:"2026.07.18",name:"리넨 앞치마",sub:"앞치마",cat:"misc",tint:"warm",label:"대체로 만족",n:223,price:34000,low:28900,lowNote:"2026.04 자사몰 세일 · 10일간 유지",deal:"open",wait:214,target:100,induction:0,dish:1,incl:223,excl:147,longN:63,keep:36,drop:27,dropWhy:"금방 해져요 (16건)",cons:[["금방 해져요", 11], ["냄새가 배요", 7], ["크기가 애매해요", 4]],site:"woodream.co.kr/p54",spec:[["재질", "리넨"], ["크기", "프리"], ["세탁", "기계세탁 가능"], ["제조", "한국"], ["보증", null]],dealPrice:27000,endDays:12,pros:[["크기가 딱 맞아요", 17], ["튼튼해서 오래 써요", 12], ["마감이 깔끔해요", 9]],rounds:1,neg:20,pos_n:147,neu:56,rate:0.09,buyUrl:"https://woodream.co.kr/deal/p54",linkOk:false,linkChk:"08.05 5:02"},
 {id:"p55",brand:"노바",checked:"2026.06.27",name:"천연 수세미 6p",sub:"행주·수세미",cat:"misc",tint:"green",label:"대체로 만족",n:130,price:9000,low:7400,lowNote:"2026.02 자사몰 세일 · 14일간 유지",deal:"gathering",wait:66,target:100,induction:0,dish:1,incl:130,excl:87,longN:37,keep:22,drop:15,dropWhy:"금방 해져요 (9건)",cons:[["금방 해져요", 6], ["냄새가 배요", 4], ["크기가 애매해요", 3]],site:"nova.co.kr/p55",spec:[["재질", "리넨"], ["크기", "프리"], ["세탁", "기계세탁 가능"], ["제조", "한국"], ["보증", null]],pros:[["마감이 깔끔해요", 8], ["세탁해도 멀쩡해요", 5], ["튼튼해서 오래 써요", 3]],neg:6,pos_n:89,neu:35,rate:0.046},
 {id:"p56",brand:"노바",checked:"2026.05.15",name:"실리콘 오븐장갑",sub:"장갑",cat:"misc",tint:"sand",label:"대체로 만족",n:266,price:14000,low:11600,lowNote:"2026.03 자사몰 세일 · 15일간 유지",deal:"gathering",wait:19,target:100,induction:0,dish:1,incl:266,excl:211,longN:102,keep:58,drop:44,dropWhy:"금방 해져요 (26건)",cons:[["금방 해져요", 13], ["냄새가 배요", 8], ["크기가 애매해요", 5]],site:"nova.co.kr/p56",spec:[["재질", "리넨"], ["크기", "프리"], ["세탁", "기계세탁 가능"], ["제조", "한국"], ["보증", null]],pros:[["크기가 딱 맞아요", 22], ["세탁해도 멀쩡해요", 18], ["튼튼해서 오래 써요", 11]],neg:20,pos_n:177,neu:69,rate:0.075},
 {id:"p57",brand:"한스틸",checked:"2026.06.22",name:"2단 싱크선반",sub:"수납선반",cat:"misc",tint:"gray",label:"의견 갈림",n:151,price:48000,low:44000,lowNote:"2026.04 자사몰 세일 · 15일간 유지",deal:"hold",wait:137,target:100,induction:0,dish:1,incl:151,excl:81,longN:59,keep:29,drop:30,dropWhy:"금방 해져요 (18건)",cons:[["금방 해져요", 7], ["냄새가 배요", 5], ["크기가 애매해요", 3]],site:"hansteel.co.kr/p57",spec:[["재질", "리넨"], ["크기", "프리"], ["세탁", "기계세탁 가능"], ["제조", "한국"], ["보증", null]],tDate:"7.25",pros:[["수납이 편해요", 6], ["마감이 깔끔해요", 4], ["튼튼해서 오래 써요", 2]],neg:47,pos_n:70,neu:34,rate:0.311,holdWhy:"내구성 후기가 엇갈려요"},
@@ -337,12 +342,10 @@ const PROM=[
  '정가를 부풀려 놓고 크게 깎아주는 것처럼 보이게 하지 않을게요.'],
 ['재촉하지 않을게요',
  '남은 수량이나 마감 임박 같은 말은 쓰지 않아요. 종료일만 알려드려요.'],
-['어느 한쪽에도 기울지 않은 곳에서만 후기를 모아요',
+['한쪽에 기울지 않은 곳에서만 모아요',
  '오픈마켓·스마트스토어·자사몰 리뷰는 수집하지 않아요. 다들이 후기를 직접 받는 일도 없습니다.'],
 ['판정은 사람이 아니라 공개된 기준표가 정해요',
  '브랜드가 요청하셔도 기준표를 제품마다 다르게 대지 않아요. 기준이 바뀌면 바뀐 기준을 다시 공개합니다.'],
-['다들의 서비스 수수료는 10%예요',
- '유통 단계를 줄인 만큼 낮게 잡았어요. 다들이 덜 받는 만큼 협상가가 더 내려갑니다. 수수료는 브랜드가 내고, 유저에게는 한 푼도 받지 않아요.'],
 ['30일 동안 가격을 대신 지켜볼게요',
  '더 싼 곳이 나오면 차액은 브랜드가 보장해요. 다들이 대신 청구하고 결과를 알려드립니다.'],
 ['틀리면 고치고, 고친 자리를 남겨둬요',
@@ -376,11 +379,11 @@ const AUDIT=[
  {q:'무겁긴 한데 그만큼 튼튼해서 2년째 잘 쓰는 중',ex:'기간 24개월 · 증상 없음 · 긍정',src:'커뮤니티 · 2026.03.11',ok:1},
  {q:'저는 다른 브랜드 쓰는데 그것도 괜찮더라구요',ex:'제품 무관 · 제외',src:'유튜브 댓글 · 2026.05.20',ok:1},
  {q:'선물받아서 아직 안 써봤어요 기대되네요',ex:'사용 전 · 제외',src:'유튜브 댓글 · 2026.06.01',ok:1},
- {q:'한 1년 넘게 썼나 코팅은 아직 괜찮은데 손잡이가 좀 흔들려요',ex:'기간 12개월 · 증상 코팅박리 · 부정',src:'커뮤니티 · 2026.02.18',ok:0,fix:'증상은 손잡이유격이 맞아요'},
+ {q:'1년 넘게 썼는데 코팅은 괜찮고 손잡이만 흔들려요',ex:'기간 12개월 · 증상 코팅박리 · 부정',src:'커뮤니티 · 2026.02.18',ok:0,fix:'증상은 손잡이유격이 맞아요'},
 ];
 
 /* ── 상태 ── */
-const S={stack:[{s:'home'}],tab:'home',unread:2,foot:1,lsort:'verdict',lmore:0,lcat:null,lrecent:[],cdom:'주방용품',cq:'',csort:'cnt',sort:'n',fcat:0,doneShow:{},pubState:'wait',reqDone:null,view:'grid',sec:null,opencat:null,glist:null,rlist:null,rax:'all',rpick:null,atab:'cand',appr:{},aud:{},mine:0,cat:'전체',brand:null,drawer:0,ptab:'rev',user:null,pending:null,noti:{open:1,post:1,drop:1,week:0},sheet:null,q:'',filters:[],picks:[],waits:{},bought:{},contact:'',tmp:null,toast:null};
+const S={stack:[{s:'home'}],tab:'home',unread:2,foot:1,ktab:'core',lsort:'verdict',lmore:0,lcat:null,lrecent:[],cdom:'주방용품',cq:'',csort:'cnt',sort:'n',fcat:0,doneShow:{},pubState:'wait',reqDone:null,view:'grid',sec:null,opencat:null,glist:null,rlist:null,rax:'all',rpick:null,atab:'cand',appr:{},aud:{},mine:0,cat:'전체',brand:null,drawer:0,ptab:'rev',user:null,pending:null,noti:{open:1,post:1,drop:1,week:0},sheet:null,q:'',filters:[],picks:[],waits:{},bought:{},contact:'',tmp:null,toast:null};
 const cur=()=>S.stack[S.stack.length-1];
 let navLock=0;
 const pushHist=()=>{if(navLock)return;try{history.pushState({d:S.stack.length},'')}catch(e){}};
@@ -488,7 +491,7 @@ V.home=()=>{
    <svg width="20" height="20" viewBox="0 0 64 64" fill="none" stroke="var(--meta)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${GLY[c.g]}</svg>
    <span class="h2">${c.k}</span></span>
    <button class="meta" data-a="cat:${c.k}" style="display:flex;align-items:center;gap:3px">전체 <span class="num">${ps.length}</span> ${ic('next',13,'var(--meta)')}</button></div>
-  <div class="meta" style="margin-bottom:11px">${c.subs.join(' · ')}</div>
+  <div class="meta pname1" style="margin-bottom:11px">${c.subs.join(' · ')}</div>
   ${ps.length?`<div class="scroller2" style="margin:0 -18px 0 -20px">${ps.slice(0,8).map(mini).join('')}</div>`
   :`<div class="soft" style="padding:16px;text-align:center"><div class="meta">아직 모은 제품이 없어요</div></div>`}</div>`}).join('');
 
@@ -550,7 +553,7 @@ V.home=()=>{
  ${sec('gathering','수요가 모이는 중','한 가격에 100명이 모이면 협상을 시작해요',gathL)}
  ${sec('done','다시 열릴 수 있어요','한 번 협상했던 제품이에요. 수요가 다시 모이면 열어봐요',noneL)}
  ${sec('pending','곧 판정해요','후기 30건이 모이면 다들이 판정을 붙여요',pendL)}
- ${sec('hold','지금은 협상하지 않아요','의견이 갈리는 제품이에요. 기다리는 분이 많아지면 다시 살펴봐요',holdL)}
+ ${sec('hold','지금은 협상하지 않아요','의견이 갈려요. 기다리는 분이 많아지면 다시 봅니다',holdL)}
  ${sec('postponed','이번엔 미뤄뒀어요','안 된 것도 남겨둘게요. 등록은 그대로 있어요',postL)}
  ${total?'':`<div class="pad" style="padding-top:56px;text-align:center">
   <div class="h2">이 갈래는 아직 준비 중이에요</div>
@@ -573,7 +576,7 @@ V.glist=()=>{
   talking:['곧 살 수 있어요','가격을 이야기하는 중이에요. 지금 등록하셔도 함께 들어갑니다'],
   gathering:['수요가 모이는 중','한 가격에 100명이 모이면 협상을 시작해요'],
   pending:['곧 판정해요','후기 30건이 모이면 다들이 판정을 붙여요'],
-  hold:['지금은 협상하지 않아요','의견이 갈리는 제품이에요. 기다리는 분이 많아지면 다시 살펴봐요'],
+  hold:['지금은 협상하지 않아요','의견이 갈려요. 기다리는 분이 많아지면 다시 봅니다'],
   none:['협상하지 않는 제품','아쉽다는 말씀이 반복해서 나온 제품이에요. 후기는 계속 모아요'],
   postponed:['이번엔 미뤄뒀어요','안 된 것도 남겨둘게요. 등록은 그대로 있어요'],
   done:['협상이 끝난 제품','한 번 이상 협상해 본 제품이에요. 다음 회차를 기다려 주세요']};
@@ -714,7 +717,7 @@ V.reviews=()=>{
     <svg width="22" height="22" viewBox="0 0 64 64" fill="none" stroke="var(--meta)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${GLY[c.g]}</svg>
     <span style="font-size:17px;font-weight:600;letter-spacing:-.03em">${c.k}</span></span>
     <button class="chip" data-a="rcat:${c.k}">전체 ${ps.length}</button></div>
-   <div class="meta" style="margin-top:9px;line-height:1.7">후기 ${ps.reduce((t,x)=>t+x.n,0).toLocaleString('ko-KR')}건 · ${subs.join(' · ')}</div></div></div>
+   <div class="meta pname1" style="margin-top:9px">후기 ${ps.reduce((t,x)=>t+x.n,0).toLocaleString('ko-KR')}건 · ${subs.join(' · ')}</div></div></div>
   ${a?`<div class="pad sec">${secHead('후기가 가장 많아요','이 갈래에서 사람들이 가장 많이 말한 제품',`rgo:cat:${c.k}:many`)}${line(a,`후기 ${a.n}건`)}</div>`:''}
   ${b?`<div class="pad sec">${secHead('문제 언급이 가장 적어요','후기 50건 이상 중에서',`rgo:cat:${c.k}:clean`)}${line(b,rate(b)?`문제 언급 ${Math.round(rate(b)*100)}%`:'문제 언급 없음')}</div>`:''}
   ${d?`<div class="pad sec">${secHead('오래 쓴 사람이 많아요','6개월 넘게 쓰신 분 기준',`rgo:cat:${c.k}:long`)}${line(d,`6개월 이상 ${d.longN}명`)}</div>`:''}
@@ -1021,17 +1024,17 @@ V.method=()=>bar('판단 기준')+`<div class="body">
   <span style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600">
    <span style="width:6px;height:6px;border-radius:3px;background:${LABC(r)}"></span>${r}</span></div>`).join('')}
  <div class="meta" style="margin-top:12px;padding-top:11px;border-top:.5px solid var(--line);line-height:1.7">
-  문제 언급률 하나로만 정해요. 좋게 말한 후기가 몇 건인지는 판정에 넣지 않아요. 좋은 말은 어디서나 볼 수 있으니까요.</div></div></div>
+  문제 언급률 하나로만 정해요. 좋게 말한 후기 수는 넣지 않아요. 좋은 말은 어디서나 볼 수 있으니까요.</div></div></div>
 
  <div class="pad sec"><div class="h2" style="margin-bottom:3px">판정에 따라 하는 일</div>
  <div class="meta" style="margin-bottom:12px">후기는 판정과 상관없이 모두 올려둬요</div>
  <div class="card" style="padding:4px 16px">
- ${[['대체로 만족','수요를 모으고 협상해요'],['의견 갈림','협상하지 않아요. 갈리는 이유를 적어둬요'],
-    ['대체로 불만','협상하지 않아요. 후기만 남겨둬요'],['표본 부족','후기 30건이 모일 때까지 기다려요']]
- .map(([l,act],i2)=>`<div class="row" style="padding:12px 0;${i2?'border-top:.5px solid var(--line2)':''}">
-  <span style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600">
-   <span style="width:6px;height:6px;border-radius:3px;background:${LABC(l)}"></span>${l}</span>
-  <span style="font-size:12px;color:var(--sub);text-align:right;max-width:58%">${act}</span></div>`).join('')}</div></div>
+ ${[['대체로 만족','수요를 모아 협상해요'],['의견 갈림','협상은 안 하고 이유만 적어둬요'],
+    ['대체로 불만','협상하지 않고 후기만 남겨요'],['표본 부족','후기 30건이 모이길 기다려요']]
+ .map(([l,act],i2)=>`<div style="padding:12px 0;${i2?'border-top:.5px solid var(--line2)':''}">
+  <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600">
+   <span style="width:6px;height:6px;border-radius:3px;background:${LABC(l)};flex-shrink:0"></span>${l}</div>
+  <div style="font-size:12px;color:var(--sub);margin-top:4px;padding-left:14px">${act}</div></div>`).join('')}</div></div>
 
  <div class="pad sec"><div class="h2" style="margin-bottom:12px">어디서 모으고, 어디서 안 모으나</div>
  <div class="card" style="padding:15px 16px">
@@ -1151,7 +1154,7 @@ V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thi
 
  ${thin?'':`
  <div class="pad sec"><div class="h2" style="margin-bottom:3px">모은 후기는 이렇게 나뉘었어요</div>
- <div class="meta" style="margin-bottom:12px">판정 기준은 아니에요. 후기가 어떤 결이었는지 참고로 보여드려요</div>
+ <div class="meta" style="margin-bottom:12px">판정 기준은 아니에요. 어떤 결이었는지 참고로 보세요</div>
  <div style="display:flex;height:9px;border-radius:5px;overflow:hidden">
   ${[[p.pos_n,'var(--brand)'],[p.neu,'var(--line3)'],[p.neg,'var(--bar2)']].filter(([v])=>v>0)
    .map(([v,c])=>`<div style="width:${v/p.n*100}%;background:${c}"></div>`).join('')}</div>
@@ -1224,7 +1227,7 @@ V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thi
   <div class="h3" style="font-size:14px">같은 ${SUB2CAT[p.sub]||'제품'} ${P.filter(x=>SUB2CAT[x.sub]===SUB2CAT[p.sub]).length}종 비교해 보기</div>
   <div class="meta" style="margin-top:4px;line-height:1.7">평가 · 가격 · 문제 언급 · 계속 쓰는 비율로 줄 세워 봐요</div></div>
   ${ic('next',18,'var(--faint)')}</div></div></div>
- <div class="pad sec" style="padding-bottom:20px"><div class="tiny" style="line-height:1.75">고친 자리 · 2026.07.18 오래 쓰신 분 후기 22건을 더 넣어 다시 계산했어요<br>사람이 본 날 · 2026.07.21</div></div>`;
+ <div class="pad sec" style="padding-bottom:20px"><div class="tiny" style="line-height:1.75">고친 자리 · 2026.07.18 장기 후기 22건을 더 넣어 다시 계산<br>사람이 본 날 · 2026.07.21</div></div>`;
 
  return bar(p.brand,1)+`<div class="body">
  <div style="height:200px;background:${TINT[p.tint]};display:flex;align-items:center;justify-content:center;position:relative">
@@ -1330,8 +1333,8 @@ V.deal=id=>{const p=byId(id);const st=ladder(p);
  <div><div class="h3" style="margin-bottom:3px">30일 최저가 보장</div>
  <div style="font-size:12px;color:var(--brand);line-height:1.7">더 싼 곳을 발견하시면 알려주세요. 차액은 브랜드가 보장해요. 다들은 대신 청구하고 결과를 알려드려요.</div></div></div></div>
  <div class="pad sec"><div style="background:var(--surface2);border-radius:12px;padding:12px 15px">
- <div class="row" style="font-size:12px;color:var(--ink3)"><span>다들이 받는 수수료</span><span class="num">판매가의 10% · 브랜드 부담</span></div>
- <div class="tiny" style="margin-top:5px;line-height:1.7">인플루언서 공구는 보통 15~30%를 받아요. 저희가 덜 받는 만큼 협상가가 내려가요.</div></div></div>
+ <div class="row" style="font-size:12px;color:var(--ink3)"><span>다들이 받는 수수료</span><span class="num">브랜드가 부담해요</span></div>
+ <div class="tiny" style="margin-top:5px;line-height:1.7">유저에게는 따로 받는 돈이 없어요. 이 협상으로 다들은 브랜드에게 수수료를 받습니다.</div></div></div>
  <div style="height:20px"></div></div>
  <div style="background:var(--surface);box-shadow:0 -.5px 0 var(--line);padding:15px 18px 18px;flex-shrink:0">
  ${S.bought[p.id]?`<button class="btn ghost" data-a="report:${p.id}">더 싼 곳을 찾았어요</button>
@@ -1432,7 +1435,7 @@ V.me=()=>{
   ${th(x,44)}<div style="min-width:0;flex:1"><div class="h3 pname1" style="font-size:14px">${x.brand} ${x.name}</div>
   <div class="meta num" style="margin-top:2px">내 가격 ${won(S.waits[x.id])} · ${x.deal==='open'?'협상 열림':x.deal==='talking'?'브랜드와 이야기 중':x.deal==='postponed'?'이번엔 미뤄뒀어요':waitCount(x)+' / '+GOAL+'명'}</div></div>
   ${ic('next',17,'var(--faint)')}</div>`).join('')
- :`<div class="card" style="padding:20px 16px;text-align:center"><div class="sub">아직 기다리시는 게 없어요.<br>마음에 드는 가격을 골라두시면 여기에 모아 보여드릴게요.</div>
+ :`<div class="card" style="padding:20px 16px;text-align:center"><div class="sub">아직 기다리시는 게 없어요.<br>가격을 골라두시면 여기에 모아 보여드려요.</div>
   <button class="btn ghost" style="margin-top:14px" data-a="root:home">협상 둘러보기</button></div>`}</div>
 
  <div class="pad sec"><div class="h2" style="margin-bottom:12px">알림 설정</div>
@@ -1501,7 +1504,7 @@ V.rules=()=>bar('다들의 약속')+`<div class="body">
  <div class="pad sec" style="padding-bottom:26px"><div class="tiny" style="line-height:1.8">최종 갱신 2026.07.22 · 예전 버전 보기<br>다들의 평가는 제품 하나하나에 대한 것이에요. 브랜드 전체를 평가하지는 않아요.</div></div></div>${tabs()}`;
 
 V.admin=()=>{
- const T=[['cand','후보'],['job','수집'],['aud','감사'],['pub','발행'],['nego','협상'],['done','완료'],['kpi','지표']];
+ const T=[['cand','후보'],['job','수집'],['aud','감사'],['pub','발행'],['nego','협상'],['link','링크'],['done','완료'],['kpi','지표']];
  const nAppr=Object.values(S.appr).filter(Boolean).length;
  const cand=`
  <div class="pad" style="padding-top:20px"><div class="h1" style="font-size:19px">이번 주 후보 ${CAND.length}개</div>
@@ -1565,7 +1568,7 @@ V.admin=()=>{
 
  const pub=`
  <div class="pad" style="padding-top:20px"><div class="h1" style="font-size:19px">발행 대기</div>
- <div class="sub" style="margin-top:8px">규칙표가 붙인 라벨이에요. 올리기 전에 한 번만 확인해 주세요.</div></div>
+ <div class="sub" style="margin-top:8px">규칙표가 붙인 라벨이에요. 올리기 전에 확인해 주세요.</div></div>
  <div class="pad" style="padding-top:12px"><div class="card" style="padding:16px 17px">
  <div class="tiny">하로</div><div class="h3" style="font-size:14px;margin-top:2px">세라믹 코팅팬 26cm</div>
  <div class="row" style="align-items:baseline;margin-top:12px;padding-top:12px;border-top:.5px solid var(--line2)">
@@ -1610,71 +1613,161 @@ V.admin=()=>{
  <div class="meta" style="line-height:1.8">가격 구간별 수요 곡선 · 예상 거래액 · 지난 회차 실현율 · 30일 가격 보장 조항 · 수수료 10% 고지.
  <b style="color:var(--ink)">숫자는 전부 파이프라인에서 자동으로 채워집니다.</b></div></div></div>`;
 
- const kpi=`
- <div class="pad" style="padding-top:20px"><div class="h1" style="font-size:19px">지표</div>
- <div class="sub" style="margin-top:8px">가장 위의 숫자 하나만 보시면 돼요. 나머지는 그 숫자를 만드는 것들이에요.</div></div>
- <div class="pad" style="padding-top:12px"><div class="card" style="padding:16px 17px">
- <div class="tiny" style="letter-spacing:.04em">이번 주 대기 등록</div>
- <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px">
- <span class="num" style="font-size:27px;font-weight:600;letter-spacing:-.04em">42</span>
- <span class="num" style="font-size:12px;color:var(--brand);font-weight:600">+11</span></div>
- <div style="display:flex;align-items:flex-end;gap:5px;height:52px;margin-top:14px">
- ${[14,19,17,26,23,31,42].map((v,i)=>`<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%">
-  <div style="height:${v/42*100}%;background:${i===6?'var(--brand)':'var(--line3)'};border-radius:3px 3px 0 0"></div></div>`).join('')}</div>
- <div class="tiny" style="margin-top:6px">최근 7주 · 12주까지 누적 150건이 목표</div></div></div>
- <div class="pad" style="padding-top:12px"><div class="card" style="padding:6px 16px">
- ${[['대기 등록 전환율','5.2%','목표 5% 넘김',1],['검색 실패율','38%','50% 넘으면 콘텐츠 우선',1],
-   ['4주 재방문율','21%','목표 25% 미달',0],['구매 인증률','—','첫 협상 이후 측정',null],
-   ['판정 통과율','64%','비추천 비율 하한 30% 유지 중',1]]
- .map(([k,v,note,ok],i)=>`<div style="padding:12px 0;${i?'border-top:.5px solid var(--line2)':''}">
-  <div class="row"><span style="font-size:12px;color:var(--ink3)">${k}</span>
-  <span class="num" style="font-size:14px;font-weight:600;color:${ok===0?'var(--accent)':'var(--ink)'}">${v}</span></div>
-  <div class="tiny" style="margin-top:2px">${note}</div></div>`).join('')}</div></div>
- <div class="pad sec"><div class="h3" style="font-size:14px;margin-bottom:4px">판정별 협상 현황</div>
- <div class="meta" style="margin-bottom:11px">「대체로 만족」만 수요를 모으고 있어요</div>
- <div class="card" style="padding:4px 16px">
- ${LABS.map((l,i)=>{const ps=P.filter(x=>x.label===l);
-  const act=ps.filter(x=>['gathering','talking','open','done'].includes(x.deal)).length;
-  return `<div class="row" style="padding:12px 0;${i?'border-top:.5px solid var(--line2)':''}">
-   <span style="display:flex;align-items:center;gap:8px;font-size:12.5px">
-   <span style="width:7px;height:7px;border-radius:4px;background:${LABC(l)}"></span>${l}</span>
-   <span class="num" style="font-size:12.5px"><b>${act}</b> / ${ps.length}종 진행</span></div>`}).join('')}</div></div>
-
- <div class="pad sec"><div class="h3" style="font-size:14px;margin-bottom:11px">못 찾고 돌아간 검색어</div>
- <div class="card" style="padding:6px 16px">
- ${[['무쇠 스킬렛',38],['압력솥',24],['에어프라이어',19],['도마',12]].map(([k,v],i)=>`<div class="row" style="padding:11px 0;${i?'border-top:.5px solid var(--line2)':''}">
-  <span style="font-size:12px">${k}</span><span class="num" style="font-size:12px;color:var(--sub)">${v}명</span></div>`).join('')}</div>
- <div class="meta" style="margin-top:10px;line-height:1.8">이 목록이 다음 주 후보의 <b style="color:var(--ink)">가장 큰 가중치</b>로 들어가요.</div></div>
- <div style="height:26px"></div>`;
+ const linkV=(()=>{const ls=P.filter(x=>x.buyUrl);
+  const ng=ls.filter(x=>!x.linkOk);
+  return `
+  <div class="pad" style="padding-top:20px"><div class="h1" style="font-size:19px">판매 링크</div>
+  <div class="sub" style="margin-top:8px">「사러 가기」를 누르면 열리는 주소예요. 브랜드가 주소를 바꾸면 여기서 고쳐 주세요.</div></div>
+  ${ng.length?`<div class="pad" style="padding-top:12px">
+   <div style="background:var(--accentBg);border-radius:11px;padding:12px 14px;display:flex;gap:9px">
+   ${ic('alert',17,'var(--accent)')}<div style="font-size:12px;color:var(--accent);line-height:1.65">
+   <b>${ng.length}건이 연결되지 않아요.</b> 지금 「사러 가기」를 누르면 빈 페이지가 열립니다.</div></div></div>`:''}
+  <div class="pad" style="padding-top:16px">
+  ${ls.length?ls.map(x=>`<div class="card" style="padding:14px 15px;margin-bottom:9px">
+   <div class="row" style="align-items:flex-start">
+    <div style="min-width:0;flex:1"><div class="tiny">${x.brand} · ${x.sub}</div>
+     <div class="h3 pname1" style="font-size:13.5px;margin-top:1px">${x.name}</div></div>
+    <span class="badge ${x.deal==='open'?'b-amber':'b-gray'}">${x.deal==='open'?'판매 중':'종료'}</span></div>
+   <div style="background:var(--surface2);border-radius:9px;padding:10px 12px;margin-top:11px">
+    <div class="row" style="margin-bottom:5px">
+     <span class="tiny">연결 주소</span>
+     <span style="display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;color:${x.linkOk?'var(--brand)':'var(--accent)'}">
+      <span style="width:5px;height:5px;border-radius:3px;background:${x.linkOk?'var(--brand)':'var(--accent)'}"></span>
+      ${x.linkOk?'정상':'연결 안 됨'}</span></div>
+    <div class="num" style="font-size:11.5px;color:var(--ink3);word-break:break-all;line-height:1.5">${x.buyUrl}</div>
+    <div class="tiny" style="margin-top:6px">마지막 확인 ${x.linkChk}</div></div>
+   <div style="display:flex;gap:8px;margin-top:11px">
+    <button class="btn ghost" style="flex:1;padding:10px;font-size:12.5px" data-a="editLink:${x.id}">주소 고치기</button>
+    <button class="btn ghost" style="flex:1;padding:10px;font-size:12.5px" data-a="say:연결을 확인했어요">지금 확인</button></div></div>`).join('')
+  :`<div class="card" style="padding:22px 16px;text-align:center"><div class="sub">아직 판매 중인 제품이 없어요.</div></div>`}</div>
+  <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:14px 15px">
+  <div class="h3" style="font-size:12.5px;margin-bottom:6px">매일 새벽에 자동으로 확인해요</div>
+  <div class="meta" style="line-height:1.8">주소가 열리지 않으면 알림을 보내고, 「사러 가기」 버튼은 <b style="color:var(--ink)">임시로 잠금</b>합니다. 죽은 링크로 유저를 보내지 않으려고요.</div></div></div>`;
+ })();
 
  const doneV=(()=>{const ds=P.filter(x=>x.deal==='done');
   return `
   <div class="pad" style="padding-top:20px"><div class="h1" style="font-size:19px">협상이 끝난 제품</div>
-  <div class="sub" style="margin-top:8px">판매가 끝난 제품이에요. 후기 모음에는 계속 남아 있고, 홈의 「아직 순서가 아니에요」에 다시 올릴지 고르실 수 있어요.</div></div>
-  <div class="pad" style="padding-top:12px"><div class="hint meta" style="line-height:1.8">
+  <div class="sub" style="margin-top:8px">판매가 끝난 제품이에요. 후기 모음에는 계속 남아 있고, 홈의 「다시 열릴 수 있어요」에 올릴지 고르실 수 있어요.</div></div>
+  <div class="pad" style="padding-top:14px"><div class="hint meta" style="line-height:1.8">
   노출을 켜면 유저가 <b style="color:var(--ink2)">다음 회차를 기다리며 대기 등록</b>할 수 있어요. 수요가 다시 모이면 재협상 후보가 됩니다.</div></div>
-  <div class="pad" style="padding-top:12px">
+  <div class="pad" style="padding-top:14px">
   ${ds.length?ds.map(x=>`<div class="card" style="padding:14px 15px;margin-bottom:9px">
    <div style="display:flex;gap:11px;align-items:center">${th(x,44)}
     <div style="min-width:0;flex:1"><div class="tiny">${x.brand} · ${x.sub}</div>
-    <div class="h3" style="font-size:14px;margin-top:1px">${x.name}</div></div>
+    <div class="h3 pname1" style="font-size:13.5px;margin-top:1px">${x.name}</div></div>
     <span class="badge b-teal">${x.rounds}회차</span></div>
    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;text-align:center">
    ${[['판매 수',x.soldN+'개'],['협상가',won(x.dealPrice)],['종료',x.doneDate]].map(([k2,v])=>`<div style="background:var(--surface2);border-radius:9px;padding:9px 6px">
     <div class="num" style="font-size:13px;font-weight:700">${v}</div><div class="tiny" style="margin-top:2px">${k2}</div></div>`).join('')}</div>
    <div class="row" style="margin-top:12px;padding-top:11px;border-top:.5px solid var(--line2)">
-    <div><div style="font-size:12px;font-weight:600">홈에 다시 노출</div>
-     <div class="tiny" style="margin-top:2px">「아직 순서가 아니에요」 섹션</div></div>
-    <span data-a="toggleDone:${x.id}" style="width:42px;height:24px;border-radius:12px;flex-shrink:0;position:relative;background:${S.doneShow[x.id]??x.showInNone?'var(--brand)':'var(--line3)'}">
-    <span style="position:absolute;top:3px;left:${(S.doneShow[x.id]??x.showInNone)?21:3}px;width:18px;height:18px;border-radius:9px;background:var(--surface)"></span></span></div></div>`).join('')
+    <div><div style="font-size:12.5px;font-weight:600">홈에 다시 노출</div>
+     <div class="tiny" style="margin-top:2px">「다시 열릴 수 있어요」 섹션</div></div>
+    <span data-a="toggleDone:${x.id}" style="width:42px;height:24px;border-radius:12px;flex-shrink:0;position:relative;background:${(S.doneShow[x.id]??x.showInNone)?'var(--brand)':'var(--line3)'}">
+    <span style="position:absolute;top:3px;left:${(S.doneShow[x.id]??x.showInNone)?21:3}px;width:18px;height:18px;border-radius:9px;background:#fff"></span></span></div></div>`).join('')
   :`<div class="card" style="padding:22px 16px;text-align:center"><div class="sub">아직 끝난 협상이 없어요.</div></div>`}</div>
   <div style="height:26px"></div>`;
  })();
 
+ const kpi=(()=>{
+  const K=S.ktab||'core';
+  const tabs2=[['core','핵심'],['funnel','이탈'],['seg','고객'],['traffic','유입']];
+  const bar2=(label,v,max,color,note)=>`<div style="margin-bottom:13px">
+   <div class="row" style="font-size:12.5px;margin-bottom:5px"><span>${label}</span>
+    <span class="num" style="font-weight:700">${v}${note||''}</span></div>
+   <div class="track" style="height:6px"><div style="width:${Math.round(v/max*100)}%;height:6px;border-radius:3px;background:${color}"></div></div></div>`;
+
+  const core=`
+  <div class="pad" style="padding-top:16px"><div class="card" style="padding:16px 17px">
+  <div class="tiny" style="letter-spacing:.04em">이번 주 대기 등록 · 북극성</div>
+  <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px">
+  <span class="num" style="font-size:30px;font-weight:700;letter-spacing:-.04em">42</span>
+  <span class="num" style="font-size:12px;color:var(--brand);font-weight:700">+11</span></div>
+  <div style="display:flex;align-items:flex-end;gap:5px;height:52px;margin-top:14px">
+  ${[14,19,17,26,23,31,42].map((v,i2)=>`<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%">
+   <div style="height:${v/42*100}%;background:${i2===6?'var(--brand)':'var(--line3)'};border-radius:3px 3px 0 0"></div></div>`).join('')}</div>
+  <div class="tiny" style="margin-top:6px">최근 7주 · 12주까지 누적 150건이 목표</div></div></div>
+  <div class="pad" style="padding-top:12px"><div class="card" style="padding:6px 16px">
+  ${[['대기 등록 전환율','5.2%','목표 5% 넘김',1],['검색 실패율','38%','50% 넘으면 콘텐츠 우선',1],
+    ['4주 재방문율','21%','목표 25% 미달',0],['구매 인증률','—','첫 협상 이후 측정',null],
+    ['판정 통과율','64%','비추천 비율 하한 30% 유지 중',1]]
+  .map(([k2,v,note,ok],i2)=>`<div style="padding:12px 0;${i2?'border-top:.5px solid var(--line2)':''}">
+   <div class="row"><span style="font-size:12.5px;color:var(--ink3)">${k2}</span>
+   <span class="num" style="font-size:14px;font-weight:700;color:${ok===0?'var(--accent)':'var(--ink)'}">${v}</span></div>
+   <div class="tiny" style="margin-top:2px">${note}</div></div>`).join('')}</div></div>`;
+
+  const funnel=`
+  <div class="pad" style="padding-top:16px"><div class="card" style="padding:16px 17px">
+  <div class="h3" style="font-size:13px;margin-bottom:4px">이번 주 이탈 지점</div>
+  <div class="meta" style="margin-bottom:14px">100명이 들어와서 몇 명이 남는지 봐요</div>
+  ${[['홈에 들어옴',100,'var(--brand)'],['제품을 열어봄',54,'var(--brand)'],
+     ['가격 시트를 엶',23,'var(--brand)'],['가격을 고름',15,'var(--accent)'],
+     ['연락처를 남김',9,'var(--accent)'],['협상 열려 구매',3,'var(--bar2)']]
+  .map(([t,v,c],i2,arr)=>{const prev=i2?arr[i2-1][1]:v; const drop=prev-v;
+   return `<div style="margin-bottom:${i2===arr.length-1?0:12}px">
+   <div class="row" style="font-size:12.5px;margin-bottom:5px"><span>${t}</span>
+    <span><span class="num" style="font-weight:700">${v}명</span>
+    ${i2?`<span class="num tiny" style="color:var(--accent);margin-left:6px">-${drop}</span>`:''}</span></div>
+   <div class="track" style="height:7px"><div style="width:${v}%;height:7px;border-radius:4px;background:${c}"></div></div></div>`}).join('')}
+  <div class="meta" style="margin-top:14px;padding-top:12px;border-top:.5px solid var(--line);line-height:1.75">
+   <b style="color:var(--ink)">가장 크게 빠지는 곳은 「가격 시트를 열고 고르기 전」</b>이에요. 고를 가격이 마음에 안 들거나, 등록이 뭔지 몰라서일 수 있어요.</div></div></div>
+  <div class="pad sec" style="padding-bottom:26px"><div class="h3" style="font-size:13px;margin-bottom:11px">화면별 이탈률</div>
+  <div class="card" style="padding:4px 16px">
+  ${[['검색 결과 없음','68%',1],['제품 상세','42%',0],['가격 시트','35%',1],['로그인 시트','28%',1],['협상 상세','19%',0]]
+  .map(([t,v,warn],i2)=>`<div class="row" style="padding:12px 0;${i2?'border-top:.5px solid var(--line2)':''}">
+   <span style="font-size:12.5px">${t}</span>
+   <span class="num" style="font-size:13px;font-weight:700;color:${warn?'var(--accent)':'var(--ink)'}">${v}</span></div>`).join('')}</div></div>`;
+
+  const seg=`
+  <div class="pad" style="padding-top:16px"><div class="hint meta" style="line-height:1.8">
+  회원가입이 없어 나이·성별은 알 수 없어요. 대신 <b style="color:var(--ink)">무엇을 보고 무엇을 골랐는지</b>로 나눠 봅니다.</div></div>
+  <div class="pad" style="padding-top:16px"><div class="card" style="padding:16px 17px">
+  <div class="h3" style="font-size:13px;margin-bottom:13px">많이 본 갈래</div>
+  ${[['조리팬',312],['냄비·솥',188],['칼·도마',141],['주방가전',96],['보관용기',54]]
+  .map(([t,v])=>bar2(t,v,312,'var(--brand)','명')).join('')}</div></div>
+  <div class="pad" style="padding-top:12px"><div class="card" style="padding:16px 17px">
+  <div class="h3" style="font-size:13px;margin-bottom:4px">고른 가격대</div>
+  <div class="meta" style="margin-bottom:13px">대기 등록할 때 어느 칸을 골랐나</div>
+  ${[['가장 높은 칸',8],['둘째 칸',22],['확인된 최저가',41],['넷째 칸',19],['가장 낮은 칸',10]]
+  .map(([t,v])=>bar2(t,v,41,'var(--accent)','%')).join('')}
+  <div class="meta" style="margin-top:4px;line-height:1.75">
+   확인된 최저가를 고르는 분이 가장 많아요. 이 지점이 협상 목표가 됩니다.</div></div></div>
+  <div class="pad sec" style="padding-bottom:26px"><div class="card" style="padding:16px 17px">
+  <div class="h3" style="font-size:13px;margin-bottom:13px">돌아온 분들</div>
+  ${[['한 번만 오고 안 옴',62],['2~3번 옴',26],['4번 이상 옴',12]]
+  .map(([t,v])=>bar2(t,v,62,'var(--bar2)','%')).join('')}
+  <div class="meta" style="margin-top:4px;line-height:1.75">
+   4번 이상 오신 분의 대기 등록률은 <b style="color:var(--ink)">31%</b>예요. 전체 평균의 6배입니다.</div></div></div>`;
+
+  const traffic=`
+  <div class="pad" style="padding-top:16px"><div class="card" style="padding:16px 17px">
+  <div class="h3" style="font-size:13px;margin-bottom:13px">어디서 오셨나</div>
+  ${[['검색',44],['직접 방문',23],['커뮤니티 링크',18],['카카오톡 공유',11],['그 외',4]]
+  .map(([t,v])=>bar2(t,v,44,'var(--brand)','%')).join('')}
+  <div class="meta" style="margin-top:4px;line-height:1.75">
+   검색 유입 50%가 목표예요. 비교 리스트가 늘어날수록 올라갑니다.</div></div></div>
+  <div class="pad" style="padding-top:12px"><div class="card" style="padding:16px 17px">
+  <div class="h3" style="font-size:13px;margin-bottom:4px">검색으로 들어온 말</div>
+  <div class="meta" style="margin-bottom:12px">유입 뒤 대기 등록까지 간 비율도 함께 봐요</div>
+  ${[['코팅팬 오래 쓰는',86,'8.1%'],['스테인리스 팬 후기',64,'6.2%'],['인덕션 냄비 추천',41,'4.4%'],['무쇠 관리',28,'2.1%']]
+  .map(([t,v,cv],i2)=>`<div class="row" style="padding:11px 0;${i2?'border-top:.5px solid var(--line2)':''}">
+   <span style="font-size:12.5px;min-width:0;flex:1">${t}</span>
+   <span style="display:flex;gap:12px;flex-shrink:0">
+    <span class="num tiny">${v}명</span>
+    <span class="num" style="font-size:12px;font-weight:700;color:var(--brand)">${cv}</span></span></div>`).join('')}</div></div>
+  <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:14px 15px">
+  <div class="h3" style="font-size:12.5px;margin-bottom:6px">이 숫자는 어디서 오나요</div>
+  <div class="meta" style="line-height:1.8">유입과 화면 이동은 웹 분석 도구에서 가져와요. 대기 등록·구매처럼 다들 안에서 일어난 일은 우리 데이터베이스에서 셉니다.</div></div></div>`;
+
+  return `<div class="swrap"><div class="scroller chiprow" style="margin-top:14px">
+  ${tabs2.map(([k2,t2])=>`<span class="chip ${K===k2?'on':''}" data-a="ktab:${k2}">${t2}</span>`).join('')}</div></div>
+  ${{core,funnel,seg,traffic}[K]}`;
+ })();
+
  return bar('운영 콘솔')+`
- <div style="display:flex;gap:2px;padding:0 14px;border-bottom:.5px solid var(--line);background:var(--surface);overflow-x:auto">
+ <div class="hscroll" data-sk="admintab" style="display:flex;gap:2px;padding:0 14px;border-bottom:.5px solid var(--line);background:var(--surface)">
  ${T.map(([k,l])=>`<button class="ptab ${S.atab===k?'on':''}" style="flex:0 0 auto;padding:12px 13px;white-space:nowrap" data-a="atab:${k}">${l}</button>`).join('')}</div>
- <div class="body"><div class="pad" style="padding-top:12px"><div class="hint tiny" style="line-height:1.7">프로토타입 화면이에요. 실제로는 관리자 권한 계정으로 로그인해 데스크톱 화면에서 쓰시게 돼요.</div></div>${{cand,job,aud,pub,nego,done:doneV,kpi}[S.atab]}</div>`};
+ <div class="body"><div class="pad" style="padding-top:12px"><div class="hint tiny" style="line-height:1.7">프로토타입 화면이에요. 실제로는 관리자 권한 계정으로 로그인해 데스크톱 화면에서 쓰시게 돼요.</div></div>${{cand,job,aud,pub,nego,link:linkV,done:doneV,kpi}[S.atab]}</div>`};
 
 /* ── 시트 ── */
 const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const p=byId(id)||P[0];
@@ -1773,6 +1866,16 @@ const sheetHTML=()=>{if(!S.sheet)return'';const [k,id]=S.sheet.split(':');const 
   <span style="font-size:14px;${S.sort===kk?'font-weight:700;color:var(--brand)':'color:var(--ink2)'}">${SORTS[kk][0]}</span>
   ${S.sort===kk?ic('check',17,'var(--brand)'):''}</button>`).join('')}</div>
  <div style="height:12px"></div></div></div>`;
+ if(k==='elink')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop>
+ <div class="grabzone"><div class="grab"></div></div>
+ <div class="pad" style="padding-top:12px"><div style="font-size:18px;font-weight:700;letter-spacing:-.03em">판매 주소 고치기</div>
+ <div class="meta" style="margin-top:5px">${p.brand} ${p.name}</div></div>
+ <div class="pad" style="padding-top:16px"><div class="meta" style="margin-bottom:6px">브랜드 판매 페이지 주소</div>
+ <input class="field" value="${p.buyUrl||''}" placeholder="https://"></div>
+ <div class="pad" style="padding-top:12px"><div class="hint meta" style="line-height:1.75">
+ 저장하면 바로 반영돼요. 협상이 열려 있는 동안에는 유저가 이 주소로 이동합니다.</div></div>
+ <div class="pad" style="padding-top:16px"><button class="btn teal" data-a="saveLink:${p.id}">저장하고 연결 확인</button>
+ <button class="btn ghost" style="margin-top:9px" data-a="closeSheet">닫기</button></div></div></div>`;
  if(k==='site')return `<div class="veil" data-a="closeSheet"><div class="sheet" data-stop style="height:78%">
  <div class="grabzone"><div class="grab"></div></div>
  <div class="pad" style="padding-top:6px;padding-bottom:12px"><div class="row">
@@ -1808,6 +1911,26 @@ function refresh(){
 }
 
 const peeked=new Set();
+const scrollMem={};
+function keepScroll(){
+ document.querySelectorAll('.scroller,.scroller2,.hscroll').forEach(sc=>{
+  const key=sc.dataset.sk||sc.dataset.pk||(sc.dataset.pk=[...sc.children].map(c=>c.textContent.trim()).join('|').slice(0,80));
+  const more=sc.scrollWidth-sc.clientWidth>4;
+  if(more&&scrollMem[key]!==undefined) sc.scrollLeft=scrollMem[key];
+  // 선택된 항목이 화면 밖이면 안으로
+  if(more){
+   const on=[...sc.children].find(c=>c.classList.contains('on'));
+   if(on){
+    const L=on.offsetLeft, R=L+on.offsetWidth;
+    const vL=sc.scrollLeft, vR=vL+sc.clientWidth;
+    if(L<vL+16) sc.scrollLeft=Math.max(0,L-16);
+    else if(R>vR-24) sc.scrollLeft=R-sc.clientWidth+40;
+    scrollMem[key]=sc.scrollLeft;
+   }
+  }
+  sc.addEventListener('scroll',()=>{scrollMem[key]=sc.scrollLeft},{passive:true});
+ });
+}
 function equalizeChips(){
  document.querySelectorAll('.scroller').forEach(sc=>{
   const chips=[...sc.children].filter(el=>el.classList.contains('chip'));
@@ -1854,6 +1977,7 @@ function bindSheet(){
  const start=e=>{
   const t=e.touches?e.touches[0]:e;
   // 손잡이를 잡았거나, 시트가 맨 위까지 스크롤된 상태일 때만
+  if(e.target.closest&&e.target.closest('.scroller,.scroller2,.hscroll')){y0=null;return}
   fromTop = (grab&&grab.contains(e.target)) || sh.scrollTop<=0;
   if(!fromTop){y0=null;return}
   y0=t.clientY; dy=0; sh.classList.remove('snap');
@@ -1894,6 +2018,8 @@ function bindPull(){
  const reset=()=>{b.classList.add('pull');b.style.transform='';if(ind)ind.style.height='0px';y0=null;dy=0;ready=0};
  b.addEventListener('touchstart',e=>{
   if(busy)return;
+  // 가로 스크롤 영역에서 시작한 터치는 무시
+  if(e.target.closest('.scroller,.scroller2,.hscroll')){y0=null;return}
   if(b.scrollTop<=0){y0=e.touches[0].clientY;b.classList.remove('pull')} else y0=null;
  },{passive:true});
  b.addEventListener('touchmove',e=>{
@@ -1948,6 +2074,7 @@ function draw(){const c=cur();
  bindPull();
  bindSheet();
  equalizeChips();
+ keepScroll();
 }
 
 document.getElementById('app').addEventListener('click',e=>{
@@ -1985,6 +2112,7 @@ document.getElementById('app').addEventListener('click',e=>{
   case'closeSheet':S.sheet=null;popHist();draw();break;
   case'admin':S.drawer=0;S.atab='cand';go('admin');break;
   case'atab':S.atab=v;draw();break;
+  case'ktab':S.ktab=v;draw();break;
   case'appr':S.appr[v]=!S.appr[v];draw();break;
   case'runJob':if(Object.values(S.appr).filter(Boolean).length){S.atab='job';draw();say('수집을 시작했어요. 밤사이 돌아갑니다')}break;
   case'audit':{const[i,ok]=v.split(':');S.aud[i]=Number(ok);draw();break}
