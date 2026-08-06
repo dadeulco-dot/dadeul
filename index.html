@@ -2103,6 +2103,7 @@ document.getElementById('app').addEventListener('click',e=>{
   case'pick2':S.tmp=Number(v);draw();break;
   case'toLogin':if(!S.tmp)break;S.pending={kind:'wait',id:v,price:S.tmp};
    if(S.user){finish()}else{S.sheet='login:'+v};draw();break;
+  case'toCode':S.sheet='code:'+(S.pending?S.pending.id:'p1');draw();break;
   case'toLoginSheet':S.sheet='login:'+(S.pending?S.pending.id:'p1');draw();break;
   case'oauth':S.user={ch:v,id:v==='kakao'?'카카오 계정':'네이버 계정'};S.contact=S.contact||(v==='kakao'?'카카오톡 알림':'네이버 이메일');finish();break;
   case'docode':{const c=document.getElementById('contact');const val=c?c.value.trim():'';
@@ -2169,6 +2170,8 @@ document.getElementById('app').addEventListener('click',e=>{
   case'rlist':S.drawer=0;if(cur().s==='rlist'){S.rlist=v;draw()}else{S.rlist=v;go('rlist')}break;
   case'glist':S.drawer=0;if(cur().s==='glist'){S.glist=v;draw()}else{S.glist=v;go('glist')}break;
   case'official':S.sheet='site:'+v;pushHist();draw();break;
+  case'editLink':S.sheet='elink:'+v;pushHist();draw();break;
+  case'saveLink':S.sheet=null;popHist();draw();say('저장했어요. 연결도 확인했습니다');break;
   case'askPublish':S.sheet='pub:x';pushHist();draw();break;
   case'doPublish':S.pubState='live';S.sheet=null;popHist();draw();say('발행했어요. 다들 카드가 올라가요');break;
   case'unpublish':S.sheet='unpub:x';pushHist();draw();break;
