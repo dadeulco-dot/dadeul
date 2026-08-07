@@ -1435,11 +1435,11 @@ V.me=()=>{
   <span data-a="toggle:${k}" style="width:42px;height:24px;border-radius:12px;flex-shrink:0;position:relative;background:${S.noti[k]?'var(--brand)':'var(--line3)'}">
   <span style="position:absolute;top:3px;left:${S.noti[k]?21:3}px;width:18px;height:18px;border-radius:9px;background:var(--surface)"></span></span></div>`;
  return `<div class="bar"><div class="row" style="align-items:flex-start"><div class="h1" style="font-size:19px">내 정보</div>${burger()}</div>
- <div class="meta" style="margin-top:4px">회원가입 없이, 알림 받으실 곳만 두고 있어요</div></div>
+</div>
  <div class="body">
  <div class="pad" style="padding-top:20px">${S.user?'':`<div class="card" style="padding:18px 17px;margin-bottom:12px">
  <div class="h2" style="font-size:15px">연결해 두시면 어디서든 이어져요</div>
- <div class="sub" style="margin-top:7px">기다리시던 것과 구매 내역이 그대로 따라와요.</div>
+ <div class="sub" style="margin-top:7px;text-wrap:pretty">후기와 비교는 연결 없이도 보실 수 있어요.<br>기다리시던 것은 연결해 두셔야 이어져요.</div>
  <button class="btn" style="background:#FEE500;color:#191600;margin-top:14px" data-a="oauth:kakao">카카오톡으로 계속하기</button>
  <button class="btn ghost" style="margin-top:8px" data-a="loginSheet">다른 방법으로 하기</button></div>`}
  ${S.user?`<div class="card" style="padding:16px 17px">
@@ -1473,14 +1473,11 @@ V.me=()=>{
  ${tg('week','주간 후기 리포트','이번 주에 새로 모은 후기를 한 번에')}</div></div>`:''}
 
  <div class="pad sec"><div class="card" style="padding:4px 16px">
- ${[['다들의 약속','rules'],['협상 기록','log'],['기준표','method']].concat(S.user?[['알림 내역','noti'],['연결 해제','logout']]:[])
+ ${[['다들의 약속','rules'],['협상 기록','log'],['기준표','method']].concat(S.user?[['알림 내역','noti'],['연결 해제','logout'],['탈퇴하기','quit']]:[])
  .map(([t,a],i)=>`<div class="row" data-a="${a}" style="padding:14px 0;${i?'border-top:.5px solid var(--line)':''};cursor:pointer">
-  <span style="font-size:14px;letter-spacing:-.02em">${t}</span></div>`).join('')}</div></div>
+  <span style="font-size:14px;letter-spacing:-.02em;${a==='quit'?'color:var(--sub)':''}">${t}</span>${a==='logout'||a==='quit'?'':ic('next',16,'var(--faint)')}</div>`).join('')}</div></div>
 
- <div class="pad sec" style="padding-bottom:26px"><div class="soft" style="padding:14px 15px">
- <div class="h3" style="font-size:12px;margin-bottom:6px">${S.user?'남기신 정보는 이것뿐이에요':'아직 남기신 정보가 없어요'}</div>
- <div class="meta" style="line-height:1.8">${S.user?'알림 받으실 연락처와 고르신 가격, 그리고 구매하실 때 쓰신 휴대폰 번호예요. 다른 곳에 쓰지 않고, 지워달라고 하시면 바로 지워드려요.':'후기와 비교는 연결하지 않으셔도 그대로 보실 수 있어요. 연결하시면 알림 받으실 곳과 고르신 가격만 두고, 다른 곳에 쓰지 않아요.'}</div>
- ${S.user?`<button class="meta" style="margin-top:10px;color:var(--accent);font-weight:500" data-a="quit">탈퇴하기</button>`:''}</div></div>
+ <div style="height:26px"></div>
  </div>${tabs()}`};
 
 V.waits=()=>{
