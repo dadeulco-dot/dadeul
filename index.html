@@ -224,10 +224,342 @@ const GLY={
  dish:'<circle cx="32" cy="32" r="17" fill="var(--surface)" fill-opacity=".66"/><circle cx="32" cy="32" r="17"/><circle cx="32" cy="32" r="10" stroke-opacity=".38"/>',
  misc:'<path d="M22 20h20l4 28H18z" fill="var(--surface)" fill-opacity=".66"/><path d="M22 20h20l4 28H18z"/><path d="M26 20c0-4 2.7-6 6-6s6 2 6 6" stroke-opacity=".5"/>',
  grill:'<rect x="13"  y="21" width="38" height="22.5" rx="5.5" fill="var(--surface)" fill-opacity=".66"/><rect x="13" y="21" width="38" height="22.5" rx="5.5"/><path d="M13.5 28.5h37M13.5 36h37" stroke-opacity=".38"/><path d="M9 26h4.5M50.5 26h4.5" stroke-width="3.6"/>'};
+/* ── 제품 썸네일 ──
+   브랜드별 재질 팔레트 × 갈래별 형태. 같은 프라이팬이라도 브랜드가 다르면 다르게 보인다.
+   x.img 가 있으면 실제 사진을 쓰고, 없으면 아래 렌더로 그린다. */
+const MAT={
+ '하로'   :{a:'#4B5158',b:'#252A30',c:'#727981',h:'#1E2226',g:.5},
+ '온담'   :{a:'#EDE4D6',b:'#C9BAA3',c:'#FFFCF6',h:'#8B7960',g:.45},
+ '무이'   :{a:'#C4CAD1',b:'#8B939C',c:'#F2F5F8',h:'#565C65',g:.95},
+ '노바'   :{a:'#8F8C87',b:'#5C5955',c:'#C3C0BA',h:'#2E2D2B',g:.4},
+ '프리모' :{a:'#404C5E',b:'#212A36',c:'#68778E',h:'#182028',g:.55},
+ '필로'   :{a:'#3A393B',b:'#1C1B1D',c:'#5E5C5F',h:'#282224',g:.35},
+ '한스틸' :{a:'#D0D6DC',b:'#98A0A9',c:'#FFFFFF',h:'#4C535B',g:.95},
+ '담온'   :{a:'#B76B40',b:'#8A4B29',c:'#DC9A6E',h:'#5C3420',g:.4},
+ '미리내' :{a:'#F1EFE9',b:'#D4D0C6',c:'#FFFFFF',h:'#A8A195',g:.55},
+ '코르나' :{a:'#302E2D',b:'#151414',c:'#524F4D',h:'#211F1E',g:.25},
+ '세라'   :{a:'#D8DCE1',b:'#A1A8AF',c:'#FFFFFF',h:'#7B5B3D',g:.9},
+ '우드림' :{a:'#C89B64',b:'#9C7240',c:'#E6C395',h:'#7A5730',g:.3},
+ '베이크한':{a:'#4E4844',b:'#2B2724',c:'#716862',h:'#343029',g:.35}};
+const MATD={a:'#C9CDD2',b:'#93989E',c:'#F0F2F5',h:'#5A5F66',g:.6};
+// 브랜드 재질과 제품 소재가 다른 갈래 — 소재를 우선한다
+const MATSUB={'앞치마':{a:'#D9CFBC',b:'#B3A791',c:'#F2EBDF',h:'#8A7C64',g:.12},
+ '행주·수세미':{a:'#D8D3C7',b:'#ADA79A',c:'#F0ECE3',h:'#8A8478',g:.1},
+ '장갑':{a:'#C4BCAC',b:'#9A9284',c:'#E2DACB',h:'#6E675C',g:.14},
+ '도마':{a:'#C89B64',b:'#9C7240',c:'#E6C395',h:'#7A5730',g:.3},
+ '밀대':{a:'#C89B64',b:'#9C7240',c:'#E6C395',h:'#7A5730',g:.3},
+ '유리컵':{a:'#DCE6EC',b:'#B4C4CE',c:'#FFFFFF',h:'#8FA3AE',g:1},
+ '유리용기':{a:'#DCE6EC',b:'#B4C4CE',c:'#FFFFFF',h:'#8FA3AE',g:1},
+ '저장병':{a:'#DCE6EC',b:'#B4C4CE',c:'#FFFFFF',h:'#8FA3AE',g:1}};
+
+let _gn=0;
+/* 재질 표현 — 소프트박스 하나를 위에서 비춘 스튜디오 촬영을 흉내낸다.
+   금속은 반사 띠가 좁고 날카롭게, 도자·나무는 넓고 부드럽게 퍼진다. */
+const GLOSS={'스테인리스':1,'주철':.35,'도자기':.5,'리넨':.15,'원목':.3,'논스틱':.45,'유리':1};
+const _G=(i,m,g=.55)=>{
+ const hi=g>.8?[[0,m.c],[.06,'#FFFFFF'],[.14,m.c],[.3,m.a],[.52,m.b],[.62,m.a],[.8,m.c],[1,m.a]]
+        :g>.4?[[0,m.c],[.18,m.a],[.55,m.b],[.86,m.a],[1,m.b]]
+              :[[0,m.a],[.45,m.b],[1,m.b]];
+ return `<linearGradient id="a${i}" x1=".08" y1="0" x2=".92" y2="1">`+
+  hi.map(([o,c])=>`<stop offset="${o}" stop-color="${c}"/>`).join('')+`</linearGradient>`+
+  `<linearGradient id="b${i}" x1="0" y1="0" x2="0" y2="1">`+
+  `<stop offset="0" stop-color="${m.b}"/><stop offset=".55" stop-color="${m.h}"/><stop offset="1" stop-color="${m.b}"/></linearGradient>`+
+  // 위쪽 소프트박스 반사
+  `<linearGradient id="s${i}" x1="0" y1="0" x2="0" y2="1">`+
+  `<stop offset="0" stop-color="#FFFFFF" stop-opacity="${(.5*g+.14).toFixed(2)}"/>`+
+  `<stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient>`+
+  // 안쪽 그늘 (오목함)
+  `<radialGradient id="v${i}" cx=".5" cy=".38" r=".72">`+
+  `<stop offset="0" stop-color="#000000" stop-opacity="0"/>`+
+  `<stop offset=".62" stop-color="#000000" stop-opacity=".1"/>`+
+  `<stop offset="1" stop-color="#000000" stop-opacity=".34"/></radialGradient>`+
+  // 바닥 접지 그림자 (가운데가 짙고 가장자리로 흐려짐)
+  `<radialGradient id="g${i}" cx=".5" cy=".5" r=".5">`+
+  `<stop offset="0" stop-color="#141416" stop-opacity=".3"/>`+
+  `<stop offset=".55" stop-color="#141416" stop-opacity=".14"/>`+
+  `<stop offset="1" stop-color="#141416" stop-opacity="0"/></radialGradient>`+
+  `<filter id="f${i}" x="-30%" y="-30%" width="160%" height="160%">`+
+  `<feDropShadow dx="0" dy="1.6" stdDeviation="1.9" flood-color="#12131A" flood-opacity=".26"/></filter>`;
+};
+let _sn=0;
+const _SH=(cx,rx)=>`<ellipse cx="${cx}" cy="87" rx="${rx*1.16}" ry="${(rx*.19+3).toFixed(1)}" fill="url(#g${_sn})" stroke="none"/>`;
+const _GL='#FFFFFF';
+
+/* 갈래별 형태 — 100×100 좌표계 */
+const SHP={
+ // 프라이팬 · 무쇠팬 계열 (3/4 시점)
+ pan:(i,m)=>_SH(46,32)+
+  `<path d="M72 50.5h20a3 3 0 0 1 0 6h-20z" fill="${m.h}"/>`+
+  `<path d="M72 50.5h20a3 3 0 0 1 0 6h-20z" fill="url(#s${i})" opacity=".5"/>`+
+  // 측면 (얕은 팬 깊이)
+  `<path d="M14 48a32 12.4 0 0 0 64 0v7a32 12.4 0 0 1-64 0z" fill="url(#b${i})"/>`+
+  // 테두리
+  `<ellipse cx="46" cy="48" rx="32" ry="12.4" fill="url(#a${i})"/>`+
+  // 조리면
+  `<ellipse cx="46" cy="48.8" rx="27.6" ry="10.2" fill="${m.b}"/>`+
+  `<ellipse cx="46" cy="48.8" rx="27.6" ry="10.2" fill="url(#v${i})"/>`+
+  `<path d="M18.4 48.8a27.6 10.2 0 0 1 55.2 0z" fill="url(#s${i})" opacity=".5"/>`+
+  `<ellipse cx="46" cy="48" rx="32" ry="12.4" fill="none" stroke="${_GL}" stroke-opacity="${.16+(m.g??.5)*.34}" stroke-width="1"/>`+
+  `<path d="M24 44.5a28 11 0 0 1 16-6.6" stroke="${_GL}" stroke-opacity="${.3+(m.g??.5)*.42}" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+ grillpan:(i,m)=>SHP.pan(i,m)+
+  `<g opacity=".26" stroke="#000" stroke-width="1.8" stroke-linecap="round" fill="none">`+
+  [0,1,2,3,4].map(k=>`<path d="M${28+k*9} ${43.5+Math.abs(2-k)*1.1}q4.5 10.4 0 10.4"/>`).join('')+`</g>`,
+ // 계란말이팬 · 그리들 (사각)
+ rectpan:(i,m)=>_SH(46,28)+
+  `<path d="M74 52h20a3.2 3.2 0 0 1 0 6.4H74z" fill="${m.h}"/>`+
+  `<path d="M20 40h56v18a5 5 0 0 1-5 5H25a5 5 0 0 1-5-5z" fill="url(#b${i})"/>`+
+  `<rect x="20" y="34" width="56" height="14" rx="4" fill="url(#a${i})"/>`+
+  `<rect x="25" y="37" width="46" height="8" rx="3" fill="#000" opacity=".16"/>`+
+  `<path d="M26 37h20" stroke="${_GL}" stroke-opacity=".4" stroke-width="2" stroke-linecap="round"/>`,
+ // 웍 · 궁중팬 (깊은 곡면)
+ wok:(i,m)=>_SH(50,30)+
+  `<path d="M18 44a32 26 0 0 0 64 0z" fill="url(#a${i})"/>`+
+  `<path d="M18 44a32 26 0 0 0 64 0z" fill="url(#v${i})"/>`+
+  `<path d="M76 41h20a3.4 3.4 0 0 1 0 6.8H76z" fill="${m.h}"/>`+
+  `<ellipse cx="50" cy="44" rx="32" ry="10.4" fill="${m.b}"/>`+
+  `<ellipse cx="50" cy="44" rx="32" ry="10.4" fill="url(#v${i})"/>`+
+  `<path d="M23 44a27 8.6 0 0 1 54 0z" fill="url(#s${i})" opacity=".5"/>`+
+  `<ellipse cx="50" cy="44" rx="32" ry="10.4" fill="none" stroke="${_GL}" stroke-opacity="${.16+(m.g??.5)*.34}" stroke-width="1.1"/>`+
+  `<path d="M27 52a28 24 0 0 0 9 15" stroke="${_GL}" stroke-opacity="${.2+(m.g??.5)*.35}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`,
+ // 냄비 (뚜껑 + 양손잡이)
+ pot:(i,m,o={})=>_SH(50,27)+
+  `<path d="M22 46h56v22a10 10 0 0 1-10 10H32a10 10 0 0 1-10-10z" fill="url(#b${i})"/>`+
+  `<path d="M14 50h9v8h-9a4 4 0 0 1 0-8z" fill="${m.h}"/><path d="M86 50h-9v8h9a4 4 0 0 0 0-8z" fill="${m.h}"/>`+
+  `<path d="M26 50h6v26h-6z" fill="url(#s${i})" opacity=".8"/>`+
+  `<path d="M20 44h60v4H20z" fill="url(#a${i})"/>`+
+  (o.lid===false?`<ellipse cx="50" cy="44" rx="29" ry="7" fill="#000" opacity=".22"/>`:
+   `<path d="M23 44a27 12 0 0 1 54 0z" fill="url(#a${i})"/>`+
+   `<path d="M30 41a20 8 0 0 1 30-5" stroke="${_GL}" stroke-opacity="${.24+(m.g??.5)*.4}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`+
+   `<rect x="45" y="28" width="10" height="5" rx="2.5" fill="${m.h}"/><rect x="48.4" y="32" width="3.2" height="4" fill="${m.h}"/>`)+
+  (o.valve?`<circle cx="50" cy="30" r="3.4" fill="${m.h}"/>`:'')+
+  `<path d="M22 46h56v22a10 10 0 0 1-10 10H32a10 10 0 0 1-10-10z" fill="none" stroke="${_GL}" stroke-opacity="${.1+(m.g??.5)*.26}" stroke-width="1"/>`,
+ onehandle:(i,m)=>SHP.pot(i,m)
+  .replace(/<path d="M14 50h9v8h-9a4 4 0 0 1 0-8z"[^>]*\/>/,'')
+  .replace(/<path d="M86 50h-9v8h9a4 4 0 0 0 0-8z"[^>]*\/>/,
+   `<path d="M77 50h20a3.4 3.4 0 0 1 0 6.8H77z" fill="${m.h}"/><path d="M77 50h20a3.4 3.4 0 0 1 0 6.8H77z" fill="#000" opacity=".16"/>`),
+ kettle:(i,m)=>_SH(50,25)+
+  `<path d="M26 48h48v20a11 11 0 0 1-11 11H37a11 11 0 0 1-11-11z" fill="url(#b${i})"/>`+
+  `<path d="M74 54c9 1 12 6 12 12" stroke="${m.h}" stroke-width="5" fill="none" stroke-linecap="round"/>`+
+  `<path d="M32 44h36v5H32z" fill="url(#a${i})"/>`+
+  `<path d="M34 44a16 9 0 0 1 32 0z" fill="url(#a${i})"/>`+
+  `<path d="M38 36q12-10 24 0" stroke="${m.h}" stroke-width="4" fill="none" stroke-linecap="round"/>`+
+  `<path d="M36 60v10" stroke="${_GL}" stroke-opacity=".28" stroke-width="3" stroke-linecap="round"/>`,
+ // 칼
+ knife:(i,m,o={})=>_SH(52,28)+
+  `<path d="M16 60L58 26q4-3 6 1l2 5-40 30z" fill="url(#a${i})"/>`+
+  `<path d="M16 60L58 26q4-3 6 1z" fill="${_GL}" opacity=".35"/>`+
+  (o.serrated?`<g stroke="#000" stroke-opacity=".28" stroke-width="1.2">`+
+    [0,1,2,3,4,5].map(k=>`<path d="M${22+k*7} ${57-k*5.1}l3 2.2"/>`).join('')+`</g>`:'')+
+  `<path d="M64 32l14-10a4 4 0 0 1 5 6L69 38z" fill="${m.h}"/>`,
+ paring:(i,m)=>_SH(52,22)+
+  `<path d="M30 56L58 34q3-2 5 1l2 4-27 21z" fill="url(#a${i})"/>`+
+  `<path d="M30 56L58 34q3-2 5 1z" fill="${_GL}" opacity=".35"/>`+
+  `<path d="M64 39l11-8a3.4 3.4 0 0 1 4 5l-11 8z" fill="${m.h}"/>`,
+ scissors:(i,m)=>_SH(50,22)+
+  `<path d="M34 26L62 62" stroke="url(#a${i})" stroke-width="5" stroke-linecap="round"/>`+
+  `<path d="M62 26L34 62" stroke="url(#a${i})" stroke-width="5" stroke-linecap="round"/>`+
+  `<circle cx="30" cy="70" r="8" stroke="${m.h}" stroke-width="4.5" fill="none"/>`+
+  `<circle cx="66" cy="70" r="8" stroke="${m.h}" stroke-width="4.5" fill="none"/>`+
+  `<circle cx="48" cy="44" r="3" fill="${m.h}"/>`,
+ board:(i,m,o={})=>_SH(50,30)+
+  `<path d="M22 30h56a4 4 0 0 1 4 4v36a4 4 0 0 1-4 4H22a4 4 0 0 1-4-4V34a4 4 0 0 1 4-4z" fill="url(#a${i})"/>`+
+  `<path d="M18 66h64v4a4 4 0 0 1-4 4H22a4 4 0 0 1-4-4z" fill="#000" opacity=".14"/>`+
+  (o.grain?`<g stroke="#000" stroke-opacity=".13" stroke-width="1.4">`+
+    [0,1,2].map(k=>`<path d="M24 ${40+k*10}h52"/>`).join('')+`</g>`:'')+
+  `<circle cx="72" cy="38" r="2.6" fill="#000" opacity=".2"/>`,
+ // 도구
+ ladle:(i,m)=>_SH(52,20)+
+  `<path d="M60 20L44 54" stroke="url(#a${i})" stroke-width="6" stroke-linecap="round"/>`+
+  `<path d="M28 54a16 16 0 0 0 32 0z" fill="url(#a${i})"/>`+
+  `<ellipse cx="44" cy="54" rx="16" ry="5" fill="${m.b}" opacity=".55"/>`+
+  `<path d="M60 20l6-8" stroke="${m.h}" stroke-width="6" stroke-linecap="round"/>`,
+ turner:(i,m)=>_SH(50,20)+
+  `<path d="M58 22L46 48" stroke="${m.h}" stroke-width="6" stroke-linecap="round"/>`+
+  `<path d="M28 48h36l-6 26H34z" fill="url(#a${i})"/>`+
+  `<g stroke="#000" stroke-opacity=".18" stroke-width="2">`+[0,1,2].map(k=>`<path d="M${38+k*8} 54v14"/>`).join('')+`</g>`,
+ tong:(i,m)=>_SH(50,20)+
+  `<path d="M44 18q-10 26-14 54" stroke="url(#a${i})" stroke-width="5" fill="none" stroke-linecap="round"/>`+
+  `<path d="M52 18q10 26 14 54" stroke="url(#a${i})" stroke-width="5" fill="none" stroke-linecap="round"/>`+
+  `<path d="M44 18h8" stroke="${m.h}" stroke-width="6" stroke-linecap="round"/>`,
+ whisk:(i,m)=>_SH(50,18)+
+  `<path d="M50 16v26" stroke="${m.h}" stroke-width="7" stroke-linecap="round"/>`+
+  `<g stroke="url(#a${i})" stroke-width="3" fill="none" stroke-linecap="round">`+
+  `<path d="M50 42q-18 12 0 32"/><path d="M50 42q-9 14 0 32"/><path d="M50 42q9 14 0 32"/><path d="M50 42q18 12 0 32"/></g>`,
+ measure:(i,m)=>_SH(50,26)+
+  `<path d="M28 40h44l-5 34H33z" fill="url(#a${i})"/>`+
+  `<path d="M26 36h48v6H26z" fill="url(#b${i})"/>`+
+  `<g stroke="#000" stroke-opacity=".2" stroke-width="1.6">`+[0,1,2].map(k=>`<path d="M34 ${50+k*8}h12"/>`).join('')+`</g>`+
+  `<path d="M74 44c9 2 10 12 2 14" stroke="${m.h}" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+ // 그릇 · 컵
+ bowl:(i,m,o={})=>_SH(50,26)+
+  `<path d="M20 46a30 24 0 0 0 60 0z" fill="url(#a${i})"/>`+
+  `<ellipse cx="50" cy="46" rx="30" ry="9.5" fill="${m.b}"/>`+
+  `<ellipse cx="50" cy="46" rx="30" ry="9.5" fill="url(#v${i})"/>`+
+  `<path d="M25 46a25 7.6 0 0 1 50 0z" fill="url(#s${i})" opacity=".5"/>`+
+  `<ellipse cx="50" cy="46" rx="30" ry="9.5" fill="none" stroke="${_GL}" stroke-opacity="${.16+(m.g??.5)*.3}" stroke-width="1.1"/>`+
+  (o.holes?`<g fill="#000" opacity=".28">`+[0,1,2,3,4].map(k=>`<circle cx="${32+k*9}" cy="${62+Math.abs(2-k)*3}" r="2"/>`).join('')+`</g>`:'')+
+  `<path d="M26 52a26 26 0 0 0 8 12" stroke="${_GL}" stroke-opacity=".3" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
+ plate:(i,m)=>_SH(50,31)+
+  `<ellipse cx="50" cy="58" rx="33" ry="14" fill="url(#b${i})"/>`+
+  `<ellipse cx="50" cy="54" rx="33" ry="14" fill="url(#a${i})"/>`+
+  `<ellipse cx="50" cy="54" rx="23" ry="9" fill="url(#v${i})"/>`+
+  `<path d="M27 54a23 9 0 0 1 46 0z" fill="url(#s${i})" opacity=".45"/>`+
+  `<ellipse cx="50" cy="54" rx="33" ry="14" fill="none" stroke="${_GL}" stroke-opacity="${.16+(m.g??.5)*.3}" stroke-width="1.1"/>`,
+ mug:(i,m)=>_SH(48,20)+
+  `<path d="M28 34h40v34a10 10 0 0 1-10 10H38a10 10 0 0 1-10-10z" fill="url(#a${i})"/>`+
+  `<ellipse cx="48" cy="34" rx="20" ry="6" fill="${m.c}"/><ellipse cx="48" cy="34" rx="15" ry="4.2" fill="#000" opacity=".2"/>`+
+  `<path d="M68 44c11 0 11 18 0 18" stroke="url(#a${i})" stroke-width="6" fill="none" stroke-linecap="round"/>`+
+  `<path d="M34 42v26" stroke="${_GL}" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>`,
+ glass:(i,m)=>_SH(50,17)+
+  `<path d="M34 28h32l-4 46a6 6 0 0 1-6 5H44a6 6 0 0 1-6-5z" fill="${m.c}" opacity=".82"/>`+
+  `<path d="M34 28h32l-4 46a6 6 0 0 1-6 5H44a6 6 0 0 1-6-5z" fill="none" stroke="${m.b}" stroke-opacity=".55" stroke-width="1.6"/>`+
+  `<ellipse cx="50" cy="28" rx="16" ry="4.4" fill="${m.a}" opacity=".5"/>`+
+  `<path d="M41 36l-2 38" stroke="${_GL}" stroke-opacity=".8" stroke-width="3" stroke-linecap="round"/>`,
+ cutlery:(i,m)=>_SH(50,26)+
+  `<ellipse cx="32" cy="30" rx="11" ry="15" fill="url(#a${i})"/>`+
+  `<rect x="28.5" y="41" width="7" height="37" rx="3.5" fill="url(#a${i})"/>`+
+  `<path d="M56 14h22v20a9 9 0 0 1-9 9h-4a9 9 0 0 1-9-9z" fill="url(#a${i})"/>`+
+  `<g fill="#000" opacity=".2"><rect x="62" y="14" width="3.4" height="17" rx="1.7"/><rect x="70.6" y="14" width="3.4" height="17" rx="1.7"/></g>`+
+  `<rect x="63.5" y="41" width="7" height="37" rx="3.5" fill="url(#a${i})"/>`,
+ // 베이킹
+ caketin:(i,m)=>_SH(50,28)+
+  `<path d="M24 44h52v20a7 7 0 0 1-7 7H31a7 7 0 0 1-7-7z" fill="url(#a${i})"/>`+
+  `<path d="M24 44h52v20a7 7 0 0 1-7 7H31a7 7 0 0 1-7-7z" fill="url(#v${i})"/>`+
+  `<ellipse cx="50" cy="44" rx="26" ry="8.4" fill="url(#a${i})"/>`+
+  `<ellipse cx="50" cy="44.6" rx="21" ry="6.2" fill="${m.b}"/>`+
+  `<ellipse cx="50" cy="44.6" rx="21" ry="6.2" fill="url(#v${i})"/>`+
+  `<path d="M29 44.6a21 6.2 0 0 1 42 0z" fill="url(#s${i})" opacity=".45"/>`+
+  `<ellipse cx="50" cy="44" rx="26" ry="8.4" fill="none" stroke="${_GL}" stroke-opacity="${.14+(m.g??.5)*.3}" stroke-width="1"/>`+
+  `<path d="M31 54v14" stroke="${_GL}" stroke-opacity=".22" stroke-width="3" stroke-linecap="round"/>`+
+  `<rect x="22" y="55" width="56" height="3" rx="1.5" fill="${m.h}" opacity=".8"/>`,
+ muffin:(i,m)=>_SH(50,30)+
+  `<rect x="18" y="38" width="64" height="30" rx="5" fill="url(#a${i})"/>`+
+  `<g>`+[0,1,2].map(k=>`<ellipse cx="${31+k*19}" cy="48" rx="8" ry="5" fill="${m.b}"/><ellipse cx="${31+k*19}" cy="48" rx="8" ry="5" fill="url(#v${i})"/>`).join('')+
+  [0,1,2].map(k=>`<ellipse cx="${31+k*19}" cy="60" rx="8" ry="5" fill="${m.b}"/><ellipse cx="${31+k*19}" cy="60" rx="8" ry="5" fill="url(#v${i})"/>`).join('')+`</g>`+
+  `<rect x="18" y="66" width="64" height="2.6" rx="1.3" fill="#000" opacity=".14"/>`,
+ tray:(i,m)=>_SH(50,32)+
+  `<path d="M16 42h68l-5 28a5 5 0 0 1-5 4H26a5 5 0 0 1-5-4z" fill="url(#a${i})"/>`+
+  `<path d="M16 42h68l-5 28a5 5 0 0 1-5 4H26a5 5 0 0 1-5-4z" fill="url(#v${i})"/>`+
+  `<path d="M20 46h60l-1.4 6H21.4z" fill="${m.b}"/>`+
+  `<path d="M16 42h68l-1 5H17z" fill="url(#a${i})"/>`+
+  `<path d="M18 42h64" stroke="${_GL}" stroke-opacity="${.2+(m.g??.4)*.3}" stroke-width="1.6"/>`,
+ mold:(i,m)=>_SH(50,28)+
+  `<rect x="20" y="40" width="60" height="30" rx="9" fill="url(#a${i})"/>`+
+  `<g fill="#000" opacity=".2">`+[0,1,2,3].map(k=>`<rect x="${26+k*13}" y="47" width="9" height="16" rx="4.5"/>`).join('')+`</g>`,
+ rollingpin:(i,m)=>_SH(50,28)+
+  `<rect x="26" y="42" width="48" height="18" rx="9" fill="url(#a${i})"/>`+
+  `<rect x="12" y="47.5" width="16" height="7" rx="3.5" fill="${m.h}"/><rect x="72" y="47.5" width="16" height="7" rx="3.5" fill="${m.h}"/>`+
+  `<path d="M34 47h30" stroke="${_GL}" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>`,
+ // 보관
+ box:(i,m,o={})=>_SH(50,28)+
+  `<path d="M22 44h56v26a5 5 0 0 1-5 5H27a5 5 0 0 1-5-5z" fill="${o.clear?m.c:'url(#b'+i+')'}" ${o.clear?'opacity=".78"':''}/>`+
+  (o.clear?`<path d="M22 44h56v26a5 5 0 0 1-5 5H27a5 5 0 0 1-5-5z" fill="none" stroke="${m.b}" stroke-opacity=".5" stroke-width="1.6"/>`:'')+
+  `<rect x="18" y="36" width="64" height="10" rx="4" fill="url(#a${i})"/>`+
+  `<rect x="42" y="32" width="16" height="5" rx="2.5" fill="${m.h}"/>`+
+  `<path d="M28 52v18" stroke="${_GL}" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"/>`,
+ jar:(i,m)=>_SH(50,20)+
+  `<path d="M32 40h36v30a8 8 0 0 1-8 8H40a8 8 0 0 1-8-8z" fill="${m.c}" opacity=".8"/>`+
+  `<path d="M32 40h36v30a8 8 0 0 1-8 8H40a8 8 0 0 1-8-8z" fill="none" stroke="${m.b}" stroke-opacity=".5" stroke-width="1.6"/>`+
+  `<rect x="36" y="26" width="28" height="10" rx="3" fill="url(#a${i})"/>`+
+  `<rect x="34" y="34" width="32" height="6" rx="2" fill="${m.h}"/>`+
+  `<path d="M39 48v22" stroke="${_GL}" stroke-opacity=".7" stroke-width="3" stroke-linecap="round"/>`,
+ // 가전
+ blender:(i,m)=>_SH(50,24)+
+  `<path d="M34 16h32l-3 40H37z" fill="${m.c}" opacity=".78"/>`+
+  `<path d="M34 16h32l-3 40H37z" fill="none" stroke="${m.b}" stroke-opacity=".5" stroke-width="1.6"/>`+
+  `<path d="M30 56h40v18a6 6 0 0 1-6 6H36a6 6 0 0 1-6-6z" fill="url(#a${i})"/>`+
+  `<circle cx="50" cy="68" r="4.4" fill="${m.h}"/>`+
+  `<path d="M40 24l-2 28" stroke="${_GL}" stroke-opacity=".75" stroke-width="3" stroke-linecap="round"/>`,
+ pot_e:(i,m)=>_SH(50,24)+
+  `<path d="M30 34h40v34a10 10 0 0 1-10 10H40a10 10 0 0 1-10-10z" fill="url(#a${i})"/>`+
+  `<ellipse cx="50" cy="34" rx="20" ry="5.4" fill="${m.c}"/>`+
+  `<path d="M70 44c11 2 11 20 0 22" stroke="${m.h}" stroke-width="6" fill="none" stroke-linecap="round"/>`+
+  `<rect x="24" y="76" width="52" height="6" rx="3" fill="${m.h}"/>`+
+  `<path d="M37 42v26" stroke="${_GL}" stroke-opacity=".32" stroke-width="3" stroke-linecap="round"/>`,
+ fryer:(i,m)=>_SH(50,27)+
+  `<rect x="24" y="20" width="52" height="58" rx="9" fill="url(#a${i})"/>`+
+  `<rect x="30" y="46" width="40" height="26" rx="5" fill="#000" opacity=".22"/>`+
+  `<rect x="42" y="66" width="16" height="3.4" rx="1.7" fill="${m.h}"/>`+
+  `<circle cx="50" cy="33" r="6" fill="${m.h}"/><circle cx="50" cy="33" r="2.4" fill="${m.c}"/>`,
+ toaster:(i,m)=>_SH(50,28)+
+  `<rect x="18" y="36" width="64" height="40" rx="8" fill="url(#a${i})"/>`+
+  `<g fill="#000" opacity=".26"><rect x="28" y="32" width="18" height="6" rx="3"/><rect x="54" y="32" width="18" height="6" rx="3"/></g>`+
+  `<rect x="70" y="48" width="5" height="18" rx="2.5" fill="${m.h}"/>`+
+  `<path d="M26 44v22" stroke="${_GL}" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"/>`,
+ rack:(i,m)=>_SH(50,32)+
+  `<path d="M16 66h68v10a4 4 0 0 1-4 4H20a4 4 0 0 1-4-4z" fill="url(#b${i})"/>`+
+  `<g stroke="${m.b}" stroke-width="3.6" stroke-linecap="round">`+
+  [0,1,2,3,4,5,6].map(k=>`<path d="M${23+k*9} 30v36"/>`).join('')+`</g>`+
+  `<g stroke="${m.a}" stroke-width="2" stroke-linecap="round">`+
+  [0,1].map(k=>`<path d="M20 ${40+k*14}h60"/>`).join('')+`</g>`+
+  `<rect x="16" y="64" width="68" height="5" rx="2.5" fill="url(#a${i})"/>`,
+ // 기타
+ apron:(i,m)=>_SH(50,24)+
+  // 목끈
+  `<path d="M41 26q9-13 18 0" stroke="${m.b}" stroke-width="2.8" fill="none" stroke-linecap="round"/>`+
+  // 몸판 — 가슴판에서 어깨로 벌어지는 실루엣
+  `<path d="M41 26h18l1 8c9 4 14 11 14 20v22a6 6 0 0 1-6 6H32a6 6 0 0 1-6-6V54c0-9 5-16 14-20z" fill="url(#a${i})"/>`+
+  // 허리끈 — 몸판 옆구리에서 이어짐
+  `<path d="M26 56H15a2.8 2.8 0 0 0 0 5.6h11zM74 56h11a2.8 2.8 0 0 1 0 5.6H74z" fill="${m.b}"/>`+
+  `<path d="M26 56h48v5.6H26z" fill="#000" opacity=".07"/>`+
+  // 주머니
+  `<rect x="40" y="64" width="20" height="14" rx="1.6" fill="#000" opacity=".1"/>`+
+  `<path d="M50 64v14" stroke="#000" stroke-opacity=".1" stroke-width="1.4"/>`+
+  `<path d="M34 40v38" stroke="${_GL}" stroke-opacity=".2" stroke-width="3" stroke-linecap="round"/>`,
+ glove:(i,m)=>_SH(48,22)+
+  `<path d="M34 24h18a9 9 0 0 1 9 9v13l10 8a7 7 0 0 1-9 10l-1-1v13a6 6 0 0 1-6 6H31a6 6 0 0 1-6-6V33a9 9 0 0 1 9-9z" fill="url(#a${i})"/>`+
+  `<path d="M25 62h36" stroke="#000" stroke-opacity=".18" stroke-width="3.4"/>`+
+  `<path d="M32 32v24" stroke="${_GL}" stroke-opacity=".28" stroke-width="3" stroke-linecap="round"/>`,
+ cloth:(i,m)=>_SH(50,28)+
+  `<rect x="20" y="34" width="42" height="34" rx="5" fill="url(#a${i})" transform="rotate(-6 41 51)"/>`+
+  `<rect x="42" y="46" width="38" height="28" rx="5" fill="url(#b${i})" transform="rotate(7 61 60)"/>`+
+  `<g stroke="#000" stroke-opacity=".12" stroke-width="2">`+[0,1].map(k=>`<path d="M26 ${44+k*10}h30"/>`).join('')+`</g>`,
+ bin:(i,m)=>_SH(50,26)+
+  `<path d="M26 40h48l-5 34a6 6 0 0 1-6 5H37a6 6 0 0 1-6-5z" fill="url(#a${i})"/>`+
+  `<rect x="22" y="32" width="56" height="8" rx="4" fill="url(#b${i})"/>`+
+  `<rect x="44" y="26" width="12" height="5" rx="2.5" fill="${m.h}"/>`+
+  `<path d="M36 48l-2 26" stroke="${_GL}" stroke-opacity=".28" stroke-width="3" stroke-linecap="round"/>`,
+ whetstone:(i,m)=>_SH(50,28)+
+  `<path d="M20 44h60v18a4 4 0 0 1-4 4H24a4 4 0 0 1-4-4z" fill="url(#b${i})"/>`+
+  `<rect x="20" y="38" width="60" height="8" rx="2" fill="url(#a${i})"/>`+
+  `<path d="M26 42h30" stroke="${_GL}" stroke-opacity=".3" stroke-width="2.4" stroke-linecap="round"/>`,
+};
+
+/* 갈래 → 형태 */
+const SUB2SHP={
+ '프라이팬':'pan','무쇠팬':'pan','그릴팬':'grillpan','계란말이팬':'rectpan','그리들':'rectpan',
+ '웍':'wok','궁중팬':'wok',
+ '양수냄비':'pot','전골냄비':'pot','밥솥·곰솥':'pot','더치오븐':'pot','압력솥':'potv','편수냄비':'onehandle','주전자':'kettle',
+ '셰프나이프':'knife','빵칼':'knifes','과도':'paring','가위':'scissors','도마':'boardg','숫돌':'whetstone',
+ '국자':'ladle','뒤집개':'turner','집게':'tong','거품기':'whisk','계량도구':'measure','채반·볼':'bowlh',
+ '볼·공기':'bowl','접시':'plate','머그':'mug','유리컵':'glass','수저':'cutlery',
+ '케이크틀':'caketin','머핀틀':'muffin','오븐팬':'tray','실리콘몰드':'mold','밀대':'rollingpin',
+ '밀폐용기':'box','유리용기':'boxc','진공용기':'box','도시락':'box','저장병':'jar',
+ '블렌더':'blender','전기포트':'pot_e','에어프라이어':'fryer','토스터':'toaster','식기건조기':'rack',
+ '수납선반':'rack','앞치마':'apron','장갑':'glove','행주·수세미':'cloth','휴지통':'bin',
+};
+const CAT2SHP={pan:'pan',pot:'pot',wok:'wok',knife:'knife',tool:'ladle',bake:'tray',
+ store:'box',appl:'fryer',dish:'bowl',misc:'cloth',grill:'pan'};
+
+const shot=(x,s)=>{
+ if(x&&x.img) return `<img src="${x.img}" alt="${x.name||''}" style="width:100%;height:100%;object-fit:cover;display:block">`;
+ const m=(x&&MATSUB[x.sub])||(x&&MAT[x.brand])||MATD, i=++_gn;
+ const key=(x&&SUB2SHP[x.sub])||(x&&CAT2SHP[x.cat])||'bowl';
+ const [base,opt]=key==='potv'?['pot',{valve:1}]:key==='knifes'?['knife',{serrated:1}]
+  :key==='boardg'?['board',{grain:1}]:key==='bowlh'?['bowl',{holes:1}]
+  :key==='boxc'?['box',{clear:1}]:[key,{}];
+ const f=SHP[base]||SHP.bowl;
+ _sn=i;
+ const body=f(i,m,opt);
+ return `<svg width="${s}" height="${s}" viewBox="0 0 100 100" style="display:block;overflow:visible">`+
+  `<defs>${_G(i,m,m.g??.55)}</defs>`+
+  `<g filter="url(#f${i})" stroke="rgba(24,24,28,.1)" stroke-width=".7" stroke-linejoin="round">${body}</g></svg>`;
+};
 const TINT={green:'var(--tGreen)',sand:'var(--tSand)',gray:'var(--tGray)',warm:'var(--tWarm)'};
-const th=(x,s=46)=>{const t=typeof x==='string'?x:x.tint,c=typeof x==='string'?null:x.cat;
- return `<div class="thumb" style="width:${s}px;height:${s}px;background:${TINT[t]};display:flex;align-items:center;justify-content:center">`+
- (c?`<svg width="${Math.round(s*.6)}" height="${Math.round(s*.6)}" viewBox="0 0 64 64" fill="none" stroke="var(--glyph)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${GLY[c]}</svg>`:'')+`</div>`};
+const BG=t=>`linear-gradient(158deg,var(--surface) 0%,var(--surface) 38%,${TINT[t]} 100%)`;
+const th=(x,s=46)=>{const o=typeof x==='string'?null:x,t=o?o.tint:x;
+ return `<div class="thumb" style="width:${s}px;height:${s}px;background:${BG(t)};display:flex;align-items:center;justify-content:center;overflow:hidden">`+
+ (o?shot(o,Math.round(s*.9)):'')+`</div>`};
 
 /* ── 데이터 ── */
 const CH={kakao:'카카오톡',naver:'네이버',phone:'휴대폰'};
@@ -469,8 +801,8 @@ V.home=()=>{
  const total=openL.length+talkL.length+gathL.length+pendL.length+holdL.length+postL.length+againL.length;
  const gcard=x=>{const off=x.dealPrice?Math.round((1-x.dealPrice/x.price)*100):0;
   return `<div class="card" data-a="product:${x.id}" style="overflow:hidden;cursor:pointer">
-  <div style="height:132px;background:${TINT[x.tint]};display:flex;align-items:center;justify-content:center;position:relative">
-   <svg width="66" height="66" viewBox="0 0 64 64" fill="none" stroke="var(--glyph)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${GLY[x.cat]}</svg>
+  <div style="height:132px;background:${BG(x.tint)};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+   ${shot(x,116)}
    ${canBuy(x)?`<span class="badge b-amber" style="position:absolute;top:9px;left:9px">${x.endDays}일 남음</span>`
     :missed(x)?`<span class="badge b-gray" style="position:absolute;top:9px;left:9px">이번 회차 판매 중</span>`:''}
    ${S.waits[x.id]?`<span class="badge b-teal" style="position:absolute;top:9px;right:9px">기다리는 중</span>`:''}</div>
@@ -502,8 +834,8 @@ V.home=()=>{
   <div class="grid">${arr.slice(0,4).map(gcard).join('')}</div></div>`:'';
 
  const mini=x=>`<div data-a="product:${x.id}" style="cursor:pointer;flex:0 0 108px">
-  <div class="thumb" style="width:108px;height:84px;border-radius:12px;background:${TINT[x.tint]};display:flex;align-items:center;justify-content:center;position:relative">
-   <svg width="46" height="46" viewBox="0 0 64 64" fill="none" stroke="var(--glyph)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${GLY[x.cat]}</svg>
+  <div class="thumb" style="width:108px;height:84px;border-radius:12px;background:${BG(x.tint)};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+   ${shot(x,76)}
    ${canBuy(x)?`<span class="badge b-amber num" style="position:absolute;top:6px;left:6px;font-size:10px;padding:2px 6px">협상가 ${(x.dealPrice/10000).toFixed(1)}만</span>`:''}</div>
   <div class="pname" style="font-size:11px;margin-top:6px">${x.name}</div>
   <div class="tiny num" style="margin-top:2px">${won(canBuy(x)?x.dealPrice:x.price)}</div></div>`;
@@ -610,8 +942,8 @@ V.glist=()=>{
  const arr=shuffle(P.filter(x=>inState(x,k)&&(S.cat==='전체'||x.sub===S.cat||SUB2CAT[x.sub]===S.cat)&&(!S.brand||x.brand===S.brand)));
  const gcard=x=>{const off=x.dealPrice?Math.round((1-x.dealPrice/x.price)*100):0;
   return `<div class="card" data-a="product:${x.id}" style="overflow:hidden;cursor:pointer">
-  <div style="height:110px;background:${TINT[x.tint]};display:flex;align-items:center;justify-content:center;position:relative">
-   <svg width="60" height="60" viewBox="0 0 64 64" fill="none" stroke="var(--glyph)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${GLY[x.cat]}</svg>
+  <div style="height:110px;background:${BG(x.tint)};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+   ${shot(x,98)}
    ${canBuy(x)?`<span class="badge b-amber" style="position:absolute;top:9px;left:9px">${x.endDays}일 남음</span>`
     :missed(x)?`<span class="badge b-gray" style="position:absolute;top:9px;left:9px">이번 회차 판매 중</span>`:''}
    ${S.waits[x.id]?`<span class="badge b-teal" style="position:absolute;top:9px;right:9px">기다리는 중</span>`:''}</div>
@@ -1263,8 +1595,8 @@ V.product=id=>{const p=byId(id);const bad=p.label==='대체로 불만';const thi
  <div class="pad sec" style="padding-bottom:20px"><div class="tiny" style="line-height:1.75">고친 자리 · 2026.07.18 장기 후기 22건을 더 넣어 다시 계산<br>사람이 본 날 · 2026.07.21</div></div>`;
 
  return bar(p.brand,1)+`<div class="body">
- <div style="height:200px;background:${TINT[p.tint]};display:flex;align-items:center;justify-content:center;position:relative">
- <svg width="104" height="104" viewBox="0 0 64 64" fill="none" stroke="rgba(27,27,29,.4)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${GLY[p.cat]}</svg>
+ <div style="height:200px;background:${BG(p.tint)};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+ ${shot(p,180)}
  ${canBuy(p)?`<span class="badge b-amber" style="position:absolute;top:14px;left:16px">${p.endDays}일 남음</span>`
   :missed(p)?`<span class="badge b-gray" style="position:absolute;top:14px;left:16px">이번 회차 판매 중</span>`:''}</div>
  <div class="pad" style="padding-top:16px">
