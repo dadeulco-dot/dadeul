@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+sqladmin
+psycopg2-binary
+python-dotenv
+google-genai
+supabase
+sqlalchemy
+jinja2
