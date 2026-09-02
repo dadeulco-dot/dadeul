@@ -723,7 +723,7 @@ const AUDIT=[
 ];
 
 /* ── 상태 ── */
-const S={stack:[{s:'home'}],tab:'home',unread:2,ktab:'core',lsort:'verdict',lmore:0,lcat:null,lrecent:[],cdom:'주방용품',cq:'',csort:'cnt',sort:'n',fcat:0,doneShow:{},pubState:'wait',reqDone:null,view:'grid',sec:null,opencat:null,glist:null,rlist:null,rax:'all',rpick:null,atab:'cand',appr:{},aud:{},mine:0,cat:'전체',brand:null,drawer:0,ptab:'rev',user:{ch:'kakao',id:'카카오 계정'},pending:null,noti:{open:1,post:1,drop:1,week:0},sheet:null,q:'',filters:[],picks:[],waits:{p54:28900},bought:{p9:{price:19700,date:'7.28',left:22}},contact:'',tmp:null,toast:null};
+const S={stack:[{s:'home'}],tab:'home',unread:2,ktab:'core',lsort:'verdict',lmore:0,lcat:null,lrecent:[],cdom:'주방용품',cq:'',csort:'cnt',sort:'n',fcat:0,doneShow:{},pubState:'wait',reqDone:null,view:'grid',sec:null,opencat:null,glist:null,rlist:null,rax:'all',rpick:null,atab:'cand',appr:{},aud:{},mine:0,cat:'전체',brand:null,drawer:0,ptab:'rev',user:{ch:'kakao',id:'카카오 계정'},pending:null,noti:{open:1,post:1,drop:1,week:0},sheet:null,q:'',filters:[],picks:[],waits:{p54:28900,p12:34500,p41:48200,p26:38100,p52:25600},bought:{p9:{price:19700,date:'7.28',left:22}},contact:'',tmp:null,toast:null};
 const cur=()=>S.stack[S.stack.length-1];
 let navLock=0;      // pushState 억제
 let skipPop=0;      // 코드로 back()을 부른 경우 popstate 1회 무시
@@ -1844,7 +1844,7 @@ V.waits=()=>{
  const open2=list.filter(canBuy).length;
  return bar('기다리는 것')+`<div class="body">
  <div class="pad" style="padding-top:18px">
-  <div class="meta" style="line-height:1.7">${list.length?`${list.length}개를 기다리고 계세요. 협상이 열리기 전까지는 언제든 가격을 바꾸실 수 있어요.`:''}
+  <div class="meta" style="line-height:1.7">${list.length?`${list.length}개를 기다리고 계세요.<br>협상이 열리기 전까지는 언제든 가격을 바꾸실 수 있어요.`:''}
   ${open2?`<br><b style="color:var(--accent)">${open2}개는 지금 사실 수 있어요.</b>`:''}</div></div>
  <div class="pad" style="padding-top:14px">${!S.user
  ?`<div class="card" style="padding:24px 18px;text-align:center"><div class="sub" style="line-height:1.75">가격을 등록하시려면 알림 받으실 곳이 필요해요.<br>연결해 두시면 기기를 바꾸셔도 그대로 따라와요.</div>
