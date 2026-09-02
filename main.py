@@ -13,6 +13,9 @@ from sqladmin import Admin, ModelView
 from sqlalchemy import create_engine, Column, Integer, String, BigInteger, Float, JSON, DateTime, text
 from sqlalchemy.orm import declarative_base, sessionmaker
 
+from markupsafe import Markup
+from models import ProductCandidate  # SQLAlchemy ORM 모델 임포트
+
 # 최신 google-genai SDK 임포트
 from google import genai
 from google.genai.types import (
@@ -87,26 +90,47 @@ app.add_middleware(
 if engine:
     admin = Admin(app, engine, title="다들(DADEUL) 어드민")
 
-    class ProductCandidateAdminView(ModelView, model=ProductCandidateAdminModel):
-        name = "후보 제품"
-        name_plural = "후보 제품 목록"
-        
-        # 목록에 보여줄 컬럼 지정
-        column_list = [
-            ProductCandidateAdminModel.id,
-            ProductCandidateAdminModel.brand,
-            ProductCandidateAdminModel.name,
-            ProductCandidateAdminModel.category,
-            ProductCandidateAdminModel.price_krw,
-            ProductCandidateAdminModel.verdict,
-            ProductCandidateAdminModel.status
-        ]
-        
-        # 검색창 지원 컬럼 지정
-        column_searchable_list = [ProductCandidateAdminModel.brand, ProductCandidateAdminModel.name]
-        
-        # ⚠️ 에러를 유발했던 column_filters는 제거하거나 문자열 방식으로 수정합니다.
-        # column_filters = ["verdict", "status", "category"] 
+    
+class ProductCandidateAdmin(ModelView, model=ProductCandidate):
+    name = "후보 제품"
+    name_plural = "후보 제품 목록"
+
+    # 1. 목록 화면에 보여줄 컬럼 (id 제외, link 포함)
+    column_list = [
+        ProductCandidate.brand,
+        ProductCandidate.name,
+        ProductCandidate.category,
+        ProductCandidate.price_krw,
+        ProductCandidate.verdict,
+        ProductCandidate.status,
+        ProductCandidate.link,  # DB 모델에 link 필드가 있다고 가정
+    ]
+
+    # 2. 수정(Edit - 연필 버튼) 클릭 시 입력받을/수정할 필드들
+    form_columns = [
+        ProductCandidate.brand,
+        ProductCandidate.name,
+        ProductCandidate.category,
+        ProductCandidate.price_krw,
+        ProductCandidate.verdict,
+        ProductCandidate.status,
+        ProductCandidate.link,
+    ]
+
+    # 3. 눈(View) 모양 버튼 커스텀 -> 외부 연결 사이트 링크로 이동하게 만들기
+    # SQLAdmin 기본 상세보기 페이지 대신 link 주소로 바로 튕기도록 HTML 렌더링
+    column_formatters = {
+        ProductCandidate.link: lambda m, a: markup(
+            f'<a href="{m.link}" target="_blank" class="btn btn-sm btn-outline-primary">'
+            f'🔗 사이트 방문</a>'
+        ) if m.link else "-"
+    }
+
+    # 권한 설정 (상세보기 페이지는 안 쓰고 바로 링크로 가므로 can_view_details=False)
+    can_view_details = False  # 눈 모양 아이콘 대신 'link' 컬럼의 버튼으로 대체
+    can_edit = True          # 연필 버튼: DB 수정 폼 열기
+    can_delete = True        # 휴지통 버튼: DB 데이터 즉시 삭제
+    can_create = True        # + New 버튼: 새 후보 제품 등록
 
     admin.add_view(ProductCandidateAdminView)
 
