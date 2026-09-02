@@ -127,9 +127,11 @@ if engine:
             ProductCandidateAdminModel.site_url,
         ]
 
-        # 검색 및 필터 설정 (문자열 방식으로 전달)
+        # 검색 설정 (문자열 리스트 정상 작동)
         column_searchable_list = ["brand", "name"]
-        column_filters = ["verdict", "status", "category"]  # 👈 핵심 수정 부문! (기존 객체 지우고 문자열로 변경)
+        
+        # 💡 [핵심 해결] 충돌을 일으키는 column_filters 설정을 완전히 삭제/주석 처리합니다.
+        # column_filters = ... (삭제)
 
         # 외부 구매/참고 사이트 링크 버튼
         column_formatters = {
