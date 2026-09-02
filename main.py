@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 from sqladmin import Admin, ModelView
 from sqlalchemy import create_engine, Column, Integer, String, BigInteger, Float, JSON, DateTime, text
 from sqlalchemy.orm import declarative_base, sessionmaker
-from markupsafe import markup
+from markupsafe import Markup
 
 # 최신 google-genai SDK 임포트
 from google import genai
@@ -132,7 +132,7 @@ if engine:
 
         # 외부 구매/참고 사이트 링크 버튼 생성
         column_formatters = {
-            ProductCandidateAdminModel.site_url: lambda m, a: markup(
+            ProductCandidateAdminModel.site_url: lambda m, a: Markup(
                 f'<a href="{m.site_url}" target="_blank" class="btn btn-sm btn-outline-primary">🔗 사이트 방문</a>'
             ) if m.site_url else "-"
         }
