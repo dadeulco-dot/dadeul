@@ -2646,5 +2646,47 @@ window.addEventListener('popstate',()=>{
 });
 draw();
 </script>
+
+<!-- 기획자/개발자 확인용 임시 컨트롤러 (개발 환경 전용) -->
+<div id="test-controller" style="position: fixed; bottom: 20px; right: 20px; background: #222; color: #fff; padding: 12px 16px; border-radius: 8px; z-index: 9999; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+  <strong style="display:block; margin-bottom: 6px; color: #a5f3fc;">🧪 자격 상태 테스트</strong>
+  <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+    <input type="checkbox" id="user-qualification-toggle" onchange="toggleQualification(this.checked)">
+    <span>협상 전 가격 등록 완료 (자격 보유)</span>
+  </label>
+</div>
+
+<script>
+// 자격 상태에 따른 UI 제어 함수
+function toggleQualification(isQualified) {
+  const sectionNowBuyable = document.querySelector('.section-now-buyable'); // 1번 섹션
+  const dealPriceElements = document.querySelectorAll('.deal-price-tag');   // 협상가 표시 태그
+  const buyButtons = document.querySelectorAll('.btn-buy');                 // 구매 버튼들
+
+  if (isQualified) {
+    // [자격 있음] 1번 섹션 노출 및 협상가/구매 버튼 활성화
+    if (sectionNowBuyable) sectionNowBuyable.style.display = 'block';
+    dealPriceElements.forEach(el => el.style.display = 'inline-block');
+    buyButtons.forEach(btn => {
+      btn.disabled = false;
+      btn.textContent = '협상가로 구매하기';
+    });
+  } else {
+    // [자격 없음] 1번 섹션 비노출, 정가만 표시 및 구매 버튼 차단
+    if (sectionNowBuyable) sectionNowBuyable.style.display = 'none';
+    dealPriceElements.forEach(el => el.style.display = 'none');
+    buyButtons.forEach(btn => {
+      btn.disabled = true;
+      btn.textContent = '협상 전 가격 등록 필요';
+    });
+  }
+}
+
+// 초기 실행 (기본값: 자격 없음)
+document.addEventListener('DOMContentLoaded', () => {
+  toggleQualification(false);
+});
+</script>
+ 
 </body>
 </html>
