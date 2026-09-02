@@ -1,17 +1,17 @@
 import os
 import json
 import re
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from supabase import create_client, Client
 from dotenv import load_dotenv
 
 # SQLAdmin & SQLAlchemy 관련 임포트
-from sqladmin import Admin, ModelView
-from sqlalchemy import create_engine, Column, Integer, String, BigInteger, Float, JSON, DateTime, text
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqladmin import Admin, ModelView, expose
+from sqlalchemy import create_engine, Column, Integer, String, BigInteger, JSON
+from sqlalchemy.orm import declarative_base
 from markupsafe import Markup
 
 # 최신 google-genai SDK 임포트
@@ -32,20 +32,16 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 DATABASE_URL = os.getenv("DATABASE_URL")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-# Render/Supabase PostgreSQL URL 호환 처리 (postgres:// -> postgresql://)
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-# Gemini Client 생성
 client = genai.Client(
     api_key=GEMINI_API_KEY,
     http_options=HttpOptions(api_version="v1")
 ) if GEMINI_API_KEY else None
 
-# Supabase SDK 클라이언트 (기존 파이프라인용)
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY) if SUPABASE_URL and SUPABASE_KEY else None
 
-# SQLAlchemy 엔진 생성 (SQLAdmin 및 관리자 판넬용)
 engine = create_engine(DATABASE_URL) if DATABASE_URL else None
 Base = declarative_base()
 
@@ -55,7 +51,6 @@ Base = declarative_base()
 class ProductCandidateAdminModel(Base):
     __tablename__ = "product_candidates"
 
-    # Supabase UUID / String Primary Key 호환을 위해 String(또는 BigInteger) 지정
     id = Column(String, primary_key=True, index=True)
     brand = Column(String, nullable=True)
     name = Column(String, nullable=True)
@@ -90,7 +85,9 @@ if engine:
         name = "후보 제품"
         name_plural = "후보 제품 목록"
 
-        # 목록 표시 컬럼
+        # 상단 템플릿에 [카테고리 콤보박스 + 제품 가져오기 버튼] 커스텀 UI 주입
+        list_template = "custom_list.html"
+
         column_list = [
             ProductCandidateAdminModel.brand,
             ProductCandidateAdminModel.name,
@@ -101,7 +98,6 @@ if engine:
             ProductCandidateAdminModel.site_url,
         ]
 
-        # 상세보기 표시 컬럼
         column_details_list = [
             ProductCandidateAdminModel.id,
             ProductCandidateAdminModel.brand,
@@ -115,7 +111,6 @@ if engine:
             ProductCandidateAdminModel.ai_metadata,
         ]
 
-        # 수정/생성 폼 필드
         form_columns = [
             ProductCandidateAdminModel.brand,
             ProductCandidateAdminModel.name,
@@ -127,13 +122,8 @@ if engine:
             ProductCandidateAdminModel.site_url,
         ]
 
-        # 검색 설정 (문자열 리스트 정상 작동)
         column_searchable_list = ["brand", "name"]
-        
-        # 💡 [핵심 해결] 충돌을 일으키는 column_filters 설정을 완전히 삭제/주석 처리합니다.
-        # column_filters = ... (삭제)
 
-        # 외부 구매/참고 사이트 링크 버튼
         column_formatters = {
             ProductCandidateAdminModel.site_url: lambda m, a: Markup(
                 f'<a href="{m.site_url}" target="_blank" class="btn btn-sm btn-outline-primary">🔗 사이트 방문</a>'
@@ -145,6 +135,16 @@ if engine:
         can_delete = True
         can_create = True
 
+        # 어드민 전용: [제품 가져오기] 액션 실행 엔드포인트
+        @expose("/fetch-products", methods=["POST"])
+        async def fetch_products_action(self, request: Request):
+            form_data = await request.form()
+            category = form_data.get("category", "후라이팬")
+            
+            # 파이프라인 구동
+            await run_pipeline(category=category, auto_save_db=True)
+            return RedirectResponse(url="/admin/product-candidate-admin-model/list", status_code=303)
+
     admin.add_view(ProductCandidateAdminView)
 
 # ----------------------------------------------------
@@ -155,21 +155,50 @@ if os.path.exists("static"):
 
 @app.get("/")
 async def serve_user_app():
-    """http://localhost:8000 접속 시 친구가 준 main.html 서빙"""
     if os.path.exists("static/main.html"):
         return FileResponse("static/main.html")
     return {"message": "static/main.html 파일을 찾을 수 없습니다. 폴더 구조를 확인하세요."}
 
 # ----------------------------------------------------
-# 6. 기존 파이프라인 로직 (Gemini Grounding)
+# 6. 파이프라인 로직 및 중복 제거 (Gemini Grounding)
 # ----------------------------------------------------
 def clean_json_response(raw_text: str):
-    """Grounding 응답에서 마크다운 JSON 태그를 제거하고 파싱합니다."""
     clean_text = re.sub(r'^```json\s*', '', raw_text, flags=re.MULTILINE)
     clean_text = re.sub(r'^```\s*', '', clean_text, flags=re.MULTILINE)
     clean_text = clean_text.strip()
     return json.loads(clean_text)
 
+def filter_existing_db_products(stage1_data: list) -> list:
+    """기존 Supabase DB를 조회하여 brand와 name이 완벽히 동일한 제품은 미리 탈락 처리합니다."""
+    if not supabase:
+        return stage1_data
+
+    try:
+        # 기존 DB 목록 불러오기
+        response = supabase.table("product_candidates").select("brand, name").execute()
+        existing_products = set()
+        for item in (response.data or []):
+            b = str(item.get("brand") or "").strip().lower()
+            n = str(item.get("name") or "").strip().lower()
+            if b and n:
+                existing_products.add((b, n))
+
+        filtered_list = []
+        for item in stage1_data:
+            item_brand = str(item.get("brand") or "").strip().lower()
+            item_name = str(item.get("name") or "").strip().lower()
+
+            # DB에 동일한 (brand, name)이 유효하게 존재하는 경우 탈락 처리
+            if (item_brand, item_name) in existing_products:
+                print(f"🚫 [기존 DB 중복 제거] {item.get('brand')} - {item.get('name')} 제품이 이미 존재하여 1단계에서 즉시 탈락 처리되었습니다.")
+                continue
+            
+            filtered_list.append(item)
+
+        return filtered_list
+    except Exception as e:
+        print(f"⚠️ 중복 검사 실행 중 예외 발생: {str(e)}")
+        return stage1_data
 
 PROMPT_STAGE_1 = """
 당신은 「다들」의 제품 발굴 담당자입니다.
@@ -272,103 +301,78 @@ PROMPT_STAGE_2 = """
 ]
 """
 
-@app.post("/api/v1/pipeline/discover-candidates")
-async def discover_candidates(category: str = "프라이팬", auto_save_db: bool = True):
+async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True):
     if not client:
         raise HTTPException(status_code=500, detail=".env 파일에 GEMINI_API_KEY가 설정되어 있지 않습니다.")
 
-    try:
-        search_config = GenerateContentConfig(
-            tools=[Tool(google_search=GoogleSearch())]
-        )
+    search_config = GenerateContentConfig(tools=[Tool(google_search=GoogleSearch())])
 
-        # --- [1단계: 후보 넓게 긁기] ---
-        print(f"\n🌐 [1단계] '{category}' 갈래 구글 실시간 검색 시작...")
-        prompt_1 = PROMPT_STAGE_1.format(category=category)
-        
-        response_1 = client.models.generate_content(
-            model="gemini-3.1-flash-lite",
-            contents=prompt_1,
-            config=search_config
-        )
-        stage1_raw = response_1.text.strip()
-        print(f"✅ [1단계 완료] 구글 실시간 검색 기반 데이터 추출 성공")
+    # 1단계: 검색 기반 추출
+    print(f"\n🌐 [1단계] '{category}' 갈래 구글 실시간 검색 시작...")
+    prompt_1 = PROMPT_STAGE_1.format(category=category)
+    response_1 = client.models.generate_content(
+        model="gemini-3.1-flash-lite",
+        contents=prompt_1,
+        config=search_config
+    )
+    stage1_parsed = clean_json_response(response_1.text)
 
-        # --- [2단계: 의심하고 검증하기] ---
-        print(f"🔍 [2단계] 후보군 구글 실시간 재검증 및 keep/drop 판정 중...")
-        prompt_2 = PROMPT_STAGE_2.format(stage1_json=stage1_raw)
-        
-        response_2 = client.models.generate_content(
-            model="gemini-3.1-flash-lite",
-            contents=prompt_2,
-            config=search_config
-        )
-        stage2_results = clean_json_response(response_2.text)
-        print(f"✅ [2단계 완료] 총 {len(stage2_results)}개 정밀 판정 완료\n")
+    # 💡 [핵심] 기존 DB 비교 - brand, name 중복 제품 필터링
+    stage1_filtered = filter_existing_db_products(stage1_parsed)
 
-        # --- [3단계: Supabase DB 저장] ---
-        saved_count = 0
-        save_errors = []
+    # 2단계: 2차 정밀 재검증
+    print(f"🔍 [2단계] 후보군 구글 실시간 재검증 및 keep/drop 판정 중...")
+    prompt_2 = PROMPT_STAGE_2.format(stage1_json=json.dumps(stage1_filtered, ensure_ascii=False))
+    response_2 = client.models.generate_content(
+        model="gemini-3.1-flash-lite",
+        contents=prompt_2,
+        config=search_config
+    )
+    stage2_results = clean_json_response(response_2.text)
 
-        if auto_save_db and supabase:
-            print("💾 [Supabase DB 저장 시작]...")
-            for item in stage2_results:
-                is_keep = item.get("verdict") == "keep"
-                brand_val = item.get("brand")
-                name_val = item.get("name")
-                category_val = item.get("sub", category)
-                
-                db_payload = {
-                    "brand": brand_val,
-                    "name": name_val,
-                    "category": category_val,
-                    "price_krw": item.get("price_krw"),
-                    "site_url": item.get("site_url"),
-                    "verdict": item.get("verdict", "keep"),
-                    "reject_reason": item.get("reason"),
-                    "status": "PENDING_APPROVAL" if is_keep else "REJECTED",
-                    "ai_metadata": {
-                        "market_rating": item.get("market_rating"),
-                        "market_reviews": item.get("market_reviews"),
-                        "market_orders": item.get("market_orders"),
-                        "aliases": item.get("aliases", []),
-                        "yt_queries": item.get("yt_queries", []),
-                        "yt_must": item.get("yt_must", []),
-                        "human_check_tags": item.get("check_by_human", []),
-                        "sources": item.get("sources", [])
-                    }
+    # 3단계: Supabase DB 저장
+    saved_count = 0
+    save_errors = []
+
+    if auto_save_db and supabase:
+        print("💾 [Supabase DB 저장 시작]...")
+        for item in stage2_results:
+            is_keep = item.get("verdict") == "keep"
+            db_payload = {
+                "brand": item.get("brand"),
+                "name": item.get("name"),
+                "category": item.get("sub", category),
+                "price_krw": item.get("price_krw"),
+                "site_url": item.get("site_url"),
+                "verdict": item.get("verdict", "keep"),
+                "reject_reason": item.get("reason"),
+                "status": "PENDING_APPROVAL" if is_keep else "REJECTED",
+                "ai_metadata": {
+                    "market_rating": item.get("market_rating"),
+                    "market_reviews": item.get("market_reviews"),
+                    "market_orders": item.get("market_orders"),
+                    "aliases": item.get("aliases", []),
+                    "yt_queries": item.get("yt_queries", []),
+                    "yt_must": item.get("yt_must", []),
+                    "human_check_tags": item.get("check_by_human", []),
+                    "sources": item.get("sources", [])
                 }
+            }
 
-                try:
-                    res = supabase.table("product_candidates").insert(db_payload).execute()
-                    if res.data:
-                        saved_count += 1
-                except Exception as insert_err:
-                    print(f"⚠️ 저장 실패 [{item.get('name')}]: {str(insert_err)}")
-                    save_errors.append({"name": item.get("name"), "error": str(insert_err)})
+            try:
+                res = supabase.table("product_candidates").insert(db_payload).execute()
+                if res.data:
+                    saved_count += 1
+            except Exception as insert_err:
+                save_errors.append({"name": item.get("name"), "error": str(insert_err)})
 
-            print(f"🎉 Supabase DB 저장 완료: {saved_count}개 성공, {len(save_errors)}개 실패\n")
+    return {
+        "status": "success",
+        "category": category,
+        "results": stage2_results,
+        "saved_count": saved_count
+    }
 
-        keeps = [i for i in stage2_results if i.get("verdict") == "keep"]
-        drops = [i for i in stage2_results if i.get("verdict") == "drop"]
-
-        return {
-            "status": "success",
-            "category": category,
-            "summary": {
-                "total_evaluated": len(stage2_results),
-                "keep_count": len(keeps),
-                "drop_count": len(drops),
-                "db_saved_count": saved_count,
-                "db_error_count": len(save_errors)
-            },
-            "save_errors": save_errors,
-            "results": stage2_results
-        }
-
-    except Exception as e:
-        print(f"❌ 파이프라인 오류 발생: {str(e)}")
-        return {
-            "status": "error",
-            "detail": str(e)
-        }
+@app.post("/api/v1/pipeline/discover-candidates")
+async def discover_candidates_endpoint(category: str = "후라이팬", auto_save_db: bool = True):
+    return await run_pipeline(category=category, auto_save_db=auto_save_db)
