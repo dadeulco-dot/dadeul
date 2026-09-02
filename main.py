@@ -79,7 +79,8 @@ app.add_middleware(
 # 4. SQLAdmin 관리자 페이지 설정 (/admin)
 # ----------------------------------------------------
 if engine:
-    admin = Admin(app, engine, title="다들(DADEUL) 어드민")
+    # templates 폴더를 연결하여 custom_list.html을 정상 로드하도록 설정
+    admin = Admin(app, engine, title="다들(DADEUL) 어드민", templates_dir="templates")
 
     class ProductCandidateAdminView(ModelView, model=ProductCandidateAdminModel):
         name = "후보 제품"
