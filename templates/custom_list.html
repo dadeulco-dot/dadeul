@@ -1,0 +1,19 @@
+{% extends "sqladmin/list.html" %}
+
+{% block content %}
+<div class="card mb-3 p-3">
+  <form action="/admin/product-candidate-admin-model/fetch-products" method="POST" class="d-flex align-items-center gap-2">
+    <label for="category" class="fw-bold me-2">카테고리 선택:</label>
+    <select name="category" id="category" class="form-select w-auto">
+      <option value="후라이팬">후라이팬</option>
+      <option value="냄비">냄비</option>
+      <option value="칼">칼</option>
+    </select>
+    <button type="submit" class="btn btn-primary ms-2" onclick="return confirm('파이프라인을 구동하여 수집 및 DB 저장을 진행하시겠습니까? (약 10~20초 소요)');">
+      🚀 제품 가져오기
+    </button>
+  </form>
+</div>
+
+{{ super() }}
+{% endblock %}
