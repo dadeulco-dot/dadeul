@@ -55,7 +55,8 @@ Base = declarative_base()
 class ProductCandidateAdminModel(Base):
     __tablename__ = "product_candidates"
 
-    id = Column(Integer, primary_key=True, index=True)
+    # Supabase UUID / String Primary Key 호환을 위해 String(또는 BigInteger) 지정
+    id = Column(String, primary_key=True, index=True)
     brand = Column(String, nullable=True)
     name = Column(String, nullable=True)
     category = Column(String, nullable=True)
@@ -89,7 +90,7 @@ if engine:
         name = "후보 제품"
         name_plural = "후보 제품 목록"
 
-        # 목록(List) 테이블 표시 컬럼 (id 숨김)
+        # 목록 테이블 표시 컬럼
         column_list = [
             ProductCandidateAdminModel.brand,
             ProductCandidateAdminModel.name,
@@ -100,7 +101,7 @@ if engine:
             ProductCandidateAdminModel.site_url,
         ]
 
-        # 상세보기(View - 눈 모양 버튼) 표시 컬럼
+        # 상세 보기 표시 컬럼
         column_details_list = [
             ProductCandidateAdminModel.id,
             ProductCandidateAdminModel.brand,
@@ -114,7 +115,7 @@ if engine:
             ProductCandidateAdminModel.ai_metadata,
         ]
 
-        # 수정(Edit - 연필 버튼) 입력 필드
+        # 수정/생성 폼 필드 (id는 자동생성되므로 제외)
         form_columns = [
             ProductCandidateAdminModel.brand,
             ProductCandidateAdminModel.name,
@@ -126,18 +127,16 @@ if engine:
             ProductCandidateAdminModel.site_url,
         ]
 
-        # 검색 및 필터 설정
         column_searchable_list = [ProductCandidateAdminModel.brand, ProductCandidateAdminModel.name]
         column_filters = [ProductCandidateAdminModel.verdict, ProductCandidateAdminModel.status, ProductCandidateAdminModel.category]
 
-        # 외부 구매/참고 사이트 링크 버튼 생성
+        # 안전한 사이트 방문 링크 렌더링
         column_formatters = {
             ProductCandidateAdminModel.site_url: lambda m, a: Markup(
                 f'<a href="{m.site_url}" target="_blank" class="btn btn-sm btn-outline-primary">🔗 사이트 방문</a>'
-            ) if m.site_url else "-"
+            ) if getattr(m, 'site_url', None) else "-"
         }
 
-        # 버튼 권한 설정 (View, Edit, Delete 모두 정상 작동)
         can_view_details = True
         can_edit = True
         can_delete = True
