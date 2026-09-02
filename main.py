@@ -90,7 +90,7 @@ if engine:
         name = "후보 제품"
         name_plural = "후보 제품 목록"
 
-        # 목록 테이블 표시 컬럼
+        # 목록 표시 컬럼
         column_list = [
             ProductCandidateAdminModel.brand,
             ProductCandidateAdminModel.name,
@@ -101,7 +101,7 @@ if engine:
             ProductCandidateAdminModel.site_url,
         ]
 
-        # 상세 보기 표시 컬럼
+        # 상세보기 표시 컬럼
         column_details_list = [
             ProductCandidateAdminModel.id,
             ProductCandidateAdminModel.brand,
@@ -115,7 +115,7 @@ if engine:
             ProductCandidateAdminModel.ai_metadata,
         ]
 
-        # 수정/생성 폼 필드 (id는 자동생성되므로 제외)
+        # 수정/생성 폼 필드
         form_columns = [
             ProductCandidateAdminModel.brand,
             ProductCandidateAdminModel.name,
@@ -127,10 +127,11 @@ if engine:
             ProductCandidateAdminModel.site_url,
         ]
 
-        column_searchable_list = [ProductCandidateAdminModel.brand, ProductCandidateAdminModel.name]
-        column_filters = [ProductCandidateAdminModel.verdict, ProductCandidateAdminModel.status, ProductCandidateAdminModel.category]
+        # 검색 및 필터 설정 (문자열 방식으로 전달)
+        column_searchable_list = ["brand", "name"]
+        column_filters = ["verdict", "status", "category"]  # 👈 핵심 수정 부문! (기존 객체 지우고 문자열로 변경)
 
-        # 안전한 사이트 방문 링크 렌더링
+        # 외부 구매/참고 사이트 링크 버튼
         column_formatters = {
             ProductCandidateAdminModel.site_url: lambda m, a: Markup(
                 f'<a href="{m.site_url}" target="_blank" class="btn btn-sm btn-outline-primary">🔗 사이트 방문</a>'
