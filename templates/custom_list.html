@@ -1,9 +1,36 @@
 {% extends "sqladmin/list.html" %}
 
 {% block content %}
-<div class="card mb-3 p-3">
-  <form action="/admin/product-candidate-admin-model/fetch-products" method="POST" class="d-flex align-items-center gap-2">
-    <label for="category" class="fw-bold me-2">카테고리 선택:</label>
+<style>
+  /* 모바일 반응형 UI 스타일 */
+  .custom-fetch-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #ffffff;
+  }
+  
+  @media (max-width: 768px) {
+    .custom-fetch-form {
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+    .custom-fetch-form select,
+    .custom-fetch-form button {
+      width: 100% !important;
+      margin-left: 0 !important;
+      margin-top: 6px;
+    }
+    /* 모바일 테이블 가로 스크롤 지원 */
+    .table-responsive {
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+</style>
+
+<div class="card custom-fetch-card mb-3 p-3">
+  <form action="/admin/product-candidate-admin-model/fetch-products" method="POST" class="d-flex align-items-center gap-2 custom-fetch-form">
+    <label for="category" class="fw-bold me-2" style="white-space: nowrap;">카테고리 선택:</label>
     <select name="category" id="category" class="form-select w-auto">
       <option value="후라이팬">후라이팬</option>
       <option value="냄비">냄비</option>
