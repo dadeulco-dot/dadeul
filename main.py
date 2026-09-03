@@ -306,7 +306,7 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
     print(f"\n🌐 [1단계] '{category}' 구글 실시간 검색 시작...")
     prompt_1 = PROMPT_STAGE_1.format(category=category)
     response_1 = client.models.generate_content(
-        model="gemini-3.1-flash-lite",
+        model="gemini-2.5-pro",
         contents=prompt_1,
         config=search_config
     )
@@ -319,7 +319,7 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
         stage1_json=json.dumps(stage1_filtered, ensure_ascii=False)
     )
     response_2 = client.models.generate_content(
-        model="gemini-3.1-flash-lite",
+        model="gemini-2.5-pro",
         contents=prompt_2,
         config=search_config
     )
