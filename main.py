@@ -8,9 +8,9 @@ from fastapi.responses import FileResponse, RedirectResponse
 from supabase import create_client, Client
 from dotenv import load_dotenv
 
-# SQLAdmin & SQLAlchemy 관련 임포트
+# SQLAdmin & SQLAlchemy 관련 임포트 (Float 추가됨)
 from sqladmin import Admin, ModelView, expose
-from sqlalchemy import create_engine, Column, Integer, String, BigInteger, JSON
+from sqlalchemy import create_engine, Column, String, BigInteger, Float, JSON
 from sqlalchemy.orm import declarative_base
 from markupsafe import Markup
 
@@ -46,7 +46,7 @@ engine = create_engine(DATABASE_URL) if DATABASE_URL else None
 Base = declarative_base()
 
 # ----------------------------------------------------
-# 2. SQLAdmin용 SQLAlchemy ORM 모델 정의
+# 2. SQLAdmin용 SQLAlchemy ORM 모델 정의 (교차 검증 컬럼 추가)
 # ----------------------------------------------------
 class ProductCandidateAdminModel(Base):
     __tablename__ = "product_candidates"
@@ -57,6 +57,13 @@ class ProductCandidateAdminModel(Base):
     category = Column(String, nullable=True)
     price_krw = Column(BigInteger, nullable=True)
     site_url = Column(String, nullable=True)
+    
+    # 💡 별점 vs 다들 교차검증 컬럼
+    market_rating = Column(Float, nullable=True)
+    market_reviews = Column(BigInteger, nullable=True)
+    dadeul_label = Column(String, nullable=True)
+    dadeul_comment = Column(String, nullable=True)
+    
     verdict = Column(String, default="keep")
     reject_reason = Column(String, nullable=True)
     status = Column(String, default="PENDING_APPROVAL")
@@ -79,32 +86,39 @@ app.add_middleware(
 # 4. SQLAdmin 관리자 페이지 설정 (/admin)
 # ----------------------------------------------------
 if engine:
-    # templates 폴더를 연결하여 custom_list.html을 정상 로드하도록 설정
+    # 모바일 호환 custom_list.html을 불러오기 위해 templates_dir 연결
     admin = Admin(app, engine, title="다들(DADEUL) 어드민", templates_dir="templates")
 
     class ProductCandidateAdminView(ModelView, model=ProductCandidateAdminModel):
         name = "후보 제품"
         name_plural = "후보 제품 목록"
 
-        # 상단 템플릿에 [카테고리 콤보박스 + 제품 가져오기 버튼] 커스텀 UI 주입
         list_template = "custom_list.html"
 
+        # 목록 표시 컬럼
         column_list = [
             ProductCandidateAdminModel.brand,
             ProductCandidateAdminModel.name,
             ProductCandidateAdminModel.category,
             ProductCandidateAdminModel.price_krw,
+            ProductCandidateAdminModel.market_rating,
+            ProductCandidateAdminModel.dadeul_label,
             ProductCandidateAdminModel.verdict,
             ProductCandidateAdminModel.status,
             ProductCandidateAdminModel.site_url,
         ]
 
+        # 상세 보기 표시 컬럼
         column_details_list = [
             ProductCandidateAdminModel.id,
             ProductCandidateAdminModel.brand,
             ProductCandidateAdminModel.name,
             ProductCandidateAdminModel.category,
             ProductCandidateAdminModel.price_krw,
+            ProductCandidateAdminModel.market_rating,
+            ProductCandidateAdminModel.market_reviews,
+            ProductCandidateAdminModel.dadeul_label,
+            ProductCandidateAdminModel.dadeul_comment,
             ProductCandidateAdminModel.verdict,
             ProductCandidateAdminModel.reject_reason,
             ProductCandidateAdminModel.status,
@@ -112,11 +126,16 @@ if engine:
             ProductCandidateAdminModel.ai_metadata,
         ]
 
+        # 수정/생성 폼 필드
         form_columns = [
             ProductCandidateAdminModel.brand,
             ProductCandidateAdminModel.name,
             ProductCandidateAdminModel.category,
             ProductCandidateAdminModel.price_krw,
+            ProductCandidateAdminModel.market_rating,
+            ProductCandidateAdminModel.market_reviews,
+            ProductCandidateAdminModel.dadeul_label,
+            ProductCandidateAdminModel.dadeul_comment,
             ProductCandidateAdminModel.verdict,
             ProductCandidateAdminModel.reject_reason,
             ProductCandidateAdminModel.status,
@@ -125,6 +144,7 @@ if engine:
 
         column_searchable_list = ["brand", "name"]
 
+        # 안전한 외부 링크 렌더링
         column_formatters = {
             ProductCandidateAdminModel.site_url: lambda m, a: Markup(
                 f'<a href="{m.site_url}" target="_blank" class="btn btn-sm btn-outline-primary">🔗 사이트 방문</a>'
@@ -136,13 +156,11 @@ if engine:
         can_delete = True
         can_create = True
 
-        # 어드민 전용: [제품 가져오기] 액션 실행 엔드포인트
         @expose("/fetch-products", methods=["POST"])
         async def fetch_products_action(self, request: Request):
             form_data = await request.form()
             category = form_data.get("category", "후라이팬")
             
-            # 파이프라인 구동
             await run_pipeline(category=category, auto_save_db=True)
             return RedirectResponse(url="/admin/product-candidate-admin-model/list", status_code=303)
 
@@ -170,12 +188,10 @@ def clean_json_response(raw_text: str):
     return json.loads(clean_text)
 
 def filter_existing_db_products(stage1_data: list) -> list:
-    """기존 Supabase DB를 조회하여 brand와 name이 완벽히 동일한 제품은 미리 탈락 처리합니다."""
     if not supabase:
         return stage1_data
 
     try:
-        # 기존 DB 목록 불러오기
         response = supabase.table("product_candidates").select("brand, name").execute()
         existing_products = set()
         for item in (response.data or []):
@@ -189,121 +205,94 @@ def filter_existing_db_products(stage1_data: list) -> list:
             item_brand = str(item.get("brand") or "").strip().lower()
             item_name = str(item.get("name") or "").strip().lower()
 
-            # DB에 동일한 (brand, name)이 유효하게 존재하는 경우 탈락 처리
             if (item_brand, item_name) in existing_products:
-                print(f"🚫 [기존 DB 중복 제거] {item.get('brand')} - {item.get('name')} 제품이 이미 존재하여 1단계에서 즉시 탈락 처리되었습니다.")
+                print(f"🚫 [기존 DB 중복] {item.get('brand')} - {item.get('name')} 제외")
                 continue
             
             filtered_list.append(item)
 
         return filtered_list
     except Exception as e:
-        print(f"⚠️ 중복 검사 실행 중 예외 발생: {str(e)}")
+        print(f"⚠️ 중복 검사 에러: {str(e)}")
         return stage1_data
 
 PROMPT_STAGE_1 = """
 당신은 「다들」의 제품 발굴 담당자입니다.
 
 ## 다들이 하는 일
-흩어진 후기를 모아 제품을 고르고, 사려는 사람이 모이면 브랜드와 직접 가격을 협상합니다.
-협상은 1인 사업자가 브랜드 담당자에게 직접 연락해서 진행합니다.
+다들의 핵심 가치는 **[판매처 별점]과 [실제 장기 사용 후기]를 교차 검증하여 그 격차(갭)를 드러내는 것**입니다.
+예: "네이버 별점 4.8이지만 다들 분석 결과는 대체로 불만/의견 갈림" -> 이 격차가 콘텐츠 자산입니다.
 
 ## 이번 작업 (카테고리 엄격 제한 ★)
 현재 작업 카테고리: 「{category}」
 
-⚠️ **[절대 주의] 반드시 오직 「{category}」 카테고리에 완벽히 속하는 제품만 검색하여 추출하세요.**
-- 예: 「후라이팬」 검색 시 냄비, 궁중팬, 웍, 칼 등 다른 카테고리 제품은 절대 포함하지 마세요.
-- 제품의 용도와 형태가 정확히 「{category}」 제품군이어야 합니다.
-- 목표: 10~25개. 조건 및 카테고리에 맞는 제품이 부족하면 부족한 대로 내고, 개수를 채우려고 억지로 다른 종류를 넣지 마세요.
+⚠️ 반드시 오직 「{category}」 카테고리에 완벽히 속하는 제품만 수집하세요. 다른 카테고리가 섞이면 안 됩니다.
 
 ## 반드시 지킬 것 ★
-1. 검색으로 확인한 것만 씁니다. 기억이나 추측으로 제품명·브랜드·가격을 만들지 마세요.
-2. 확인하지 못한 항목은 반드시 null 로 두세요. 빈칸을 채우려 짐작하지 마세요.
-3. 제품마다 근거 URL을 최소 1개 답니다. URL을 못 찾으면 그 제품은 빼세요.
-4. 제품이 좋은지 나쁜지 판단하지 마세요. 후기 평가는 다들이 별도 절차로 합니다.
-   당신은 "협상 후보가 될 조건을 갖췄는가"만 봅니다.
-5. 후기 원문·상세페이지 문구를 복사하지 마세요. 사실(숫자·스펙 값)만 옮깁니다.
+1. 검색으로 확인한 정량 데이터(별점, 리뷰수, 가격)만 명확히 수집합니다.
+2. 판매처 별점과 실제 텍스트 후기 분석 내용 간의 격차(교차 검증 포인트)를 찾아내어 기록하세요.
+3. 확인되지 않은 항목은 null로 처리하세요.
 
-## 후보 조건 — 7개를 모두 만족해야 합니다
-① 브랜드 규모: 1인이 연락해 협상할 수 있는 국내 중소 브랜드 (대기업, 상장사, 노브랜드 수입품 제외)
-② 모델이 특정되는가: 모델 단위로 딱 떨어지는 대표 규격 1개
+## 후보 조건 (7가지)
+① 브랜드 규모: 국내 중소 브랜드 (대기업, 상장사 제외)
+② 모델 특정: 모델 단위로 특정되는 대표 규격 1개
 ③ 유튜브 리뷰: 최근 24개월 안 3개 이상
-④ 내구재: 최소 3개월 이상 사용하는 물건
-⑤ 가격 공개: 매일 동일 주소 확인 가능
+④ 내구재: 3개월 이상 사용하는 물건
+⑤ 가격 공개: 동일 주소 확인 가능
 ⑥ 가격대: 정가 15,000원 ~ 300,000원
-⑦ 수요 규모: 누적 리뷰 1,000건 이상 & 구매 건수 300건 이상 (확인 불가 시 null)
-
-★ 별점은 통과 기준이 아닙니다. 숫자만 적으세요. 4.0 미만이면 uncertain에 「별점 낮음」 표기.
-★ 리뷰 본문은 읽지 마세요. 숫자(별점, 리뷰수, 구매수)만 기록합니다.
+⑦ 수요 규모: 누적 리뷰 1,000건 이상 & 구매 건수 300건 이상
 
 ## 무조건 제외
-지정된 「{category}」 외 타 제품군 전체, 식품, 건기식, 의약외품, 화장품, 유아/아동용, 병행수입, 리셀, 중고, 출시 6개월 미만, 상시 할인 제품
+지정된 「{category}」 외 타 제품군 전체, 식품, 건기식, 화장품, 병행수입, 리셀, 중고 등
 
-## 출력 형식
-설명이나 인삿말 없이 반드시 **JSON 배열만** 출력해 주세요.
-sub 항목에는 반드시 지정된 카테고리명인 "{category}"를 넣으세요.
+## 출력 형식 (JSON 배열만 출력)
 [
   {{
     "brand": "브랜드명",
-    "name": "모델명까지 포함한 제품명",
+    "name": "모델명 포함 제품명",
     "sub": "{category}",
     "price_krw": 39800,
-    "site_url": "가격을 추적할 판매처 주소",
-    "brand_scale": "중소",
-    "brand_evidence": "판단 근거",
-    "yt_review_count": 5,
-    "yt_evidence": ["영상 URL"],
-    "market_rating": 4.68,
-    "market_reviews": 109000,
-    "market_orders": 4507,
-    "market_url": "숫자를 확인한 판매처 주소",
-    "release": "2024-03 또는 null",
-    "sources": ["근거 URL"],
-    "uncertain": ["확신이 낮은 항목명"]
+    "site_url": "판매처 주소",
+    "market_rating": 4.8,
+    "market_reviews": 1148,
+    "dadeul_label": "의견 갈림 또는 대체로 불만 또는 만족",
+    "dadeul_comment": "별점은 높은데 오래 쓰신 분들 사이엔 말이 갈려요",
+    "sources": ["근거 URL"]
   }}
 ]
 """
 
 PROMPT_STAGE_2 = """
 아래는 1단계에서 뽑은 「다들」 제품 후보 목록입니다.
-이번에는 **떨어뜨리는 쪽에 서서** 다시 검토해 주세요.
+교차 검증 관점(별점 vs 다들 평가 격차)을 유지하며 **검증 및 필터링**을 진행해 주세요.
 
 ## 검증 규칙
-1. 지정된 카테고리가 아닌 제품이 섞여있다면 가장 먼저 탈락(verdict: "drop", 사유: 「카테고리 불일치」) 시키세요.
-2. 각 제품을 다시 검색해 브랜드·모델명·가격이 실제로 존재하는지 확인합니다. 재확인 실패 시 verdict: "drop", 사유: 「재확인 실패」.
-3. 중복 제품은 하나로 합칩니다.
-4. 한 브랜드에서 3개를 넘기지 마세요. 넘치면 리뷰 영상이 많은 순으로 남깁니다.
-5. 7개 조건 중 하나라도 어긋나면 떨어뜨립니다. 애매하면 떨어뜨리는 쪽을 고릅니다.
-6. market_reviews, market_orders를 다시 확인하여 1단계 값과 차이가 크면 check_by_human에 「수치 불일치」 작성.
-★ market_rating은 높든 낮든 판정 근거로 쓰지 마세요.
-
-## 통과한 제품(keep) 필수 생성 항목
-- aliases: 검색 별칭 3~5개
-- yt_queries: 브랜드명 + 제품 종류 + 규격 조합 검색어 2~3개
-- yt_must: 영상 제목 필수 포함 단어 1~2개 (오염 방지 핵심)
+1. 카테고리가 「{category}」와 일치하지 않는 제품은 즉시 drop (사유: 「카테고리 불일치」).
+2. 별점과 실제 후기의 격차(교차 검증 포인트)가 명확한 제품을 우대합니다.
+3. 브랜드당 최대 3개까지만 유지합니다.
+4. 재확인 실패 시 verdict: "drop", 사유: 「재확인 실패」.
 
 ## 검증 대상 데이터:
 {stage1_json}
 
-## 출력 형식
-설명이나 인삿말 없이 반드시 **JSON 배열만** 출력해 주세요.
+## 출력 형식 (JSON 배열만 출력)
 [
   {{
     "verdict": "keep" 또는 "drop",
     "reason": "판정 사유 한 줄",
     "brand": "...",
     "name": "...",
-    "sub": "...",
+    "sub": "{category}",
     "price_krw": 39800,
     "site_url": "...",
-    "market_rating": 4.68,
-    "market_reviews": 109000,
-    "market_orders": 4507,
-    "aliases": ["..."],
-    "yt_queries": ["..."],
-    "yt_must": ["..."],
-    "sources": ["..."],
-    "check_by_human": ["사람이 볼 항목"]
+    "market_rating": 4.8,
+    "market_reviews": 1148,
+    "dadeul_label": "의견 갈림",
+    "dadeul_comment": "별점은 높은데 오래 쓰신 분들 사이엔 말이 갈려요",
+    "aliases": ["검색 별칭들"],
+    "yt_queries": ["유튜브 검색어들"],
+    "yt_must": ["필수 포함 단어들"],
+    "sources": ["근거 URL"]
   }}
 ]
 """
@@ -314,8 +303,7 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
 
     search_config = GenerateContentConfig(tools=[Tool(google_search=GoogleSearch())])
 
-    # 1단계: 검색 기반 추출
-    print(f"\n🌐 [1단계] '{category}' 갈래 구글 실시간 검색 시작...")
+    print(f"\n🌐 [1단계] '{category}' 구글 실시간 검색 시작...")
     prompt_1 = PROMPT_STAGE_1.format(category=category)
     response_1 = client.models.generate_content(
         model="gemini-3.1-flash-lite",
@@ -323,13 +311,13 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
         config=search_config
     )
     stage1_parsed = clean_json_response(response_1.text)
-
-    # 💡 [핵심] 기존 DB 비교 - brand, name 중복 제품 필터링
     stage1_filtered = filter_existing_db_products(stage1_parsed)
 
-    # 2단계: 2차 정밀 재검증
     print(f"🔍 [2단계] 후보군 구글 실시간 재검증 및 keep/drop 판정 중...")
-    prompt_2 = PROMPT_STAGE_2.format(stage1_json=json.dumps(stage1_filtered, ensure_ascii=False))
+    prompt_2 = PROMPT_STAGE_2.format(
+        category=category, 
+        stage1_json=json.dumps(stage1_filtered, ensure_ascii=False)
+    )
     response_2 = client.models.generate_content(
         model="gemini-3.1-flash-lite",
         contents=prompt_2,
@@ -337,7 +325,6 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
     )
     stage2_results = clean_json_response(response_2.text)
 
-    # 3단계: Supabase DB 저장
     saved_count = 0
     save_errors = []
 
@@ -351,17 +338,20 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
                 "category": item.get("sub", category),
                 "price_krw": item.get("price_krw"),
                 "site_url": item.get("site_url"),
+                
+                # 💡 교차검증 데이터 DB 맵핑
+                "market_rating": item.get("market_rating"),
+                "market_reviews": item.get("market_reviews"),
+                "dadeul_label": item.get("dadeul_label"),
+                "dadeul_comment": item.get("dadeul_comment"),
+                
                 "verdict": item.get("verdict", "keep"),
                 "reject_reason": item.get("reason"),
                 "status": "PENDING_APPROVAL" if is_keep else "REJECTED",
                 "ai_metadata": {
-                    "market_rating": item.get("market_rating"),
-                    "market_reviews": item.get("market_reviews"),
-                    "market_orders": item.get("market_orders"),
                     "aliases": item.get("aliases", []),
                     "yt_queries": item.get("yt_queries", []),
                     "yt_must": item.get("yt_must", []),
-                    "human_check_tags": item.get("check_by_human", []),
                     "sources": item.get("sources", [])
                 }
             }
