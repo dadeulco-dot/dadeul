@@ -182,10 +182,22 @@ async def serve_user_app():
 # 6. 파이프라인 로직 및 중복 제거 (Gemini Grounding)
 # ----------------------------------------------------
 def clean_json_response(raw_text: str):
-    clean_text = re.sub(r'^```json\s*', '', raw_text, flags=re.MULTILINE)
-    clean_text = re.sub(r'^```\s*', '', clean_text, flags=re.MULTILINE)
-    clean_text = clean_text.strip()
-    return json.loads(clean_text)
+    if not raw_text:
+        return []
+        
+    # 💡 텍스트 내에서 JSON 배열 시작 '['과 끝 ']' 위치만 정확히 찾아내어 자름
+    start_idx = raw_text.find('[')
+    end_idx = raw_text.rfind(']')
+    
+    if start_idx != -1 and end_idx != -1:
+        clean_text = raw_text[start_idx:end_idx+1]
+        try:
+            return json.loads(clean_text)
+        except Exception as e:
+            print(f"⚠️ JSON 변환 오류: {str(e)}")
+            
+    print(f"⚠️ [JSON 파싱 실패] 원본 텍스트: {raw_text}")
+    return []
 
 def filter_existing_db_products(stage1_data: list) -> list:
     if not supabase:
@@ -298,11 +310,15 @@ PROMPT_STAGE_2 = """
 """
 
 async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True):
-    if not client:
+   if not client:
         raise HTTPException(status_code=500, detail=".env 파일에 GEMINI_API_KEY가 설정되어 있지 않습니다.")
 
-    search_config = GenerateContentConfig(tools=[Tool(google_search=GoogleSearch())])
-
+    # 💡 도구 설정에 JSON 강제 및 온도(temperature) 조절 옵션 추가
+    search_config = GenerateContentConfig(
+        tools=[Tool(google_search=GoogleSearch())],
+        response_mime_type="application/json",
+        temperature=0.3
+    )
     print(f"\n🌐 [1단계] '{category}' 구글 실시간 검색 시작...")
     prompt_1 = PROMPT_STAGE_1.format(category=category)
     response_1 = client.models.generate_content(
