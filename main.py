@@ -310,19 +310,19 @@ PROMPT_STAGE_2 = """
 """
 
 async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True):
-   if not client:
+    if not client:
         raise HTTPException(status_code=500, detail=".env 파일에 GEMINI_API_KEY가 설정되어 있지 않습니다.")
 
-    # 💡 도구 설정에 JSON 강제 및 온도(temperature) 조절 옵션 추가
     search_config = GenerateContentConfig(
         tools=[Tool(google_search=GoogleSearch())],
         response_mime_type="application/json",
         temperature=0.3
     )
+
     print(f"\n🌐 [1단계] '{category}' 구글 실시간 검색 시작...")
     prompt_1 = PROMPT_STAGE_1.format(category=category)
     response_1 = client.models.generate_content(
-        model="gemini-3.1-pro-preview",
+        model="gemini-2.5-pro",
         contents=prompt_1,
         config=search_config
     )
@@ -335,7 +335,7 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
         stage1_json=json.dumps(stage1_filtered, ensure_ascii=False)
     )
     response_2 = client.models.generate_content(
-        model="gemini-3.1-pro-preview",
+        model="gemini-2.5-pro",
         contents=prompt_2,
         config=search_config
     )
@@ -354,13 +354,10 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
                 "category": item.get("sub", category),
                 "price_krw": item.get("price_krw"),
                 "site_url": item.get("site_url"),
-                
-                # 💡 교차검증 데이터 DB 맵핑
                 "market_rating": item.get("market_rating"),
                 "market_reviews": item.get("market_reviews"),
                 "dadeul_label": item.get("dadeul_label"),
                 "dadeul_comment": item.get("dadeul_comment"),
-                
                 "verdict": item.get("verdict", "keep"),
                 "reject_reason": item.get("reason"),
                 "status": "PENDING_APPROVAL" if is_keep else "REJECTED",
