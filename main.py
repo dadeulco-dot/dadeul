@@ -319,17 +319,29 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
         temperature=0.3
     )
 
-    print(f"\n🌐 [1단계] '{category}' 구글 실시간 검색 시작...")
+    print(f"\n======================================")
+    print(f"🌐 [1단계] '{category}' 구글 실시간 검색 시작...")
     prompt_1 = PROMPT_STAGE_1.format(category=category)
     response_1 = client.models.generate_content(
         model="gemini-2.5-pro",
         contents=prompt_1,
         config=search_config
     )
+    
+    # 💡 [디버깅 로그 1] 1단계에서 Gemini가 뱉은 날것의 텍스트 확인
+    print(f"📝 [1단계 원본 응답]\n{response_1.text}\n")
+    
     stage1_parsed = clean_json_response(response_1.text)
+    print(f"📊 [1단계 파싱 완료] 총 {len(stage1_parsed)}개 제품 추출됨.")
+
+    # 1단계에서 아무것도 못 찾았으면 여기서 멈춤
+    if not stage1_parsed:
+        print("⚠️ 1단계 추출 결과가 0개입니다. 파이프라인을 조기 종료합니다.")
+        return {"status": "empty", "message": "1단계에서 조건에 맞는 제품을 찾지 못했습니다."}
+
     stage1_filtered = filter_existing_db_products(stage1_parsed)
 
-    print(f"🔍 [2단계] 후보군 구글 실시간 재검증 및 keep/drop 판정 중...")
+    print(f"\n🔍 [2단계] 후보군 구글 실시간 재검증 및 keep/drop 판정 중...")
     prompt_2 = PROMPT_STAGE_2.format(
         category=category, 
         stage1_json=json.dumps(stage1_filtered, ensure_ascii=False)
@@ -339,13 +351,18 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
         contents=prompt_2,
         config=search_config
     )
+    
+    # 💡 [디버깅 로그 2] 2단계에서 Gemini가 뱉은 날것의 텍스트 확인
+    print(f"📝 [2단계 원본 응답]\n{response_2.text}\n")
+    
     stage2_results = clean_json_response(response_2.text)
+    print(f"📊 [2단계 파싱 완료] 총 {len(stage2_results)}개 제품 검증 완료.")
 
     saved_count = 0
     save_errors = []
 
     if auto_save_db and supabase:
-        print("💾 [Supabase DB 저장 시작]...")
+        print("\n💾 [Supabase DB 저장 시작]...")
         for item in stage2_results:
             is_keep = item.get("verdict") == "keep"
             db_payload = {
@@ -375,6 +392,9 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
                     saved_count += 1
             except Exception as insert_err:
                 save_errors.append({"name": item.get("name"), "error": str(insert_err)})
+
+        # 💡 [디버깅 로그 3] 최종 DB 저장 결과 확인
+        print(f"🎉 파이프라인 완료! 총 {len(stage2_results)}개 중 {saved_count}개 DB 저장 성공 (에러: {len(save_errors)}개)")
 
     return {
         "status": "success",
