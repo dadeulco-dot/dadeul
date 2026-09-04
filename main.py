@@ -37,7 +37,7 @@ if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
 
 client = genai.Client(
     api_key=GEMINI_API_KEY,
-    http_options=HttpOptions(api_version="v1")
+    http_options=HttpOptions(api_version="v1beta")
 ) if GEMINI_API_KEY else None
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY) if SUPABASE_URL and SUPABASE_KEY else None
