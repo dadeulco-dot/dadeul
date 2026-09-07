@@ -93,6 +93,18 @@ class ProductCandidateAdminModel(Base):
     uncertain = Column(JSON, default=list)
     check_by_human = Column(JSON, default=list)
 
+    # ── B단계 수집값 (스토어에서 코드가 긁어온 값) ──
+    # nv_product_no 가 제품 고유 키입니다. 같은 제품이 여러 스토어에 있어도 이 값으로 중복을 잡습니다.
+    nv_product_no = Column(String, nullable=True, index=True)
+    store_url = Column(String, nullable=True)      # 스토어 홈
+    product_url = Column(String, nullable=True)    # 개별 제품 페이지 · 「상세 보기」가 향하는 곳
+    nv_rating = Column(Float, nullable=True)       # 스토어 별점 (주 1회 갱신)
+    nv_reviews = Column(Integer, nullable=True)    # 스토어 리뷰 수 (주 1회 갱신)
+    # ★ URL만 저장합니다. 내려받아 우리 서버에 재호스팅하지 않습니다.
+    #   URL 참조는 링크지만 내려받아 올리면 복제입니다 (명세서 B단계).
+    thumb_url = Column(String, nullable=True)
+    collected_at = Column(String, nullable=True)   # 수집 시점 · 화면에 「9.02 확인」처럼 병기
+
     # ── 원본 스냅샷 (감사용) ──
     raw_stage1 = Column(JSON, nullable=True)
     raw_stage2 = Column(JSON, nullable=True)
@@ -176,7 +188,9 @@ if engine:
         name = "후보 제품"
         name_plural = "후보 제품 목록"
 
-        list_template = "custom_list.html"
+        # B단계 결과(CSV) 붙여넣기 UI를 주입한 템플릿.
+        # 예전 custom_list.html 의 「제품 가져오기」 버튼은 A~D단계 분리로 폐지됐습니다.
+        list_template = "product_list.html"
 
         # ── 리스트: 후보를 빠르게 훑어보기 위한 최소 정보 ──
         column_list = [
@@ -186,10 +200,11 @@ if engine:
             ProductCandidateAdminModel.price_krw,
             ProductCandidateAdminModel.list_price,
             ProductCandidateAdminModel.price_inflated,
-            ProductCandidateAdminModel.market_reviews,
+            ProductCandidateAdminModel.nv_rating,
+            ProductCandidateAdminModel.nv_reviews,
             ProductCandidateAdminModel.verdict,
             ProductCandidateAdminModel.status,
-            ProductCandidateAdminModel.site_url,
+            ProductCandidateAdminModel.product_url,
         ]
 
         # ── 상세: 승인 전 사람이 확인해야 할 순서대로 ──
@@ -202,6 +217,14 @@ if engine:
             ProductCandidateAdminModel.reject_reason,
             ProductCandidateAdminModel.status,
             ProductCandidateAdminModel.stage,
+            # B단계 수집값
+            ProductCandidateAdminModel.nv_product_no,
+            ProductCandidateAdminModel.product_url,
+            ProductCandidateAdminModel.store_url,
+            ProductCandidateAdminModel.nv_rating,
+            ProductCandidateAdminModel.nv_reviews,
+            ProductCandidateAdminModel.thumb_url,
+            ProductCandidateAdminModel.collected_at,
             # 가격 3종
             ProductCandidateAdminModel.price_krw,
             ProductCandidateAdminModel.list_price,
@@ -280,6 +303,13 @@ if engine:
             ProductCandidateAdminModel.reject_reason: "판정 사유",
             ProductCandidateAdminModel.status: "운영 상태",
             ProductCandidateAdminModel.stage: "파이프라인 단계",
+            ProductCandidateAdminModel.nv_product_no: "네이버 상품번호",
+            ProductCandidateAdminModel.product_url: "제품 페이지",
+            ProductCandidateAdminModel.store_url: "스토어",
+            ProductCandidateAdminModel.nv_rating: "스토어 별점",
+            ProductCandidateAdminModel.nv_reviews: "스토어 리뷰 수",
+            ProductCandidateAdminModel.thumb_url: "썸네일 URL",
+            ProductCandidateAdminModel.collected_at: "수집 시점",
             ProductCandidateAdminModel.price_krw: "판매가",
             ProductCandidateAdminModel.list_price: "표시가",
             ProductCandidateAdminModel.member_price: "조건부가",
@@ -311,6 +341,7 @@ if engine:
 
         column_formatters = {
             ProductCandidateAdminModel.site_url: lambda m, a: _fmt_link(m.site_url, "🔗 자사몰"),
+            ProductCandidateAdminModel.product_url: lambda m, a: _fmt_link(m.product_url, "🛒 제품"),
             ProductCandidateAdminModel.price_krw: lambda m, a: _fmt_won(m.price_krw),
             ProductCandidateAdminModel.list_price: lambda m, a: _fmt_won(m.list_price),
             ProductCandidateAdminModel.price_inflated: lambda m, a: _fmt_flag(m.price_inflated),
@@ -318,6 +349,8 @@ if engine:
 
         column_formatters_detail = {
             ProductCandidateAdminModel.site_url: lambda m, a: _fmt_link(m.site_url, "🔗 자사몰"),
+            ProductCandidateAdminModel.product_url: lambda m, a: _fmt_link(m.product_url, "🛒 제품 페이지"),
+            ProductCandidateAdminModel.store_url: lambda m, a: _fmt_link(m.store_url, "🏪 스토어"),
             ProductCandidateAdminModel.watch_naver: lambda m, a: _fmt_link(m.watch_naver, "🔗 네이버"),
             ProductCandidateAdminModel.watch_toss: lambda m, a: _fmt_link(m.watch_toss, "🔗 토스"),
             ProductCandidateAdminModel.watch_coupang: lambda m, a: _fmt_link(m.watch_coupang, "🔗 제휴"),
@@ -326,6 +359,10 @@ if engine:
             ProductCandidateAdminModel.list_price: lambda m, a: _fmt_won(m.list_price),
             ProductCandidateAdminModel.member_price: lambda m, a: _fmt_won(m.member_price),
             ProductCandidateAdminModel.price_inflated: lambda m, a: _fmt_flag(m.price_inflated),
+            ProductCandidateAdminModel.thumb_url: lambda m, a: (
+                Markup(f'<img src="{m.thumb_url}" style="max-width:160px;border-radius:6px">')
+                if m.thumb_url else "-"
+            ),
         }
 
         can_view_details = True
@@ -341,6 +378,79 @@ if engine:
             #    B단계(스토어 크롤링)가 만들어지면 여기에 다시 연결합니다.
             print("⚠️ [폐지된 경로] 제품 가져오기는 A~D단계로 분리됐습니다. 브랜드 화면에서 A단계를 먼저 실행하세요.")
             return RedirectResponse(url="/admin/brand-admin-model/list", status_code=303)
+
+        @expose("/import-products", methods=["POST"])
+        async def import_products_action(self, request: Request):
+            """B단계 결과(collect_store.py 가 만든 CSV)를 붙여넣어 저장합니다.
+
+            서버가 직접 크롤링하지 않습니다. 수집은 로컬에서 사람이 돌리고,
+            그 결과만 여기로 들어옵니다.
+            """
+            import csv as _csv
+            import io as _io
+
+            form_data = await request.form()
+            category = (form_data.get("category") or "").strip()
+            brand = (form_data.get("brand") or "").strip()
+            raw_csv = form_data.get("csv_text") or ""
+
+            if not raw_csv.strip() or not supabase:
+                return RedirectResponse(url="/admin/product-candidate-admin-model/list", status_code=303)
+
+            reader = _csv.DictReader(_io.StringIO(raw_csv.strip()))
+            rows = list(reader)
+            print(f"\n📥 [제품 CSV 가져오기] 갈래='{category}' 브랜드='{brand}' · {len(rows)}행 파싱됨")
+
+            # nv_product_no 로 중복을 잡습니다 (명세서 B단계)
+            existing = set()
+            try:
+                res = supabase.table("product_candidates").select("nv_product_no").execute()
+                for it in (res.data or []):
+                    if it.get("nv_product_no"):
+                        existing.add(str(it["nv_product_no"]))
+            except Exception as e:
+                print(f"⚠️ 기존 제품 조회 실패: {e}")
+
+            payloads = []
+            skipped = 0
+            for r in rows:
+                pno = (r.get("nv_product_no") or "").strip()
+                if not pno or pno in existing:
+                    skipped += 1
+                    continue
+                existing.add(pno)
+
+                price_krw = safe_int(r.get("price_krw"))
+                list_price = safe_int(r.get("list_price"))
+                payloads.append({
+                    "nv_product_no": pno,
+                    "brand": brand or None,
+                    "name": (r.get("name") or "").strip() or None,
+                    "category": category or None,
+                    "store_url": (r.get("store_url") or "").strip() or None,
+                    "product_url": (r.get("product_url") or "").strip() or None,
+                    "price_krw": price_krw,
+                    "list_price": list_price,
+                    "member_price": safe_int(r.get("member_price")),
+                    "price_inflated": bool(list_price and price_krw and list_price > 2 * price_krw),
+                    "nv_rating": safe_float(r.get("nv_rating")),
+                    "nv_reviews": safe_int(r.get("nv_reviews")),
+                    "thumb_url": (r.get("thumb_url") or "").strip() or None,
+                    "collected_at": (r.get("collected_at") or "").strip() or None,
+                    "stage": "stage_b_collected",
+                    "status": "PENDING_APPROVAL",
+                })
+
+            saved = 0
+            if payloads:
+                try:
+                    res = supabase.table("product_candidates").insert(payloads).execute()
+                    saved = len(res.data or [])
+                except Exception as e:
+                    print(f"❌ 제품 저장 실패: {e}")
+
+            print(f"✅ 저장 {saved}개 / 중복·빈값 건너뜀 {skipped}개")
+            return RedirectResponse(url="/admin/product-candidate-admin-model/list", status_code=303)
 
     admin.add_view(ProductCandidateAdminView)
 
