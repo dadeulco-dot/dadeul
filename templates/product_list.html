@@ -6,30 +6,22 @@
     <h3 class="card-title">B단계 · 제품 CSV 가져오기</h3>
     <p class="text-muted" style="font-size: 13px;">
       로컬에서 <code>collect_store.py</code> 를 돌려 만든 CSV 파일을 그대로 올리세요.
+      <strong>여러 브랜드를 한 파일로 올려도 됩니다</strong> &mdash; CSV의 brand 칸을 보고 각각 저장합니다.
       네이버 상품번호가 같은 제품은 자동으로 건너뜁니다.
     </p>
 
     <div class="alert alert-info" style="font-size: 12px;">
-      <strong>수집 방법</strong><br>
-      <code>python collect_store.py --store "카테고리_URL" --limit 5</code><br>
+      <strong>여러 브랜드 한 번에 수집하기</strong><br>
+      <code>stores.txt</code> 에 「브랜드명 | 갈래 | 카테고리 URL」 을 한 줄에 하나씩 적으세요:<br>
+      <code>PN풍년 | 프라이팬 | https://brand.naver.com/pn_store/category/xxx?cp=1</code><br>
+      <code>네오플램 | 프라이팬 | https://brand.naver.com/neoflam/category/yyy?cp=1</code><br><br>
+      <code>python collect_store.py --file stores.txt --limit 20</code><br>
       갈래를 좁히려면 스토어 홈이 아니라 <strong>카테고리 URL</strong>을 넣으세요.
-      스토어 홈을 주면 쌀통·압력솥까지 전 제품군이 섞여 나옵니다.<br>
-      별점·리뷰 수까지 받으려면 <code>--detail</code> 을 붙이세요 (느립니다).
+      별점·리뷰 수가 비면 <code>--detail</code> 을 붙여 다시 돌리면 됩니다.
     </div>
 
     <form method="POST" action="/admin/product-candidate-admin-model/import-products"
           enctype="multipart/form-data">
-      <div class="row">
-        <div class="col-md-6 mb-2">
-          <label class="form-label">갈래 (카테고리)</label>
-          <input type="text" name="category" class="form-control" placeholder="예: 프라이팬">
-        </div>
-        <div class="col-md-6 mb-2">
-          <label class="form-label">브랜드</label>
-          <input type="text" name="brand" class="form-control" placeholder="예: PN풍년">
-        </div>
-      </div>
-
       <div class="mb-3">
         <label class="form-label">CSV 파일</label>
         <input type="file" name="csv_file" class="form-control" accept=".csv,.tsv,.txt">
@@ -38,13 +30,28 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="col-md-6 mb-2">
+          <label class="form-label">갈래 (선택)</label>
+          <input type="text" name="category" class="form-control" placeholder="예: 프라이팬">
+        </div>
+        <div class="col-md-6 mb-2">
+          <label class="form-label">브랜드 (선택)</label>
+          <input type="text" name="brand" class="form-control" placeholder="예: PN풍년">
+        </div>
+      </div>
+      <div class="form-text mb-3" style="font-size: 12px;">
+        CSV에 brand·category 칸이 비어 있을 때만 여기 값이 쓰입니다.
+        CSV에 값이 있으면 <strong>행마다의 값이 우선</strong>합니다.
+      </div>
+
       <details class="mb-3">
         <summary style="cursor: pointer; font-size: 13px; color: #666;">
           또는 내용을 직접 붙여넣기
         </summary>
         <textarea name="csv_text" class="form-control mt-2" rows="8"
                   style="font-family: monospace; font-size: 12px;"
-                  placeholder="nv_product_no,store_url,product_url,name,price_krw,..."></textarea>
+                  placeholder="brand,category,nv_product_no,store_url,product_url,name,price_krw,..."></textarea>
         <div class="form-text" style="font-size: 12px;">
           파일을 선택하면 이 내용은 무시됩니다. 헤더 줄을 포함해 한 번만 붙여넣으세요.
         </div>
