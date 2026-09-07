@@ -10,18 +10,13 @@ from dotenv import load_dotenv
 
 # SQLAdmin & SQLAlchemy 관련 임포트
 from sqladmin import Admin, ModelView, expose
-from sqlalchemy import create_engine, Column, String, BigInteger, Float, JSON
+from sqlalchemy import create_engine, Column, String, BigInteger, Integer, Float, Boolean, Text, JSON, DateTime
+from sqlalchemy.sql import func
 from sqlalchemy.orm import declarative_base
 from markupsafe import Markup
 
-# 최신 google-genai SDK 임포트
-from google import genai
-from google.genai.types import (
-    GenerateContentConfig,
-    GoogleSearch,
-    HttpOptions,
-    Tool,
-)
+# Anthropic Claude SDK 임포트
+import anthropic
 
 # ----------------------------------------------------
 # 1. 환경 변수 및 DB 연결 설정
@@ -30,16 +25,12 @@ load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 DATABASE_URL = os.getenv("DATABASE_URL")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-# 💡 최신 심화 모델(2.5 Pro) 사용을 위해 v1beta로 설정
-client = genai.Client(
-    api_key=GEMINI_API_KEY,
-    http_options=HttpOptions(api_version="v1beta")
-) if GEMINI_API_KEY else None
+client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_API_KEY else None
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY) if SUPABASE_URL and SUPABASE_KEY else None
 
@@ -52,28 +43,66 @@ Base = declarative_base()
 class ProductCandidateAdminModel(Base):
     __tablename__ = "product_candidates"
 
+    # ── 기본 정보 ──
     id = Column(String, primary_key=True, index=True)
     brand = Column(String, nullable=True)
     name = Column(String, nullable=True)
-    category = Column(String, nullable=True)
-    price_krw = Column(BigInteger, nullable=True)
-    site_url = Column(String, nullable=True)
-    
-    # 별점 vs 다들 교차검증 컬럼
-    market_rating = Column(Float, nullable=True)
-    market_reviews = Column(BigInteger, nullable=True)
-    dadeul_label = Column(String, nullable=True)
-    dadeul_comment = Column(String, nullable=True)
-    
-    verdict = Column(String, default="keep")
+    category = Column(String, nullable=True)  # 갈래(sub)
+    verdict = Column(String, default="keep")  # 후보 통과 여부: keep / drop (명세서상 "제품 라벨"이 아니라 "후보 채택 여부"임에 유의)
     reject_reason = Column(String, nullable=True)
     status = Column(String, default="PENDING_APPROVAL")
-    ai_metadata = Column(JSON, nullable=True)
+    stage = Column(String, default="stage1_only")  # stage1_only / stage2_verified
+
+    # ── 가격 3종 (HANDOFF 6-3-1 ★ 섞으면 확인된 최저가가 오염됨) ──
+    price_krw = Column(BigInteger, nullable=True)      # 판매가 — confirmed_low() 의 유일한 입력
+    list_price = Column(BigInteger, nullable=True)     # 표시가 — 믿지 않음, 기록만
+    member_price = Column(BigInteger, nullable=True)   # 조건부가 — 카드·멤버십·쿠폰
+    price_inflated = Column(Boolean, default=False)    # 표시가가 판매가의 2배 초과 시 자동 플래그
+
+    # ── 판매처 · 가격 감시 채널 (HANDOFF 6-3-2) ──
+    # site_url = 브랜드 자사몰(기준가) · watch_naver = 시장 최저가 탐색 · watch_toss = 프로모션 감시(가격만)
+    site_url = Column(String, nullable=True)
+    watch_naver = Column(String, nullable=True)
+    watch_toss = Column(String, nullable=True)
+    watch_coupang = Column(String, nullable=True)
+
+    # ── 브랜드 검증 (모기업 확인 등, 명세서 5-2) ──
+    brand_scale = Column(String, nullable=True)
+    brand_evidence = Column(Text, nullable=True)
+
+    # ── 유튜브 근거 · 파이프라인 입력 (yt_must ★ 오염 방지 핵심) ──
+    yt_review_count = Column(Integer, nullable=True)
+    yt_evidence = Column(JSON, default=list)
+    yt_queries = Column(JSON, default=list)
+    yt_must = Column(JSON, default=list)
+    aliases = Column(JSON, default=list)
+
+    # ── 시장 신호 (참고용 · 후보 발굴 단계의 정량 데이터일 뿐, 다들 라벨이 아님) ──
+    # ⚠ market_rating/market_reviews 자체가 "다들의 판단"이 되어서는 안 됨 (명세서 2-2).
+    #    라벨(대체로 만족 등)은 여기서 산출하지 않고, 유튜브 댓글이 모인 뒤 label_of() 가 계산한다.
+    market_rating = Column(Float, nullable=True)
+    market_reviews = Column(Integer, nullable=True)
+    market_orders = Column(Integer, nullable=True)
+    market_url = Column(String, nullable=True)
+
+    release = Column(String, nullable=True)  # "2024-03" 또는 null
+
+    # ── 근거 · 불확실성 · 사람 확인 대상 ──
+    sources = Column(JSON, default=list)
+    uncertain = Column(JSON, default=list)
+    check_by_human = Column(JSON, default=list)
+
+    # ── 원본 스냅샷 (감사용) ──
+    raw_stage1 = Column(JSON, nullable=True)
+    raw_stage2 = Column(JSON, nullable=True)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 # ----------------------------------------------------
 # 3. FastAPI 앱 및 기본 설정
 # ----------------------------------------------------
-app = FastAPI(title="다들 (DADEUL) - 구글 실시간 검색 기반 제품 발굴 파이프라인", version="6.0.0")
+app = FastAPI(title="다들 (DADEUL) - Claude 웹 검색 기반 제품 발굴 파이프라인", version="7.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -90,62 +119,169 @@ if engine:
     # 💡 templates_dir 연결로 모바일 대응 custom_list.html 적용
     admin = Admin(app, engine, title="다들(DADEUL) 어드민", templates_dir="templates")
 
+    def _fmt_link(url, label="🔗 이동"):
+        return Markup(f'<a href="{url}" target="_blank" class="btn btn-sm btn-outline-primary">{label}</a>') if url else "-"
+
+    def _fmt_won(v):
+        return f"{v:,}원" if isinstance(v, (int, float)) and v is not None else "-"
+
+    def _fmt_flag(v):
+        return Markup('<span class="badge bg-danger">부풀림 의심</span>') if v else "-"
+
     class ProductCandidateAdminView(ModelView, model=ProductCandidateAdminModel):
         name = "후보 제품"
         name_plural = "후보 제품 목록"
 
         list_template = "custom_list.html"
 
+        # ── 리스트: 후보를 빠르게 훑어보기 위한 최소 정보 ──
         column_list = [
             ProductCandidateAdminModel.brand,
             ProductCandidateAdminModel.name,
             ProductCandidateAdminModel.category,
             ProductCandidateAdminModel.price_krw,
-            ProductCandidateAdminModel.market_rating,
-            ProductCandidateAdminModel.dadeul_label,
+            ProductCandidateAdminModel.list_price,
+            ProductCandidateAdminModel.price_inflated,
+            ProductCandidateAdminModel.market_reviews,
             ProductCandidateAdminModel.verdict,
             ProductCandidateAdminModel.status,
             ProductCandidateAdminModel.site_url,
         ]
 
+        # ── 상세: 승인 전 사람이 확인해야 할 순서대로 ──
         column_details_list = [
             ProductCandidateAdminModel.id,
             ProductCandidateAdminModel.brand,
             ProductCandidateAdminModel.name,
             ProductCandidateAdminModel.category,
-            ProductCandidateAdminModel.price_krw,
-            ProductCandidateAdminModel.market_rating,
-            ProductCandidateAdminModel.market_reviews,
-            ProductCandidateAdminModel.dadeul_label,
-            ProductCandidateAdminModel.dadeul_comment,
             ProductCandidateAdminModel.verdict,
             ProductCandidateAdminModel.reject_reason,
             ProductCandidateAdminModel.status,
+            ProductCandidateAdminModel.stage,
+            # 가격 3종
+            ProductCandidateAdminModel.price_krw,
+            ProductCandidateAdminModel.list_price,
+            ProductCandidateAdminModel.member_price,
+            ProductCandidateAdminModel.price_inflated,
+            # 판매처 · 감시 채널
             ProductCandidateAdminModel.site_url,
-            ProductCandidateAdminModel.ai_metadata,
+            ProductCandidateAdminModel.watch_naver,
+            ProductCandidateAdminModel.watch_toss,
+            ProductCandidateAdminModel.watch_coupang,
+            # 브랜드 검증
+            ProductCandidateAdminModel.brand_scale,
+            ProductCandidateAdminModel.brand_evidence,
+            # 유튜브 · 파이프라인 입력
+            ProductCandidateAdminModel.yt_review_count,
+            ProductCandidateAdminModel.yt_evidence,
+            ProductCandidateAdminModel.yt_queries,
+            ProductCandidateAdminModel.yt_must,
+            ProductCandidateAdminModel.aliases,
+            # 시장 신호 (참고용)
+            ProductCandidateAdminModel.market_rating,
+            ProductCandidateAdminModel.market_reviews,
+            ProductCandidateAdminModel.market_orders,
+            ProductCandidateAdminModel.market_url,
+            ProductCandidateAdminModel.release,
+            # 근거 · 불확실성
+            ProductCandidateAdminModel.sources,
+            ProductCandidateAdminModel.uncertain,
+            ProductCandidateAdminModel.check_by_human,
+            # 원본 스냅샷
+            ProductCandidateAdminModel.raw_stage1,
+            ProductCandidateAdminModel.raw_stage2,
+            ProductCandidateAdminModel.created_at,
+            ProductCandidateAdminModel.updated_at,
         ]
 
+        # ── 편집 폼: 승인 전 사람이 직접 고칠 수 있는 항목 전부 ──
         form_columns = [
             ProductCandidateAdminModel.brand,
             ProductCandidateAdminModel.name,
             ProductCandidateAdminModel.category,
-            ProductCandidateAdminModel.price_krw,
-            ProductCandidateAdminModel.market_rating,
-            ProductCandidateAdminModel.market_reviews,
-            ProductCandidateAdminModel.dadeul_label,
-            ProductCandidateAdminModel.dadeul_comment,
             ProductCandidateAdminModel.verdict,
             ProductCandidateAdminModel.reject_reason,
             ProductCandidateAdminModel.status,
+            ProductCandidateAdminModel.price_krw,
+            ProductCandidateAdminModel.list_price,
+            ProductCandidateAdminModel.member_price,
             ProductCandidateAdminModel.site_url,
+            ProductCandidateAdminModel.watch_naver,
+            ProductCandidateAdminModel.watch_toss,
+            ProductCandidateAdminModel.watch_coupang,
+            ProductCandidateAdminModel.brand_scale,
+            ProductCandidateAdminModel.brand_evidence,
+            ProductCandidateAdminModel.yt_review_count,
+            ProductCandidateAdminModel.yt_evidence,
+            ProductCandidateAdminModel.yt_queries,
+            ProductCandidateAdminModel.yt_must,
+            ProductCandidateAdminModel.aliases,
+            ProductCandidateAdminModel.market_rating,
+            ProductCandidateAdminModel.market_reviews,
+            ProductCandidateAdminModel.market_orders,
+            ProductCandidateAdminModel.market_url,
+            ProductCandidateAdminModel.release,
+            ProductCandidateAdminModel.sources,
+            ProductCandidateAdminModel.uncertain,
+            ProductCandidateAdminModel.check_by_human,
         ]
 
         column_searchable_list = ["brand", "name"]
 
+        column_labels = {
+            ProductCandidateAdminModel.brand: "브랜드",
+            ProductCandidateAdminModel.name: "제품명",
+            ProductCandidateAdminModel.category: "갈래",
+            ProductCandidateAdminModel.verdict: "후보 채택 여부",
+            ProductCandidateAdminModel.reject_reason: "판정 사유",
+            ProductCandidateAdminModel.status: "운영 상태",
+            ProductCandidateAdminModel.stage: "파이프라인 단계",
+            ProductCandidateAdminModel.price_krw: "판매가",
+            ProductCandidateAdminModel.list_price: "표시가",
+            ProductCandidateAdminModel.member_price: "조건부가",
+            ProductCandidateAdminModel.price_inflated: "정가 부풀림 의심",
+            ProductCandidateAdminModel.site_url: "자사몰(기준가)",
+            ProductCandidateAdminModel.watch_naver: "네이버 쇼핑",
+            ProductCandidateAdminModel.watch_toss: "토스 쇼핑",
+            ProductCandidateAdminModel.watch_coupang: "기타 제휴 채널",
+            ProductCandidateAdminModel.brand_scale: "브랜드 규모",
+            ProductCandidateAdminModel.brand_evidence: "브랜드 판단 근거",
+            ProductCandidateAdminModel.yt_review_count: "유튜브 리뷰 수",
+            ProductCandidateAdminModel.yt_evidence: "유튜브 근거 URL",
+            ProductCandidateAdminModel.yt_queries: "유튜브 검색어",
+            ProductCandidateAdminModel.yt_must: "제목 필수 단어",
+            ProductCandidateAdminModel.aliases: "검색 별칭",
+            ProductCandidateAdminModel.market_rating: "판매처 별점(참고용)",
+            ProductCandidateAdminModel.market_reviews: "누적 리뷰 수",
+            ProductCandidateAdminModel.market_orders: "구매 건수",
+            ProductCandidateAdminModel.market_url: "수치 확인 주소",
+            ProductCandidateAdminModel.release: "출시 시점",
+            ProductCandidateAdminModel.sources: "근거 URL",
+            ProductCandidateAdminModel.uncertain: "확신 낮은 항목",
+            ProductCandidateAdminModel.check_by_human: "사람이 볼 항목",
+            ProductCandidateAdminModel.raw_stage1: "1단계 원본",
+            ProductCandidateAdminModel.raw_stage2: "2단계 원본",
+            ProductCandidateAdminModel.created_at: "생성일",
+            ProductCandidateAdminModel.updated_at: "수정일",
+        }
+
         column_formatters = {
-            ProductCandidateAdminModel.site_url: lambda m, a: Markup(
-                f'<a href="{m.site_url}" target="_blank" class="btn btn-sm btn-outline-primary">🔗 사이트 방문</a>'
-            ) if getattr(m, 'site_url', None) else "-"
+            ProductCandidateAdminModel.site_url: lambda m, a: _fmt_link(m.site_url, "🔗 자사몰"),
+            ProductCandidateAdminModel.price_krw: lambda m, a: _fmt_won(m.price_krw),
+            ProductCandidateAdminModel.list_price: lambda m, a: _fmt_won(m.list_price),
+            ProductCandidateAdminModel.price_inflated: lambda m, a: _fmt_flag(m.price_inflated),
+        }
+
+        column_formatters_detail = {
+            ProductCandidateAdminModel.site_url: lambda m, a: _fmt_link(m.site_url, "🔗 자사몰"),
+            ProductCandidateAdminModel.watch_naver: lambda m, a: _fmt_link(m.watch_naver, "🔗 네이버"),
+            ProductCandidateAdminModel.watch_toss: lambda m, a: _fmt_link(m.watch_toss, "🔗 토스"),
+            ProductCandidateAdminModel.watch_coupang: lambda m, a: _fmt_link(m.watch_coupang, "🔗 제휴"),
+            ProductCandidateAdminModel.market_url: lambda m, a: _fmt_link(m.market_url, "🔗 수치 확인"),
+            ProductCandidateAdminModel.price_krw: lambda m, a: _fmt_won(m.price_krw),
+            ProductCandidateAdminModel.list_price: lambda m, a: _fmt_won(m.list_price),
+            ProductCandidateAdminModel.member_price: lambda m, a: _fmt_won(m.member_price),
+            ProductCandidateAdminModel.price_inflated: lambda m, a: _fmt_flag(m.price_inflated),
         }
 
         can_view_details = True
@@ -176,7 +312,7 @@ async def serve_user_app():
     return {"message": "static/main.html 파일을 찾을 수 없습니다. 폴더 구조를 확인하세요."}
 
 # ----------------------------------------------------
-# 6. 파이프라인 로직 및 중복 제거 (Gemini Grounding)
+# 6. 파이프라인 로직 및 중복 제거 (Claude web_search 툴)
 # ----------------------------------------------------
 def clean_json_response(raw_text: str):
     """불순물이 섞여도 JSON 배열만 정확히 추출하는 방어 코드"""
@@ -206,6 +342,16 @@ def safe_float(val):
     if not val: return None
     try: return float(re.sub(r'[^\d.-]', '', str(val)))
     except: return None
+
+def extract_text(response) -> str:
+    """Claude Messages API 응답에서 text 블록만 이어붙여 반환.
+    web_search 툴을 쓰면 content 배열에 server_tool_use/web_search_tool_result
+    블록이 text 블록과 섞여서 오므로, 순수 텍스트만 골라내야 JSON 파싱이 안전하다."""
+    parts = []
+    for block in (response.content or []):
+        if getattr(block, "type", None) == "text":
+            parts.append(block.text)
+    return "\n".join(parts)
 
 def filter_existing_db_products(stage1_data: list) -> list:
     if not supabase:
@@ -239,27 +385,82 @@ PROMPT_STAGE_1 = """
 당신은 「다들」의 제품 발굴 담당자입니다.
 
 ## 다들이 하는 일
-다들의 핵심 가치는 **[판매처 별점]과 [실제 장기 사용 후기]를 교차 검증하여 그 격차(갭)를 드러내는 것**입니다.
+흩어진 후기를 모아 제품을 고르고, 사려는 사람이 모이면 브랜드와 직접 가격을 협상합니다.
+협상은 1인 사업자가 브랜드 담당자에게 직접 연락해서 진행합니다.
+당신은 이 협상의 후보가 될 만한 제품을 찾는 역할만 합니다.
+★ 제품이 좋은지 나쁜지, 별점이 실제 후기와 맞는지 안 맞는지는 여기서 판단하지 않습니다.
+   그건 다들이 유튜브 댓글을 모은 뒤 별도의 공개된 규칙(label_of)으로 정합니다.
 
 ## 이번 작업 (카테고리 엄격 제한 ★)
 현재 작업 카테고리: 「{category}」
-⚠️ 반드시 오직 「{category}」 카테고리에 완벽히 속하는 제품만 수집하세요.
+반드시 오직 「{category}」에 속하는 제품만 찾으세요.
+목표 25~40개. 부족하면 부족한 대로 내고, 개수를 채우려고 억지로 넣지 마세요.
 
 ## 반드시 지킬 것 ★
-1. 검색으로 확인한 정량 데이터(별점, 리뷰수, 가격)만 명확히 수집합니다.
-2. 확인되지 않은 항목은 null로 처리하세요.
+1. 검색으로 확인한 것만 씁니다. 기억이나 추측으로 제품명·브랜드·가격을 만들지 마세요.
+2. 확인하지 못한 항목은 반드시 null로 두세요. 빈칸을 채우려 짐작하지 마세요.
+3. 제품마다 근거 URL을 최소 1개 답니다. URL을 못 찾으면 그 제품은 빼세요.
+4. 제품 평가(별점 해석, 다들 라벨 등)를 스스로 만들어내지 마세요. 정량 데이터만 그대로 옮겨 적습니다.
+5. 후기 원문·상세페이지 문구를 복사하지 마세요. 사실(숫자·스펙 값)만 옮깁니다.
 
-## 후보 조건 (7가지)
-① 브랜드 규모: 국내 중소 브랜드 (대기업, 상장사 제외)
-② 모델 특정: 모델 단위로 특정되는 대표 규격 1개
-③ 유튜브 리뷰: 최근 24개월 안 3개 이상
-④ 내구재: 3개월 이상 사용하는 물건
-⑤ 판매처 제한 ★: 반드시 **네이버 스마트스토어(smartstore.naver.com) 또는 브랜드스토어(brand.naver.com)**에서 판매 중이어야 함
-⑥ 가격대: 정가 15,000원 ~ 300,000원
-⑦ 수요 규모: 네이버 스토어 기준 누적 리뷰 1,000건 이상 & 구매 건수 300건 이상
+## 후보 조건 — 7개를 모두 만족해야 합니다
+
+① 브랜드 규모
+1인이 연락해 협상 테이블에 앉을 수 있는 국내 중소 브랜드.
+- 필요: 자사몰 또는 스마트스토어를 직접 운영하고, 고객센터·문의 창구가 공개돼 있음
+- 제외: 대기업·대기업 계열·글로벌 브랜드, 상장사, 홈쇼핑 전속 브랜드
+- ★ 국내 브랜드처럼 보여도 모기업을 확인하세요. 예: 테팔은 프랑스 그룹세브 소속이라 제외입니다
+- 제외: 브랜드 실체가 불분명한 노브랜드 수입품, 오픈마켓 전용 무명 셀러
+
+② 모델이 특정되는가
+제품명이 모델 단위로 딱 떨어져야 합니다. 크기·용량 파생이 있으면 가장 많이 팔리는 규격 하나만 고릅니다.
+
+③ 유튜브 리뷰가 쌓이는가
+최근 24개월 안에 이 제품(또는 정확히 같은 모델)을 다룬 리뷰 영상이 3개 이상,
+그중 댓글이 달린 영상이 있어야 합니다.
+
+④ 오래 쓰는 물건인가
+최소 3개월 이상 쓰면서 장기 사용 후기가 쌓이는 내구재. 소모품·시즌 상품은 제외.
+
+⑤ 가격이 공개돼 있고 추적 가능한가
+공개 판매처에서 가격이 노출되고, 매일 같은 주소에서 확인할 수 있어야 합니다.
+
+★ 가격은 세 종류를 구분해서 적어 주세요. 섞으면 안 됩니다.
+| 종류 | 무엇 | 필드 |
+|---|---|---|
+| 표시가 | 판매처가 적어둔 정가 | list_price |
+| 판매가 | 조건 없이 지금 누구나 사는 값 (배송비 포함) | price_krw ← 이게 기준 |
+| 조건부가 | 카드·멤버십·쿠폰·앱 전용가 | member_price |
+
+★ 표시가가 판매가의 2배를 넘으면 uncertain에 "정가 부풀림 의심"을 적어 주세요.
+  다들은 부풀린 정가로 할인율을 크게 보이게 하지 않겠다고 약속했습니다.
+
+⑥ 가격대
+정가 15,000원 ~ 300,000원.
+
+⑦ 수요 규모 — 아래를 모두 만족
+- 누적 리뷰 1,000건 이상
+- 구매 건수 300건 이상 (판매처에 표기된 값. 표기가 없으면 null로 두고 사람이 확인합니다)
+- 여러 판매처에 흩어져 있으면 가장 많이 파는 곳 하나를 기준으로 합니다
+
+## 판매처 · 가격 감시 채널
+- site_url: 브랜드 자사몰 — 「사러 가기」가 향할 곳(기준가). 자사몰이 없으면 브랜드가 직접 운영하는
+  브랜드스토어(brand.naver.com)를 대신 쓸 수 있지만, 아무나 여는 일반 스마트스토어를 자사몰로 대신 쓰지 마세요.
+- watch_urls: 가격을 매일 감시할 다른 채널 — {{"naver": "...", "toss": null, "coupang": null}}.
+  프로모션 채널에서 더 싸게 팔리고 있으면 나중에 협상가가 무의미해지므로 필요합니다.
+  단, 어느 채널에서도 리뷰 본문은 읽거나 옮기지 마세요. 숫자와 주소만 가져옵니다.
+
+★ 별점은 통과 기준이 아닙니다. 숫자만 그대로 적어 주세요. 높다고 뽑거나 낮다고 떨어뜨리지 마세요.
+  다만 별점이 4.0 미만이면 uncertain에 "별점 낮음"을 적어 사람이 보게 하세요.
+★ 리뷰 본문을 읽거나 옮기지 마세요. 별점·리뷰 수·구매 수 세 숫자만 기록합니다.
 
 ## 무조건 제외
-지정된 「{category}」 외 타 제품군 전체, 식품, 화장품, 병행수입, 리셀, 중고 등
+- 식품·건강기능식품·의약외품·화장품
+- 유아·아동이 직접 쓰는 제품
+- 병행수입품, 리셀 상품, 중고
+- 출시 6개월 미만 신제품
+- 상시 할인 중이라 정가가 의미 없는 제품
+- 지정된 「{category}」 외 타 제품군 전체
 
 ## 출력 형식 (JSON 배열만 출력)
 [
@@ -268,25 +469,49 @@ PROMPT_STAGE_1 = """
     "name": "모델명 포함 제품명",
     "sub": "{category}",
     "price_krw": 39800,
-    "site_url": "네이버 스마트스토어 또는 브랜드스토어 URL",
-    "market_rating": 4.8,
+    "list_price": 45000,
+    "member_price": null,
+    "site_url": "브랜드 자사몰 주소",
+    "watch_urls": {{"naver": "...", "toss": null, "coupang": null}},
+    "brand_scale": "중소",
+    "brand_evidence": "자사몰 운영·고객센터 공개 등 판단 근거",
+    "yt_review_count": 5,
+    "yt_evidence": ["영상 URL"],
+    "market_rating": 4.6,
     "market_reviews": 1148,
-    "dadeul_label": "의견 갈림 또는 대체로 불만 또는 만족",
-    "dadeul_comment": "별점은 높은데 오래 쓰신 분들 사이엔 말이 갈려요",
-    "sources": ["근거 URL"]
+    "market_orders": 320,
+    "market_url": "숫자를 확인한 판매처 주소",
+    "release": "2024-03 또는 null",
+    "sources": ["근거 URL"],
+    "uncertain": ["확신 낮은 항목명"]
   }}
 ]
 """
 
 PROMPT_STAGE_2 = """
-아래는 1단계에서 뽑은 「다들」 제품 후보 목록입니다.
-교차 검증 관점을 유지하며 **검증 및 필터링**을 진행해 주세요.
+아래는 1단계에서 뽑은 「다들」 제품 후보입니다.
+이번에는 떨어뜨리는 쪽에 서서 다시 검토해 주세요.
 
 ## 검증 규칙
-1. 카테고리가 「{category}」와 일치하지 않는 제품은 drop (사유: 「카테고리 불일치」).
-2. **[URL 검증]** site_url이 네이버 스마트스토어(smartstore.naver.com)나 브랜드스토어(brand.naver.com)가 아니라면 올바른 네이버 주소로 다시 검색해 수정하세요. 네이버 판매처를 찾을 수 없다면 즉시 drop (사유: 「네이버 스토어 아님」) 시키세요.
-3. 별점과 실제 후기의 격차가 명확한 제품을 우대합니다.
-4. 재확인 실패 시 verdict: "drop", 사유: 「재확인 실패」.
+1. 카테고리가 「{category}」와 일치하지 않는 제품은 drop (사유: "카테고리 불일치").
+2. 각 제품을 다시 검색해 브랜드·모델명·가격이 실제로 존재하는지 확인합니다.
+   재확인되지 않으면 verdict: "drop", 사유: "재확인 실패".
+3. 같은 제품이 이름만 다르게 두 번 들어왔으면 하나로 합칩니다.
+4. 한 브랜드에서 3개를 넘기지 마세요. 넘치면 리뷰 영상이 많은 순으로 남깁니다.
+5. 7개 조건 중 하나라도 어긋나면 떨어뜨립니다. 애매하면 떨어뜨리는 쪽을 고릅니다.
+6. price_krw가 조건 없는 판매가가 맞는지 다시 확인합니다.
+   카드·멤버십·쿠폰이 붙어야 나오는 값이면 member_price로 옮기고 price_krw를 다시 찾으세요.
+7. site_url이 브랜드 자사몰(또는 브랜드스토어)이 아니라 아무나 여는 일반 스마트스토어라면
+   drop 하거나, 진짜 자사몰 주소를 다시 찾아 수정하세요.
+8. watch_urls 중 하나(특히 토스)가 site_url보다 30% 넘게 싸면 check_by_human에
+   "채널 가격 격차"를 적습니다.
+9. market_rating/market_reviews는 판정 근거로 쓰지 마세요. 옮겨 적기만 합니다.
+
+## 통과한 제품에만 아래를 만들어 주세요
+- aliases: 사람들이 실제로 검색할 만한 별칭 3~5개
+- yt_queries: 유튜브 검색어 2~3개. 브랜드명 + 제품 종류 + 규격 조합
+- yt_must: 영상 제목에 반드시 들어가야 통과시킬 단어 1~2개
+  ★ 이 항목이 가장 중요합니다. 이게 없으면 다른 모델 댓글이 섞여 후기 전체가 오염됩니다.
 
 ## 검증 대상 데이터:
 {stage1_json}
@@ -300,41 +525,50 @@ PROMPT_STAGE_2 = """
     "name": "...",
     "sub": "{category}",
     "price_krw": 39800,
-    "site_url": "검증된 네이버 스토어 주소",
-    "market_rating": 4.8,
+    "list_price": 45000,
+    "member_price": null,
+    "site_url": "검증된 브랜드 자사몰 주소",
+    "watch_urls": {{"naver": "...", "toss": null, "coupang": null}},
+    "brand_scale": "...",
+    "brand_evidence": "...",
+    "market_rating": 4.6,
     "market_reviews": 1148,
-    "dadeul_label": "의견 갈림",
-    "dadeul_comment": "...",
+    "market_orders": 320,
+    "market_url": "...",
     "aliases": ["검색 별칭들"],
     "yt_queries": ["유튜브 검색어들"],
     "yt_must": ["필수 포함 단어들"],
-    "sources": ["근거 URL"]
+    "sources": ["근거 URL"],
+    "check_by_human": ["사람이 반드시 눈으로 볼 항목"]
   }}
 ]
+
+drop도 반드시 포함해 출력하세요. 왜 떨어졌는지가 다음 주 검색어를 고치는 재료가 됩니다.
 """
 
 async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True):
     if not client:
-        raise HTTPException(status_code=500, detail=".env 파일에 GEMINI_API_KEY가 설정되어 있지 않습니다.")
+        raise HTTPException(status_code=500, detail=".env 파일에 ANTHROPIC_API_KEY가 설정되어 있지 않습니다.")
 
-    # 💡 JSON 강제 생성 옵션 추가
-    search_config = GenerateContentConfig(
-        tools=[Tool(google_search=GoogleSearch())],
-        response_mime_type="application/json",
-        temperature=0.3
-    )
+    # 💡 Claude Sonnet 5는 temperature 등 샘플링 파라미터를 기본값 외로 주면 400 에러를 냅니다.
+    #    JSON 강제는 프롬프트 지시("설명 없이 JSON 배열만")와 clean_json_response의
+    #    괄호 추출 방어 로직으로 대신합니다.
+    WEB_SEARCH_TOOL = {"type": "web_search_20250305", "name": "web_search", "max_uses": 10}
+    MODEL_ID = "claude-sonnet-5"
 
     print(f"\n======================================")
-    print(f"🌐 [1단계] '{category}' 구글 실시간 검색 시작...")
+    print(f"🌐 [1단계] '{category}' Claude 웹 검색 시작...")
     prompt_1 = PROMPT_STAGE_1.format(category=category)
-    response_1 = client.models.generate_content(
-        model="gemini-3.1-pro-preview", # 💡 최신 심화 모델
-        contents=prompt_1,
-        config=search_config
+    response_1 = client.messages.create(
+        model=MODEL_ID,
+        max_tokens=8000,
+        messages=[{"role": "user", "content": prompt_1}],
+        tools=[WEB_SEARCH_TOOL],
     )
-    
-    print(f"📝 [1단계 원본 응답]\n{response_1.text}\n")
-    stage1_parsed = clean_json_response(response_1.text)
+
+    text_1 = extract_text(response_1)
+    print(f"📝 [1단계 원본 응답]\n{text_1}\n")
+    stage1_parsed = clean_json_response(text_1)
     print(f"📊 [1단계 파싱 완료] 총 {len(stage1_parsed)}개 제품 추출됨.")
 
     if not stage1_parsed:
@@ -343,20 +577,29 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
 
     stage1_filtered = filter_existing_db_products(stage1_parsed)
 
-    print(f"\n🔍 [2단계] 후보군 구글 실시간 재검증 및 keep/drop 판정 중...")
+    print(f"\n🔍 [2단계] 후보군 Claude 웹 재검증 및 keep/drop 판정 중...")
     prompt_2 = PROMPT_STAGE_2.format(
         category=category, 
         stage1_json=json.dumps(stage1_filtered, ensure_ascii=False)
     )
-    response_2 = client.models.generate_content(
-        model="gemini-3.1-pro-preview", # 💡 최신 심화 모델
-        contents=prompt_2,
-        config=search_config
+    response_2 = client.messages.create(
+        model=MODEL_ID,
+        max_tokens=8000,
+        messages=[{"role": "user", "content": prompt_2}],
+        tools=[WEB_SEARCH_TOOL],
     )
-    
-    print(f"📝 [2단계 원본 응답]\n{response_2.text}\n")
-    stage2_results = clean_json_response(response_2.text)
+
+    text_2 = extract_text(response_2)
+    print(f"📝 [2단계 원본 응답]\n{text_2}\n")
+    stage2_results = clean_json_response(text_2)
     print(f"📊 [2단계 파싱 완료] 총 {len(stage2_results)}개 제품 검증 완료.")
+
+    # 💡 stage2가 아직 재출력하지 않는 필드(brand_scale, release 등)를 stage1 값으로
+    #    폴백시키고, raw_stage1 감사 스냅샷도 남기기 위한 매칭 테이블
+    stage1_lookup = {}
+    for it in stage1_filtered:
+        key = (str(it.get("brand") or "").strip().lower(), str(it.get("name") or "").strip().lower())
+        stage1_lookup[key] = it
 
     saved_count = 0
     save_errors = []
@@ -365,27 +608,57 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
         print("\n💾 [Supabase DB 저장 시작]...")
         for item in stage2_results:
             is_keep = item.get("verdict") == "keep"
-            
+            key = (str(item.get("brand") or "").strip().lower(), str(item.get("name") or "").strip().lower())
+            s1 = stage1_lookup.get(key) or {}
+
             # 💡 safe_int, safe_float 적용으로 DB 저장 안정성 극대화
+            watch = item.get("watch_urls", s1.get("watch_urls")) or {}
+            list_price = safe_int(item.get("list_price", s1.get("list_price")))
+            price_krw = safe_int(item.get("price_krw", s1.get("price_krw")))
+            price_inflated = bool(list_price and price_krw and list_price > 2 * price_krw)
+
             db_payload = {
                 "brand": item.get("brand"),
                 "name": item.get("name"),
                 "category": item.get("sub", category),
-                "price_krw": safe_int(item.get("price_krw")),
-                "site_url": item.get("site_url"),
-                "market_rating": safe_float(item.get("market_rating")),
-                "market_reviews": safe_int(item.get("market_reviews")),
-                "dadeul_label": item.get("dadeul_label"),
-                "dadeul_comment": item.get("dadeul_comment"),
                 "verdict": item.get("verdict", "keep"),
                 "reject_reason": item.get("reason"),
                 "status": "PENDING_APPROVAL" if is_keep else "REJECTED",
-                "ai_metadata": {
-                    "aliases": item.get("aliases", []),
-                    "yt_queries": item.get("yt_queries", []),
-                    "yt_must": item.get("yt_must", []),
-                    "sources": item.get("sources", [])
-                }
+                "stage": "stage2_verified",
+
+                "price_krw": price_krw,
+                "list_price": list_price,
+                "member_price": safe_int(item.get("member_price", s1.get("member_price"))),
+                "price_inflated": price_inflated,
+
+                "site_url": item.get("site_url", s1.get("site_url")),
+                "watch_naver": watch.get("naver"),
+                "watch_toss": watch.get("toss"),
+                "watch_coupang": watch.get("coupang"),
+
+                "brand_scale": item.get("brand_scale", s1.get("brand_scale")),
+                "brand_evidence": item.get("brand_evidence", s1.get("brand_evidence")),
+
+                "yt_review_count": safe_int(item.get("yt_review_count", s1.get("yt_review_count"))),
+                "yt_evidence": item.get("yt_evidence", s1.get("yt_evidence", [])),
+                "yt_queries": item.get("yt_queries", []),
+                "yt_must": item.get("yt_must", []),
+                "aliases": item.get("aliases", []),
+
+                # 참고용 시장 신호일 뿐, 이 값 자체가 다들 라벨이 되지는 않음 (명세서 2-2)
+                "market_rating": safe_float(item.get("market_rating", s1.get("market_rating"))),
+                "market_reviews": safe_int(item.get("market_reviews", s1.get("market_reviews"))),
+                "market_orders": safe_int(item.get("market_orders", s1.get("market_orders"))),
+                "market_url": item.get("market_url", s1.get("market_url")),
+
+                "release": item.get("release", s1.get("release")),
+
+                "sources": item.get("sources", s1.get("sources", [])),
+                "uncertain": item.get("uncertain", s1.get("uncertain", [])),
+                "check_by_human": item.get("check_by_human", []),
+
+                "raw_stage1": s1 or None,
+                "raw_stage2": item,
             }
 
             try:
