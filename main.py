@@ -392,14 +392,38 @@ if engine:
             form_data = await request.form()
             category = (form_data.get("category") or "").strip()
             brand = (form_data.get("brand") or "").strip()
-            raw_csv = form_data.get("csv_text") or ""
+
+            # 파일 업로드를 우선하고, 없으면 붙여넣기 텍스트를 씁니다
+            raw_csv = ""
+            upload = form_data.get("csv_file")
+            if upload is not None and hasattr(upload, "read"):
+                content = await upload.read()
+                if content:
+                    # 엑셀이 저장한 한글 CSV는 보통 utf-8-sig 또는 cp949 입니다
+                    for enc in ("utf-8-sig", "utf-8", "cp949", "euc-kr"):
+                        try:
+                            raw_csv = content.decode(enc)
+                            print(f"📄 업로드 파일 인코딩: {enc}")
+                            break
+                        except UnicodeDecodeError:
+                            continue
+            if not raw_csv:
+                raw_csv = form_data.get("csv_text") or ""
 
             if not raw_csv.strip() or not supabase:
                 return RedirectResponse(url="/admin/product-candidate-admin-model/list", status_code=303)
 
-            reader = _csv.DictReader(_io.StringIO(raw_csv.strip()))
+            text = raw_csv.strip()
+
+            # 💡 엑셀에서 복사해 붙여넣으면 쉼표가 아니라 탭으로 구분됩니다.
+            #    첫 줄을 보고 구분자를 자동으로 판단합니다.
+            first_line = text.split("\n", 1)[0]
+            delimiter = "\t" if first_line.count("\t") > first_line.count(",") else ","
+
+            reader = _csv.DictReader(_io.StringIO(text), delimiter=delimiter)
             rows = list(reader)
-            print(f"\n📥 [제품 CSV 가져오기] 갈래='{category}' 브랜드='{brand}' · {len(rows)}행 파싱됨")
+            print(f"\n📥 [제품 CSV 가져오기] 갈래='{category}' 브랜드='{brand}' · "
+                  f"구분자={'탭' if delimiter == chr(9) else '쉼표'} · {len(rows)}행 파싱됨")
 
             # nv_product_no 로 중복을 잡습니다 (명세서 B단계)
             existing = set()
@@ -415,6 +439,10 @@ if engine:
             skipped = 0
             for r in rows:
                 pno = (r.get("nv_product_no") or "").strip()
+                # 같은 CSV를 두 번 붙여넣으면 헤더 줄이 데이터로 섞여 들어옵니다
+                if pno == "nv_product_no":
+                    skipped += 1
+                    continue
                 if not pno or pno in existing:
                     skipped += 1
                     continue
