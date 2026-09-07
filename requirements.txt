@@ -7,3 +7,4 @@ google-genai
 supabase
 sqlalchemy
 jinja2
+anthropic
