@@ -396,6 +396,13 @@ PROMPT_STAGE_1 = """
 반드시 오직 「{category}」에 속하는 제품만 찾으세요.
 목표 25~40개. 부족하면 부족한 대로 내고, 개수를 채우려고 억지로 넣지 마세요.
 
+★ 검색 방법 — 순서를 반드시 지키세요.
+1. 먼저 「{category}」를 만드는 국내 중소 브랜드를 아는 대로 최소 15개 이상 머릿속으로 나열하세요.
+   (예시가 필요하면 "국내 {category} 브랜드", "{category} 중소기업" 같은 검색으로 목록부터 넓게 훑으세요.)
+2. 나열한 브랜드마다 대표 모델을 최소 1개씩 검색해서 조건을 확인하세요.
+3. 확신 가는 3~5개만 찾고 멈추지 마세요. 나열한 브랜드를 다 확인하기 전엔 후보 목록을 마감하지 마세요.
+4. 검색 예산은 넉넉합니다. 브랜드 하나당 검색을 아끼지 말고, 필요하면 같은 브랜드도 여러 번 검색해서 정확히 확인하세요.
+
 ## 반드시 지킬 것 ★
 1. 검색으로 확인한 것만 씁니다. 기억이나 추측으로 제품명·브랜드·가격을 만들지 마세요.
 2. 확인하지 못한 항목은 반드시 null로 두세요. 빈칸을 채우려 짐작하지 마세요.
@@ -553,7 +560,7 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
     # 💡 Claude Sonnet 5는 temperature 등 샘플링 파라미터를 기본값 외로 주면 400 에러를 냅니다.
     #    JSON 강제는 프롬프트 지시("설명 없이 JSON 배열만")와 clean_json_response의
     #    괄호 추출 방어 로직으로 대신합니다.
-    WEB_SEARCH_TOOL = {"type": "web_search_20250305", "name": "web_search", "max_uses": 10}
+    WEB_SEARCH_TOOL = {"type": "web_search_20250305", "name": "web_search", "max_uses": 40}
     MODEL_ID = "claude-sonnet-5"
 
     print(f"\n======================================")
@@ -561,7 +568,7 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
     prompt_1 = PROMPT_STAGE_1.format(category=category)
     response_1 = client.messages.create(
         model=MODEL_ID,
-        max_tokens=8000,
+        max_tokens=16000,
         messages=[{"role": "user", "content": prompt_1}],
         tools=[WEB_SEARCH_TOOL],
     )
@@ -584,7 +591,7 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
     )
     response_2 = client.messages.create(
         model=MODEL_ID,
-        max_tokens=8000,
+        max_tokens=16000,
         messages=[{"role": "user", "content": prompt_2}],
         tools=[WEB_SEARCH_TOOL],
     )
