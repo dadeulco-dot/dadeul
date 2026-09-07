@@ -1,0 +1,53 @@
+{% extends "sqladmin/list.html" %}
+
+{% block content %}
+<div class="card mb-3">
+  <div class="card-body">
+    <h3 class="card-title">B단계 · 제품 CSV 가져오기</h3>
+    <p class="text-muted" style="font-size: 13px;">
+      로컬에서 <code>collect_store.py</code> 를 돌려 만든 CSV 내용을 그대로 붙여넣으세요.
+      <strong>헤더 줄(nv_product_no,store_url,...)을 포함해서</strong> 전체를 복사하면 됩니다.
+      네이버 상품번호가 같은 제품은 자동으로 건너뜁니다.
+    </p>
+
+    <div class="alert alert-info" style="font-size: 12px;">
+      <strong>수집 방법</strong><br>
+      <code>pip install playwright &amp;&amp; playwright install chromium</code><br>
+      <code>python3 collect_store.py --store https://brand.naver.com/xxxx --limit 10</code><br>
+      실행이 끝나면 <code>products_날짜.csv</code> 가 만들어집니다. 그 파일을 열어 전체 복사하세요.
+    </div>
+
+    <form method="POST" action="/admin/product-candidate-admin-model/import-products">
+      <div class="row">
+        <div class="col-md-6 mb-2">
+          <label class="form-label">갈래 (카테고리)</label>
+          <input type="text" name="category" class="form-control" placeholder="예: 프라이팬">
+        </div>
+        <div class="col-md-6 mb-2">
+          <label class="form-label">브랜드</label>
+          <input type="text" name="brand" class="form-control" placeholder="예: 네오플램">
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">CSV 내용</label>
+        <textarea name="csv_text" class="form-control" rows="10" required
+                  style="font-family: monospace; font-size: 12px;"
+                  placeholder="nv_product_no,store_url,product_url,name,price_krw,list_price,member_price,nv_rating,nv_reviews,thumb_url,collected_at&#10;12345678,https://brand.naver.com/xxx,...">
+        </textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">📥 제품 저장</button>
+    </form>
+
+    <div class="mt-3" style="font-size: 12px; color: #666;">
+      <strong>가격 3종 주의</strong> &mdash;
+      <code>price_krw</code> 는 조건 없이 누구나 사는 값입니다.
+      카드·멤버십·쿠폰이 붙어야 나오는 값이면 <code>member_price</code> 로 옮기세요.
+      표시가가 판매가의 2배를 넘으면 「정가 부풀림 의심」이 자동으로 표시됩니다.
+    </div>
+  </div>
+</div>
+
+{{ super() }}
+{% endblock %}
