@@ -561,13 +561,16 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
     #    JSON 강제는 프롬프트 지시("설명 없이 JSON 배열만")와 clean_json_response의
     #    괄호 추출 방어 로직으로 대신합니다.
     WEB_SEARCH_TOOL = {"type": "web_search_20250305", "name": "web_search", "max_uses": 40}
-    MODEL_ID = "claude-sonnet-5"
+    # 💡 1단계(넓게 찾기)는 저렴한 Haiku로, 2단계(검증·판정)만 Sonnet으로.
+    #    검색-토큰 누적 때문에 1단계 비용이 가장 크게 늘어나는 구간이라 여기를 먼저 낮춘다.
+    MODEL_STAGE1 = "claude-haiku-4-5-20251001"
+    MODEL_STAGE2 = "claude-sonnet-5"
 
     print(f"\n======================================")
     print(f"🌐 [1단계] '{category}' Claude 웹 검색 시작...")
     prompt_1 = PROMPT_STAGE_1.format(category=category)
     response_1 = client.messages.create(
-        model=MODEL_ID,
+        model=MODEL_STAGE1,
         max_tokens=16000,
         messages=[{"role": "user", "content": prompt_1}],
         tools=[WEB_SEARCH_TOOL],
@@ -590,7 +593,7 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
         stage1_json=json.dumps(stage1_filtered, ensure_ascii=False)
     )
     response_2 = client.messages.create(
-        model=MODEL_ID,
+        model=MODEL_STAGE2,
         max_tokens=16000,
         messages=[{"role": "user", "content": prompt_2}],
         tools=[WEB_SEARCH_TOOL],
