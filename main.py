@@ -394,7 +394,7 @@ PROMPT_STAGE_1 = """
 ## 이번 작업 (카테고리 엄격 제한 ★)
 현재 작업 카테고리: 「{category}」
 반드시 오직 「{category}」에 속하는 제품만 찾으세요.
-목표 25~40개. 부족하면 부족한 대로 내고, 개수를 채우려고 억지로 넣지 마세요.
+목표 5~8개. 부족하면 부족한 대로 내고, 개수를 채우려고 억지로 넣지 마세요.
 
 ★★★ 출력 규칙 — 다른 무엇보다 우선합니다 ★★★
 당신은 이 작업 내내 어떤 텍스트도 출력하지 않습니다. 검색 도구만 조용히 반복해서 사용하세요.
@@ -404,11 +404,11 @@ PROMPT_STAGE_1 = """
 - 이 규칙을 어기면 응답이 중간에 잘려 결과물이 통째로 사라집니다. 서술은 결과를 0개로 만듭니다.
 
 ★ 검색 방법 — 순서를 반드시 지키세요. (아래는 검색 도구 사용 순서일 뿐, 텍스트로 쓰라는 뜻이 아닙니다)
-1. 먼저 「{category}」를 만드는 국내 중소 브랜드를 아는 대로 최소 15개 이상 나열해보고 검색으로 목록을 넓히세요.
+1. 먼저 「{category}」를 만드는 국내 중소 브랜드를 아는 대로 최소 5개 이상 나열해보고 검색으로 목록을 넓히세요.
    (예시가 필요하면 "국내 {category} 브랜드", "{category} 중소기업" 같은 검색으로 목록부터 넓게 훑으세요.)
 2. 나열한 브랜드마다 대표 모델을 최소 1개씩 검색해서 조건을 확인하세요.
 3. 확신 가는 3~5개만 찾고 멈추지 마세요. 나열한 브랜드를 다 확인하기 전엔 후보 목록을 마감하지 마세요.
-4. 검색 예산은 넉넉합니다. 브랜드 하나당 검색을 아끼지 말고, 필요하면 같은 브랜드도 여러 번 검색해서 정확히 확인하세요.
+4. 검색 예산이 넉넉하지 않습니다(약 6회). 브랜드 하나당 검색 1회로 최대한 많은 정보를 확인하고, 같은 브랜드를 여러 번 검색하지 마세요.
 5. 이 모든 과정은 검색 도구 호출로만 진행하고, 사람에게는 아무것도 보고하지 않습니다.
 
 ## 반드시 지킬 것 ★
@@ -568,7 +568,7 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
     # 💡 Claude Sonnet 5는 temperature 등 샘플링 파라미터를 기본값 외로 주면 400 에러를 냅니다.
     #    JSON 강제는 프롬프트 지시("설명 없이 JSON 배열만")와 clean_json_response의
     #    괄호 추출 방어 로직으로 대신합니다.
-    WEB_SEARCH_TOOL = {"type": "web_search_20250305", "name": "web_search", "max_uses": 40}
+    WEB_SEARCH_TOOL = {"type": "web_search_20250305", "name": "web_search", "max_uses": 6}
     # 💡 1단계(넓게 찾기)는 저렴한 Haiku로, 2단계(검증·판정)만 Sonnet으로.
     #    검색-토큰 누적 때문에 1단계 비용이 가장 크게 늘어나는 구간이라 여기를 먼저 낮춘다.
     MODEL_STAGE1 = "claude-haiku-4-5-20251001"
@@ -579,7 +579,7 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
     prompt_1 = PROMPT_STAGE_1.format(category=category)
     response_1 = client.messages.create(
         model=MODEL_STAGE1,
-        max_tokens=16000,
+        max_tokens=4000,
         messages=[{"role": "user", "content": prompt_1}],
         tools=[WEB_SEARCH_TOOL],
     )
@@ -589,21 +589,9 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
     stage1_parsed = clean_json_response(text_1)
     print(f"📊 [1단계 파싱 완료] 총 {len(stage1_parsed)}개 제품 추출됨.")
 
-    # 💡 저렴한 모델(Haiku)이 서술만 하다 끝나서 0개가 나오면, 그 자체로 예산 낭비다.
-    #    Sonnet으로 한 번만 재시도한다 — 재시도까지 실패하면 그때 포기.
-    if not stage1_parsed:
-        print("⚠️ 1단계(Haiku) 결과가 0개입니다. Sonnet으로 재시도합니다...")
-        response_1_retry = client.messages.create(
-            model=MODEL_STAGE2,
-            max_tokens=16000,
-            messages=[{"role": "user", "content": prompt_1}],
-            tools=[WEB_SEARCH_TOOL],
-        )
-        text_1 = extract_text(response_1_retry)
-        print(f"📝 [1단계 재시도 원본 응답]\n{text_1}\n")
-        stage1_parsed = clean_json_response(text_1)
-        print(f"📊 [1단계 재시도 파싱 완료] 총 {len(stage1_parsed)}개 제품 추출됨.")
-
+    # 💡 여기서 자동으로 Sonnet 재시도를 걸지 않는다 — 실패는 실패로 명확히 보여주고,
+    #    재시도할지는 사람이 로그를 보고 직접 버튼을 다시 눌러 결정하게 한다.
+    #    (돈이 나가는 API 호출을 사용자 모르게 한 번 더 트리거하지 않기 위함)
     if not stage1_parsed:
         print("⚠️ 1단계 추출 결과가 0개입니다. 파이프라인을 조기 종료합니다.")
         return {"status": "empty", "message": "1단계에서 조건에 맞는 제품을 찾지 못했습니다."}
@@ -617,7 +605,7 @@ async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True
     )
     response_2 = client.messages.create(
         model=MODEL_STAGE2,
-        max_tokens=16000,
+        max_tokens=4000,
         messages=[{"role": "user", "content": prompt_2}],
         tools=[WEB_SEARCH_TOOL],
     )
