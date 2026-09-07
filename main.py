@@ -448,13 +448,19 @@ if engine:
                     continue
                 existing.add(pno)
 
+                # ★ CSV에 brand/category 가 있으면 행마다의 값을 씁니다.
+                #   여러 브랜드를 한 파일로 올릴 수 있게 하기 위함입니다.
+                #   비어 있으면 폼에 입력한 값으로 채웁니다.
+                row_brand = (r.get("brand") or "").strip() or brand or None
+                row_category = (r.get("category") or "").strip() or category or None
+
                 price_krw = safe_int(r.get("price_krw"))
                 list_price = safe_int(r.get("list_price"))
                 payloads.append({
                     "nv_product_no": pno,
-                    "brand": brand or None,
+                    "brand": row_brand,
                     "name": (r.get("name") or "").strip() or None,
-                    "category": category or None,
+                    "category": row_category,
                     "store_url": (r.get("store_url") or "").strip() or None,
                     "product_url": (r.get("product_url") or "").strip() or None,
                     "price_krw": price_krw,
@@ -477,7 +483,13 @@ if engine:
                 except Exception as e:
                     print(f"❌ 제품 저장 실패: {e}")
 
+            by_brand = {}
+            for pl in payloads:
+                b = pl.get("brand") or "(미지정)"
+                by_brand[b] = by_brand.get(b, 0) + 1
             print(f"✅ 저장 {saved}개 / 중복·빈값 건너뜀 {skipped}개")
+            if by_brand:
+                print(f"   브랜드별: {by_brand}")
             return RedirectResponse(url="/admin/product-candidate-admin-model/list", status_code=303)
 
     admin.add_view(ProductCandidateAdminView)
