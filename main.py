@@ -103,6 +103,8 @@ class ProductCandidateAdminModel(Base):
     # ★ URL만 저장합니다. 내려받아 우리 서버에 재호스팅하지 않습니다.
     #   URL 참조는 링크지만 내려받아 올리면 복제입니다 (명세서 B단계).
     thumb_url = Column(String, nullable=True)
+    # 어느 경로로 수집했는지 (render / state_json) — 이상 데이터 추적용
+    parse_method = Column(String, nullable=True)
     collected_at = Column(String, nullable=True)   # 수집 시점 · 화면에 「9.02 확인」처럼 병기
 
     # ── 원본 스냅샷 (감사용) ──
@@ -224,6 +226,7 @@ if engine:
             ProductCandidateAdminModel.nv_rating,
             ProductCandidateAdminModel.nv_reviews,
             ProductCandidateAdminModel.thumb_url,
+            ProductCandidateAdminModel.parse_method,
             ProductCandidateAdminModel.collected_at,
             # 가격 3종
             ProductCandidateAdminModel.price_krw,
@@ -309,6 +312,7 @@ if engine:
             ProductCandidateAdminModel.nv_rating: "스토어 별점",
             ProductCandidateAdminModel.nv_reviews: "스토어 리뷰 수",
             ProductCandidateAdminModel.thumb_url: "썸네일 URL",
+            ProductCandidateAdminModel.parse_method: "수집 경로",
             ProductCandidateAdminModel.collected_at: "수집 시점",
             ProductCandidateAdminModel.price_krw: "판매가",
             ProductCandidateAdminModel.list_price: "표시가",
@@ -470,6 +474,7 @@ if engine:
                     "nv_rating": safe_float(r.get("nv_rating")),
                     "nv_reviews": safe_int(r.get("nv_reviews")),
                     "thumb_url": (r.get("thumb_url") or "").strip() or None,
+                    "parse_method": (r.get("parse_method") or "").strip() or None,
                     "collected_at": (r.get("collected_at") or "").strip() or None,
                     "stage": "stage_b_collected",
                     "status": "PENDING_APPROVAL",
@@ -644,16 +649,20 @@ if engine:
     admin.add_view(BrandAdminView)
 
 # ----------------------------------------------------
-# 5. 사용자 앱 (main.html) 서빙
+# 5. 사용자 앱 (index.html) 서빙
+#    ※ 핸드오버 패키지의 prototype/index.html 과 이름을 맞췄습니다.
+#      templates/ 의 어드민 템플릿과 헷갈리지 않도록 static/ 아래에 둡니다.
 # ----------------------------------------------------
 if os.path.exists("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 async def serve_user_app():
-    if os.path.exists("static/main.html"):
-        return FileResponse("static/main.html")
-    return {"message": "static/main.html 파일을 찾을 수 없습니다. 폴더 구조를 확인하세요."}
+    # index.html 이 기준입니다. 예전 이름(main.html)은 이전 기간 동안만 봐 줍니다.
+    for path in ("static/index.html", "static/main.html"):
+        if os.path.exists(path):
+            return FileResponse(path)
+    return {"message": "static/index.html 파일을 찾을 수 없습니다. 폴더 구조를 확인하세요."}
 
 # ----------------------------------------------------
 # 5-2. 브랜드 시드 분류 로직
