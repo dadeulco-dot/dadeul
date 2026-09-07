@@ -1,6 +1,7 @@
 import os
 import json
 import re
+from datetime import datetime, timezone
 from fastapi import FastAPI, HTTPException, Request, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -95,6 +96,49 @@ class ProductCandidateAdminModel(Base):
     # ── 원본 스냅샷 (감사용) ──
     raw_stage1 = Column(JSON, nullable=True)
     raw_stage2 = Column(JSON, nullable=True)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class BrandAdminModel(Base):
+    """카테고리(갈래)별 브랜드 시드 목록.
+
+    이 테이블의 목적은 「LLM이 매번 돈 주고 브랜드를 찾아내지 않게 하는 것」입니다.
+    브랜드 구성은 자주 바뀌지 않으므로, 사람이 한 번 채워두고 계속 재사용합니다.
+
+    tier 는 「인기순 상위 N개」로 자르는 게 아니라 명세서 후보 조건 ①
+    (1인이 협상 가능한 국내 중소 브랜드)에 따라 나눕니다.
+    다들의 타겟은 오히려 무명 중소 브랜드이므로, 인기 상위권을 남기는 방식은 취지에 어긋납니다.
+    """
+    __tablename__ = "brands"
+
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String, nullable=False, index=True)   # 브랜드명
+    category = Column(String, nullable=True, index=True)  # 갈래 (예: 프라이팬)
+
+    # candidate        : 국내 중소로 보임 — 실제 후보 발굴 대상
+    # excluded_global  : 해외 브랜드 (르크루제, 휘슬러 등)
+    # excluded_large   : 대기업·상장사·계열 (테팔=그룹세브, 락앤락 등)
+    # excluded_pb      : 유통사 PB·오픈마켓 (노브랜드, 탐사, 쿠팡 등)
+    # unknown          : 판단 보류 — 사람이 직접 확인해야 함
+    tier = Column(String, default="unknown", index=True)
+    tier_reason = Column(String, nullable=True)  # 왜 이 등급인지 (자동분류 근거 또는 사람 메모)
+
+    is_active = Column(Boolean, default=True)  # 후보 발굴에 실제로 쓸지 여부
+    note = Column(Text, nullable=True)
+
+    # ── A단계 산출: 브랜드 공식 스마트스토어 ──
+    # HANDOFF「스마트스토어 기준」(2026-09-03): 제품 수집은 스마트스토어 등록분만.
+    # 판매자가 브랜드 본사여야 하며, 총판·리셀러 스토어는 협상 상대가 아니므로 official=False.
+    store_url = Column(String, nullable=True)       # brand.naver.com/... 또는 smartstore.naver.com/...
+    store_type = Column(String, nullable=True)      # "brand"(브랜드스토어) | "smartstore"(일반)
+    official = Column(Boolean, nullable=True)       # 브랜드 본사 운영으로 확인됐는가
+    official_evidence = Column(Text, nullable=True) # 배지·사업자명 일치·홈페이지 안내 등 판별 근거
+    scale_evidence = Column(Text, nullable=True)    # 중소 브랜드 판단 근거 · 모기업 확인 결과
+    store_sources = Column(JSON, default=list)      # 근거 URL
+    store_uncertain = Column(JSON, default=list)    # 확신 낮은 항목
+    store_checked_at = Column(DateTime(timezone=True), nullable=True)  # A단계를 마지막으로 돌린 시각
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
@@ -291,13 +335,163 @@ if engine:
 
         @expose("/fetch-products", methods=["POST"])
         async def fetch_products_action(self, request: Request):
-            form_data = await request.form()
-            category = form_data.get("category", "후라이팬")
-            
-            await run_pipeline(category=category, auto_save_db=True)
-            return RedirectResponse(url="/admin/product-candidate-admin-model/list", status_code=303)
+            # ⚠️ 예전 「제품 가져오기」는 AI에게 제품·별점·가격까지 한꺼번에 물어보는 방식이었고,
+            #    새 명세서(2026-09-03)에서 A~D 4단계로 분리되면서 폐지됐습니다.
+            #    지금은 A단계(브랜드 공식 스토어 찾기)만 구현돼 있고, 브랜드 화면에서 실행합니다.
+            #    B단계(스토어 크롤링)가 만들어지면 여기에 다시 연결합니다.
+            print("⚠️ [폐지된 경로] 제품 가져오기는 A~D단계로 분리됐습니다. 브랜드 화면에서 A단계를 먼저 실행하세요.")
+            return RedirectResponse(url="/admin/brand-admin-model/list", status_code=303)
 
     admin.add_view(ProductCandidateAdminView)
+
+    class BrandAdminView(ModelView, model=BrandAdminModel):
+        name = "브랜드"
+        name_plural = "브랜드 목록"
+
+        # 붙여넣기 입력 UI를 주입한 템플릿 (templates/brand_list.html)
+        list_template = "brand_list.html"
+
+        column_list = [
+            BrandAdminModel.name,
+            BrandAdminModel.category,
+            BrandAdminModel.tier,
+            BrandAdminModel.store_url,
+            BrandAdminModel.store_type,
+            BrandAdminModel.official,
+            BrandAdminModel.is_active,
+        ]
+
+        column_details_list = [
+            BrandAdminModel.id,
+            BrandAdminModel.name,
+            BrandAdminModel.category,
+            BrandAdminModel.tier,
+            BrandAdminModel.tier_reason,
+            BrandAdminModel.is_active,
+            BrandAdminModel.note,
+            # A단계 산출
+            BrandAdminModel.store_url,
+            BrandAdminModel.store_type,
+            BrandAdminModel.official,
+            BrandAdminModel.official_evidence,
+            BrandAdminModel.scale_evidence,
+            BrandAdminModel.store_sources,
+            BrandAdminModel.store_uncertain,
+            BrandAdminModel.store_checked_at,
+            BrandAdminModel.created_at,
+            BrandAdminModel.updated_at,
+        ]
+
+        form_columns = [
+            BrandAdminModel.name,
+            BrandAdminModel.category,
+            BrandAdminModel.tier,
+            BrandAdminModel.tier_reason,
+            BrandAdminModel.is_active,
+            BrandAdminModel.note,
+            BrandAdminModel.store_url,
+            BrandAdminModel.store_type,
+            BrandAdminModel.official,
+            BrandAdminModel.official_evidence,
+            BrandAdminModel.scale_evidence,
+        ]
+
+        column_searchable_list = ["name", "category"]
+        column_sortable_list = ["name", "category", "tier"]
+
+        column_labels = {
+            BrandAdminModel.name: "브랜드명",
+            BrandAdminModel.category: "갈래",
+            BrandAdminModel.tier: "등급",
+            BrandAdminModel.tier_reason: "등급 근거",
+            BrandAdminModel.is_active: "사용",
+            BrandAdminModel.note: "메모",
+            BrandAdminModel.store_url: "공식 스토어",
+            BrandAdminModel.store_type: "스토어 유형",
+            BrandAdminModel.official: "공식 확인",
+            BrandAdminModel.official_evidence: "공식 판별 근거",
+            BrandAdminModel.scale_evidence: "규모 판단 근거",
+            BrandAdminModel.store_sources: "근거 URL",
+            BrandAdminModel.store_uncertain: "확신 낮은 항목",
+            BrandAdminModel.store_checked_at: "스토어 확인 시각",
+            BrandAdminModel.created_at: "생성일",
+            BrandAdminModel.updated_at: "수정일",
+        }
+
+        column_formatters = {
+            BrandAdminModel.store_url: lambda m, a: _fmt_link(m.store_url, "🏪 스토어"),
+        }
+        column_formatters_detail = {
+            BrandAdminModel.store_url: lambda m, a: _fmt_link(m.store_url, "🏪 스토어"),
+        }
+
+        can_view_details = True
+        can_edit = True
+        can_delete = True
+        can_create = True
+
+        @expose("/import-brands", methods=["POST"])
+        async def import_brands_action(self, request: Request):
+            """붙여넣은 브랜드 목록을 파싱해 저장합니다. (크롤링이 아니라 사람이 1회 입력)"""
+            form_data = await request.form()
+            category = (form_data.get("category") or "").strip()
+            raw_text = form_data.get("brand_text") or ""
+
+            names = parse_brand_input(raw_text)
+            print(f"\n📥 [브랜드 가져오기] 갈래='{category}', 입력 {len(names)}개 파싱됨")
+
+            if not supabase or not names:
+                return RedirectResponse(url="/admin/brand-admin-model/list", status_code=303)
+
+            # 같은 갈래에 이미 있는 브랜드는 건너뜁니다 (등급을 사람이 고쳐놨을 수 있으므로 덮어쓰지 않음)
+            existing = set()
+            try:
+                res = supabase.table("brands").select("name, category").eq("category", category).execute()
+                for it in (res.data or []):
+                    existing.add(str(it.get("name") or "").strip().lower())
+            except Exception as e:
+                print(f"⚠️ 기존 브랜드 조회 실패: {e}")
+
+            rows = []
+            for nm in names:
+                if nm.strip().lower() in existing:
+                    continue
+                tier, reason = classify_brand(nm)
+                rows.append({
+                    "name": nm,
+                    "category": category,
+                    "tier": tier,
+                    "tier_reason": reason,
+                    "is_active": True,
+                })
+
+            saved = 0
+            if rows:
+                try:
+                    r = supabase.table("brands").insert(rows).execute()
+                    saved = len(r.data or [])
+                except Exception as e:
+                    print(f"❌ 브랜드 저장 실패: {e}")
+
+            skipped = len(names) - len(rows)
+            counts = {}
+            for row in rows:
+                counts[row["tier"]] = counts.get(row["tier"], 0) + 1
+            print(f"✅ 저장 {saved}개 / 중복 건너뜀 {skipped}개 / 등급별 {counts}")
+
+            return RedirectResponse(url="/admin/brand-admin-model/list", status_code=303)
+
+        @expose("/find-stores", methods=["POST"])
+        async def find_stores_action(self, request: Request):
+            """A단계 실행: 이 갈래 브랜드들의 공식 스마트스토어 주소를 찾습니다."""
+            form_data = await request.form()
+            category = (form_data.get("category") or "").strip()
+            if not category:
+                return RedirectResponse(url="/admin/brand-admin-model/list", status_code=303)
+            await run_stage_a(category=category, auto_save_db=True)
+            return RedirectResponse(url="/admin/brand-admin-model/list", status_code=303)
+
+    admin.add_view(BrandAdminView)
 
 # ----------------------------------------------------
 # 5. 사용자 앱 (main.html) 서빙
@@ -310,6 +504,92 @@ async def serve_user_app():
     if os.path.exists("static/main.html"):
         return FileResponse("static/main.html")
     return {"message": "static/main.html 파일을 찾을 수 없습니다. 폴더 구조를 확인하세요."}
+
+# ----------------------------------------------------
+# 5-2. 브랜드 시드 분류 로직
+# ----------------------------------------------------
+# ⚠️ 아래 목록은 「확실히 아는 것만」 담습니다. 애매하면 unknown으로 남겨서 사람이 봅니다.
+#    자동 분류가 틀릴 수 있으므로 어드민에서 언제든 등급을 고칠 수 있게 해두었습니다.
+
+# 해외 브랜드 (수입·글로벌)
+BRANDS_GLOBAL = {
+    "르크루제", "스타우브", "휘슬러", "헹켈", "롯지", "WMF", "이딸라", "조셉조셉",
+    "코렐", "코닝웨어", "파이렉스", "이케아", "MUJI", "샤오미", "비타크래프트",
+    "비타그래프트", "실리트", "드부이에", "드메이어", "발라리니", "버미큘라",
+    "스캔팬", "스칸팬 코리아", "스켑슐트", "브라반티아", "OXO", "피스카스",
+    "타파웨어", "트라몬티나", "베르그호프", "버그호프", "구찌니", "포트메리온",
+    "로얄코펜하겐", "니토리", "프랑프랑", "웨버", "페트로막스", "삼보넷",
+    "스위스다이아몬드", "쿠진아트", "리버라이트", "타이거크라운", "이와츄",
+    "파켈만", "페드리니", "에바솔로", "라바제", "INVICTA", "ELO", "AMT",
+    "WOLL", "TVS", "SKATER", "스케이터코리아", "아놀론", "마이어", "그린팬",
+    "헥스클래드", "파사바체", "베네통", "메종오브제", "라씨에뜨", "소리야나기",
+    "요시가와", "스기야마", "나가타니", "아케보노", "호쿠리쿠", "후지호로",
+    "하코야", "카모메키친", "키와메", "타케하라", "히로유키", "론네바이브룩",
+}
+
+# 대기업·상장사·계열 (1인 협상이 현실적으로 어려움)
+BRANDS_LARGE = {
+    "테팔",          # 프랑스 그룹세브 — 명세서에 명시된 제외 사례
+    "락앤락", "쿠쿠", "롯데", "롯데알미늄", "롯데이라이프", "한샘",
+    "신세계인터내셔날", "모던하우스", "자주(JAJU)", "JAJU", "글라스락",
+    "삼양가전", "현대물산", "현대산업", "3M", "써모스", "한국도자기",
+    "한국도자기리빙", "자이글", "쿠첸프로피", "애터미",
+}
+
+# 유통사 PB · 오픈마켓 · 브랜드 실체 불분명
+BRANDS_PB = {
+    "노브랜드", "탐사", "쿠팡", "오늘좋은", "오너클랜", "젊은이마켓",
+    "기타", "홈플러스", "이마트", "에이치플러스몰",
+}
+
+
+def classify_brand(name: str):
+    """브랜드명을 보고 1차 등급을 매깁니다. 확실하지 않으면 unknown으로 둡니다."""
+    n = (name or "").strip()
+    if not n:
+        return ("unknown", None)
+    if n in BRANDS_GLOBAL:
+        return ("excluded_global", "해외 브랜드")
+    if n in BRANDS_LARGE:
+        return ("excluded_large", "대기업·상장사·계열")
+    if n in BRANDS_PB:
+        return ("excluded_pb", "유통사 PB·오픈마켓")
+    return ("unknown", None)
+
+
+def parse_brand_input(raw_text: str):
+    """어드민에서 붙여넣은 브랜드 목록을 파싱합니다.
+
+    다나와 필터 목록을 그대로 복사하면 '- [ ] 브랜드명' 같은 형태로 붙는 경우가 많아,
+    체크박스 기호·불릿·번호를 벗겨냅니다. 줄바꿈/쉼표 둘 다 구분자로 받습니다.
+    """
+    if not raw_text:
+        return []
+
+    # 쉼표로 붙여넣은 경우도 줄바꿈으로 통일
+    text = raw_text.replace(",", "\n")
+    names = []
+    seen = set()
+
+    for line in text.split("\n"):
+        s = line.strip()
+        if not s:
+            continue
+        # '- [ ] ', '- [x] ', '* ', '- ', '1. ' 같은 접두 기호 제거
+        s = re.sub(r'^[-*•]\s*', '', s)
+        s = re.sub(r'^\[[ xX]?\]\s*', '', s)
+        s = re.sub(r'^\d+[\.\)]\s*', '', s)
+        s = s.strip()
+        if not s:
+            continue
+        # 중복 제거 (대소문자·공백 무시)
+        key = s.replace(" ", "").lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        names.append(s)
+
+    return names
 
 # ----------------------------------------------------
 # 6. 파이프라인 로직 및 중복 제거 (Claude web_search 툴)
@@ -381,126 +661,65 @@ def filter_existing_db_products(stage1_data: list) -> list:
         print(f"⚠️ 중복 검사 에러: {str(e)}")
         return stage1_data
 
-PROMPT_STAGE_1 = """
+PROMPT_A_STORE = """
 당신은 「다들」의 제품 발굴 담당자입니다.
-
-## 다들이 하는 일
-흩어진 후기를 모아 제품을 고르고, 사려는 사람이 모이면 브랜드와 직접 가격을 협상합니다.
+다들은 흩어진 후기를 모아 제품을 고르고, 사려는 사람이 모이면 브랜드와 직접 가격을 협상합니다.
 협상은 1인 사업자가 브랜드 담당자에게 직접 연락해서 진행합니다.
-당신은 이 협상의 후보가 될 만한 제품을 찾는 역할만 합니다.
-★ 제품이 좋은지 나쁜지, 별점이 실제 후기와 맞는지 안 맞는지는 여기서 판단하지 않습니다.
-   그건 다들이 유튜브 댓글을 모은 뒤 별도의 공개된 규칙(label_of)으로 정합니다.
 
-## 이번 작업 (카테고리 엄격 제한 ★)
-현재 작업 카테고리: 「{category}」
-반드시 오직 「{category}」에 속하는 제품만 찾으세요.
-목표 5~8개. 부족하면 부족한 대로 내고, 개수를 채우려고 억지로 넣지 마세요.
+## 이번 작업
+「{category}」 갈래에서 **네이버 스마트스토어를 직접 운영하는 국내 중소 브랜드**를 찾아 주세요.
+제품이 아니라 **브랜드와 그 스토어 주소**를 찾는 단계입니다.
+제품 목록·별점·리뷰 수·가격은 다음 단계에서 코드가 직접 수집하므로, 여기서 찾지 마세요.
 
 ★★★ 출력 규칙 — 다른 무엇보다 우선합니다 ★★★
-당신은 이 작업 내내 어떤 텍스트도 출력하지 않습니다. 검색 도구만 조용히 반복해서 사용하세요.
-- "~하겠습니다", "확인했습니다", "이제 더 효율적으로" 같은 진행 상황 설명을 단 한 글자도 쓰지 마세요.
-- 브랜드 목록, 검증 계획, 중간 결과를 텍스트로 나열하지 마세요. 검색 도구 호출 안에서만 다루세요.
-- 검색을 몇 번을 하든, 사람에게 보이는 텍스트 응답은 맨 마지막에 JSON 배열 단 한 번만 출력합니다.
-- 이 규칙을 어기면 응답이 중간에 잘려 결과물이 통째로 사라집니다. 서술은 결과를 0개로 만듭니다.
-
-★ 검색 방법 — 순서를 반드시 지키세요. (아래는 검색 도구 사용 순서일 뿐, 텍스트로 쓰라는 뜻이 아닙니다)
-1. 먼저 「{category}」를 만드는 국내 중소 브랜드를 아는 대로 최소 5개 이상 나열해보고 검색으로 목록을 넓히세요.
-   (예시가 필요하면 "국내 {category} 브랜드", "{category} 중소기업" 같은 검색으로 목록부터 넓게 훑으세요.)
-2. 나열한 브랜드마다 대표 모델을 최소 1개씩 검색해서 조건을 확인하세요.
-3. 확신 가는 3~5개만 찾고 멈추지 마세요. 나열한 브랜드를 다 확인하기 전엔 후보 목록을 마감하지 마세요.
-4. 검색 예산이 넉넉하지 않습니다(약 6회). 브랜드 하나당 검색 1회로 최대한 많은 정보를 확인하고, 같은 브랜드를 여러 번 검색하지 마세요.
-5. 이 모든 과정은 검색 도구 호출로만 진행하고, 사람에게는 아무것도 보고하지 않습니다.
+작업 내내 사람에게 보이는 텍스트를 쓰지 않습니다. 검색 도구만 조용히 사용하세요.
+- "~하겠습니다", "확인했습니다" 같은 진행 상황 설명을 단 한 글자도 쓰지 마세요.
+- 브랜드 목록이나 검증 계획을 텍스트로 나열하지 마세요.
+- 사람에게 보이는 응답은 맨 마지막에 JSON 배열 단 한 번뿐입니다.
+- 이 규칙을 어기면 응답이 잘려 결과물이 통째로 사라집니다.
 
 ## 반드시 지킬 것 ★
-1. 검색으로 확인한 것만 씁니다. 기억이나 추측으로 제품명·브랜드·가격을 만들지 마세요.
-2. 확인하지 못한 항목은 반드시 null로 두세요. 빈칸을 채우려 짐작하지 마세요.
-3. 제품마다 근거 URL을 최소 1개 답니다. URL을 못 찾으면 그 제품은 빼세요.
-4. 제품 평가(별점 해석, 다들 라벨 등)를 스스로 만들어내지 마세요. 정량 데이터만 그대로 옮겨 적습니다.
-5. 후기 원문·상세페이지 문구를 복사하지 마세요. 사실(숫자·스펙 값)만 옮깁니다.
+1. 검색으로 확인한 것만 씁니다. 스토어 주소를 지어내지 마세요.
+2. **주소를 실제로 확인하지 못했으면 그 브랜드는 빼세요.** null 로 남기지 마세요.
+3. 브랜드가 좋은지 나쁜지 판단하지 마세요. 조건만 봅니다.
 
-## 후보 조건 — 7개를 모두 만족해야 합니다
+## 조건
 
-① 브랜드 규모
-1인이 연락해 협상 테이블에 앉을 수 있는 국내 중소 브랜드.
-- 필요: 자사몰 또는 스마트스토어를 직접 운영하고, 고객센터·문의 창구가 공개돼 있음
-- 제외: 대기업·대기업 계열·글로벌 브랜드, 상장사, 홈쇼핑 전속 브랜드
-- ★ 국내 브랜드처럼 보여도 모기업을 확인하세요. 예: 테팔은 프랑스 그룹세브 소속이라 제외입니다
-- 제외: 브랜드 실체가 불분명한 노브랜드 수입품, 오픈마켓 전용 무명 셀러
+**① 공식 스토어여야 합니다**
+판매자가 **브랜드 본사**여야 합니다. 총판·리셀러가 운영하는 스토어는 협상 상대가 아닙니다.
+- `brand.naver.com/{{브랜드}}` — 브랜드스토어. **공식일 가능성이 높습니다**
+- `smartstore.naver.com/{{스토어}}` — 일반 스마트스토어. 스토어명이 브랜드명과 일치하는지 확인하세요
+- 판별 근거: 「브랜드스토어」 배지 · 스토어명·사업자명이 브랜드와 일치 · 브랜드 홈페이지에서 이 스토어를 공식으로 안내
 
-② 모델이 특정되는가
-제품명이 모델 단위로 딱 떨어져야 합니다. 크기·용량 파생이 있으면 가장 많이 팔리는 규격 하나만 고릅니다.
+**② 1인이 협상할 수 있는 규모**
+- 제외: 대기업·계열사·상장사·홈쇼핑 전속
+- ★ **국내 브랜드처럼 보여도 모기업을 확인하세요.** 테팔은 프랑스 그룹세브 소속이라 제외입니다
+- 제외: 브랜드 실체가 불분명한 노브랜드 수입품
 
-③ 유튜브 리뷰가 쌓이는가
-최근 24개월 안에 이 제품(또는 정확히 같은 모델)을 다룬 리뷰 영상이 3개 이상,
-그중 댓글이 달린 영상이 있어야 합니다.
+**③ 취급 제품이 조건에 맞을 것**
+내구재를 팔아야 합니다. 소모품·식품·화장품만 파는 브랜드는 제외합니다.
 
-④ 오래 쓰는 물건인가
-최소 3개월 이상 쓰면서 장기 사용 후기가 쌓이는 내구재. 소모품·시즌 상품은 제외.
+## 검색 방법
+검색 예산이 넉넉하지 않습니다. 브랜드 하나당 검색 1~2회로 스토어 주소를 확인하고 넘어가세요.
+{brand_hint}
 
-⑤ 가격이 공개돼 있고 추적 가능한가
-공개 판매처에서 가격이 노출되고, 매일 같은 주소에서 확인할 수 있어야 합니다.
+## 출력
+설명 없이 JSON 배열만.
 
-★ 가격은 세 종류를 구분해서 적어 주세요. 섞으면 안 됩니다.
-| 종류 | 무엇 | 필드 |
-|---|---|---|
-| 표시가 | 판매처가 적어둔 정가 | list_price |
-| 판매가 | 조건 없이 지금 누구나 사는 값 (배송비 포함) | price_krw ← 이게 기준 |
-| 조건부가 | 카드·멤버십·쿠폰·앱 전용가 | member_price |
-
-★ 표시가가 판매가의 2배를 넘으면 uncertain에 "정가 부풀림 의심"을 적어 주세요.
-  다들은 부풀린 정가로 할인율을 크게 보이게 하지 않겠다고 약속했습니다.
-
-⑥ 가격대
-정가 15,000원 ~ 300,000원.
-
-⑦ 수요 규모 — 아래를 모두 만족
-- 누적 리뷰 1,000건 이상
-- 구매 건수 300건 이상 (판매처에 표기된 값. 표기가 없으면 null로 두고 사람이 확인합니다)
-- 여러 판매처에 흩어져 있으면 가장 많이 파는 곳 하나를 기준으로 합니다
-
-## 판매처 · 가격 감시 채널
-- site_url: 브랜드 자사몰 — 「사러 가기」가 향할 곳(기준가). 자사몰이 없으면 브랜드가 직접 운영하는
-  브랜드스토어(brand.naver.com)를 대신 쓸 수 있지만, 아무나 여는 일반 스마트스토어를 자사몰로 대신 쓰지 마세요.
-- watch_urls: 가격을 매일 감시할 다른 채널 — {{"naver": "...", "toss": null, "coupang": null}}.
-  프로모션 채널에서 더 싸게 팔리고 있으면 나중에 협상가가 무의미해지므로 필요합니다.
-  단, 어느 채널에서도 리뷰 본문은 읽거나 옮기지 마세요. 숫자와 주소만 가져옵니다.
-
-★ 별점은 통과 기준이 아닙니다. 숫자만 그대로 적어 주세요. 높다고 뽑거나 낮다고 떨어뜨리지 마세요.
-  다만 별점이 4.0 미만이면 uncertain에 "별점 낮음"을 적어 사람이 보게 하세요.
-★ 리뷰 본문을 읽거나 옮기지 마세요. 별점·리뷰 수·구매 수 세 숫자만 기록합니다.
-
-## 무조건 제외
-- 식품·건강기능식품·의약외품·화장품
-- 유아·아동이 직접 쓰는 제품
-- 병행수입품, 리셀 상품, 중고
-- 출시 6개월 미만 신제품
-- 상시 할인 중이라 정가가 의미 없는 제품
-- 지정된 「{category}」 외 타 제품군 전체
-
-## 출력 형식 (JSON 배열만 출력)
 [
   {{
     "brand": "브랜드명",
-    "name": "모델명 포함 제품명",
-    "sub": "{category}",
-    "price_krw": 39800,
-    "list_price": 45000,
-    "member_price": null,
-    "site_url": "브랜드 자사몰 주소",
-    "watch_urls": {{"naver": "...", "toss": null, "coupang": null}},
-    "brand_scale": "중소",
-    "brand_evidence": "자사몰 운영·고객센터 공개 등 판단 근거",
-    "yt_review_count": 5,
-    "yt_evidence": ["영상 URL"],
-    "market_rating": 4.6,
-    "market_reviews": 1148,
-    "market_orders": 320,
-    "market_url": "숫자를 확인한 판매처 주소",
-    "release": "2024-03 또는 null",
+    "store_url": "https://brand.naver.com/... 또는 https://smartstore.naver.com/...",
+    "store_type": "brand" 또는 "smartstore",
+    "official": true,
+    "official_evidence": "공식으로 본 근거",
+    "scale_evidence": "중소 브랜드로 본 근거 · 모기업 확인 결과",
     "sources": ["근거 URL"],
-    "uncertain": ["확신 낮은 항목명"]
+    "uncertain": ["확신이 낮은 항목"]
   }}
 ]
+
+목표 8~15개 브랜드. **개수를 채우려고 억지로 넣지 마세요.**
 """
 
 PROMPT_STAGE_2 = """
@@ -561,144 +780,147 @@ PROMPT_STAGE_2 = """
 drop도 반드시 포함해 출력하세요. 왜 떨어졌는지가 다음 주 검색어를 고치는 재료가 됩니다.
 """
 
-async def run_pipeline(category: str = "후라이팬", auto_save_db: bool = True):
+async def run_stage_a(category: str = "프라이팬", auto_save_db: bool = True):
+    """A단계 · 브랜드 공식 스마트스토어 찾기.
+
+    새 명세서(dadeul-gemini-candidates.md 0장)의 역할 분담을 따릅니다.
+      A단계  브랜드 공식 스토어 찾기      ← 여기 (AI + 웹 검색)
+      B단계  스토어 제품 목록·상세 수집   코드 (크롤링)
+      C단계  후보 조건으로 판정           AI
+      D단계  등록 형식으로 변환           AI
+
+    제품·별점·리뷰 수·가격은 여기서 찾지 않습니다. AI에게 숫자를 물으면 지어냅니다.
+    """
     if not client:
         raise HTTPException(status_code=500, detail=".env 파일에 ANTHROPIC_API_KEY가 설정되어 있지 않습니다.")
 
     # 💡 Claude Sonnet 5는 temperature 등 샘플링 파라미터를 기본값 외로 주면 400 에러를 냅니다.
-    #    JSON 강제는 프롬프트 지시("설명 없이 JSON 배열만")와 clean_json_response의
-    #    괄호 추출 방어 로직으로 대신합니다.
-    WEB_SEARCH_TOOL = {"type": "web_search_20250305", "name": "web_search", "max_uses": 6}
-    # 💡 1단계(넓게 찾기)는 저렴한 Haiku로, 2단계(검증·판정)만 Sonnet으로.
-    #    검색-토큰 누적 때문에 1단계 비용이 가장 크게 늘어나는 구간이라 여기를 먼저 낮춘다.
-    MODEL_STAGE1 = "claude-haiku-4-5-20251001"
-    MODEL_STAGE2 = "claude-sonnet-5"
+    WEB_SEARCH_TOOL = {"type": "web_search_20250305", "name": "web_search", "max_uses": 10}
+    MODEL_STAGE_A = "claude-sonnet-5"
+
+    # ── brands 테이블에서 이 갈래의 후보 브랜드를 힌트로 넘긴다 ──
+    #    이미 사람이 채워둔 목록이 있으면 AI가 브랜드를 "찾느라" 검색을 태우지 않아도 된다.
+    brand_hint = ""
+    known_brands = []
+    already_done = set()
+    if supabase:
+        try:
+            res = (supabase.table("brands")
+                   .select("name, tier, store_url")
+                   .eq("category", category)
+                   .eq("is_active", True)
+                   .execute())
+            for it in (res.data or []):
+                tier = (it.get("tier") or "").strip()
+                nm = (it.get("name") or "").strip()
+                if not nm:
+                    continue
+                # 이미 스토어를 찾아둔 브랜드는 다시 검색하지 않는다 (비용 절약)
+                if it.get("store_url"):
+                    already_done.add(nm.lower())
+                    continue
+                # 명백한 제외 등급은 애초에 후보가 아니다
+                if tier in ("excluded_global", "excluded_large", "excluded_pb"):
+                    continue
+                known_brands.append(nm)
+        except Exception as e:
+            print(f"⚠️ brands 조회 실패(무시하고 진행): {e}")
+
+    if known_brands:
+        brand_hint = (
+            "아래는 이 갈래에서 이미 확인된 브랜드 목록입니다. "
+            "이 브랜드들의 스토어 주소를 우선 확인하세요. "
+            "목록에 없는 브랜드를 새로 찾는 데 검색을 쓰지 마세요.\n"
+            + ", ".join(known_brands[:40])
+        )
+        print(f"📋 brands 테이블에서 {len(known_brands)}개 브랜드를 힌트로 사용 "
+              f"(이미 완료 {len(already_done)}개는 제외)")
+    else:
+        brand_hint = "참고할 브랜드 목록이 아직 없습니다. 검색으로 직접 찾으세요."
+        print("📋 brands 테이블에 이 갈래의 미처리 브랜드가 없습니다. AI가 직접 찾습니다.")
 
     print(f"\n======================================")
-    print(f"🌐 [1단계] '{category}' Claude 웹 검색 시작...")
-    prompt_1 = PROMPT_STAGE_1.format(category=category)
-    response_1 = client.messages.create(
-        model=MODEL_STAGE1,
+    print(f"🏪 [A단계] '{category}' 브랜드 공식 스토어 찾기 시작...")
+
+    prompt_a = PROMPT_A_STORE.format(category=category, brand_hint=brand_hint)
+    response_a = client.messages.create(
+        model=MODEL_STAGE_A,
         max_tokens=4000,
-        messages=[{"role": "user", "content": prompt_1}],
+        messages=[{"role": "user", "content": prompt_a}],
         tools=[WEB_SEARCH_TOOL],
     )
 
-    text_1 = extract_text(response_1)
-    print(f"📝 [1단계 원본 응답]\n{text_1}\n")
-    stage1_parsed = clean_json_response(text_1)
-    print(f"📊 [1단계 파싱 완료] 총 {len(stage1_parsed)}개 제품 추출됨.")
+    text_a = extract_text(response_a)
+    print(f"📝 [A단계 원본 응답]\n{text_a}\n")
+    results = clean_json_response(text_a)
+    print(f"📊 [A단계 파싱 완료] 총 {len(results)}개 브랜드 스토어 확인됨.")
 
-    # 💡 여기서 자동으로 Sonnet 재시도를 걸지 않는다 — 실패는 실패로 명확히 보여주고,
-    #    재시도할지는 사람이 로그를 보고 직접 버튼을 다시 눌러 결정하게 한다.
-    #    (돈이 나가는 API 호출을 사용자 모르게 한 번 더 트리거하지 않기 위함)
-    if not stage1_parsed:
-        print("⚠️ 1단계 추출 결과가 0개입니다. 파이프라인을 조기 종료합니다.")
-        return {"status": "empty", "message": "1단계에서 조건에 맞는 제품을 찾지 못했습니다."}
-
-    stage1_filtered = filter_existing_db_products(stage1_parsed)
-
-    print(f"\n🔍 [2단계] 후보군 Claude 웹 재검증 및 keep/drop 판정 중...")
-    prompt_2 = PROMPT_STAGE_2.format(
-        category=category, 
-        stage1_json=json.dumps(stage1_filtered, ensure_ascii=False)
-    )
-    response_2 = client.messages.create(
-        model=MODEL_STAGE2,
-        max_tokens=4000,
-        messages=[{"role": "user", "content": prompt_2}],
-        tools=[WEB_SEARCH_TOOL],
-    )
-
-    text_2 = extract_text(response_2)
-    print(f"📝 [2단계 원본 응답]\n{text_2}\n")
-    stage2_results = clean_json_response(text_2)
-    print(f"📊 [2단계 파싱 완료] 총 {len(stage2_results)}개 제품 검증 완료.")
-
-    # 💡 stage2가 아직 재출력하지 않는 필드(brand_scale, release 등)를 stage1 값으로
-    #    폴백시키고, raw_stage1 감사 스냅샷도 남기기 위한 매칭 테이블
-    stage1_lookup = {}
-    for it in stage1_filtered:
-        key = (str(it.get("brand") or "").strip().lower(), str(it.get("name") or "").strip().lower())
-        stage1_lookup[key] = it
+    if not results:
+        print("⚠️ A단계 결과가 0개입니다. 조기 종료합니다.")
+        return {"status": "empty", "message": "A단계에서 공식 스토어를 찾지 못했습니다."}
 
     saved_count = 0
     save_errors = []
+    skipped = 0
 
     if auto_save_db and supabase:
-        print("\n💾 [Supabase DB 저장 시작]...")
-        for item in stage2_results:
-            is_keep = item.get("verdict") == "keep"
-            key = (str(item.get("brand") or "").strip().lower(), str(item.get("name") or "").strip().lower())
-            s1 = stage1_lookup.get(key) or {}
+        print("\n💾 [brands 테이블 갱신 시작]...")
+        for item in results:
+            brand_name = (item.get("brand") or "").strip()
+            store_url = (item.get("store_url") or "").strip()
 
-            # 💡 safe_int, safe_float 적용으로 DB 저장 안정성 극대화
-            watch = item.get("watch_urls", s1.get("watch_urls")) or {}
-            list_price = safe_int(item.get("list_price", s1.get("list_price")))
-            price_krw = safe_int(item.get("price_krw", s1.get("price_krw")))
-            price_inflated = bool(list_price and price_krw and list_price > 2 * price_krw)
+            # 명세서 A단계 규칙 2: 주소를 확인 못 했으면 그 브랜드는 뺀다
+            if not brand_name or not store_url:
+                skipped += 1
+                continue
 
-            db_payload = {
-                "brand": item.get("brand"),
-                "name": item.get("name"),
-                "category": item.get("sub", category),
-                "verdict": item.get("verdict", "keep"),
-                "reject_reason": item.get("reason"),
-                "status": "PENDING_APPROVAL" if is_keep else "REJECTED",
-                "stage": "stage2_verified",
-
-                "price_krw": price_krw,
-                "list_price": list_price,
-                "member_price": safe_int(item.get("member_price", s1.get("member_price"))),
-                "price_inflated": price_inflated,
-
-                "site_url": item.get("site_url", s1.get("site_url")),
-                "watch_naver": watch.get("naver"),
-                "watch_toss": watch.get("toss"),
-                "watch_coupang": watch.get("coupang"),
-
-                "brand_scale": item.get("brand_scale", s1.get("brand_scale")),
-                "brand_evidence": item.get("brand_evidence", s1.get("brand_evidence")),
-
-                "yt_review_count": safe_int(item.get("yt_review_count", s1.get("yt_review_count"))),
-                "yt_evidence": item.get("yt_evidence", s1.get("yt_evidence", [])),
-                "yt_queries": item.get("yt_queries", []),
-                "yt_must": item.get("yt_must", []),
-                "aliases": item.get("aliases", []),
-
-                # 참고용 시장 신호일 뿐, 이 값 자체가 다들 라벨이 되지는 않음 (명세서 2-2)
-                "market_rating": safe_float(item.get("market_rating", s1.get("market_rating"))),
-                "market_reviews": safe_int(item.get("market_reviews", s1.get("market_reviews"))),
-                "market_orders": safe_int(item.get("market_orders", s1.get("market_orders"))),
-                "market_url": item.get("market_url", s1.get("market_url")),
-
-                "release": item.get("release", s1.get("release")),
-
-                "sources": item.get("sources", s1.get("sources", [])),
-                "uncertain": item.get("uncertain", s1.get("uncertain", [])),
-                "check_by_human": item.get("check_by_human", []),
-
-                "raw_stage1": s1 or None,
-                "raw_stage2": item,
+            payload = {
+                "store_url": store_url,
+                "store_type": item.get("store_type"),
+                "official": item.get("official"),
+                "official_evidence": item.get("official_evidence"),
+                "scale_evidence": item.get("scale_evidence"),
+                "store_sources": item.get("sources", []),
+                "store_uncertain": item.get("uncertain", []),
+                "store_checked_at": datetime.now(timezone.utc).isoformat(),
             }
 
             try:
-                res = supabase.table("product_candidates").insert(db_payload).execute()
-                if res.data:
-                    saved_count += 1
-            except Exception as insert_err:
-                print(f"❌ [DB 저장 실패] {item.get('name')}: {str(insert_err)}")
-                save_errors.append({"name": item.get("name"), "error": str(insert_err)})
+                # 이미 있는 브랜드면 갱신, 없으면 새로 넣는다
+                existing = (supabase.table("brands")
+                            .select("id")
+                            .eq("category", category)
+                            .ilike("name", brand_name)
+                            .execute())
 
-        print(f"🎉 파이프라인 완료! 총 {len(stage2_results)}개 중 {saved_count}개 DB 저장 성공 (에러: {len(save_errors)}개)")
+                if existing.data:
+                    supabase.table("brands").update(payload).eq("id", existing.data[0]["id"]).execute()
+                else:
+                    payload.update({
+                        "name": brand_name,
+                        "category": category,
+                        "tier": "candidate",
+                        "tier_reason": "A단계에서 공식 스토어 확인됨",
+                        "is_active": True,
+                    })
+                    supabase.table("brands").insert(payload).execute()
+                saved_count += 1
+            except Exception as e:
+                print(f"❌ [저장 실패] {brand_name}: {e}")
+                save_errors.append({"brand": brand_name, "error": str(e)})
+
+        print(f"🎉 A단계 완료! {saved_count}개 저장 · 주소 없어 건너뜀 {skipped}개 · 에러 {len(save_errors)}개")
 
     return {
         "status": "success",
+        "stage": "A",
         "category": category,
-        "results": stage2_results,
-        "saved_count": saved_count
+        "results": results,
+        "saved_count": saved_count,
     }
 
-@app.post("/api/v1/pipeline/discover-candidates")
-async def discover_candidates_endpoint(category: str = "후라이팬", auto_save_db: bool = True):
-    return await run_pipeline(category=category, auto_save_db=auto_save_db)
+
+@app.post("/api/v1/pipeline/find-stores")
+async def find_stores_endpoint(category: str = "프라이팬", auto_save_db: bool = True):
+    """A단계 실행 엔드포인트."""
+    return await run_stage_a(category=category, auto_save_db=auto_save_db)
