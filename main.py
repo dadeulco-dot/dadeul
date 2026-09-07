@@ -699,8 +699,15 @@ PROMPT_A_STORE = """
 **③ 취급 제품이 조건에 맞을 것**
 내구재를 팔아야 합니다. 소모품·식품·화장품만 파는 브랜드는 제외합니다.
 
-## 검색 방법
-검색 예산이 넉넉하지 않습니다. 브랜드 하나당 검색 1~2회로 스토어 주소를 확인하고 넘어가세요.
+## 검색 방법 ★
+스토어 주소는 **반드시 검색으로 확인해야 합니다.** 기억으로 답하지 마세요.
+아래 브랜드를 하나씩, 빠짐없이 검색해서 공식 스토어가 있는지 확인하세요.
+
+- 검색어 예시: `브랜드명 스마트스토어`, `브랜드명 네이버 브랜드스토어`, `브랜드명 공식몰`
+- 한 브랜드에서 못 찾으면 그 브랜드만 건너뛰고 **다음 브랜드를 계속 확인하세요.**
+- ★ 검색을 시작하지도 않고 빈 배열을 반환하지 마세요. 목록의 브랜드를 모두 확인한 뒤에 결론을 내세요.
+- 일부만 찾아도 괜찮습니다. 찾은 것만 배열에 담으면 됩니다.
+
 {brand_hint}
 
 ## 출력
@@ -719,7 +726,8 @@ PROMPT_A_STORE = """
   }}
 ]
 
-목표 8~15개 브랜드. **개수를 채우려고 억지로 넣지 마세요.**
+위 목록의 브랜드를 모두 확인한 뒤, **공식 스토어를 실제로 찾은 것만** 배열에 담으세요.
+개수를 채우려고 억지로 넣지 마세요. 목록보다 적게 나오는 것은 정상입니다.
 """
 
 PROMPT_STAGE_2 = """
@@ -795,8 +803,17 @@ async def run_stage_a(category: str = "프라이팬", auto_save_db: bool = True)
         raise HTTPException(status_code=500, detail=".env 파일에 ANTHROPIC_API_KEY가 설정되어 있지 않습니다.")
 
     # 💡 Claude Sonnet 5는 temperature 등 샘플링 파라미터를 기본값 외로 주면 400 에러를 냅니다.
-    WEB_SEARCH_TOOL = {"type": "web_search_20250305", "name": "web_search", "max_uses": 10}
     MODEL_STAGE_A = "claude-sonnet-5"
+
+    # ★ 한 번에 처리할 브랜드 수. 검색 예산과 반드시 맞춰야 합니다.
+    #   브랜드 35개를 주면서 검색 10회만 허용하면, 모델은 "예산이 부족하니 아무것도 못 하겠다"며
+    #   빈 배열을 반환합니다(실제로 그렇게 실패했습니다). 브랜드당 검색 2회를 잡습니다.
+    BRAND_BATCH_SIZE = 8
+    WEB_SEARCH_TOOL = {
+        "type": "web_search_20250305",
+        "name": "web_search",
+        "max_uses": BRAND_BATCH_SIZE * 2 + 2,
+    }
 
     # ── brands 테이블에서 이 갈래의 후보 브랜드를 힌트로 넘긴다 ──
     #    이미 사람이 채워둔 목록이 있으면 AI가 브랜드를 "찾느라" 검색을 태우지 않아도 된다.
@@ -826,15 +843,19 @@ async def run_stage_a(category: str = "프라이팬", auto_save_db: bool = True)
         except Exception as e:
             print(f"⚠️ brands 조회 실패(무시하고 진행): {e}")
 
-    if known_brands:
+    remaining = len(known_brands)
+    batch = known_brands[:BRAND_BATCH_SIZE]
+
+    if batch:
         brand_hint = (
-            "아래는 이 갈래에서 이미 확인된 브랜드 목록입니다. "
-            "이 브랜드들의 스토어 주소를 우선 확인하세요. "
-            "목록에 없는 브랜드를 새로 찾는 데 검색을 쓰지 마세요.\n"
-            + ", ".join(known_brands[:40])
+            "이번에 확인할 브랜드는 아래 "
+            f"{len(batch)}개입니다. 이 브랜드들만 확인하고, 다른 브랜드를 새로 찾지 마세요.\n"
+            + "\n".join(f"- {b}" for b in batch)
         )
-        print(f"📋 brands 테이블에서 {len(known_brands)}개 브랜드를 힌트로 사용 "
-              f"(이미 완료 {len(already_done)}개는 제외)")
+        print(f"📋 미처리 브랜드 {remaining}개 중 {len(batch)}개를 이번 배치로 처리합니다. "
+              f"(이미 완료 {len(already_done)}개)")
+        if remaining > len(batch):
+            print(f"   → 남은 {remaining - len(batch)}개는 버튼을 다시 눌러 이어서 처리하세요.")
     else:
         brand_hint = "참고할 브랜드 목록이 아직 없습니다. 검색으로 직접 찾으세요."
         print("📋 brands 테이블에 이 갈래의 미처리 브랜드가 없습니다. AI가 직접 찾습니다.")
