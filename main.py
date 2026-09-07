@@ -808,7 +808,8 @@ async def run_stage_a(category: str = "프라이팬", auto_save_db: bool = True)
     # ★ 한 번에 처리할 브랜드 수. 검색 예산과 반드시 맞춰야 합니다.
     #   브랜드 35개를 주면서 검색 10회만 허용하면, 모델은 "예산이 부족하니 아무것도 못 하겠다"며
     #   빈 배열을 반환합니다(실제로 그렇게 실패했습니다). 브랜드당 검색 2회를 잡습니다.
-    BRAND_BATCH_SIZE = 8
+    #   ⚠️ 테스트 단계라 5로 낮춰 둡니다. 결과가 만족스러우면 8~10으로 올리세요.
+    BRAND_BATCH_SIZE = 5
     WEB_SEARCH_TOOL = {
         "type": "web_search_20250305",
         "name": "web_search",
