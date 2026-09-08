@@ -1558,21 +1558,43 @@ async def run_yt_stage_a(product_id: str, product_name: str,
             yt_must=", ".join(yt_must),
             videos_json=json.dumps(videos_for_ai, ensure_ascii=False),
         )
-        resp = client.messages.create(
-            model="claude-sonnet-5",
-            max_tokens=8000,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        text = extract_text(resp)
-        parsed = clean_json_response(text)
 
         batch_no = i // VIDEO_BATCH + 1
+        parsed = []
+        text = ""
+        resp = None
+
+        # 협찬 판정이 애매한 영상이 몰리면 모델이 사고에만 예산을 다 쓰고
+        # 정작 답변을 못 내는 일이 있습니다(블록이 thinking 뿐이고 text 가 0자).
+        # 그 경우 배치를 반으로 쪼개 다시 시도합니다.
+        for attempt, (sub_batch, budget) in enumerate([
+            (batch, 12000),
+            (batch[:len(batch) // 2 or 1], 12000),
+        ]):
+            sub_videos = videos_for_ai[:len(sub_batch)]
+            p = PROMPT_YT_VIDEOS.format(
+                product_name=product_name,
+                yt_must=", ".join(yt_must),
+                videos_json=json.dumps(sub_videos, ensure_ascii=False),
+            )
+            resp = client.messages.create(
+                model="claude-sonnet-5",
+                max_tokens=budget,
+                messages=[{"role": "user", "content": p}],
+            )
+            text = extract_text(resp)
+            parsed = clean_json_response(text)
+            if parsed:
+                break
+            if attempt == 0:
+                print(f"  ↻ [배치 {batch_no}] 응답이 비어 절반으로 나눠 재시도합니다.")
+
         if not parsed:
             # 조용히 넘어가면 원인을 알 수 없습니다. 응답 구조를 그대로 남깁니다.
-            block_types = [getattr(b, "type", "?") for b in (resp.content or [])]
+            block_types = [getattr(b, "type", "?") for b in (resp.content or [])] if resp else []
             print(f"  ⚠️ [배치 {batch_no}] 판정 0건")
-            print(f"     stop_reason={resp.stop_reason} · 블록={block_types}")
-            print(f"     출력 토큰={getattr(resp.usage, 'output_tokens', '?')}")
+            print(f"     stop_reason={getattr(resp, 'stop_reason', '?')} · 블록={block_types}")
+            print(f"     출력 토큰={getattr(getattr(resp, 'usage', None), 'output_tokens', '?')}")
             print(f"     텍스트 길이={len(text)} · 앞부분: {text[:300]}")
         else:
             print(f"  · [배치 {batch_no}] 영상 {len(batch)}개 → 판정 {len(parsed)}건")
@@ -1583,6 +1605,7 @@ async def run_yt_stage_a(product_id: str, product_name: str,
     # ── ④ 저장 ──
     saved = 0
     stats = {}
+    save_errors = {}
     if supabase:
         for v in verdicts:
             vid = v.get("video_id")
@@ -1613,9 +1636,21 @@ async def run_yt_stage_a(product_id: str, product_name: str,
                 supabase.table("yt_videos").insert(payload).execute()
                 saved += 1
             except Exception as e:
-                # 이미 있는 영상이면 조용히 넘어갑니다
-                if "duplicate" not in str(e).lower():
-                    print(f"  ⚠️ 저장 실패 {vid}: {str(e)[:80]}")
+                msg = str(e)
+                # 이미 있는 영상이면 정상입니다
+                if "duplicate" in msg.lower():
+                    continue
+                # 같은 오류를 수십 줄 찍지 않고 한 번만 모아서 보여줍니다
+                key = msg[:120]
+                save_errors[key] = save_errors.get(key, 0) + 1
+
+    for msg, cnt in save_errors.items():
+        print(f"  ❌ 저장 실패 {cnt}건: {msg}")
+        if "row-level security" in msg:
+            print("     → Supabase SQL Editor 에서 아래를 실행하세요:")
+            print("       ALTER TABLE yt_videos DISABLE ROW LEVEL SECURITY;")
+            print("       ALTER TABLE yt_comments DISABLE ROW LEVEL SECURITY;")
+            print("       ALTER TABLE yt_extractions DISABLE ROW LEVEL SECURITY;")
 
     keeps = [v for v in verdicts if v.get("verdict") == "keep"]
     lows = [v for v in verdicts if v.get("confidence") == "low"]
