@@ -1495,7 +1495,7 @@ confidence: "low" 는 사람이 확인합니다. 애매하면 솔직하게 low �
 
 async def run_yt_stage_a(product_id: str, product_name: str,
                          yt_queries: list, yt_must: list,
-                         max_videos: int = 25):
+                         max_videos: int = 15):
     """유튜브 A단계 · 영상 검색 + 선별.
 
     코드가 검색하고, AI는 판정만 합니다.
@@ -1535,27 +1535,50 @@ async def run_yt_stage_a(product_id: str, product_name: str,
             found[vid]["view_count"] = d.get("view_count")
 
     # ── ③ AI가 판정합니다 ──
-    videos_for_ai = [{
-        "video_id": v["video_id"],
-        "title": v.get("title"),
-        "channel": v.get("channel_title"),
-        "published_at": v.get("published_at"),
-        # 설명문은 협찬 표기 판정용이라 앞부분만 보냅니다 (토큰 절약)
-        "description": (v.get("description") or "")[:600],
-    } for v in found.values()]
+    # ★ 한 번에 다 넣으면 출력 토큰이 모자라 응답이 잘리고, JSON 파싱이 조용히 실패합니다.
+    #   영상 42개로 실제로 0건이 나왔습니다. 배치로 나눠 처리합니다.
+    VIDEO_BATCH = 12
 
-    prompt = PROMPT_YT_VIDEOS.format(
-        product_name=product_name,
-        yt_must=", ".join(yt_must),
-        videos_json=json.dumps(videos_for_ai, ensure_ascii=False),
-    )
-    resp = client.messages.create(
-        model="claude-sonnet-5",
-        max_tokens=8000,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    verdicts = clean_json_response(extract_text(resp))
-    print(f"  · AI 판정 {len(verdicts)}건")
+    all_videos = list(found.values())
+    verdicts = []
+
+    for i in range(0, len(all_videos), VIDEO_BATCH):
+        batch = all_videos[i:i + VIDEO_BATCH]
+        videos_for_ai = [{
+            "video_id": v["video_id"],
+            "title": v.get("title"),
+            "channel": v.get("channel_title"),
+            "published_at": v.get("published_at"),
+            # 설명문은 협찬 표기 판정용이라 앞부분만 보냅니다 (토큰 절약)
+            "description": (v.get("description") or "")[:400],
+        } for v in batch]
+
+        prompt = PROMPT_YT_VIDEOS.format(
+            product_name=product_name,
+            yt_must=", ".join(yt_must),
+            videos_json=json.dumps(videos_for_ai, ensure_ascii=False),
+        )
+        resp = client.messages.create(
+            model="claude-sonnet-5",
+            max_tokens=8000,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        text = extract_text(resp)
+        parsed = clean_json_response(text)
+
+        batch_no = i // VIDEO_BATCH + 1
+        if not parsed:
+            # 조용히 넘어가면 원인을 알 수 없습니다. 응답 구조를 그대로 남깁니다.
+            block_types = [getattr(b, "type", "?") for b in (resp.content or [])]
+            print(f"  ⚠️ [배치 {batch_no}] 판정 0건")
+            print(f"     stop_reason={resp.stop_reason} · 블록={block_types}")
+            print(f"     출력 토큰={getattr(resp.usage, 'output_tokens', '?')}")
+            print(f"     텍스트 길이={len(text)} · 앞부분: {text[:300]}")
+        else:
+            print(f"  · [배치 {batch_no}] 영상 {len(batch)}개 → 판정 {len(parsed)}건")
+        verdicts.extend(parsed)
+
+    print(f"  · AI 판정 총 {len(verdicts)}건")
 
     # ── ④ 저장 ──
     saved = 0
