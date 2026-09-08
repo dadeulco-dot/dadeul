@@ -1134,6 +1134,54 @@ def hash_author(channel_id: str) -> str:
     return hashlib.sha256(f"dadeul:{channel_id}".encode()).hexdigest()[:32]
 
 
+# ── 제휴·협찬 표기 탐지 (코드) ──
+# ★ AI에게만 맡기면 놓칩니다. 실제로 쿠팡 파트너스 영상이 keep 으로 통과했습니다.
+#   쿠팡 파트너스는 「브랜드 협찬」이 아니라 「판매 수수료」라서
+#   협찬·유료광고 같은 단어가 문구에 안 나옵니다.
+#   확실한 패턴은 코드가 먼저 잡고, 애매한 것만 AI에게 넘깁니다.
+_AFFILIATE_PATTERNS = [
+    # 쿠팡 파트너스
+    (r"쿠팡\s*파트너스", "쿠팡 파트너스 표기"),
+    (r"일정액의?\s*수수료", "수수료 수취 고지"),
+    (r"link\.coupang\.com", "쿠팡 제휴 링크"),
+    (r"coupa\.ng", "쿠팡 단축 제휴 링크"),
+    (r"partners\.coupang", "쿠팡 파트너스 링크"),
+    # 기타 제휴
+    (r"어필리에이트|affiliate", "제휴 마케팅 표기"),
+    (r"amzn\.to|amazon\.co\.kr/.*tag=", "아마존 어소시에이트"),
+    (r"s\.click\.aliexpress", "알리 제휴 링크"),
+    # 브랜드 협찬
+    (r"유료\s*광고|유료광고", "유료광고 표기"),
+    (r"협찬", "협찬 표기"),
+    (r"제품을?\s*(?:무상\s*)?제공\s*받", "제품 제공 고지"),
+    (r"체험단", "체험단"),
+    (r"#(?:AD|ad|PPL|ppl)\b", "AD·PPL 해시태그"),
+    (r"소정의\s*(?:원고료|수수료|대가)", "대가 수취 고지"),
+]
+
+
+def detect_affiliate(text: str):
+    """설명문에서 제휴·협찬 표기를 찾습니다. 찾으면 (True, 근거), 없으면 (False, None)."""
+    if not text:
+        return (False, None)
+    for pat, label in _AFFILIATE_PATTERNS:
+        if re.search(pat, text, re.IGNORECASE):
+            return (True, label)
+    return (False, None)
+
+
+def _desc_head_tail(desc: str, head: int = 300, tail: int = 300) -> str:
+    """설명문의 앞과 뒤를 함께 남깁니다.
+
+    협찬·수수료 고지는 설명문 맨 아래에 붙는 경우가 많아,
+    앞부분만 잘라 보내면 판정이 틀립니다.
+    """
+    d = (desc or "").strip()
+    if len(d) <= head + tail:
+        return d
+    return f"{d[:head]}\n…(중략)…\n{d[-tail:]}"
+
+
 def yt_fetch_comments(video_id: str, max_comments: int = 200):
     """댓글 원문을 가져옵니다. 100개당 1 unit.
 
@@ -1461,12 +1509,23 @@ route 와 tier 를 반드시 표시해 주세요. 단별로 정확도를 따로 
 제목에 다음 단어가 **모두** 들어 있어야 합니다: {yt_must}
 하나라도 없으면 tier 2 후보로 내려보내고, 그것도 아니면 drop 「제목 미일치」.
 
-**② 협찬 영상 판정 ★**
+**② 협찬·제휴 영상 판정 ★ 가장 중요합니다**
 아래 중 하나라도 해당하면 drop, 사유 「협찬」.
-- 제목·설명문에 유료광고·협찬·제공·지원·체험단·AD·PPL 표기
-- 설명문에 브랜드가 준 할인코드·제휴 링크가 있음
-- 「업체로부터 제품을 제공받아」 류의 고지 문구
 
+*(가) 브랜드 협찬*
+- 제목·설명문에 유료광고·협찬·제공·지원·체험단·AD·PPL 표기
+- 「업체로부터 제품을 제공받아」 류의 고지 문구
+- 브랜드가 준 할인코드
+
+*(나) 제휴 마케팅 ★ 놓치기 쉽습니다*
+판매 수수료를 받는 링크가 있으면 브랜드 협찬이 아니어도 drop 입니다.
+구매를 유도할 동기가 생기므로 후기의 중립성을 믿을 수 없습니다.
+- **쿠팡 파트너스** — 「쿠팡 파트너스 활동의 일환」, 「일정액의 수수료를 제공받습니다」
+- 링크 주소에 `link.coupang.com`, `coupa.ng`, `partners.coupang`
+- 네이버 쇼핑 제휴, 알리 어필리에이트, 아마존 어소시에이트 등 모든 제휴 링크
+- 「구매 링크」·「최저가 링크」와 함께 수수료 고지가 있는 경우
+
+★ 수수료 고지 문구는 설명문 **맨 아래**에 붙는 경우가 많습니다. 끝까지 읽으세요.
 ★ 애매하면 떨어뜨리세요. 협찬 하나가 들어오는 손해가, 정상 영상 하나를 놓치는 손해보다 큽니다.
 
 **③ 제품 무관**
@@ -1534,13 +1593,48 @@ async def run_yt_stage_a(product_id: str, product_name: str,
             found[vid]["description"] = d.get("description")
             found[vid]["view_count"] = d.get("view_count")
 
+    # ── ②-2 코드가 먼저 제휴·협찬을 걸러냅니다 ──
+    # ★ AI에게만 맡겼더니 쿠팡 파트너스 영상이 keep 으로 통과했습니다.
+    #   확실한 패턴은 코드가 잡는 것이 안전하고, 토큰도 아낍니다.
+    auto_dropped = []
+    for vid, v in list(found.items()):
+        haystack = f"{v.get('title') or ''}\n{v.get('description') or ''}"
+        is_aff, why = detect_affiliate(haystack)
+        if is_aff:
+            v["_auto_drop"] = why
+            auto_dropped.append(vid)
+
+    if auto_dropped:
+        print(f"  · 코드가 제휴·협찬으로 걸러낸 영상 {len(auto_dropped)}개")
+        by_reason = {}
+        for vid in auto_dropped:
+            r = found[vid]["_auto_drop"]
+            by_reason[r] = by_reason.get(r, 0) + 1
+        print(f"    사유: {by_reason}")
+
+    # AI에게는 코드가 못 거른 것만 넘깁니다
+    to_judge = [v for v in found.values() if not v.get("_auto_drop")]
+    print(f"  · AI 판정 대상 {len(to_judge)}개")
+
     # ── ③ AI가 판정합니다 ──
     # ★ 한 번에 다 넣으면 출력 토큰이 모자라 응답이 잘리고, JSON 파싱이 조용히 실패합니다.
     #   영상 42개로 실제로 0건이 나왔습니다. 배치로 나눠 처리합니다.
     VIDEO_BATCH = 12
 
-    all_videos = list(found.values())
+    all_videos = to_judge
     verdicts = []
+
+    # 코드가 걸러낸 것도 결과에 포함시켜 DB에 남깁니다 (왜 뺐는지가 남아야 합니다)
+    for vid in auto_dropped:
+        verdicts.append({
+            "video_id": vid,
+            "verdict": "drop",
+            "route": None,
+            "tier": None,
+            "reason": "협찬",
+            "sponsor_evidence": f"[코드 자동] {found[vid]['_auto_drop']}",
+            "confidence": "high",
+        })
 
     for i in range(0, len(all_videos), VIDEO_BATCH):
         batch = all_videos[i:i + VIDEO_BATCH]
@@ -1550,7 +1644,9 @@ async def run_yt_stage_a(product_id: str, product_name: str,
             "channel": v.get("channel_title"),
             "published_at": v.get("published_at"),
             # 설명문은 협찬 표기 판정용이라 앞부분만 보냅니다 (토큰 절약)
-            "description": (v.get("description") or "")[:400],
+            # 협찬·수수료 고지는 설명문 맨 아래에 붙는 경우가 많습니다.
+            # 앞부분만 자르면 놓치므로 앞 300자 + 뒤 300자를 함께 보냅니다.
+            "description": _desc_head_tail(v.get("description")),
         } for v in batch]
 
         prompt = PROMPT_YT_VIDEOS.format(
