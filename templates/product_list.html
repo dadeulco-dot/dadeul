@@ -1,33 +1,60 @@
 {% extends "sqladmin/list.html" %}
 
 {% block content %}
+<style>
+  /* SQLAdmin 기본 스타일이 code 태그를 쪼개는 문제를 막습니다 */
+  .dadeul-guide code {
+    display: inline !important;
+    white-space: nowrap;
+    background: #f1f3f5;
+    color: #d6336c;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+  }
+  .dadeul-guide pre {
+    display: block;
+    background: #1f2937;
+    color: #e5e7eb;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 6px 0;
+  }
+  .dadeul-guide { font-size: 13px; }
+</style>
+
 <div class="card mb-3">
-  <div class="card-body">
+  <div class="card-body dadeul-guide">
     <h3 class="card-title">B단계 · 제품 CSV 가져오기</h3>
-    <p class="text-muted" style="font-size: 13px;">
-      로컬에서 <code>collect_store.py</code> 를 돌려 만든 CSV 파일을 그대로 올리세요.
-      <strong>여러 브랜드를 한 파일로 올려도 됩니다</strong> &mdash; CSV의 brand 칸을 보고 각각 저장합니다.
-      네이버 상품번호가 같은 제품은 자동으로 건너뜁니다.
+    <p class="text-muted">
+      로컬에서 <code>collect_store.py</code> 를 돌려 만든 CSV 파일을 올리세요.
+      여러 브랜드를 한 파일로 올려도 됩니다. 네이버 상품번호가 같은 제품은 자동으로 건너뜁니다.
     </p>
 
-    <div class="alert alert-info" style="font-size: 12px;">
-      <strong>여러 브랜드 한 번에 수집하기</strong><br>
-      <code>stores.txt</code> 에 「브랜드명 | 갈래 | 카테고리 URL」 을 한 줄에 하나씩 적으세요:<br>
-      <code>PN풍년 | 프라이팬 | https://brand.naver.com/pn_store/category/xxx?cp=1</code><br>
-      <code>네오플램 | 프라이팬 | https://brand.naver.com/neoflam/category/yyy?cp=1</code><br><br>
-      <code>python collect_store.py --file stores.txt --limit 20</code><br>
-      갈래를 좁히려면 스토어 홈이 아니라 <strong>카테고리 URL</strong>을 넣으세요.
-      별점·리뷰 수가 비면 <code>--detail</code> 을 붙여 다시 돌리면 됩니다.
-    </div>
+    <details class="mb-3">
+      <summary style="cursor:pointer; color:#495057;">수집 방법 보기</summary>
+      <div class="mt-2">
+        <p class="mb-1"><strong>stores.txt</strong> 에 「브랜드명 | 갈래 | 카테고리 URL」을 한 줄에 하나씩:</p>
+<pre>PN풍년  | 프라이팬 | https://brand.naver.com/pn_store/category/xxx?cp=1
+네오플램 | 프라이팬 | https://brand.naver.com/neoflam/category/yyy?cp=1</pre>
+        <p class="mb-1">실행:</p>
+<pre>python collect_store.py --file stores.txt --limit 20</pre>
+        <p class="mb-0 text-muted">
+          갈래를 좁히려면 스토어 홈이 아니라 <strong>카테고리 URL</strong>을 넣으세요.
+          별점·리뷰가 비면 <code>--detail</code> 을 붙여 다시 돌립니다.
+        </p>
+      </div>
+    </details>
 
     <form method="POST" action="/admin/product-candidate-admin-model/import-products"
           enctype="multipart/form-data">
       <div class="mb-3">
         <label class="form-label">CSV 파일</label>
         <input type="file" name="csv_file" class="form-control" accept=".csv,.tsv,.txt">
-        <div class="form-text" style="font-size: 12px;">
-          <code>products_20260907_1530.csv</code> 같은 파일을 선택하세요. 쉼표·탭 구분 모두 인식합니다.
-        </div>
       </div>
 
       <div class="row">
@@ -40,32 +67,18 @@
           <input type="text" name="brand" class="form-control" placeholder="예: PN풍년">
         </div>
       </div>
-      <div class="form-text mb-3" style="font-size: 12px;">
+      <div class="form-text mb-3">
         CSV에 brand·category 칸이 비어 있을 때만 여기 값이 쓰입니다.
-        CSV에 값이 있으면 <strong>행마다의 값이 우선</strong>합니다.
       </div>
 
       <details class="mb-3">
-        <summary style="cursor: pointer; font-size: 13px; color: #666;">
-          또는 내용을 직접 붙여넣기
-        </summary>
-        <textarea name="csv_text" class="form-control mt-2" rows="8"
-                  style="font-family: monospace; font-size: 12px;"
-                  placeholder="brand,category,nv_product_no,store_url,product_url,name,price_krw,..."></textarea>
-        <div class="form-text" style="font-size: 12px;">
-          파일을 선택하면 이 내용은 무시됩니다. 헤더 줄을 포함해 한 번만 붙여넣으세요.
-        </div>
+        <summary style="cursor:pointer; color:#868e96;">또는 내용을 직접 붙여넣기</summary>
+        <textarea name="csv_text" class="form-control mt-2" rows="6"
+                  style="font-family:monospace; font-size:12px;"></textarea>
       </details>
 
-      <button type="submit" class="btn btn-primary">📥 제품 저장</button>
+      <button type="submit" class="btn btn-primary">제품 저장</button>
     </form>
-
-    <div class="mt-3" style="font-size: 12px; color: #666;">
-      <strong>가격 3종 주의</strong> &mdash;
-      <code>price_krw</code> 는 조건 없이 누구나 사는 값입니다.
-      카드·멤버십·쿠폰이 붙어야 나오는 값이면 <code>member_price</code> 로 옮기세요.
-      표시가가 판매가의 2배를 넘으면 「정가 부풀림 의심」이 자동으로 표시됩니다.
-    </div>
   </div>
 </div>
 
