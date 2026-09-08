@@ -27,6 +27,11 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 DATABASE_URL = os.getenv("DATABASE_URL")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+# YouTube Data API v3 — 댓글은 AI가 아니라 이 API로 가져옵니다 (CLAUDE.md)
+#   search.list        100 units/호출  → 하루 100회가 실질 상한
+#   commentThreads.list  1 unit/호출   → 댓글 100개
+#   일일 무료 한도    10,000 units
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
