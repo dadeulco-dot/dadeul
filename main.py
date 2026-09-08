@@ -1,7 +1,10 @@
 import os
 import json
 import re
-from datetime import datetime, timezone
+import hashlib
+import uuid
+import requests
+from datetime import datetime, timezone, timedelta
 from fastapi import FastAPI, HTTPException, Request, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -764,6 +767,8 @@ if engine:
         name = "유튜브 영상"
         name_plural = "유튜브 영상 (A단계)"
 
+        list_template = "yt_video_list.html"
+
         column_list = [
             YtVideoModel.title,
             YtVideoModel.channel_title,
@@ -810,6 +815,36 @@ if engine:
         }
         can_view_details = True
         can_create = False
+
+        @expose("/run-stage-a", methods=["POST"])
+        async def run_stage_a_action(self, request: Request):
+            """영상 검색 + 선별을 실행합니다."""
+            form = await request.form()
+            product_id = (form.get("product_id") or "").strip()
+            product_name = (form.get("product_name") or "").strip()
+            queries = [q.strip() for q in (form.get("yt_queries") or "").split(",") if q.strip()]
+            musts = [m.strip() for m in (form.get("yt_must") or "").split(",") if m.strip()]
+
+            if product_id and product_name and queries and musts:
+                try:
+                    await run_yt_stage_a(product_id, product_name, queries, musts)
+                except Exception as e:
+                    print(f"❌ A단계 실패: {e}")
+            else:
+                print("⚠️ 제품 ID·제품명·검색어·필수단어를 모두 입력해야 합니다.")
+            return RedirectResponse(url="/admin/yt-video-model/list", status_code=303)
+
+        @expose("/fetch-comments", methods=["POST"])
+        async def fetch_comments_action(self, request: Request):
+            """keep 판정된 영상의 댓글을 수집합니다."""
+            form = await request.form()
+            product_id = (form.get("product_id") or "").strip()
+            if product_id:
+                try:
+                    await run_yt_fetch_comments(product_id)
+                except Exception as e:
+                    print(f"❌ 댓글 수집 실패: {e}")
+            return RedirectResponse(url="/admin/yt-comment-model/list", status_code=303)
 
     admin.add_view(YtVideoAdminView)
 
@@ -1003,6 +1038,203 @@ def parse_brand_input(raw_text: str):
         names.append(s)
 
     return names
+
+# ----------------------------------------------------
+# 5-3. 유튜브 후기 수집 (YouTube Data API v3)
+# ----------------------------------------------------
+# ★ 댓글은 AI가 가져오지 않습니다 (CLAUDE.md).
+#   「유튜브에서 댓글 찾아와」라고 하면 없는 댓글을 만들어냅니다.
+#   코드 → API → 원문 저장 → AI 에 배치 전달 → 값만 회수
+#
+# 할당량 (일일 무료 10,000 units)
+#   search.list         100 units/호출 → 하루 100회가 실질 상한. 비쌉니다.
+#   commentThreads.list   1 unit/호출  → 댓글 100개
+
+YT_API = "https://www.googleapis.com/youtube/v3"
+
+
+def yt_search_videos(query: str, max_results: int = 25, months_back: int = 24):
+    """영상을 검색합니다. 1회당 100 units 를 씁니다.
+
+    게시일이 24개월 이전이면 단종·구형 모델이 섞이므로 API 단계에서 잘라냅니다.
+    """
+    if not YOUTUBE_API_KEY:
+        raise HTTPException(status_code=500, detail="YOUTUBE_API_KEY 가 설정되어 있지 않습니다.")
+
+    published_after = (datetime.now(timezone.utc) - timedelta(days=months_back * 30)).isoformat()
+    params = {
+        "key": YOUTUBE_API_KEY,
+        "part": "snippet",
+        "q": query,
+        "type": "video",
+        "maxResults": min(max_results, 50),
+        "order": "relevance",
+        "publishedAfter": published_after.replace("+00:00", "Z"),
+        "relevanceLanguage": "ko",
+        "regionCode": "KR",
+    }
+    r = requests.get(f"{YT_API}/search", params=params, timeout=20)
+    if r.status_code != 200:
+        print(f"❌ [yt_search] {r.status_code} {r.text[:300]}")
+        r.raise_for_status()
+
+    items = r.json().get("items", [])
+    out = []
+    for it in items:
+        vid = (it.get("id") or {}).get("videoId")
+        sn = it.get("snippet") or {}
+        if not vid:
+            continue
+        out.append({
+            "video_id": vid,
+            "title": sn.get("title"),
+            "description": sn.get("description"),
+            "channel_id": sn.get("channelId"),
+            "channel_title": sn.get("channelTitle"),
+            "published_at": sn.get("publishedAt"),
+            "found_by_query": query,
+        })
+    return out
+
+
+def yt_video_details(video_ids: list):
+    """영상 상세(설명문 전문·조회수)를 가져옵니다. 1 unit 으로 최대 50개.
+
+    검색 결과의 설명문은 잘려 있어서, 협찬 표기를 놓칠 수 있습니다.
+    협찬 판정에 쓸 전문이 필요하므로 따로 받습니다.
+    """
+    if not video_ids:
+        return {}
+    params = {
+        "key": YOUTUBE_API_KEY,
+        "part": "snippet,statistics",
+        "id": ",".join(video_ids[:50]),
+    }
+    r = requests.get(f"{YT_API}/videos", params=params, timeout=20)
+    if r.status_code != 200:
+        print(f"⚠️ [yt_video_details] {r.status_code} {r.text[:200]}")
+        return {}
+
+    out = {}
+    for it in r.json().get("items", []):
+        sn = it.get("snippet") or {}
+        st = it.get("statistics") or {}
+        out[it.get("id")] = {
+            "description": sn.get("description"),   # 전문
+            "view_count": safe_int(st.get("viewCount")),
+            "tags": sn.get("tags") or [],
+        }
+    return out
+
+
+def hash_author(channel_id: str) -> str:
+    """작성자는 해시로만 저장합니다 (개인정보)."""
+    if not channel_id:
+        return None
+    return hashlib.sha256(f"dadeul:{channel_id}".encode()).hexdigest()[:32]
+
+
+def yt_fetch_comments(video_id: str, max_comments: int = 200):
+    """댓글 원문을 가져옵니다. 100개당 1 unit.
+
+    ★ 여기서 받은 원문을 그대로 저장합니다. AI를 거치지 않습니다.
+      댓글이 꺼진 영상은 조회되지 않습니다 — 건너뛰고 커버리지에 기록합니다.
+
+    반환: (댓글 목록, 댓글꺼짐 여부)
+    """
+    comments = []
+    page_token = None
+    disabled = False
+
+    while len(comments) < max_comments:
+        params = {
+            "key": YOUTUBE_API_KEY,
+            "part": "snippet",
+            "videoId": video_id,
+            "maxResults": 100,
+            "order": "relevance",
+            "textFormat": "plainText",
+        }
+        if page_token:
+            params["pageToken"] = page_token
+
+        r = requests.get(f"{YT_API}/commentThreads", params=params, timeout=20)
+        if r.status_code == 403:
+            # 댓글이 꺼져 있거나 접근 불가
+            disabled = True
+            print(f"  · {video_id}: 댓글을 가져올 수 없습니다 (꺼짐 또는 제한)")
+            break
+        if r.status_code != 200:
+            print(f"  ⚠️ {video_id}: {r.status_code} {r.text[:150]}")
+            break
+
+        data = r.json()
+        for it in data.get("items", []):
+            top = ((it.get("snippet") or {}).get("topLevelComment") or {})
+            sn = top.get("snippet") or {}
+            comments.append({
+                "comment_id": top.get("id"),
+                "text": sn.get("textOriginal") or sn.get("textDisplay"),
+                "author_hash": hash_author((sn.get("authorChannelId") or {}).get("value")),
+                "like_count": safe_int(sn.get("likeCount")),
+                "published_at": sn.get("publishedAt"),
+            })
+
+        page_token = data.get("nextPageToken")
+        if not page_token:
+            break
+
+    return comments[:max_comments], disabled
+
+
+# ── 한국어 기간 파서 (규칙 기반) ──
+# 명세서 C단계: AI 추출값과 대조해 불일치를 사람 확인 대기열로 보냅니다.
+# AI 혼자 두면 틀려도 알 수 없습니다.
+_NUM_KO = {"한": 1, "두": 2, "세": 3, "네": 4, "다섯": 5, "여섯": 6,
+           "일곱": 7, "여덟": 8, "아홉": 9, "열": 10}
+
+# ★ 배송·주문·가격 이야기의 숫자는 기간이 아닙니다.
+#   「배송 3일 만에 왔어요」 → null, 「3만원에 샀어요」 → null
+_NOT_DURATION = re.compile(r"(배송|주문|결제|할인|가격|원에|만원|택배|도착|출고)")
+
+
+def parse_months_rule(text: str):
+    """댓글에서 사용 기간(개월)을 규칙으로 뽑습니다. 못 찾으면 None."""
+    if not text:
+        return None
+    t = str(text)
+
+    # 기간 표현에 「바로 붙은」 말만 봅니다.
+    #   「배송 3일 만에」  → 앞이 배송이므로 기간 아님
+    #   「6개월 썼고 배송도 빨랐어요」 → 뒤쪽 배송은 다른 절이므로 기간 맞음
+    # 창을 넓게 잡으면 뒤에 나온 배송·가격 이야기까지 끌어와 멀쩡한 기간을 버립니다.
+    def _ctx_ok(m):
+        before = t[max(0, m.start() - 6):m.start()]
+        after = t[m.end():m.end() + 3]
+        return not (_NOT_DURATION.search(before) or _NOT_DURATION.search(after))
+
+    # 년/해 → 개월
+    for m in re.finditer(r"(\d+(?:\.\d+)?)\s*(?:년|해)", t):
+        if _ctx_ok(m):
+            return float(m.group(1)) * 12
+    # 반년
+    if re.search(r"반\s*년", t):
+        return 6.0
+    # N개월 / N달
+    for m in re.finditer(r"(\d+(?:\.\d+)?)\s*(?:개월|달)", t):
+        if _ctx_ok(m):
+            return float(m.group(1))
+    # 한 달 · 세 달 같은 한글 수사
+    for word, val in _NUM_KO.items():
+        m = re.search(rf"{word}\s*(?:개월|달)", t)
+        if m and _ctx_ok(m):
+            return float(val)
+    # N주 → 개월 (2주 = 0.5)
+    for m in re.finditer(r"(\d+)\s*주", t):
+        if _ctx_ok(m):
+            return round(int(m.group(1)) / 4.0, 1)
+
+    return None
 
 # ----------------------------------------------------
 # 6. 파이프라인 로직 및 중복 제거 (Claude web_search 툴)
@@ -1200,6 +1432,303 @@ PROMPT_STAGE_2 = """
 
 drop도 반드시 포함해 출력하세요. 왜 떨어졌는지가 다음 주 검색어를 고치는 재료가 됩니다.
 """
+
+PROMPT_YT_VIDEOS = """
+당신은 「다들」의 후기 수집 담당자입니다.
+다들은 유튜브 댓글에서 실사용 후기를 모아 제품에 라벨을 붙입니다.
+협찬받은 콘텐츠가 섞이면 라벨 전체가 무너지므로, 걸러내는 것이 당신의 일입니다.
+
+## 이번 작업
+아래 영상들이 「{product_name}」의 후기를 모으기에 적합한지 판정해 주세요.
+
+★★★ 출력 규칙 ★★★
+설명·인사말·진행 상황을 쓰지 마세요. JSON 배열 하나만 출력합니다.
+입력 영상 개수와 출력 개수가 반드시 같아야 합니다. 하나도 빠뜨리지 마세요.
+
+## 경로가 세 가지입니다 (커버리지 사다리)
+| route | tier | 무엇 |
+|---|---|---|
+| title | 1 | yt_must 가 제목에 **모두** 있음 |
+| category | 2 | 제목에는 없지만 해당 갈래를 다루는 리뷰·비교 영상 |
+| shorts | 3 | 쇼츠 · 커뮤니티 탭 |
+
+category 와 shorts 는 댓글 단계에서 본문에 제품명이 있는 것만 남깁니다.
+route 와 tier 를 반드시 표시해 주세요. 단별로 정확도를 따로 잽니다.
+
+## 판정 규칙
+
+**① 제목 일치 (tier 1)**
+제목에 다음 단어가 **모두** 들어 있어야 합니다: {yt_must}
+하나라도 없으면 tier 2 후보로 내려보내고, 그것도 아니면 drop 「제목 미일치」.
+
+**② 협찬 영상 판정 ★**
+아래 중 하나라도 해당하면 drop, 사유 「협찬」.
+- 제목·설명문에 유료광고·협찬·제공·지원·체험단·AD·PPL 표기
+- 설명문에 브랜드가 준 할인코드·제휴 링크가 있음
+- 「업체로부터 제품을 제공받아」 류의 고지 문구
+
+★ 애매하면 떨어뜨리세요. 협찬 하나가 들어오는 손해가, 정상 영상 하나를 놓치는 손해보다 큽니다.
+
+**③ 제품 무관**
+제품이 스치듯 나올 뿐 리뷰가 아닌 영상(브이로그·요리 레시피)은 drop 「제품 무관」.
+단, 제품을 실제로 쓰면서 언급하는 영상은 남깁니다 — 댓글에 사용기가 달립니다.
+
+## 출력
+[
+  {{
+    "video_id": "...",
+    "verdict": "keep" 또는 "drop",
+    "route": "title" 또는 "category" 또는 "shorts",
+    "tier": 1 또는 2 또는 3,
+    "reason": "제목 미일치" 또는 "협찬" 또는 "제품 무관" 또는 "적합",
+    "sponsor_evidence": "협찬으로 본 근거. 아니면 null",
+    "confidence": "high" 또는 "low"
+  }}
+]
+
+confidence: "low" 는 사람이 확인합니다. 애매하면 솔직하게 low 를 쓰세요.
+
+## 판정 대상 영상
+{videos_json}
+"""
+
+
+async def run_yt_stage_a(product_id: str, product_name: str,
+                         yt_queries: list, yt_must: list,
+                         max_videos: int = 25):
+    """유튜브 A단계 · 영상 검색 + 선별.
+
+    코드가 검색하고, AI는 판정만 합니다.
+    search.list 가 100 units/호출이라 검색어 수만큼 할당량이 나갑니다.
+    """
+    if not YOUTUBE_API_KEY:
+        raise HTTPException(status_code=500, detail="YOUTUBE_API_KEY 가 설정되어 있지 않습니다.")
+    if not client:
+        raise HTTPException(status_code=500, detail="ANTHROPIC_API_KEY 가 설정되어 있지 않습니다.")
+
+    print(f"\n{'='*50}")
+    print(f"🎬 [유튜브 A단계] {product_name}")
+    print(f"   검색어 {len(yt_queries)}개 · 제목 필수 단어 {yt_must}")
+    print(f"   예상 할당량: {len(yt_queries) * 100} units (일일 10,000)")
+
+    # ── ① 코드가 검색합니다 ──
+    found = {}
+    for q in yt_queries:
+        try:
+            for v in yt_search_videos(q, max_results=max_videos):
+                # 같은 영상이 여러 검색어에 걸리면 처음 것만 남깁니다
+                found.setdefault(v["video_id"], v)
+        except Exception as e:
+            print(f"  ⚠️ 검색 실패 '{q}': {str(e)[:100]}")
+
+    if not found:
+        print("⚠️ 검색 결과가 없습니다.")
+        return {"status": "empty", "message": "영상을 찾지 못했습니다."}
+
+    print(f"  · 영상 {len(found)}개 발견 (중복 제거 후)")
+
+    # ── ② 설명문 전문을 받습니다 (협찬 표기가 잘려 있으면 못 잡습니다) ──
+    details = yt_video_details(list(found.keys()))
+    for vid, d in details.items():
+        if vid in found:
+            found[vid]["description"] = d.get("description")
+            found[vid]["view_count"] = d.get("view_count")
+
+    # ── ③ AI가 판정합니다 ──
+    videos_for_ai = [{
+        "video_id": v["video_id"],
+        "title": v.get("title"),
+        "channel": v.get("channel_title"),
+        "published_at": v.get("published_at"),
+        # 설명문은 협찬 표기 판정용이라 앞부분만 보냅니다 (토큰 절약)
+        "description": (v.get("description") or "")[:600],
+    } for v in found.values()]
+
+    prompt = PROMPT_YT_VIDEOS.format(
+        product_name=product_name,
+        yt_must=", ".join(yt_must),
+        videos_json=json.dumps(videos_for_ai, ensure_ascii=False),
+    )
+    resp = client.messages.create(
+        model="claude-sonnet-5",
+        max_tokens=8000,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    verdicts = clean_json_response(extract_text(resp))
+    print(f"  · AI 판정 {len(verdicts)}건")
+
+    # ── ④ 저장 ──
+    saved = 0
+    stats = {}
+    if supabase:
+        for v in verdicts:
+            vid = v.get("video_id")
+            src = found.get(vid)
+            if not vid or not src:
+                continue
+            reason = v.get("reason") or "?"
+            stats[reason] = stats.get(reason, 0) + 1
+
+            payload = {
+                "id": str(uuid.uuid4()),
+                "product_id": product_id,
+                "video_id": vid,
+                "channel_id": src.get("channel_id"),
+                "channel_title": src.get("channel_title"),
+                "title": src.get("title"),
+                "published_at": src.get("published_at"),
+                "view_count": src.get("view_count"),
+                "found_by_query": src.get("found_by_query"),
+                "verdict": v.get("verdict"),
+                "route": v.get("route"),
+                "tier": v.get("tier"),
+                "reason": reason,
+                "sponsor_evidence": v.get("sponsor_evidence"),
+                "confidence": v.get("confidence"),
+            }
+            try:
+                supabase.table("yt_videos").insert(payload).execute()
+                saved += 1
+            except Exception as e:
+                # 이미 있는 영상이면 조용히 넘어갑니다
+                if "duplicate" not in str(e).lower():
+                    print(f"  ⚠️ 저장 실패 {vid}: {str(e)[:80]}")
+
+    keeps = [v for v in verdicts if v.get("verdict") == "keep"]
+    lows = [v for v in verdicts if v.get("confidence") == "low"]
+    print(f"🎉 A단계 완료 · 저장 {saved}건 · keep {len(keeps)}건 · 사람확인 필요 {len(lows)}건")
+    print(f"   판정 사유: {stats}")
+
+    return {
+        "status": "success",
+        "found": len(found),
+        "saved": saved,
+        "keep": len(keeps),
+        "low_confidence": len(lows),
+        "reasons": stats,
+    }
+
+
+async def run_yt_fetch_comments(product_id: str, max_per_video: int = 200):
+    """유튜브 댓글 수집 · 코드만 씁니다.
+
+    ★ AI는 여기 관여하지 않습니다 (CLAUDE.md).
+      「유튜브에서 댓글 찾아와」라고 하면 없는 댓글을 만들어냅니다.
+      API 원문을 그대로 저장하고, AI는 다음 단계에서 값만 뽑습니다.
+    """
+    if not YOUTUBE_API_KEY:
+        raise HTTPException(status_code=500, detail="YOUTUBE_API_KEY 가 설정되어 있지 않습니다.")
+    if not supabase:
+        raise HTTPException(status_code=500, detail="Supabase 연결이 없습니다.")
+
+    # A단계를 통과한 영상만 대상입니다
+    res = (supabase.table("yt_videos")
+           .select("video_id, title, tier, route, comment_count")
+           .eq("product_id", product_id)
+           .eq("verdict", "keep")
+           .execute())
+    videos = res.data or []
+
+    if not videos:
+        print("⚠️ 댓글을 수집할 영상이 없습니다. A단계를 먼저 돌리세요.")
+        return {"status": "empty", "message": "keep 판정된 영상이 없습니다."}
+
+    print(f"\n{'='*50}")
+    print(f"💬 [댓글 수집] 영상 {len(videos)}개")
+
+    total_saved = 0
+    disabled_count = 0
+
+    for v in videos:
+        vid = v["video_id"]
+        # 이미 수집한 영상은 건너뜁니다 (할당량 절약)
+        if (v.get("comment_count") or 0) > 0:
+            print(f"  · {vid}: 이미 수집됨 ({v['comment_count']}건) — 건너뜀")
+            continue
+
+        comments, disabled = yt_fetch_comments(vid, max_comments=max_per_video)
+
+        if disabled:
+            disabled_count += 1
+            try:
+                supabase.table("yt_videos").update(
+                    {"comments_disabled": True,
+                     "comments_fetched_at": datetime.now(timezone.utc).isoformat()}
+                ).eq("product_id", product_id).eq("video_id", vid).execute()
+            except Exception:
+                pass
+            continue
+
+        rows = []
+        for c in comments:
+            if not c.get("comment_id") or not c.get("text"):
+                continue
+            rows.append({
+                "id": str(uuid.uuid4()),
+                "video_id": vid,
+                "product_id": product_id,
+                "comment_id": c["comment_id"],
+                "text": c["text"],           # ★ API 원문 그대로
+                "author_hash": c.get("author_hash"),
+                "like_count": c.get("like_count"),
+                "published_at": c.get("published_at"),
+                "tier": v.get("tier"),
+                "route": v.get("route"),
+            })
+
+        saved_here = 0
+        if rows:
+            # 한 번에 넣다가 중복 하나로 전체가 실패하지 않도록 나눠 넣습니다
+            for i in range(0, len(rows), 50):
+                chunk = rows[i:i + 50]
+                try:
+                    r = supabase.table("yt_comments").insert(chunk).execute()
+                    saved_here += len(r.data or [])
+                except Exception as e:
+                    if "duplicate" in str(e).lower():
+                        # 이미 있는 댓글은 정상입니다
+                        continue
+                    print(f"  ⚠️ {vid} 저장 실패: {str(e)[:80]}")
+
+        total_saved += saved_here
+        try:
+            supabase.table("yt_videos").update({
+                "comment_count": len(rows),
+                "comments_fetched_at": datetime.now(timezone.utc).isoformat(),
+            }).eq("product_id", product_id).eq("video_id", vid).execute()
+        except Exception:
+            pass
+
+        print(f"  · {vid}: 댓글 {len(rows)}건 (저장 {saved_here}건) — {(v.get('title') or '')[:34]}")
+
+    print(f"🎉 댓글 수집 완료 · 총 {total_saved}건 저장 · 댓글 꺼진 영상 {disabled_count}개")
+    return {
+        "status": "success",
+        "videos": len(videos),
+        "saved": total_saved,
+        "comments_disabled": disabled_count,
+    }
+
+
+# ── 실행 엔드포인트 ──
+@app.post("/api/v1/youtube/stage-a")
+async def yt_stage_a_endpoint(
+    product_id: str,
+    product_name: str,
+    yt_queries: str,     # 쉼표로 구분
+    yt_must: str,        # 쉼표로 구분
+):
+    """유튜브 A단계 실행 (영상 검색 + 선별)."""
+    queries = [q.strip() for q in yt_queries.split(",") if q.strip()]
+    musts = [m.strip() for m in yt_must.split(",") if m.strip()]
+    return await run_yt_stage_a(product_id, product_name, queries, musts)
+
+
+@app.post("/api/v1/youtube/fetch-comments")
+async def yt_fetch_comments_endpoint(product_id: str, max_per_video: int = 200):
+    """A단계를 통과한 영상의 댓글을 수집합니다."""
+    return await run_yt_fetch_comments(product_id, max_per_video)
+
 
 async def run_stage_a(category: str = "프라이팬", auto_save_db: bool = True):
     """A단계 · 브랜드 공식 스마트스토어 찾기.
