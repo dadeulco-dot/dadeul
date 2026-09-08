@@ -99,7 +99,15 @@ class ProductCandidateAdminModel(Base):
     store_url = Column(String, nullable=True)      # 스토어 홈
     product_url = Column(String, nullable=True)    # 개별 제품 페이지 · 「상세 보기」가 향하는 곳
     nv_rating = Column(Float, nullable=True)       # 스토어 별점 (주 1회 갱신)
-    nv_reviews = Column(Integer, nullable=True)    # 스토어 리뷰 수 (주 1회 갱신)
+    # ★ 리뷰 수는 두 가지를 구분해야 합니다.
+    #   네이버는 한 상품페이지의 여러 옵션(24cm 팬·26cm 그릴팬·계란말이팬…) 리뷰를
+    #   합쳐서 하나로 표시합니다. 실측: 페이지 표기 14,610건 / 24cm 옵션만 5,938건.
+    #   합계를 그대로 쓰면 명세서 조건 ②(모델 단위 특정)·⑦(수요 규모)이 부풀려집니다.
+    nv_reviews = Column(Integer, nullable=True)          # 옵션 기준 리뷰 수 ← 판단은 이 값으로
+    nv_reviews_total = Column(Integer, nullable=True)    # 페이지 표기 합계 (참고용)
+    nv_option_name = Column(String, nullable=True)       # 어느 옵션 기준인지 (예: 01. 헤이즐 IH 팬 24cm)
+    nv_option_id = Column(String, nullable=True)         # 옵션 식별자
+    nv_rating_recent = Column(Float, nullable=True)      # 최근 6개월 별점 (있으면)
     # ★ URL만 저장합니다. 내려받아 우리 서버에 재호스팅하지 않습니다.
     #   URL 참조는 링크지만 내려받아 올리면 복제입니다 (명세서 B단계).
     thumb_url = Column(String, nullable=True)
@@ -225,7 +233,11 @@ if engine:
             ProductCandidateAdminModel.product_url,
             ProductCandidateAdminModel.store_url,
             ProductCandidateAdminModel.nv_rating,
+            ProductCandidateAdminModel.nv_rating_recent,
             ProductCandidateAdminModel.nv_reviews,
+            ProductCandidateAdminModel.nv_reviews_total,
+            ProductCandidateAdminModel.nv_option_name,
+            ProductCandidateAdminModel.nv_option_id,
             ProductCandidateAdminModel.thumb_url,
             ProductCandidateAdminModel.parse_method,
             ProductCandidateAdminModel.collected_at,
@@ -311,7 +323,11 @@ if engine:
             ProductCandidateAdminModel.product_url: "제품 페이지",
             ProductCandidateAdminModel.store_url: "스토어",
             ProductCandidateAdminModel.nv_rating: "스토어 별점",
-            ProductCandidateAdminModel.nv_reviews: "스토어 리뷰 수",
+            ProductCandidateAdminModel.nv_reviews: "리뷰 수(옵션)",
+            ProductCandidateAdminModel.nv_reviews_total: "리뷰 수(페이지 합계)",
+            ProductCandidateAdminModel.nv_option_name: "옵션명",
+            ProductCandidateAdminModel.nv_option_id: "옵션 ID",
+            ProductCandidateAdminModel.nv_rating_recent: "최근 6개월 별점",
             ProductCandidateAdminModel.thumb_url: "썸네일 URL",
             ProductCandidateAdminModel.parse_method: "수집 경로",
             ProductCandidateAdminModel.collected_at: "수집 시점",
@@ -474,6 +490,10 @@ if engine:
                     "price_inflated": bool(list_price and price_krw and list_price > 2 * price_krw),
                     "nv_rating": safe_float(r.get("nv_rating")),
                     "nv_reviews": safe_int(r.get("nv_reviews")),
+                    "nv_reviews_total": safe_int(r.get("nv_reviews_total")),
+                    "nv_option_name": (r.get("nv_option_name") or "").strip() or None,
+                    "nv_option_id": (r.get("nv_option_id") or "").strip() or None,
+                    "nv_rating_recent": safe_float(r.get("nv_rating_recent")),
                     "thumb_url": (r.get("thumb_url") or "").strip() or None,
                     "parse_method": (r.get("parse_method") or "").strip() or None,
                     "collected_at": (r.get("collected_at") or "").strip() or None,
