@@ -157,9 +157,115 @@ class BrandAdminModel(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
+
 # ----------------------------------------------------
-# 3. FastAPI 앱 및 기본 설정
+# 2-2. 유튜브 후기 수집 파이프라인
 # ----------------------------------------------------
+class YtVideoModel(Base):
+    """A단계 · 영상 선별 결과.
+
+    search.list 가 100 units/호출로 비쌉니다(일일 무료 10,000 units).
+    한 번 판정한 영상은 저장해 두고 재사용합니다.
+    """
+    __tablename__ = "yt_videos"
+
+    id = Column(String, primary_key=True, index=True)
+    product_id = Column(String, nullable=True, index=True)
+    video_id = Column(String, nullable=False, index=True)
+    channel_id = Column(String, nullable=True)
+    channel_title = Column(String, nullable=True)
+    title = Column(Text, nullable=True)
+    published_at = Column(DateTime(timezone=True), nullable=True)
+    view_count = Column(BigInteger, nullable=True)
+    found_by_query = Column(String, nullable=True)   # 어떤 검색어로 찾았는지
+
+    # ── A단계 판정 (AI) ──
+    verdict = Column(String, nullable=True)          # keep / drop
+    route = Column(String, nullable=True)            # title / category / shorts
+    tier = Column(Integer, nullable=True)            # 1 / 2 / 3
+    reason = Column(String, nullable=True)
+    sponsor_evidence = Column(Text, nullable=True)
+    confidence = Column(String, nullable=True)       # high / low — low 는 사람이 확인
+    human_checked = Column(Boolean, default=False)
+
+    comments_disabled = Column(Boolean, default=False)
+    comments_fetched_at = Column(DateTime(timezone=True), nullable=True)
+    comment_count = Column(Integer, default=0)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class YtCommentModel(Base):
+    """댓글 원문 — 코드가 API에서 받은 그대로.
+
+    ★ AI가 되돌려준 텍스트를 여기 저장하지 마세요 (CLAUDE.md 2-3).
+      조용히 다듬어 놓기 때문에 나중에 원문 대조가 불가능해집니다.
+    ★ YouTube API 약관상 30일 주기 재검증이 필요합니다.
+      원문은 지워도 yt_extractions 의 추출값은 남습니다.
+    """
+    __tablename__ = "yt_comments"
+
+    id = Column(String, primary_key=True, index=True)
+    video_id = Column(String, nullable=False, index=True)
+    product_id = Column(String, nullable=True, index=True)
+    comment_id = Column(String, nullable=False, index=True)
+    text = Column(Text, nullable=True)               # 원문 · 30일 주기 재검증 대상
+    author_hash = Column(String, nullable=True)      # 작성자는 해시로만
+    like_count = Column(Integer, nullable=True)
+    published_at = Column(DateTime(timezone=True), nullable=True)
+
+    tier = Column(Integer, nullable=True)
+    route = Column(String, nullable=True)
+
+    collected_at = Column(DateTime(timezone=True), server_default=func.now())
+    rechecked_at = Column(DateTime(timezone=True), nullable=True)
+    is_deleted = Column(Boolean, default=False)      # 재조회 시 사라졌으면 true
+    text_purged_at = Column(DateTime(timezone=True), nullable=True)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class YtExtractionModel(Base):
+    """B단계 추출값 — 영구 보관.
+
+    ★ 정확도 85% 를 재는 대상이 이 테이블입니다.
+    """
+    __tablename__ = "yt_extractions"
+
+    id = Column(String, primary_key=True, index=True)
+    comment_id = Column(String, nullable=False, index=True)
+    product_id = Column(String, nullable=True, index=True)
+
+    # ── AI 추출값 ──
+    months = Column(Float, nullable=True)            # 2주 = 0.5
+    issues = Column(JSON, default=list)
+    sentiment = Column(String, nullable=True)        # 긍정 / 부정 / 중립
+    irony = Column(Boolean, default=False)           # 반어 · true 는 사람이 따로 봄
+    product_match = Column(Boolean, nullable=True)   # title 이면 null
+    exclude = Column(String, nullable=True)          # 협찬 / 사용 전 / 제품 무관 / 광고 스팸
+    unsure = Column(Boolean, default=False)          # 판단이 안 서면 true. 찍지 않음
+
+    # ── 코드 추출값 (규칙 기반) · C단계 이중 추출 대조 ──
+    months_rule = Column(Float, nullable=True)
+    conflict = Column(Boolean, default=False)        # 규칙과 AI가 어긋난 건
+
+    # ── 코드 판정 (AI에게 시키면 숫자를 지어냅니다) ──
+    similarity_dup = Column(Boolean, default=False)  # 4-gram 자카드 ≥ 0.45
+    date_cluster = Column(Boolean, default=False)    # 출시 2주 내 게시일 군집
+
+    tier = Column(Integer, nullable=True)
+    route = Column(String, nullable=True)
+    counted = Column(Boolean, default=True)          # 라벨 계산에 포함되는가
+
+    extracted_at = Column(DateTime(timezone=True), server_default=func.now())
+    model = Column(String, nullable=True)
+    human_checked = Column(Boolean, default=False)
+    human_note = Column(Text, nullable=True)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
 app = FastAPI(title="다들 (DADEUL) - Claude 웹 검색 기반 제품 발굴 파이프라인", version="7.0.0")
 
 app.add_middleware(
@@ -647,6 +753,149 @@ if engine:
             return RedirectResponse(url="/admin/brand-admin-model/list", status_code=303)
 
     admin.add_view(BrandAdminView)
+
+    # ── 유튜브 후기 파이프라인 ──
+    class YtVideoAdminView(ModelView, model=YtVideoModel):
+        name = "유튜브 영상"
+        name_plural = "유튜브 영상 (A단계)"
+
+        column_list = [
+            YtVideoModel.title,
+            YtVideoModel.channel_title,
+            YtVideoModel.verdict,
+            YtVideoModel.tier,
+            YtVideoModel.reason,
+            YtVideoModel.confidence,
+            YtVideoModel.comment_count,
+            YtVideoModel.published_at,
+        ]
+        column_details_exclude_list = []
+        form_columns = [
+            YtVideoModel.verdict,
+            YtVideoModel.route,
+            YtVideoModel.tier,
+            YtVideoModel.reason,
+            YtVideoModel.sponsor_evidence,
+            YtVideoModel.confidence,
+            YtVideoModel.human_checked,
+        ]
+        column_searchable_list = ["title", "channel_title", "video_id"]
+        column_sortable_list = ["published_at", "tier", "comment_count"]
+        column_labels = {
+            YtVideoModel.video_id: "영상 ID",
+            YtVideoModel.title: "제목",
+            YtVideoModel.channel_title: "채널",
+            YtVideoModel.published_at: "게시일",
+            YtVideoModel.view_count: "조회수",
+            YtVideoModel.found_by_query: "찾은 검색어",
+            YtVideoModel.verdict: "판정",
+            YtVideoModel.route: "경로",
+            YtVideoModel.tier: "단계",
+            YtVideoModel.reason: "사유",
+            YtVideoModel.sponsor_evidence: "협찬 근거",
+            YtVideoModel.confidence: "확신",
+            YtVideoModel.human_checked: "사람 확인",
+            YtVideoModel.comments_disabled: "댓글 꺼짐",
+            YtVideoModel.comment_count: "댓글 수",
+        }
+        column_formatters = {
+            YtVideoModel.title: lambda m, a: Markup(
+                f'<a href="https://www.youtube.com/watch?v={m.video_id}" target="_blank">{(m.title or "")[:60]}</a>'
+            ) if m.video_id else (m.title or "-"),
+        }
+        can_view_details = True
+        can_create = False
+
+    admin.add_view(YtVideoAdminView)
+
+    class YtCommentAdminView(ModelView, model=YtCommentModel):
+        name = "유튜브 댓글"
+        name_plural = "유튜브 댓글 (원문)"
+
+        column_list = [
+            YtCommentModel.text,
+            YtCommentModel.video_id,
+            YtCommentModel.tier,
+            YtCommentModel.like_count,
+            YtCommentModel.is_deleted,
+            YtCommentModel.collected_at,
+        ]
+        column_searchable_list = ["text", "video_id", "comment_id"]
+        column_sortable_list = ["collected_at", "like_count"]
+        column_labels = {
+            YtCommentModel.text: "원문",
+            YtCommentModel.video_id: "영상 ID",
+            YtCommentModel.comment_id: "댓글 ID",
+            YtCommentModel.author_hash: "작성자(해시)",
+            YtCommentModel.like_count: "좋아요",
+            YtCommentModel.published_at: "작성일",
+            YtCommentModel.tier: "단계",
+            YtCommentModel.route: "경로",
+            YtCommentModel.collected_at: "수집 시각",
+            YtCommentModel.rechecked_at: "재조회 시각",
+            YtCommentModel.is_deleted: "삭제됨",
+            YtCommentModel.text_purged_at: "원문 삭제 시각",
+        }
+        can_view_details = True
+        can_create = False
+        can_edit = False   # 원문은 손대지 않습니다
+
+    admin.add_view(YtCommentAdminView)
+
+    class YtExtractionAdminView(ModelView, model=YtExtractionModel):
+        name = "댓글 추출값"
+        name_plural = "댓글 추출값 (B단계)"
+
+        column_list = [
+            YtExtractionModel.comment_id,
+            YtExtractionModel.months,
+            YtExtractionModel.issues,
+            YtExtractionModel.sentiment,
+            YtExtractionModel.exclude,
+            YtExtractionModel.unsure,
+            YtExtractionModel.irony,
+            YtExtractionModel.conflict,
+            YtExtractionModel.tier,
+            YtExtractionModel.counted,
+        ]
+        form_columns = [
+            YtExtractionModel.months,
+            YtExtractionModel.issues,
+            YtExtractionModel.sentiment,
+            YtExtractionModel.irony,
+            YtExtractionModel.product_match,
+            YtExtractionModel.exclude,
+            YtExtractionModel.unsure,
+            YtExtractionModel.counted,
+            YtExtractionModel.human_checked,
+            YtExtractionModel.human_note,
+        ]
+        column_sortable_list = ["extracted_at", "months", "tier"]
+        column_labels = {
+            YtExtractionModel.comment_id: "댓글 ID",
+            YtExtractionModel.months: "사용 기간(개월)",
+            YtExtractionModel.issues: "문제유형",
+            YtExtractionModel.sentiment: "감성",
+            YtExtractionModel.irony: "반어",
+            YtExtractionModel.product_match: "제품 일치",
+            YtExtractionModel.exclude: "제외 사유",
+            YtExtractionModel.unsure: "판단 보류",
+            YtExtractionModel.months_rule: "기간(규칙)",
+            YtExtractionModel.conflict: "규칙·AI 불일치",
+            YtExtractionModel.similarity_dup: "유사 중복",
+            YtExtractionModel.date_cluster: "게시일 군집",
+            YtExtractionModel.tier: "단계",
+            YtExtractionModel.route: "경로",
+            YtExtractionModel.counted: "라벨 계산 포함",
+            YtExtractionModel.extracted_at: "추출 시각",
+            YtExtractionModel.model: "모델",
+            YtExtractionModel.human_checked: "사람 확인",
+            YtExtractionModel.human_note: "확인 메모",
+        }
+        can_view_details = True
+        can_create = False
+
+    admin.add_view(YtExtractionAdminView)
 
 # ----------------------------------------------------
 # 5. 사용자 앱 (index.html) 서빙
