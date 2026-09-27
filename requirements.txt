@@ -1,10 +1,29 @@
+# 다들(DADEUL) 서버 의존성
+#
+# ★ 버전이 왜 적혀 있나 — 2026-09-27 배포 사고
+#   Render 기본 파이썬이 3.14.3 으로 올라가면서 greenlet 이 설치되지 않아
+#   sqladmin 임포트가 실패했습니다(SQLAlchemy asyncio 가 greenlet 을 요구).
+#   .python-version 으로 파이썬을 3.12 에 고정하고, 아래처럼 필요한 것을
+#   빠뜨리지 않게 명시합니다.
+
 fastapi
-uvicorn
+uvicorn[standard]
+
+# 파일 업로드(제품·리뷰 CSV)를 받으려면 필요합니다.
+# 없으면 request.form() 이 "Form data requires python-multipart" 로 터집니다.
+python-multipart
+
+# ★ [asyncio] 를 붙여야 greenlet 이 함께 깔립니다. sqladmin 이 이걸 씁니다.
+sqlalchemy[asyncio]
+greenlet
 sqladmin
+
 psycopg2-binary
-python-dotenv
-google-genai
 supabase
-sqlalchemy
+python-dotenv
 jinja2
+
+# Claude API
 anthropic
+
+# 제미나이는 더 쓰지 않습니다 (2026-09 Claude 로 이전). google-genai 제거.
