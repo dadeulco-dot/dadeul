@@ -1,7 +1,7 @@
 import os
 import json
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from fastapi import FastAPI, HTTPException, Request, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 # SQLAdmin & SQLAlchemy 관련 임포트
 from sqladmin import Admin, ModelView, expose
-from sqlalchemy import create_engine, Column, String, BigInteger, Integer, Float, Boolean, Text, JSON, DateTime
+from sqlalchemy import create_engine, Column, String, BigInteger, Integer, Float, Boolean, Text, JSON, DateTime, Date
 from sqlalchemy.sql import func
 from sqlalchemy.orm import declarative_base
 from markupsafe import Markup
@@ -164,6 +164,124 @@ class BrandAdminModel(Base):
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+# ----------------------------------------------------
+# 2-2. 브랜드스토어 리뷰 수집
+# ----------------------------------------------------
+class ReviewModel(Base):
+    """리뷰 원문 — 코드가 크롤링한 그대로.
+
+    ★ AI가 되돌려준 텍스트를 여기 저장하지 마세요. 조용히 다듬어 놓습니다.
+    ★ 원문은 30일 보관 대상입니다(명세서 2-7). 추출값은 별도로 영구 보관합니다.
+    """
+    __tablename__ = "reviews"
+
+    id = Column(String, primary_key=True, index=True)
+    product_id = Column(String, nullable=True, index=True)
+    review_key = Column(String, nullable=False, index=True)  # 재조회용 식별자
+
+    body = Column(Text, nullable=True)              # 본문 원문 · 30일 보관
+    # ★ 별점은 라벨 계산에 쓰지 않습니다. 리뷰 포인트 때문에
+    #   별점 5점에 「3개월 만에 코팅 벗겨졌어요」가 흔합니다. 대조용으로만 둡니다.
+    rating = Column(Integer, nullable=True)
+    # ★ 작성일은 date 입니다 (DB도 date). 시각이 없으니 DateTime 으로 두면 어긋납니다.
+    written_at = Column(Date, nullable=True)                     # 작성일(구매일 아님)
+    author_hash = Column(String, nullable=True)     # 화면 노출 금지
+    has_photo = Column(Boolean, default=False)
+
+    # ── 배지 — 기간의 근거 ──
+    # 텍스트에서 기간을 뽑는 방식은 폐기했습니다(표본 편향·누락·오탐).
+    # 「한달사용」은 네이버가 시점으로 강제한 메타데이터라 훨씬 정확합니다.
+    is_month = Column(Boolean, default=False)
+    is_repeat = Column(Boolean, default=False)      # 가장 강한 만족 신호
+    badges_raw = Column(String, nullable=True)      # 셀렉터가 깨졌는지 확인용
+
+    # ── 옵션 — 28cm 팬 라벨에 26cm 후기가 섞이면 안 됩니다 ──
+    option_text = Column(String, nullable=True)
+    option_match = Column(Boolean, nullable=True)   # false면 라벨 계산에서 제외
+    option_unsure = Column(Boolean, default=False)
+
+    # ── 1단 하드 배제 (코드) ──
+    hard_excluded = Column(Boolean, default=False)
+    hard_reason = Column(String, nullable=True)
+    dup_cluster = Column(String, nullable=True)
+
+    # ── 수집 출처 — 「어떻게 모았는지」에 따라 쓸 수 있는 통계가 다릅니다 ──
+    #   sorted_latest=false 면 랭킹순 편향이라 라벨 계산에서 빼야 합니다.
+    #   complete=false 면 게시일 군집(체험단 살포)을 판정할 수 없습니다.
+    sorted_latest = Column(Boolean, nullable=True)
+    complete = Column(Boolean, nullable=True)
+    option_filtered = Column(Boolean, nullable=True)
+    pages_read = Column(Integer, nullable=True)
+    date_cluster = Column(String, nullable=True)
+    body_clipped = Column(Boolean, nullable=True)
+
+    # ── 30일 재조회 ──
+    collected_at = Column(DateTime(timezone=True), server_default=func.now())
+    rechecked_at = Column(DateTime(timezone=True), nullable=True)
+    is_deleted = Column(Boolean, default=False)     # 스토어별 삭제율의 근거
+    body_purged_at = Column(DateTime(timezone=True), nullable=True)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class ReviewExtractModel(Base):
+    """2·3단 추출값 — 영구 보관.
+
+    ★ 선별 정밀도 90% 를 재는 대상이 이 테이블입니다.
+    """
+    __tablename__ = "review_extracts"
+
+    id = Column(String, primary_key=True, index=True)
+    review_id = Column(String, nullable=False, index=True)
+    product_id = Column(String, nullable=True, index=True)
+
+    # 2단 진성 신호: period·context·problem·merit·compare·mixed
+    # ★ 「나쁜 것을 찾는」 게 아니라 「남길 이유를 찾는」 방식입니다.
+    signals = Column(JSON, default=list)
+    # 3단 배제: 과장·판매자칭찬·홍보문·재구매만·협찬의심·내용없음
+    exclude = Column(String, nullable=True)
+
+    months = Column(Float, nullable=True)   # ★ 분모로 쓰지 않음. 표기용
+    issues = Column(JSON, default=list)
+    sentiment = Column(String, nullable=True)
+    irony = Column(Boolean, default=False)
+    unsure = Column(Boolean, default=False)
+
+    # ── 이중 대조 ──
+    months_rule = Column(Float, nullable=True)
+    conflict = Column(Boolean, default=False)
+    # 별점 4~5 인데 sentiment 가 부정 → 다들이 존재하는 이유를 보여주는 숫자
+    mismatch = Column(Boolean, default=False)
+
+    counted = Column(Boolean, default=True)
+
+    extracted_at = Column(DateTime(timezone=True), server_default=func.now())
+    model = Column(String, nullable=True)
+    human_checked = Column(Boolean, default=False)
+    human_note = Column(Text, nullable=True)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class IssueTypeModel(Base):
+    """문제유형 사전.
+
+    ★ needs_time 이 분모를 정합니다.
+      내구성 계열(코팅박리 등)은 한달 사용 후기가 분모입니다.
+      받자마자 쓴 사람은 애초에 겪을 수 없으므로 분모에서 뺍니다.
+    """
+    __tablename__ = "issue_types"
+
+    id = Column(String, primary_key=True, index=True)
+    category = Column(String, nullable=False, index=True)
+    name = Column(String, nullable=False)
+    needs_time = Column(Boolean, default=False)
+    keywords = Column(JSON, default=list)
+    is_active = Column(Boolean, default=True)
+    note = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
 # ----------------------------------------------------
@@ -669,6 +787,356 @@ if engine:
 
     admin.add_view(BrandAdminView)
 
+    # ── 브랜드스토어 리뷰 ──
+    class ReviewAdminView(ModelView, model=ReviewModel):
+        name = "리뷰"
+        name_plural = "리뷰 (원문)"
+
+        column_list = [
+            ReviewModel.body,
+            ReviewModel.rating,
+            ReviewModel.is_month,
+            ReviewModel.is_repeat,
+            ReviewModel.option_text,
+            ReviewModel.hard_excluded,
+            ReviewModel.hard_reason,
+            ReviewModel.written_at,
+        ]
+        column_searchable_list = ["body", "option_text"]
+        column_sortable_list = ["written_at", "rating", "collected_at"]
+        column_labels = {
+            ReviewModel.body: "본문",
+            ReviewModel.rating: "별점(참고)",
+            ReviewModel.written_at: "작성일",
+            ReviewModel.author_hash: "작성자(해시)",
+            ReviewModel.has_photo: "사진",
+            ReviewModel.is_month: "한달사용",
+            ReviewModel.is_repeat: "재구매",
+            ReviewModel.badges_raw: "배지 원문",
+            ReviewModel.option_text: "옵션",
+            ReviewModel.option_match: "대표옵션 일치",
+            ReviewModel.option_unsure: "옵션 애매",
+            ReviewModel.hard_excluded: "1단 배제",
+            ReviewModel.hard_reason: "배제 사유",
+            ReviewModel.dup_cluster: "복붙 클러스터",
+            ReviewModel.collected_at: "수집 시각",
+            ReviewModel.rechecked_at: "재조회 시각",
+            ReviewModel.is_deleted: "삭제됨",
+            ReviewModel.body_purged_at: "원문 삭제 시각",
+        }
+        can_view_details = True
+        can_create = False
+        can_edit = False   # 원문은 손대지 않습니다
+
+        # 업로드 폼을 주입한 템플릿
+        list_template = "review_list.html"
+
+        @expose("/import-reviews", methods=["POST"])
+        async def import_reviews_action(self, request: Request):
+            """collect_reviews.py 가 만든 CSV를 리뷰 테이블에 넣습니다.
+
+            ★ 서버는 크롤링하지 않습니다. 수집은 로컬에서 사람이 돌리고
+              그 결과만 여기로 들어옵니다 (약관 리스크가 실행 위치에 달려 있습니다).
+
+            같은 파일을 다시 올려도 안전합니다:
+              새 리뷰       insert
+              이미 있는 것  rechecked_at 만 갱신 (= 명세서 4장의 30일 재조회)
+            """
+            import csv as _csv
+            import io as _io
+
+            form = await request.form()
+            create_missing = bool(form.get("create_missing"))
+            back = RedirectResponse(url="/admin/review-model/list", status_code=303)
+
+            # ── 파일 읽기 ──
+            raw = ""
+            upload = form.get("csv_file")
+            if upload is not None and hasattr(upload, "read"):
+                content = await upload.read()
+                for enc in ("utf-8-sig", "utf-8", "cp949", "euc-kr"):
+                    try:
+                        raw = content.decode(enc)
+                        print(f"📄 업로드 파일 인코딩: {enc}")
+                        break
+                    except UnicodeDecodeError:
+                        continue
+            if not raw.strip() or not supabase:
+                print("⚠️ [리뷰 가져오기] 파일이 비었거나 DB 연결이 없습니다")
+                return back
+
+            text = raw.strip()
+            first = text.split("\n", 1)[0]
+            delim = "\t" if first.count("\t") > first.count(",") else ","
+            rows = [r for r in _csv.DictReader(_io.StringIO(text), delimiter=delim)
+                    if (r.get("review_key") or "").strip() not in ("", "review_key")]
+            print(f"\n📥 [리뷰 CSV 가져오기] 구분자={'탭' if delim == chr(9) else '쉼표'} · "
+                  f"{len(rows)}행 파싱됨")
+            if not rows:
+                print("⚠️ review_key 가 있는 행이 없습니다. CSV 헤더를 확인하세요")
+                return back
+
+            # ── 제품 찾기 (nv_product_no → product_candidates.id) ──
+            need = {(r.get("nv_product_no") or "").strip() for r in rows}
+            need.discard("")
+            pmap = {}
+            try:
+                res = (supabase.table("product_candidates")
+                       .select("id,nv_product_no").execute())
+                for it in (res.data or []):
+                    if it.get("nv_product_no"):
+                        pmap[str(it["nv_product_no"])] = it["id"]
+            except Exception as e:
+                print(f"⚠️ 제품 조회 실패: {e}")
+
+            missing = sorted(need - set(pmap))
+            if missing and create_missing:
+                # ★ 리뷰만 있고 제품이 없으면 리뷰가 어디에도 매달리지 못합니다.
+                #   CSV의 brand·category·product_url 로 최소한의 후보를 만듭니다.
+                #   가격·별점은 비어 있으니 collect_store.py 로 따로 채워야 합니다.
+                stubs = []
+                for pno in missing:
+                    src = next((r for r in rows
+                                if (r.get("nv_product_no") or "").strip() == pno), {})
+                    stubs.append({
+                        "nv_product_no": pno,
+                        "brand": (src.get("brand") or "").strip() or None,
+                        "category": (src.get("category") or "").strip() or None,
+                        "product_url": (src.get("product_url") or "").strip() or None,
+                        "nv_option_name": (src.get("option_target") or "").strip() or None,
+                        "stage": "stage_b_collected",
+                        "status": "PENDING_APPROVAL",
+                    })
+                try:
+                    r2 = supabase.table("product_candidates").insert(stubs).execute()
+                    for it in (r2.data or []):
+                        pmap[str(it["nv_product_no"])] = it["id"]
+                    print(f"➕ 제품 후보 {len(r2.data or [])}개를 새로 만들었습니다 "
+                          f"— 가격·별점은 collect_store.py 로 채우세요")
+                except Exception as e:
+                    print(f"❌ 제품 후보 생성 실패: {e}")
+            elif missing:
+                print(f"⚠️ 제품 후보에 없는 상품번호 {len(missing)}개: {missing[:5]}")
+                print("   「없는 제품은 후보로 만들기」를 켜고 다시 올리거나, "
+                      "먼저 제품 CSV를 넣으세요")
+
+            # ── 이미 있는 리뷰 key ──
+            pids = {pmap[p] for p in need if p in pmap}
+            existing = {}
+            for pid in pids:
+                try:
+                    r3 = (supabase.table("reviews")
+                          .select("id,review_key").eq("product_id", pid)
+                          .limit(50000).execute())
+                    for it in (r3.data or []):
+                        existing[(pid, it["review_key"])] = it["id"]
+                except Exception as e:
+                    print(f"⚠️ 기존 리뷰 조회 실패: {e}")
+
+            # ── 행 → payload ──
+            new_rows, again, no_product = [], [], 0
+            csv_keys_by_pid = {}
+            complete_by_pid = {}
+            for r in rows:
+                pno = (r.get("nv_product_no") or "").strip()
+                pid = pmap.get(pno)
+                if not pid:
+                    no_product += 1
+                    continue
+                key = (r.get("review_key") or "").strip()
+                csv_keys_by_pid.setdefault(pid, set()).add(key)
+
+                comp = safe_bool(r.get("complete"))
+                # 한 제품의 행이 모두 전수 수집이어야 「전수」로 봅니다
+                complete_by_pid[pid] = complete_by_pid.get(pid, True) and bool(comp)
+
+                if (pid, key) in existing:
+                    again.append(existing[(pid, key)])
+                    continue
+
+                body = r.get("body") or ""
+                # ★ 1단 하드 배제를 서버에서 다시 계산합니다.
+                #   로컬 스크립트와 같은 코드지만, 어긋나면 수치가 달라지므로
+                #   DB에 들어가는 값은 서버 기준으로 통일합니다.
+                #   단 「복붙」은 리뷰 전체를 봐야 아는 것이라 CSV 값을 그대로 씁니다.
+                csv_reason = (r.get("hard_reason") or "").strip() or None
+                if csv_reason == "복붙":
+                    excluded, reason = True, "복붙"
+                else:
+                    excluded, reason = hard_filter_review(body)
+
+                new_rows.append({
+                    "product_id": pid,
+                    "review_key": key,
+                    "body": body or None,
+                    "rating": safe_int(r.get("rating")),
+                    "written_at": safe_date(r.get("written_at")),
+                    "author_hash": (r.get("author_hash") or "").strip() or None,
+                    "has_photo": bool(safe_bool(r.get("has_photo"))),
+                    "is_month": bool(safe_bool(r.get("is_month"))),
+                    "is_repeat": bool(safe_bool(r.get("is_repeat"))),
+                    "badges_raw": (r.get("badges_raw") or "").strip() or None,
+                    "option_text": (r.get("option_text") or "").strip() or None,
+                    "option_match": safe_bool(r.get("option_match")),
+                    "option_unsure": bool(safe_bool(r.get("option_unsure"))),
+                    "hard_excluded": excluded,
+                    "hard_reason": reason,
+                    "dup_cluster": (r.get("dup_cluster") or "").strip() or None,
+                    "sorted_latest": safe_bool(r.get("sorted_latest")),
+                    "complete": comp,
+                    "option_filtered": safe_bool(r.get("option_filtered")),
+                    "pages_read": safe_int(r.get("pages_read")),
+                    "date_cluster": (r.get("date_cluster") or "").strip() or None,
+                    "body_clipped": safe_bool(r.get("body_clipped")),
+                    "collected_at": (r.get("collected_at") or "").strip() or None,
+                })
+
+            # ── 저장 ──
+            saved = 0
+            for i in range(0, len(new_rows), 500):
+                chunk = new_rows[i:i + 500]
+                try:
+                    r4 = supabase.table("reviews").insert(chunk).execute()
+                    saved += len(r4.data or [])
+                except Exception as e:
+                    print(f"❌ 리뷰 저장 실패 ({i}~{i+len(chunk)}): {str(e)[:200]}")
+
+            # ── 재조회: 이미 있던 건은 「아직 살아 있다」고 표시 ──
+            now_iso = datetime.now(timezone.utc).isoformat()
+            rechecked = 0
+            for i in range(0, len(again), 200):
+                ids = again[i:i + 200]
+                try:
+                    (supabase.table("reviews")
+                     .update({"rechecked_at": now_iso, "is_deleted": False})
+                     .in_("id", ids).execute())
+                    rechecked += len(ids)
+                except Exception as e:
+                    print(f"⚠️ 재조회 표시 실패: {str(e)[:120]}")
+
+            # ── 삭제 감지 (전수 수집일 때만) ──
+            # ★ 표본 상한으로 1,000건만 모았다면, DB에 있는데 CSV에 없는 것은
+            #   「삭제된 것」이 아니라 「이번에 안 본 것」입니다. 전수일 때만 판정합니다.
+            deleted = 0
+            skipped_del = []
+            for pid, keys in csv_keys_by_pid.items():
+                if not complete_by_pid.get(pid):
+                    skipped_del.append(pid)
+                    continue
+                gone = [rid for (p, k), rid in existing.items() if p == pid and k not in keys]
+                for i in range(0, len(gone), 200):
+                    ids = gone[i:i + 200]
+                    try:
+                        (supabase.table("reviews")
+                         .update({"is_deleted": True, "rechecked_at": now_iso})
+                         .in_("id", ids).execute())
+                        deleted += len(ids)
+                    except Exception as e:
+                        print(f"⚠️ 삭제 표시 실패: {str(e)[:120]}")
+
+            # ── 보고 ──
+            usable = [r for r in new_rows
+                      if not r["hard_excluded"] and r.get("option_match") is not False]
+            month = sum(1 for r in usable if r["is_month"])
+            biased = sum(1 for r in new_rows if r.get("sorted_latest") is False)
+
+            print(f"✅ 새 리뷰 {saved}건 저장 · 재조회 표시 {rechecked}건 · 삭제 표시 {deleted}건")
+            if no_product:
+                print(f"   제품을 못 찾아 건너뜀 {no_product}건")
+            print(f"   1단 통과 + 대표옵션 일치 {len(usable)}건 (한달사용 {month}건) "
+                  f"→ 2·3단 AI 대상")
+            if biased:
+                print(f"   ⚠️ 랭킹순으로 모은 행 {biased}건 — 라벨 계산에서 빼야 합니다")
+            if skipped_del:
+                print(f"   ℹ️ 삭제 감지 건너뜀 (전수 수집이 아님) · 제품 {len(skipped_del)}개")
+            if len(usable) < 30:
+                print("   ⚠️ 30건 미만입니다 — 명세서대로 「표본 부족」으로 둬야 합니다")
+            return back
+
+    admin.add_view(ReviewAdminView)
+
+    class ReviewExtractAdminView(ModelView, model=ReviewExtractModel):
+        name = "리뷰 추출값"
+        name_plural = "리뷰 추출값"
+
+        column_list = [
+            ReviewExtractModel.signals,
+            ReviewExtractModel.exclude,
+            ReviewExtractModel.issues,
+            ReviewExtractModel.sentiment,
+            ReviewExtractModel.months,
+            ReviewExtractModel.mismatch,
+            ReviewExtractModel.conflict,
+            ReviewExtractModel.unsure,
+            ReviewExtractModel.counted,
+        ]
+        form_columns = [
+            ReviewExtractModel.signals,
+            ReviewExtractModel.exclude,
+            ReviewExtractModel.months,
+            ReviewExtractModel.issues,
+            ReviewExtractModel.sentiment,
+            ReviewExtractModel.irony,
+            ReviewExtractModel.unsure,
+            ReviewExtractModel.counted,
+            ReviewExtractModel.human_checked,
+            ReviewExtractModel.human_note,
+        ]
+        column_sortable_list = ["extracted_at", "months"]
+        column_labels = {
+            ReviewExtractModel.review_id: "리뷰 ID",
+            ReviewExtractModel.signals: "진성 신호",
+            ReviewExtractModel.exclude: "배제 사유",
+            ReviewExtractModel.months: "기간(표기용)",
+            ReviewExtractModel.issues: "문제유형",
+            ReviewExtractModel.sentiment: "감성",
+            ReviewExtractModel.irony: "반어",
+            ReviewExtractModel.unsure: "판단 보류",
+            ReviewExtractModel.months_rule: "기간(규칙)",
+            ReviewExtractModel.conflict: "규칙·AI 불일치",
+            ReviewExtractModel.mismatch: "별점·내용 어긋남",
+            ReviewExtractModel.counted: "라벨 계산 포함",
+            ReviewExtractModel.extracted_at: "추출 시각",
+            ReviewExtractModel.model: "모델",
+            ReviewExtractModel.human_checked: "사람 확인",
+            ReviewExtractModel.human_note: "확인 메모",
+        }
+        can_view_details = True
+        can_create = False
+
+    admin.add_view(ReviewExtractAdminView)
+
+    class IssueTypeAdminView(ModelView, model=IssueTypeModel):
+        name = "문제유형"
+        name_plural = "문제유형 사전"
+
+        column_list = [
+            IssueTypeModel.category,
+            IssueTypeModel.name,
+            IssueTypeModel.needs_time,
+            IssueTypeModel.keywords,
+            IssueTypeModel.is_active,
+        ]
+        form_columns = [
+            IssueTypeModel.category,
+            IssueTypeModel.name,
+            IssueTypeModel.needs_time,
+            IssueTypeModel.keywords,
+            IssueTypeModel.is_active,
+            IssueTypeModel.note,
+        ]
+        column_labels = {
+            IssueTypeModel.category: "갈래",
+            IssueTypeModel.name: "유형명",
+            IssueTypeModel.needs_time: "내구성 계열(분모=한달사용)",
+            IssueTypeModel.keywords: "키워드",
+            IssueTypeModel.is_active: "사용",
+            IssueTypeModel.note: "메모",
+        }
+        can_view_details = True
+
+    admin.add_view(IssueTypeAdminView)
+
 # ----------------------------------------------------
 # 5. 사용자 앱 (index.html) 서빙
 #    ※ 핸드오버 패키지의 prototype/index.html 과 이름을 맞췄습니다.
@@ -782,6 +1250,126 @@ _NUM_KO = {"한": 1, "두": 2, "세": 3, "네": 4, "다섯": 5, "여섯": 6,
 _NOT_DURATION = re.compile(r"(배송|주문|결제|할인|가격|원에|만원|택배|도착|출고)")
 
 
+# ----------------------------------------------------
+# 5-4. 리뷰 1단 하드 배제 (코드)
+# ----------------------------------------------------
+# ★ AI를 부르기 전에 기계적으로 걸러 비용과 오류를 함께 줄입니다.
+#   네이버 리뷰는 「좋아요」 「잘 쓸게요」 같은 내용 없는 것이 압도적으로 많습니다.
+
+# 제품 관련 단어가 하나도 없으면 배송·포장 이야기뿐인 리뷰로 봅니다
+_DELIVERY_ONLY = re.compile(r"(배송|택배|포장|도착|발송|빠르게|빨리 왔)")
+_PRODUCT_HINT = re.compile(
+    r"(팬|냄비|프라이|코팅|손잡이|바닥|무게|무겁|가볍|열|불|요리|계란|고기|볶|굽|"
+    r"세척|설거지|기름|인덕션|가스|크기|사이즈|디자인|재질|두께|사용|써|쓰)"
+)
+
+
+def hard_filter_review(body: str, written_at=None):
+    """1단 하드 배제. (배제여부, 사유) 를 돌려줍니다.
+
+    명세서 3장 기준:
+      너무 짧음      공백 제외 15자 미만
+      배송·포장만    제품 관련 단어가 0개
+      이모지·자음만  한글 음절이 5자 미만
+
+    ★ 날짜로는 배제하지 않습니다.
+      네이버는 리뷰 포인트가 있어 대부분 받자마자 씁니다. 날짜로 자르면 거의 다 날아가고,
+      신제품일수록 초기 리뷰가 전부라 표본이 통째로 사라집니다.
+      체험단 살포는 게시일 군집 규칙이 따로 담당합니다.
+    """
+    t = (body or "").strip()
+    if not t:
+        return (True, "너무짧음")
+
+    stripped = re.sub(r"\s", "", t)
+    syllables = len(re.findall(r"[가-힣]", t))
+
+    # 「ㅎㅎㅎ 👍👍👍」처럼 길이는 되는데 한글 내용이 없는 경우.
+    # 짧은 리뷰(「좋아요」「잘 쓸게요」)와 구분하려면 길이가 아니라 「한글 비중」을 봐야 합니다.
+    # 15자 이상인데도 한글이 5자 미만이면 이모지·자음으로 채운 것입니다.
+    # 그래야 배제 사유 통계에서 원인을 구분할 수 있습니다.
+    if len(stripped) >= 15 and syllables < 5:
+        return (True, "이모지만")
+
+    # 한글이 거의 없는 짧은 것도 이모지 계열로 봅니다
+    if syllables == 0 and len(stripped) >= 3:
+        return (True, "이모지만")
+
+    # 공백 제외 15자 미만
+    if len(stripped) < 15:
+        return (True, "너무짧음")
+
+    # 배송 이야기뿐인가
+    if _DELIVERY_ONLY.search(t) and not _PRODUCT_HINT.search(t):
+        return (True, "배송만")
+
+    return (False, None)
+
+
+def _ngrams(text: str, n: int = 4):
+    t = re.sub(r"\s", "", (text or ""))
+    return {t[i:i + n] for i in range(max(0, len(t) - n + 1))}
+
+
+def jaccard(a: str, b: str, n: int = 4) -> float:
+    """4-gram 자카드 유사도. 복붙 리뷰(원고 배포)를 찾습니다."""
+    ga, gb = _ngrams(a, n), _ngrams(b, n)
+    if not ga or not gb:
+        return 0.0
+    return len(ga & gb) / len(ga | gb)
+
+
+def find_dup_clusters(reviews: list, threshold: float = 0.45):
+    """복붙 클러스터를 찾습니다. reviews 는 [{"id":..., "body":...}].
+
+    ★ 유사도 계산을 AI에게 시키면 숫자를 지어냅니다. 코드가 합니다.
+    반환: {review_id: cluster_id}
+    """
+    clusters = {}
+    cluster_of = {}
+    next_id = 1
+
+    for i, r in enumerate(reviews):
+        rid = r.get("id")
+        body = r.get("body") or ""
+        if not rid or rid in cluster_of:
+            continue
+        members = [rid]
+        for other in reviews[i + 1:]:
+            oid = other.get("id")
+            if not oid or oid in cluster_of:
+                continue
+            if jaccard(body, other.get("body") or "") >= threshold:
+                members.append(oid)
+        if len(members) > 1:
+            cid = f"dup{next_id}"
+            next_id += 1
+            for mid in members:
+                cluster_of[mid] = cid
+            clusters[cid] = members
+
+    return cluster_of
+
+
+def detect_date_cluster(dates: list, ratio: float = 0.40, window_days: int = 7):
+    """게시일 군집을 찾습니다 — 체험단 살포 신호.
+
+    특정 7일 구간에 전체의 40%를 넘게 몰려 있으면 True.
+    dates 는 date 또는 datetime 목록입니다.
+    """
+    ds = sorted(d for d in dates if d)
+    if len(ds) < 10:
+        return (False, None)
+
+    total = len(ds)
+    for i, start in enumerate(ds):
+        end = start + timedelta(days=window_days)
+        cnt = sum(1 for d in ds[i:] if d <= end)
+        if cnt / total > ratio:
+            return (True, f"{start} ~ {end} 구간에 {cnt}/{total}건")
+    return (False, None)
+
+
 def parse_months_rule(text: str):
     """댓글에서 사용 기간(개월)을 규칙으로 뽑습니다. 못 찾으면 None."""
     if not text:
@@ -844,6 +1432,40 @@ def safe_int(val):
     if not val: return None
     try: return int(re.sub(r'[^\d-]', '', str(val)))
     except: return None
+
+def safe_bool(val):
+    """CSV의 참/거짓 표기를 불리언으로. 빈 값은 None (모른다는 뜻).
+
+    ★ collect_reviews.py 는 파이썬 csv 로 쓰므로 'True'/'False' 문자열이 들어옵니다.
+      엑셀을 거치면 'TRUE'/'1'/'참' 이 될 수 있어 넉넉히 받습니다.
+      ★ 빈 값을 False 로 바꾸면 안 됩니다 — option_match 는 3값(참·거짓·모름)입니다.
+    """
+    if isinstance(val, bool):
+        return val
+    s = str(val or "").strip().lower()
+    if not s:
+        return None
+    if s in ("true", "t", "1", "y", "yes", "참"):
+        return True
+    if s in ("false", "f", "0", "n", "no", "거짓"):
+        return False
+    return None
+
+
+def safe_date(val):
+    """'2026-09-23' 같은 문자열을 date 문자열로. 아니면 None."""
+    s = str(val or "").strip()
+    if not s:
+        return None
+    m = re.search(r"(\d{4})-(\d{1,2})-(\d{1,2})", s)
+    if not m:
+        return None
+    try:
+        from datetime import date as _date
+        return _date(int(m.group(1)), int(m.group(2)), int(m.group(3))).isoformat()
+    except ValueError:
+        return None
+
 
 def safe_float(val):
     """숫자 외의 문자가 섞여도 안전하게 실수로 변환"""
