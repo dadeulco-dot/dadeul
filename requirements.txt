@@ -1,10 +1,17 @@
 # 다들(DADEUL) 서버 의존성
 #
-# ★ 버전이 왜 적혀 있나 — 2026-09-27 배포 사고
-#   Render 기본 파이썬이 3.14.3 으로 올라가면서 greenlet 이 설치되지 않아
-#   sqladmin 임포트가 실패했습니다(SQLAlchemy asyncio 가 greenlet 을 요구).
-#   .python-version 으로 파이썬을 3.12 에 고정하고, 아래처럼 필요한 것을
-#   빠뜨리지 않게 명시합니다.
+# ★ 버전을 박아둔 이유 — 2026-09-27~28 배포 사고 두 번
+#
+#   ① Render 기본 파이썬이 3.14.3 으로 올라가 greenlet 이 안 깔렸습니다.
+#      → .python-version 으로 3.12 고정 + sqlalchemy[asyncio] 로 greenlet 포함
+#
+#   ② SQLAlchemy 2.1 이 「postgresql://」 URL 의 기본 드라이버를
+#      psycopg2 → psycopg v3 로 바꿨습니다. 우리는 psycopg2-binary 를 쓰는데
+#      psycopg 를 찾아서 터졌습니다.
+#      → sqlalchemy 를 2.0 대에 고정합니다. sqladmin 이 이 조합에서 잘 돌고 있었습니다.
+#
+#   교훈: 버전을 안 박으면 코드를 안 건드려도 어느 날 갑자기 안 됩니다.
+#   오래 손 못 댈 때가 있는 프로젝트라 더 중요합니다.
 
 fastapi
 uvicorn[standard]
@@ -13,8 +20,9 @@ uvicorn[standard]
 # 없으면 request.form() 이 "Form data requires python-multipart" 로 터집니다.
 python-multipart
 
-# ★ [asyncio] 를 붙여야 greenlet 이 함께 깔립니다. sqladmin 이 이걸 씁니다.
-sqlalchemy[asyncio]
+# ★ 2.1 로 올리지 마세요. postgresql:// 를 psycopg v3 로 해석해 버립니다.
+#   올리려면 psycopg[binary] 를 함께 넣고 sqladmin 호환을 먼저 확인하세요.
+sqlalchemy[asyncio]>=2.0,<2.1
 greenlet
 sqladmin
 
