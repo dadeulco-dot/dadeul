@@ -876,33 +876,73 @@ if engine:
                 print("⚠️ review_key 가 있는 행이 없습니다. CSV 헤더를 확인하세요")
                 return back
 
-            # ── 제품 찾기 (nv_product_no → product_candidates.id) ──
-            need = {(r.get("nv_product_no") or "").strip() for r in rows}
-            need.discard("")
-            pmap = {}
+            # ── 제품 찾기 ──
+            # ★ 상품번호로 찾고, 없으면 제품 URL 로 찾습니다.
+            #   CSV 에 상품번호가 비어 있어 1,000건이 통째로 버려진 적이 있습니다.
+            #   URL 은 수집기가 항상 채우므로 확실한 열쇠입니다.
+            def _url_key(u):
+                """비교용 URL — 물음표 뒤, 끝 슬래시, 대소문자 차이를 없앱니다."""
+                u = (u or "").strip().split("?")[0].split("#")[0].rstrip("/")
+                return u.lower()
+
+            def _pno_from_url(u):
+                m = re.search(r"products/(\d{6,})", u or "")
+                return m.group(1) if m else ""
+
+            pmap, umap = {}, {}
             try:
                 res = (supabase.table("product_candidates")
-                       .select("id,nv_product_no").execute())
+                       .select("id,nv_product_no,product_url").execute())
                 for it in (res.data or []):
                     if it.get("nv_product_no"):
-                        pmap[str(it["nv_product_no"])] = it["id"]
+                        pmap[str(it["nv_product_no"]).strip()] = it["id"]
+                    if it.get("product_url"):
+                        umap[_url_key(it["product_url"])] = it["id"]
+                        # 저장된 URL 에서 뽑은 번호로도 찾을 수 있게 해 둡니다
+                        p2 = _pno_from_url(it["product_url"])
+                        if p2:
+                            pmap.setdefault(p2, it["id"])
             except Exception as e:
                 print(f"⚠️ 제품 조회 실패: {e}")
 
-            missing = sorted(need - set(pmap))
+            def _find_product(r):
+                """CSV 한 행이 가리키는 제품 id. 못 찾으면 None."""
+                pno = (r.get("nv_product_no") or "").strip()
+                if pno and pno in pmap:
+                    return pmap[pno]
+                url = r.get("product_url") or ""
+                if url:
+                    hit = umap.get(_url_key(url))
+                    if hit:
+                        return hit
+                    p2 = _pno_from_url(url)      # CSV 번호가 비었을 때
+                    if p2 and p2 in pmap:
+                        return pmap[p2]
+                return None
+
+            # 못 찾은 제품을 URL 기준으로 모읍니다 (같은 제품을 여러 번 만들지 않도록)
+            need_urls = {}
+            for r in rows:
+                if _find_product(r) is None:
+                    u = (r.get("product_url") or "").strip()
+                    key = _url_key(u) or (r.get("nv_product_no") or "").strip()
+                    if key:
+                        need_urls.setdefault(key, r)
+            missing = sorted(need_urls)
             if missing and create_missing:
                 # ★ 리뷰만 있고 제품이 없으면 리뷰가 어디에도 매달리지 못합니다.
                 #   CSV의 brand·category·product_url 로 최소한의 후보를 만듭니다.
                 #   가격·별점은 비어 있으니 collect_store.py 로 따로 채워야 합니다.
                 stubs = []
-                for pno in missing:
-                    src = next((r for r in rows
-                                if (r.get("nv_product_no") or "").strip() == pno), {})
+                for key in missing:
+                    src = need_urls[key]
+                    url = (src.get("product_url") or "").strip() or None
+                    pno = (src.get("nv_product_no") or "").strip() or _pno_from_url(url)
                     stubs.append({
-                        "nv_product_no": pno,
+                        "nv_product_no": pno or None,
                         "brand": (src.get("brand") or "").strip() or None,
                         "category": (src.get("category") or "").strip() or None,
-                        "product_url": (src.get("product_url") or "").strip() or None,
+                        "product_url": url,
                         "nv_option_name": (src.get("option_target") or "").strip() or None,
                         "stage": "stage_b_collected",
                         "status": "PENDING_APPROVAL",
@@ -910,18 +950,21 @@ if engine:
                 try:
                     r2 = supabase.table("product_candidates").insert(stubs).execute()
                     for it in (r2.data or []):
-                        pmap[str(it["nv_product_no"])] = it["id"]
+                        if it.get("nv_product_no"):
+                            pmap[str(it["nv_product_no"])] = it["id"]
+                        if it.get("product_url"):
+                            umap[_url_key(it["product_url"])] = it["id"]
                     print(f"➕ 제품 후보 {len(r2.data or [])}개를 새로 만들었습니다 "
                           f"— 가격·별점은 collect_store.py 로 채우세요")
                 except Exception as e:
                     print(f"❌ 제품 후보 생성 실패: {e}")
             elif missing:
-                print(f"⚠️ 제품 후보에 없는 상품번호 {len(missing)}개: {missing[:5]}")
+                print(f"⚠️ 제품 후보에서 못 찾은 제품 {len(missing)}개: {missing[:3]}")
                 print("   「없는 제품은 후보로 만들기」를 켜고 다시 올리거나, "
                       "먼저 제품 CSV를 넣으세요")
 
             # ── 이미 있는 리뷰 key ──
-            pids = {pmap[p] for p in need if p in pmap}
+            pids = {pid for pid in (_find_product(r) for r in rows) if pid}
             existing = {}
             for pid in pids:
                 try:
@@ -938,8 +981,7 @@ if engine:
             csv_keys_by_pid = {}
             complete_by_pid = {}
             for r in rows:
-                pno = (r.get("nv_product_no") or "").strip()
-                pid = pmap.get(pno)
+                pid = _find_product(r)
                 if not pid:
                     no_product += 1
                     continue
