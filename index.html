@@ -47,7 +47,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .pchip{flex-shrink:0;font-size:12px;padding:6px 10px;border-radius:8px;background:var(--surface);color:var(--ink2);border:.5px solid var(--line)}
 .pchip.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
 
-.top{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:.5px solid var(--line);background:var(--surface)}
+.top{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:10px 10px;border-bottom:.5px solid var(--line);background:var(--surface)}
 .ib{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:12px;flex-shrink:0}
 .ib:active{background:var(--surface2)}
 .sbox{flex:1;height:40px;border-radius:12px;background:var(--surface2);display:flex;align-items:center;gap:8px;padding:0 12px;color:var(--meta);font-size:15px}
@@ -100,7 +100,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .crow{display:flex;gap:6px;overflow-x:auto;padding:12px 20px 10px;scrollbar-width:none;position:relative}.crow::-webkit-scrollbar{display:none}
 /* 가로 스크롤에서 마지막 여백이 먹지 않는 문제 → 끝에 빈 칸을 둠 */
 .crow::after{content:"";flex:0 0 14px}
-.crow .chip.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.crow .chip.on,.kwrap .chip.on,.fchips .chip.on{background:var(--brand);color:#fff;border-color:var(--brand)}
 .cwrap{position:relative}
 .carr{position:absolute;top:0;bottom:0;width:60px;display:none;align-items:center;z-index:2;pointer-events:none}
 .carr.l{left:0;justify-content:flex-start;padding-left:8px;background:linear-gradient(90deg,var(--surface) 50%,transparent)}
@@ -110,7 +110,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .carr button:hover{background:var(--surface2)}
 /* 휴대폰(터치)에서는 버튼 없이 흐려지는 가장자리만 — 밀어서 넘기라는 힌트 */
 @media (hover:none){.carr{width:36px;padding:0}.carr button{display:none}}
-@media (prefers-color-scheme:dark){.crow .chip.on{color:#0E1512}}
+@media (prefers-color-scheme:dark){.crow .chip.on,.kwrap .chip.on,.fchips .chip.on{color:#0E1512}}
 .chip{flex-shrink:0;min-height:36px;padding:0 13px;border-radius:18px;background:var(--surface2);font-size:13px;font-weight:600;color:var(--ink2);display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
 .chip.exp{background:transparent;border:1px solid var(--line);font-weight:500;color:var(--sub)}
 .csep{flex-shrink:0;width:1px;background:var(--line);margin:6px 4px}
@@ -140,7 +140,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .hs{display:flex;gap:10px;overflow-x:auto;padding:12px 20px 4px;scrollbar-width:none}.hs::-webkit-scrollbar{display:none}
 .mini{flex:0 0 136px}
 .mini .th{width:136px;height:104px;border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.mini .nm{font-size:13px;font-weight:500;line-height:1.4;margin-top:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.8em}
+.mini .nm{font-size:13px;font-weight:500;line-height:1.4;margin-top:7px;text-wrap:balance;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.8em}
 .dot{width:7px;height:7px;border-radius:4px;display:inline-block;flex-shrink:0}
 
 .foot{padding:22px 20px 28px}
@@ -167,8 +167,9 @@ body.pcmode{display:block;padding:0;background:var(--surface)}
 .pcroot .t-body{font-size:16px}.pcroot .t-sub{font-size:14px}.pcroot .t-cap{font-size:13px}
 .wrap{max-width:1200px;margin:0 auto;padding:0 32px}
 .pproto{background:var(--surface2);border-bottom:.5px solid var(--line)}
-.pproto .wrap{display:flex;align-items:center;gap:8px;height:44px}
-.pproto .lab{font-size:13px;color:var(--meta);margin-right:4px}
+.pproto .wrap{display:flex;align-items:center;gap:8px;height:44px;overflow-x:auto;scrollbar-width:none}.pproto .wrap::-webkit-scrollbar{display:none}
+.pproto .pchip{flex-shrink:0}
+.pproto .lab{font-size:13px;color:var(--meta);margin-right:4px;white-space:nowrap;flex-shrink:0}
 .vseg{margin-left:auto;display:flex;background:var(--surface);border:.5px solid var(--line);border-radius:9px;padding:2px}
 .vseg button{font-size:13px;padding:5px 12px;border-radius:7px;color:var(--sub)}.vseg button.on{background:var(--ink);color:var(--surface)}
 .gnb{position:sticky;top:0;z-index:15;background:var(--surface);border-bottom:1px solid var(--line)}
@@ -233,13 +234,288 @@ body.pcmode{display:block;padding:0;background:var(--surface)}
 .pcroot .toast{position:fixed;left:50%;right:auto;transform:translateX(-50%);bottom:110px;max-width:520px;font-size:15px}
 .tray{position:fixed;left:0;right:0;bottom:0;z-index:14;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -12px 26px -20px rgba(0,0,0,.3)}
 .tray .wrap{display:flex;align-items:center;gap:12px;height:80px}
-.titem{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:6px 8px 6px 6px;max-width:250px}
+.titem{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:6px 8px 6px 6px;max-width:230px;min-width:0;flex:0 1 auto}
+@media (max-width:1240px){.tempty{display:none}}
 .titem .thumb{border-radius:9px}
 .titem .x{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .titem .x:hover{background:var(--surface2)}
 .tempty{width:120px;height:54px;border:1px dashed var(--faint);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--tiny)}
-.tgo{margin-left:auto;height:52px;padding:0 26px;border-radius:14px;background:var(--brand);color:#fff;font-size:16px;font-weight:700}
+.tgo{margin-left:auto;flex-shrink:0;white-space:nowrap;height:52px;padding:0 26px;border-radius:14px;background:var(--brand);color:#fff;font-size:16px;font-weight:700}
 @media (prefers-color-scheme:dark){.tgo,.gbtn .n{color:#0E1512}}
+
+/* ════ 소분류 목록 ════ */
+.ib2{width:40px;height:40px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center}
+.ib2:hover{background:var(--surface2)}
+.cbtn{height:36px;padding:0 12px;border-radius:10px;border:1px solid var(--line);font-size:13px;font-weight:700;color:var(--ink2);white-space:nowrap}
+.cbtn.on{border-color:var(--brand);color:var(--brand);background:var(--brandBg)}
+.lcard{border-bottom:.5px solid var(--line);padding:14px 20px 10px}
+.lmain{display:flex;gap:14px;width:100%;align-items:flex-start}
+.lname{font-size:15px;font-weight:600;letter-spacing:-.02em;line-height:1.4;margin-top:1px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lkey{margin-top:6px;font-size:14px;color:var(--ink);display:flex;align-items:center;flex-wrap:wrap;gap:2px 0}
+.lkey b{color:var(--brand);font-weight:700;margin-left:4px}
+.lpc{display:flex;flex-direction:column;gap:3px;margin-top:7px;font-size:13px;color:var(--ink2)}
+.lpc span{display:flex;align-items:center;gap:6px}
+.lpc .mk{width:16px;height:16px;margin-top:0}.lpc .mk svg{width:10px;height:10px}
+.lpc.pc{margin-top:5px;gap:2px}.lpc.pc span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;display:flex}
+.lfoot{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-left:90px}
+.ksec{margin-top:20px;padding-top:18px;border-top:8px solid var(--surface2)}
+.ksec .crow{padding-top:10px}
+.ltool{display:flex;gap:8px;padding-top:12px;padding-bottom:6px;border-top:.5px solid var(--line)}
+.tbtn{min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--line);display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--ink2);white-space:nowrap;max-width:100%}
+.tbtn span{overflow:hidden;text-overflow:ellipsis}
+.thinh{padding-top:22px;padding-bottom:6px;border-top:8px solid var(--surface2)}
+.tabs{flex-shrink:0;display:flex;border-top:.5px solid var(--line);background:var(--surface);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tab{flex:1;height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;color:var(--meta)}
+.tab.on{color:var(--brand);font-weight:700}
+.cfloat{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 16px;background:var(--brandBg);border-top:.5px solid var(--line)}
+.cfloat .thumb{border-radius:8px;border:1px solid var(--surface)}
+.cgo{height:40px;padding:0 16px;border-radius:10px;background:var(--brand);color:#fff;font-size:14px;font-weight:700;white-space:nowrap;flex-shrink:0}
+.cgo[aria-disabled="true"]{background:var(--surface);color:var(--sub);border:1px solid var(--line)}
+@media (prefers-color-scheme:dark){.cgo{color:#0E1512}}
+.srow{width:100%;min-height:52px;display:flex;align-items:center;justify-content:space-between;border-bottom:.5px solid var(--line);font-size:15px}
+.sh2{font-size:14px;font-weight:700;margin-top:18px;margin-bottom:8px}
+.fchips{display:flex;flex-wrap:wrap;gap:6px}
+/* PC 목록 */
+.rng{padding:2px 0 0;user-select:none}
+.rvals{display:flex;gap:8px;align-items:baseline;font-size:16px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+.rtrack{position:relative;height:36px}
+.rtrack::before{content:"";position:absolute;left:14px;right:14px;top:50%;height:4px;margin-top:-2px;border-radius:2px;background:var(--line)}
+.rfill{position:absolute;top:50%;height:4px;margin-top:-2px;border-radius:2px;background:var(--brand)}
+.rtrack input{position:absolute;left:0;top:0;width:100%;height:36px;margin:0;background:none;pointer-events:none;-webkit-appearance:none;appearance:none}
+.rtrack input::-webkit-slider-runnable-track{height:36px;background:none;border:0}
+.rtrack input::-moz-range-track{height:36px;background:none;border:0}
+.rtrack input::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:28px;height:28px;margin-top:4px;border-radius:14px;background:#fff;border:1px solid var(--line);box-shadow:0 1px 5px rgba(0,0,0,.28);cursor:grab}
+.rtrack input::-moz-range-thumb{pointer-events:auto;width:28px;height:28px;border-radius:14px;background:#fff;border:1px solid var(--line);box-shadow:0 1px 5px rgba(0,0,0,.28);cursor:grab}
+.rtrack input:active::-webkit-slider-thumb{cursor:grabbing;box-shadow:0 0 0 6px var(--brandBg),0 1px 5px rgba(0,0,0,.28)}
+.rtrack input:focus-visible{outline:none}
+.rtrack input:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 3px var(--brand)}
+.rtrack input:focus-visible::-moz-range-thumb{box-shadow:0 0 0 3px var(--brand)}
+.rends{display:flex;justify-content:space-between;margin-top:2px}
+.lgrid{display:grid;grid-template-columns:220px minmax(0,1fr);gap:40px;align-items:start;padding-bottom:140px}
+.lside{position:sticky;top:88px}
+.lside .sh{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.lside .sl{display:flex;justify-content:space-between;width:100%;padding:8px 10px;border-radius:9px;font-size:15px;color:var(--ink2)}
+.lside .sl:hover{background:var(--surface2)}
+.lside .sl.on{background:var(--brandBg);color:var(--brand);font-weight:700}
+.ck{display:flex;align-items:center;gap:10px;width:100%;padding:7px 2px;font-size:15px;color:var(--ink2)}
+.box{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--faint);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.box.on{background:var(--brand);border-color:var(--brand)}
+.radio{width:20px;height:20px;border-radius:10px;border:1.5px solid var(--faint);flex-shrink:0;position:relative}
+.radio.on{border-color:var(--brand)}.radio.on::after{content:"";position:absolute;inset:4px;border-radius:6px;background:var(--brand)}
+.kwrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.sortrow{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:26px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.lsel{height:40px;padding:0 36px 0 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:15px;font-weight:600;appearance:none;-webkit-appearance:none;cursor:pointer;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236E6E75' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.lsel:hover{background-color:var(--surface2)}
+.sortrow{gap:10px}
+.ltable td{padding:14px 12px}.ltable th{padding-left:12px;padding-right:12px}
+.ltable td:first-child,.ltable th:first-child{padding-left:16px}
+.ltable th{white-space:normal;line-height:1.35;vertical-align:bottom}
+@media (max-width:1180px){.lgrid{grid-template-columns:190px minmax(0,1fr);gap:28px}.ltable .lpc{display:none}}
+/* ════ 비교 화면 ════ */
+.chead{position:sticky;top:0;z-index:5;background:var(--surface);display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 20px 12px;margin-top:14px;border-top:.5px solid var(--line);border-bottom:1px solid var(--line)}
+.chc{position:relative;min-width:0}
+.chn{font-size:14px;font-weight:600;letter-spacing:-.02em;line-height:1.35;text-wrap:balance;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cx{position:absolute;top:-6px;right:-8px;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;z-index:1}
+.cx:hover{background:var(--surface2)}
+.csum{margin-top:14px;background:var(--surface2);border-radius:14px;padding:14px 16px}
+.cgh{font-size:13px;font-weight:700;color:var(--sub);padding-top:22px;padding-bottom:4px;letter-spacing:-.01em}
+.crw{padding:10px 20px 12px;border-bottom:.5px solid var(--line2)}
+.crl{font-size:13px;color:var(--sub);display:flex;align-items:center;gap:4px;margin-bottom:6px;flex-wrap:wrap}
+.crc{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cv{font-size:16px;font-weight:600;letter-spacing:-.02em;line-height:1.4}
+.cbar{height:6px;border-radius:3px;background:var(--line2);overflow:hidden;margin:6px 0 3px}
+.cbar i{display:block;height:100%;background:var(--good);border-radius:3px}
+.cpt{display:flex;gap:6px;align-items:flex-start;font-size:14px;line-height:1.45}
+.cpt span{text-wrap:balance}
+.cpt .mk{width:18px;height:18px;margin-top:1px}
+/* PC 비교표 */
+.pcg{margin-top:18px;border:1px solid var(--line);border-radius:18px}
+.pcgh,.pcgr{display:grid;grid-template-columns:var(--cols);align-items:start}
+.pcgh{position:sticky;top:68px;z-index:6;background:var(--surface);border-bottom:1px solid var(--line);border-radius:18px 18px 0 0}
+.pcgr{border-bottom:1px solid var(--line2)}
+.pcgr:last-child{border-bottom:0}
+.pcgl{padding:16px 18px;font-size:15px;color:var(--ink2);display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.pcgl .t-cap{flex-basis:100%}
+.pcgc{padding:16px 18px;position:relative;min-width:0;border-left:1px solid var(--line2)}
+.pcgh .pcgc{padding:18px 30px 16px 18px}
+.pcgh .cx{top:8px;right:6px}
+/* 좁은 PC 에서는 비교표 머리의 사진 아래에 이름을 둠 (옆에 두면 이름이 네 줄로 쪼개짐) */
+@media (max-width:1180px){.pcgh .pcgc>button{flex-direction:column;align-items:flex-start!important;gap:8px!important}}
+.pcgg{padding:20px 18px 6px;font-size:14px;font-weight:700;color:var(--sub);border-bottom:1px solid var(--line2);background:var(--surface2)}
+.pcg .cv{font-size:17px}
+.cone{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:16px;padding:12px 12px 12px 14px}
+.cadd{width:100%;height:56px;border:1px dashed var(--faint);border-radius:12px;font-size:14px;font-weight:600;color:var(--sub);text-align:center}
+.cadd:hover{background:var(--surface2)}
+/* ════ 홈 ════ */
+.hsearch{width:100%;height:54px;border-radius:14px;background:var(--surface2);display:flex;align-items:center;gap:10px;padding:0 16px;font-size:16px;color:var(--meta);border:1px solid var(--line)}
+.dseg{display:inline-flex;background:var(--surface2);border-radius:12px;padding:3px}
+.dseg button{height:40px;padding:0 18px;border-radius:10px;font-size:15px;font-weight:600;color:var(--sub)}
+.dseg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.mids{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:12px}
+.mid{min-height:56px;border-radius:14px;background:var(--surface2);font-size:13px;font-weight:600;letter-spacing:-.02em;color:var(--ink2);text-align:center;padding:6px 4px;line-height:1.3;word-break:keep-all}
+.mid:hover{background:var(--brandBg);color:var(--brand)}
+.hsec{margin-top:26px;padding-top:22px;border-top:8px solid var(--surface2)}
+.gcard{display:flex;gap:12px;align-items:center;width:100%;padding:12px 0;border-bottom:.5px solid var(--line);text-align:left}
+.gcard:last-child{border-bottom:0}
+.newsb{border:1px solid var(--line);border-radius:16px;padding:14px 16px 8px}
+.nrow{display:flex;gap:10px;align-items:center;width:100%;padding:9px 0;border-top:.5px solid var(--line2)}
+.nrow .thumb{border-radius:10px}
+/* PC 홈 */
+.phero{display:flex;justify-content:space-between;align-items:flex-start;gap:40px;padding:40px 0 10px}
+.pcroot .phero .t-title{font-size:32px}
+.pcroot .mids{grid-template-columns:repeat(10,minmax(0,1fr));margin-top:14px}
+.pcroot .mid{min-height:64px;font-size:14px}
+.hgrid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:40px}
+/* ════ 카테고리 메뉴 ════ */
+.catwrap{flex:1;display:flex;flex-direction:column;min-height:0}
+.csearch{margin:0 16px;height:46px;border-radius:12px;background:var(--surface2);display:flex;align-items:center;gap:8px;padding:0 12px;cursor:text}
+.csearch input{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:16px;color:var(--ink);outline:none;-webkit-appearance:none}
+.csearch input::placeholder{color:var(--meta)}
+.csearch:focus-within{box-shadow:0 0 0 2px var(--brand)}
+.csearch input::-webkit-search-cancel-button{-webkit-appearance:none}
+.cpanes{flex:1;display:flex;min-height:0;border-top:1px solid var(--line)}
+.cpanes[hidden],[data-cpanes][hidden],.cres[hidden]{display:none}
+.crail{width:112px;flex-shrink:0;overflow-y:auto;background:var(--surface2);scrollbar-width:none;overscroll-behavior:contain}
+.crail::-webkit-scrollbar{display:none}
+.crail button{display:block;width:100%;text-align:left;padding:14px 10px 14px 16px;font-size:14px;color:var(--sub);line-height:1.35;position:relative;word-break:keep-all}
+.crail button.on{background:var(--surface);color:var(--ink);font-weight:700}
+.crail button.on::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:2px;background:var(--brand)}
+.cright{flex:1;min-width:0;overflow-y:auto;padding:0 16px 0;overscroll-behavior:contain}
+.cgrp{padding-top:18px}
+.cgrp h3{font-size:15px;font-weight:700;letter-spacing:-.02em;padding-bottom:2px}
+.crow2{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;min-height:48px;padding:6px 0;border-bottom:.5px solid var(--line2);font-size:15px;color:var(--ink);text-align:left}
+.crow2.off{color:var(--tiny)}
+.cres{flex:1;overflow-y:auto;padding:0 16px 30px;border-top:1px solid var(--line)}
+/* PC 펼침 메뉴 머리: 찾기 · 최근 본 */
+.gnb .mega .mhead{display:flex;align-items:center;gap:16px;height:auto;padding-top:20px;padding-bottom:4px}
+.csearch.pc{margin:0;width:420px;flex-shrink:0}
+.gnb .mega .mres{display:grid;height:auto;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 28px;padding-top:10px;padding-bottom:26px}
+.gnb .mega .mres[hidden],.gnb .mega [data-cpanes][hidden]{display:none}
+.gnb .mega .mres .crow2{font-size:14px}
+/* ════ 프로토타입 전용 「샘플」 버튼 ════ */
+.pfab{position:fixed;left:12px;bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:40}
+.phone:has(.cfloat) .pfab{bottom:calc(140px + env(safe-area-inset-bottom,0px))}
+@media (min-width:521px){body:not(.pcmode) .pfab{left:20px;bottom:20px}}
+body.pcmode .pfab{left:20px;bottom:100px}
+.pfb{height:34px;padding:0 14px;border-radius:17px;background:var(--ink);color:var(--surface);font-size:13px;font-weight:700;box-shadow:0 4px 14px -4px rgba(0,0,0,.35);opacity:.92}
+.pfb:hover{opacity:1}
+.pfb.bad{background:var(--accent);color:#fff}
+.pfp{position:absolute;left:0;bottom:44px;width:300px;max-height:min(70vh,560px);overflow-y:auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 18px 40px -16px rgba(0,0,0,.4)}
+.pfg{margin-top:14px}
+.pft{font-size:12px;font-weight:700;color:var(--meta);margin-bottom:4px}
+.pfi{display:block;width:100%;text-align:left;padding:8px 10px;border-radius:8px;font-size:14px;color:var(--ink2)}
+.pfi:hover{background:var(--surface2)}
+.pfi.on{background:var(--brandBg);color:var(--brand);font-weight:700}
+/* 홈 콘텐츠 */
+.funnel{border:1px solid var(--line);border-radius:18px;padding:18px 18px 14px;background:var(--surface)}
+.fbar{display:flex;height:12px;border-radius:6px;overflow:hidden;margin-top:12px;background:var(--line2)}
+.fbar i{display:block;height:100%}.fbar .fx{background:var(--bad)}.fbar .fn{background:var(--brand)}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.step{display:flex;gap:10px;align-items:flex-start;background:var(--surface2);border-radius:14px;padding:12px}
+.sn{width:24px;height:24px;border-radius:12px;background:var(--brand);color:#fff;font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+@media (prefers-color-scheme:dark){.sn{color:#0E1512}}
+/* 휴대폰: PC 와 같은 카드(번호 왼쪽 · 제목과 설명 오른쪽)를 세로로 쌓음 — 가로 3칸은 폭이 모자라 글자가 쪼개짐 */
+.phone .steps{grid-template-columns:1fr;gap:6px}.phone .step{align-items:center;padding:9px 14px}
+.phone .funnel{padding:14px 16px 8px}
+.rrow{display:flex;gap:12px;align-items:center;width:100%;padding:12px 0;border-bottom:.5px solid var(--line)}
+.tcards{display:grid;gap:8px}
+.tcard{border:1px solid var(--line);border-radius:16px;padding:14px 16px;text-align:left;width:100%}
+.tcard:hover{border-color:var(--brand)}
+.gdrow{display:flex;gap:12px;align-items:center;width:100%;padding:12px 0;border-bottom:.5px solid var(--line)}
+.gdrow .sn{background:var(--surface2);color:var(--ink2)}
+.pcard{border:1px solid var(--line);border-radius:18px;padding:16px}
+/* [제품 A] vs [제품 B] 를 한 묶음으로 가운데 — vs 양쪽 간격이 같게 */
+.pvs{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:12px}
+.pvs>button{flex:0 1 auto;max-width:calc(50% - 30px)}
+/* 휴대폰 카드는 폭이 좁아 사진 아래에 이름을 둠 (사진 옆에 두면 이름이 잘림) */
+.phone .pvs{gap:12px;align-items:flex-start}.phone .pvs>span{align-self:center;margin-top:-18px}
+.phone .pvs>button{flex:1 1 0;max-width:none;flex-direction:column;align-items:center;text-align:center!important;gap:6px}
+.phone .pvs>button .chn{-webkit-line-clamp:2}
+.hs.pcs .pcard{flex:0 0 300px}
+.h2col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.pcroot .tcards{grid-template-columns:1fr 1fr}
+.rcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:32px}
+.pcroot .rcols .rrow{border-bottom:1px solid var(--line2)}
+.pcroot .hgrid{margin-top:48px}
+.why2{display:flex;align-items:center;gap:0 6px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--tiny)}
+.why2 span{white-space:nowrap}
+.plink{font-size:12px;font-weight:700;color:var(--brand);min-height:28px;text-decoration:underline;text-underline-offset:2px}
+/* ════ 검색 ════ */
+.sfield{flex:1;min-width:0;height:44px;border-radius:12px;background:var(--surface2);display:flex;align-items:center;gap:8px;padding:0 6px 0 12px;cursor:text}
+.sfield:focus-within,.gsearch:focus-within{box-shadow:0 0 0 2px var(--brand)}
+.sfield input,.gsearch input{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:16px;color:var(--ink);outline:none;-webkit-appearance:none}
+.sfield input::placeholder,.gsearch input::placeholder{color:var(--meta)}
+.sfield input::-webkit-search-cancel-button,.gsearch input::-webkit-search-cancel-button{-webkit-appearance:none}
+.sx{width:32px;height:32px;border-radius:16px;font-size:20px;line-height:1;color:var(--meta);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sx[hidden]{display:none}
+.sblk{padding:16px 20px 4px}
+.shd{display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:700;margin-bottom:10px;letter-spacing:-.02em}
+.rq{display:inline-flex;align-items:center;background:var(--surface2);border-radius:18px;padding-left:12px;min-height:36px;font-size:13px;font-weight:600;color:var(--ink2)}
+.rqx{width:32px;height:32px;color:var(--meta);font-size:16px}
+.popq{display:grid;grid-template-columns:1fr 1fr;column-gap:16px}
+.popq button{display:flex;align-items:center;gap:10px;min-height:42px;font-size:15px;border-bottom:.5px solid var(--line2);text-align:left}
+.pn{width:18px;font-weight:700;color:var(--brand)}
+.sgh{font-size:12px;font-weight:700;color:var(--meta);margin:14px 0 2px}
+.srow2{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:6px 0;border-bottom:.5px solid var(--line2);font-size:15px}
+.srow2 .thumb{border-radius:10px}
+.sall{display:flex;align-items:center;gap:8px;width:100%;min-height:48px;font-size:15px;font-weight:600;color:var(--brand);margin-top:6px}
+.subcard{display:flex;align-items:center;gap:12px;width:100%;border:1px solid var(--brand);background:var(--brandBg);border-radius:16px;padding:14px 16px;margin-top:10px}
+.snote{margin-top:12px;font-size:13px;color:var(--ink2);background:var(--surface2);border-radius:10px;padding:10px 12px}
+.reqb{background:var(--surface2);border-radius:16px;padding:18px;margin:14px 0 10px}
+.reqb.big{background:none;padding:18px 0 4px;margin-top:0}
+/* PC: 상단 검색창 + 펼침 */
+.gsw{flex:1;max-width:540px;position:relative}
+.gsw .gsearch{max-width:none;width:100%;cursor:text}
+.sdrop{position:absolute;left:0;right:0;top:52px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 40px -18px rgba(0,0,0,.35);max-height:70vh;overflow-y:auto;z-index:20}
+.sdrop .sblk{padding:16px 18px 8px}
+.sgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:10px 20px 0}
+.sgrid .lcard{border:1px solid var(--line);border-radius:16px;padding:14px 16px 10px}
+.pcroot .sblk{padding-left:20px;padding-right:20px}
+/* ════ 찜 ════ */
+.notib{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:16px;padding:14px 14px 14px 16px}
+.notib.on{background:var(--brandBg);border-color:transparent}
+@media (prefers-color-scheme:dark){.notib .tbtn[style*="--brand"]{color:#0E1512!important}}
+.fgrp{margin-top:22px}
+.fgh{display:flex;justify-content:space-between;align-items:center;font-size:16px;letter-spacing:-.02em;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.frow{padding:12px 0 8px;border-bottom:.5px solid var(--line)}
+.fnews{margin-top:4px;font-size:13px;font-weight:700;color:var(--brand)}
+.favgrid{display:grid;grid-template-columns:340px minmax(0,1fr);gap:40px;align-items:start;margin-top:10px}
+.favgrid aside{position:sticky;top:88px}
+.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}
+.lgbtn{display:block;width:100%;height:52px;border-radius:14px;font-size:16px;font-weight:700;text-align:center;margin-top:10px}
+.lgbtn.kakao{background:#FEE500;color:#191600;margin-top:18px}
+.lgbtn.naver{background:#03C75A;color:#fff}
+/* ════ 이 이야기만 자세히 ════ */
+.stsec{margin-top:26px;padding-top:22px;border-top:8px solid var(--surface2)}
+.pcroot .stsec{border-top:1px solid var(--line)}
+.spt{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:.5px solid var(--line2)}
+.sbar{height:6px;border-radius:3px;background:var(--line2);overflow:hidden;margin-top:6px}
+.sbar i{display:block;height:100%;border-radius:3px}
+.mcmp{display:flex;align-items:center;gap:18px;margin-top:14px;background:var(--surface2);border-radius:16px;padding:16px 18px}
+.mcmp>div:not(.marr){flex:1}
+.marr{font-size:22px;color:var(--meta)}
+.prow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 44px;gap:10px;align-items:center;width:100%;min-height:44px;padding:6px 8px;border-radius:10px;text-align:left}
+.prow.me{background:var(--brandBg)}
+.prow.me .pnm{font-weight:700}
+.pnm{font-size:13px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.pb{font-size:12px;color:var(--sub)}
+/* 휴대폰: 모든 줄을 「브랜드 / 제품명」 두 줄로 통일 (한 줄 · 두 줄이 섞이지 않게) */
+.phone .pnm{white-space:normal}.phone .pb{display:block}.phone .pn2{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pbar{height:8px;border-radius:4px;background:var(--line2);overflow:hidden}.pbar i{display:block;height:100%;background:var(--good)}
+.prow:not(.me) .pbar i{opacity:.55}
+.pv{font-size:13px;font-weight:700;text-align:right}
+.stgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:start;margin-top:6px}
+.stgrid>div>.stsec:first-child{margin-top:0;padding-top:0;border-top:0}
+/* ════ 브랜드 ════ */
+.blink{display:inline-flex;align-items:center;gap:2px;font-size:13px;color:var(--sub);min-height:28px;text-decoration:underline;text-decoration-color:var(--faint);text-underline-offset:3px}
+.blink:hover{color:var(--ink)}
+.pcroot .blink{font-size:14px}
+.bnote{margin-top:14px;font-size:12px;color:var(--tiny)}
+.bgrp{margin-top:26px}
+.bback{display:inline-flex;align-items:center;gap:4px;margin-top:16px;min-height:32px;font-size:14px;font-weight:600;color:var(--ink2)}.bback:hover{color:var(--ink)}
+.bidx{margin-top:10px}
+.bcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:28px}
 </style>
 </head>
 <body>
@@ -262,6 +538,9 @@ const I={
  chev:'<path d="M9 6l6 6-6 6"/>', ext:'<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5"/>',
  star:'<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8 6.8 19.6l1-5.8L3.5 9.7l5.9-.8z"/>',
  cmpi:'<rect x="3.5" y="5" width="7.5" height="14" rx="1.5"/><rect x="13" y="5" width="7.5" height="14" rx="1.5"/>',
+ home:'<path d="M4 10.5L12 4l8 6.5V19a1 1 0 01-1 1h-4.5v-5.5h-5V20H5a1 1 0 01-1-1z"/>',
+ grid:'<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
  list:'<path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r=".6"/><circle cx="4" cy="12" r=".6"/><circle cx="4" cy="18" r=".6"/>',
 };
 const ic=(n,s=20,c='currentColor',w=1.8,fill='none')=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="${fill}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]}</svg>`;
@@ -273,6 +552,7 @@ const GLY={
  pan:'<ellipse cx="44" cy="52" rx="30" ry="12" fill="#3B3F45"/><ellipse cx="44" cy="49" rx="27" ry="9.5" fill="#23262B"/><ellipse cx="40" cy="47" rx="12" ry="3" fill="#fff" opacity=".12"/><rect x="72" y="46" width="22" height="6" rx="3" fill="#5B4636"/>',
  steel:'<ellipse cx="44" cy="52" rx="30" ry="12" fill="#A9AEB4"/><ellipse cx="44" cy="49" rx="27" ry="9.5" fill="#D5D9DD"/><ellipse cx="38" cy="47" rx="13" ry="3" fill="#fff" opacity=".6"/><rect x="72" y="46" width="22" height="6" rx="3" fill="#9CA1A7"/>',
  pot:'<rect x="24" y="34" width="44" height="30" rx="5" fill="#B9BEC3"/><ellipse cx="46" cy="34" rx="22" ry="6" fill="#DADDE0"/><rect x="66" y="38" width="22" height="5" rx="2.5" fill="#9FA4A9"/><rect x="30" y="38" width="6" height="22" rx="3" fill="#fff" opacity=".35"/>',
+ bottle:'<rect x="38" y="34" width="24" height="40" rx="7" fill="#F5F7F8" stroke="#C9D1D6" stroke-width="1.3"/><rect x="36" y="28" width="28" height="9" rx="3" fill="#8FC3B0"/><path d="M44 28c0-9 12-9 12 0z" fill="#E8C9A8"/><path d="M42 46h7M42 54h7M42 62h7" stroke="#9AA6AD" stroke-width="1.3"/>',
  jar:'<rect x="26" y="40" width="44" height="26" rx="8" fill="#F4EFE8" stroke="#D8CFC3" stroke-width="1.2"/><rect x="24" y="30" width="48" height="13" rx="5" fill="#C9B79C"/><rect x="32" y="48" width="18" height="3" rx="1.5" fill="#C9B79C" opacity=".7"/>',
 };
 const TINT={green:'var(--tGreen)',sand:'var(--tSand)',gray:'var(--tGray)'};
@@ -305,55 +585,52 @@ const unitPrice=p=>p.vol?`${p.vol.u==='ml'?'10ml':'100g'}당 ${won(Math.round(p.
    cats[].time=true      시간이 지나야 알 수 있는 이야기 → 한 달 써 본 후기만 셈
    pts: [좋다/아쉽다, 포인트, 전체 건수, 한 달 써 본 후기 중 건수]              */
 const P=[
-{id:'p1',dom:'주방용품',mid:'조리팬',sub:'프라이팬',subN:12,brand:'하로',name:'인덕션 코팅팬 28cm',price:39800,gly:'pan',tint:'green',
+{id:'p1',dom:'주방용품',mid:'조리팬',sub:'프라이팬',brand:'하로',name:'인덕션 코팅팬 28cm',price:39800,gly:'pan',tint:'green',
  nv:{r:4.7,c:1148,chk:'9.28'},found:1148,excl:961,n:187,month:63,evalN:171,probN:24,seen:'2026.09.21',fix:null,
  exclWhy:[['너무 짧은 글',512],['구체적인 이야기가 없는 글',287],['감탄만 있는 글',103],['서로 너무 닮은 글',24],['판매자 칭찬',21],['다른 옵션을 사신 분의 글',14]],
  cats:[
-  {k:'coat',name:'코팅·표면 내구성',time:true,m:39,g:34,b:5,tier:'상위권',pts:[['+','오래 써도 코팅이 멀쩡해요',29,29],['+','긁힘에 강해요',9,9],['-','코팅이 약해져요',4,4],['-','눌어붙기 시작해요',2,2]]},
-  {k:'heat',name:'열 전달·예열',m:55,g:51,b:4,mm:18,mg:17,mb:1,tier:'상위권',pts:[['+','예열이 빨라요',33,11],['+','열이 고르게 퍼져요',24,8],['-','가장자리만 뜨거워요',3,1],['-','예열이 오래 걸려요',1,0]]},
-  {k:'cook',name:'조리 성능',m:62,g:57,b:5,mm:24,mg:20,mb:4,tier:'중간',pts:[['+','안 눌어붙어요',44,15],['+','계란프라이가 잘 돼요',16,6],['-','기름 없으면 눌어요',5,4]]},
-  {k:'grip',name:'무게·손잡이',m:44,g:36,b:8,mm:16,mg:12,mb:4,tier:'중간',pts:[['+','가벼워서 다루기 쉬워요',31,10],['+','손잡이가 튼튼해요',6,3],['-','손잡이가 뜨거워져요',7,3],['-','손잡이가 흔들려요',1,1]]},
-  {k:'wash',name:'세척·관리',m:54,g:52,b:2,mm:19,mg:17,mb:2,tier:'상위권',pts:[['+','설거지가 쉬워요',49,16],['+','식기세척기에 넣어도 괜찮아요',5,2],['-','식기세척기 쓰면 변색돼요',2,2]]},
-  {k:'size',name:'크기·마감',m:30,g:24,b:6,mm:9,mg:7,mb:2,tier:'하위권',pts:[['+','크기가 딱 좋아요',18,5],['+','마감이 깔끔해요',7,2],['-','생각보다 얕아요',5,2],['-','바닥이 살짝 떠요',1,0]]},
+  {k:'coat',name:'코팅·표면 내구성',time:true,m:39,g:34,b:5,pts:[['+','오래 써도 코팅이 멀쩡해요',29,29],['+','긁힘에 강해요',9,9],['-','코팅이 약해져요',4,4],['-','눌어붙기 시작해요',2,2]]},
+  {k:'heat',name:'열 전달·예열',m:55,g:51,b:4,mm:18,mg:17,mb:1,pts:[['+','예열이 빨라요',33,11],['+','열이 고르게 퍼져요',24,8],['-','가장자리만 뜨거워요',3,1],['-','예열이 오래 걸려요',1,0]]},
+  {k:'cook',name:'조리 성능',m:62,g:57,b:5,mm:24,mg:20,mb:4,pts:[['+','안 눌어붙어요',44,15],['+','계란프라이가 잘 돼요',16,6],['-','기름 없으면 눌어요',5,4]]},
+  {k:'grip',name:'무게·손잡이',m:44,g:36,b:8,mm:16,mg:12,mb:4,pts:[['+','가벼워서 다루기 쉬워요',31,10],['+','손잡이가 튼튼해요',6,3],['-','손잡이가 뜨거워져요',7,3],['-','손잡이가 흔들려요',1,1]]},
+  {k:'wash',name:'세척·관리',m:54,g:52,b:2,mm:19,mg:17,mb:2,pts:[['+','설거지가 쉬워요',49,16],['+','식기세척기에 넣어도 괜찮아요',5,2],['-','식기세척기 쓰면 변색돼요',2,2]]},
+  {k:'size',name:'크기·마감',m:30,g:24,b:6,mm:9,mg:7,mb:2,pts:[['+','크기가 딱 좋아요',18,5],['+','마감이 깔끔해요',7,2],['-','생각보다 얕아요',5,2],['-','바닥이 살짝 떠요',1,0]]},
   {k:'defect',name:'초기 불량',defect:true,m:4,g:0,b:4,mm:1,mg:0,mb:1,pts:[['-','처음부터 코팅이 긁혀 있었어요',3,1],['-','바닥이 휘어서 왔어요',1,0]]}],
  exp:[{name:'배송·포장',m:64,pts:[['+','빨리 왔어요',51],['+','포장이 꼼꼼해요',12],['-','상자가 찌그러져 왔어요',3]]},
       {name:'가격·구성',m:22,pts:[['+','할인할 때 사면 좋아요',14],['-','가격이 올랐어요',5]]},
-      {name:'판매자·AS 응대',m:6,pts:[['+','교환이 빨랐어요',4],['-','문의 답이 늦었어요',2]]}],
- sib:['p2','m1','m2','m3']},
+      {name:'판매자·AS 응대',m:6,pts:[['+','교환이 빨랐어요',4],['-','문의 답이 늦었어요',2]]}]},
 
-{id:'p2',dom:'주방용품',mid:'조리팬',sub:'프라이팬',subN:12,brand:'무이',name:'스테인리스 3중 팬 28cm',price:45900,gly:'steel',tint:'gray',
+{id:'p2',dom:'주방용품',mid:'조리팬',sub:'프라이팬',brand:'무이',name:'스테인리스 3중 팬 28cm',price:45900,gly:'steel',tint:'gray',
  nv:{r:4.6,c:1512,chk:'9.28'},found:1512,excl:1188,n:324,month:97,evalN:301,probN:118,seen:'2026.09.21',fix:'2026.09.14 · 한 달 써 본 후기 22건을 더해 다시 계산',
  exclWhy:[['너무 짧은 글',641],['구체적인 이야기가 없는 글',352],['감탄만 있는 글',128],['서로 너무 닮은 글',31],['판매자 칭찬',25],['다른 옵션을 사신 분의 글',11]],
  cats:[
-  {k:'coat',name:'코팅·표면 내구성',time:true,m:58,g:31,b:27,tier:'하위권',pts:[['+','표면이 오래 깨끗해요',31,31],['-','무지개 얼룩이 생겨요',19,19],['-','바닥이 변색돼요',11,11]]},
-  {k:'heat',name:'열 전달·예열',m:121,g:88,b:33,mm:38,mg:28,mb:10,tier:'중간',pts:[['+','열이 고르게 퍼져요',64,20],['+','예열하면 온도가 오래가요',29,9],['-','예열이 오래 걸려요',33,10]]},
-  {k:'cook',name:'조리 성능',m:176,g:71,b:105,mm:58,mg:26,mb:32,tier:'하위권',pts:[['+','익숙해지면 잘 안 붙어요',58,24],['+','고기 구이가 잘 돼요',19,5],['-','음식이 자꾸 눌어붙어요',98,30],['-','계란 요리가 어려워요',41,14]]},
-  {k:'grip',name:'무게·손잡이',m:96,g:38,b:58,mm:31,mg:11,mb:20,tier:'하위권',pts:[['+','손잡이가 튼튼해요',38,11],['-','무거워서 손목이 아파요',51,18],['-','손잡이가 뜨거워져요',12,4]]},
-  {k:'wash',name:'세척·관리',m:88,g:41,b:47,mm:29,mg:12,mb:17,tier:'하위권',pts:[['+','베이킹소다로 잘 닦여요',41,12],['-','탄 자국이 잘 안 지워져요',47,17]]},
-  {k:'size',name:'크기·마감',m:41,g:33,b:8,mm:12,mg:10,mb:2,tier:'중간',pts:[['+','마감이 튼튼해요',25,8],['+','깊이가 넉넉해요',10,3],['-','생각보다 작아요',8,2]]},
+  {k:'coat',name:'코팅·표면 내구성',time:true,m:58,g:31,b:27,pts:[['+','표면이 오래 깨끗해요',31,31],['-','무지개 얼룩이 생겨요',19,19],['-','바닥이 변색돼요',11,11]]},
+  {k:'heat',name:'열 전달·예열',m:121,g:88,b:33,mm:38,mg:28,mb:10,pts:[['+','열이 고르게 퍼져요',64,20],['+','예열하면 온도가 오래가요',29,9],['-','예열이 오래 걸려요',33,10]]},
+  {k:'cook',name:'조리 성능',m:176,g:71,b:105,mm:58,mg:26,mb:32,pts:[['+','익숙해지면 잘 안 붙어요',58,24],['+','고기 구이가 잘 돼요',19,5],['-','음식이 자꾸 눌어붙어요',98,30],['-','계란 요리가 어려워요',41,14]]},
+  {k:'grip',name:'무게·손잡이',m:96,g:38,b:58,mm:31,mg:11,mb:20,pts:[['+','손잡이가 튼튼해요',38,11],['-','무거워서 손목이 아파요',51,18],['-','손잡이가 뜨거워져요',12,4]]},
+  {k:'wash',name:'세척·관리',m:88,g:41,b:47,mm:29,mg:12,mb:17,pts:[['+','베이킹소다로 잘 닦여요',41,12],['-','탄 자국이 잘 안 지워져요',47,17]]},
+  {k:'size',name:'크기·마감',m:41,g:33,b:8,mm:12,mg:10,mb:2,pts:[['+','마감이 튼튼해요',25,8],['+','깊이가 넉넉해요',10,3],['-','생각보다 작아요',8,2]]},
   {k:'defect',name:'초기 불량',defect:true,m:3,g:0,b:3,mm:0,mg:0,mb:0,pts:[['-','바닥이 휘어서 왔어요',2,0],['-','손잡이 나사가 헐거웠어요',1,0]]}],
  exp:[{name:'배송·포장',m:88,pts:[['+','빨리 왔어요',71],['+','포장이 꼼꼼해요',15],['-','상자가 찌그러져 왔어요',4]]},
       {name:'가격·구성',m:30,pts:[['+','할인할 때 사면 좋아요',18],['-','가격이 올랐어요',9]]},
-      {name:'판매자·AS 응대',m:11,pts:[['+','교환이 빨랐어요',7],['-','문의 답이 늦었어요',4]]}],
- sib:['p1','m1','m2','m3']},
+      {name:'판매자·AS 응대',m:11,pts:[['+','교환이 빨랐어요',7],['-','문의 답이 늦었어요',4]]}]},
 
-{id:'p3',dom:'뷰티',mid:'스킨케어',sub:'크림',subN:18,brand:'라온랩',name:'세라마이드 수분크림 80ml',price:32000,vol:{v:80,u:'ml'},gly:'jar',tint:'sand',
+{id:'p3',dom:'뷰티',mid:'스킨케어',sub:'크림',brand:'라온랩',name:'세라마이드 수분크림 80ml',price:32000,vol:{v:80,u:'ml'},gly:'jar',tint:'sand',
  nv:{r:4.8,c:2406,chk:'9.28'},found:2406,excl:1862,n:544,month:131,evalN:512,probN:128,seen:'2026.09.21',fix:null,
  exclWhy:[['너무 짧은 글',1004],['구체적인 이야기가 없는 글',511],['감탄만 있는 글',208],['서로 너무 닮은 글',61],['판매자 칭찬',47],['협찬이라고 밝힌 글',19],['다른 옵션을 사신 분의 글',12]],
  cats:[
-  {k:'moist',name:'보습·유지력',m:301,g:262,b:39,mm:88,mg:71,mb:17,tier:'상위권',pts:[['+','오래 촉촉했다는 후기',188,52],['+','속건조가 줄었다는 후기',71,19],['-','금방 건조해진다는 후기',39,17]]},
-  {k:'absorb',name:'흡수·끈적임',m:214,g:97,b:117,mm:61,mg:25,mb:36,tier:'하위권',pts:[['+','빨리 흡수된다는 후기',97,25],['-','끈적인다는 후기',92,29],['-','화장이 밀린다는 후기',31,11]]},
-  {k:'irrit',name:'자극·트러블',m:118,g:71,b:47,mm:39,mg:24,mb:15,tier:'중간',pts:[['+','민감한 피부에도 괜찮았다는 후기',71,24],['-','트러블이 났다는 후기',33,11],['-','따가웠다는 후기',16,5]]},
-  {k:'calm',name:'진정',m:64,g:58,b:6,mm:22,mg:20,mb:2,tier:'상위권',pts:[['+','붉은 기가 가라앉았다는 후기',58,20],['-','진정은 잘 모르겠다는 후기',6,2]]},
-  {k:'scent',name:'향',m:71,g:49,b:22,mm:19,mg:14,mb:5,tier:'중간',pts:[['+','향이 거의 없어 좋다는 후기',49,14],['-','특유의 냄새가 난다는 후기',22,5]]},
-  {k:'pack',name:'용기·사용 편의',m:52,g:30,b:22,mm:17,mg:9,mb:8,tier:'하위권',pts:[['+','양 조절이 쉽다는 후기',30,9],['-','끝까지 짜기 어렵다는 후기',22,8]]},
-  {k:'effect',name:'효과 체감',time:true,m:88,g:61,b:27,tier:'중간',pts:[['+','피부결이 좋아졌다는 후기',44,44],['+','화장이 잘 먹는다는 후기',19,19],['-','큰 변화는 없었다는 후기',27,27]]}],
+  {k:'moist',name:'보습·유지력',m:301,g:262,b:39,mm:88,mg:71,mb:17,pts:[['+','오래 촉촉했다는 후기',188,52],['+','속건조가 줄었다는 후기',71,19],['-','금방 건조해진다는 후기',39,17]]},
+  {k:'absorb',name:'흡수·끈적임',m:214,g:97,b:117,mm:61,mg:25,mb:36,pts:[['+','빨리 흡수된다는 후기',97,25],['-','끈적인다는 후기',92,29],['-','화장이 밀린다는 후기',31,11]]},
+  {k:'irrit',name:'자극·트러블',m:118,g:71,b:47,mm:39,mg:24,mb:15,pts:[['+','민감한 피부에도 괜찮았다는 후기',71,24],['-','트러블이 났다는 후기',33,11],['-','따가웠다는 후기',16,5]]},
+  {k:'calm',name:'진정',m:64,g:58,b:6,mm:22,mg:20,mb:2,pts:[['+','붉은 기가 가라앉았다는 후기',58,20],['-','진정은 잘 모르겠다는 후기',6,2]]},
+  {k:'scent',name:'향',m:71,g:49,b:22,mm:19,mg:14,mb:5,pts:[['+','향이 거의 없어 좋다는 후기',49,14],['-','특유의 냄새가 난다는 후기',22,5]]},
+  {k:'pack',name:'용기·사용 편의',m:52,g:30,b:22,mm:17,mg:9,mb:8,pts:[['+','양 조절이 쉽다는 후기',30,9],['-','끝까지 짜기 어렵다는 후기',22,8]]},
+  {k:'effect',name:'효과 체감',time:true,m:88,g:61,b:27,pts:[['+','피부결이 좋아졌다는 후기',44,44],['+','화장이 잘 먹는다는 후기',19,19],['-','큰 변화는 없었다는 후기',27,27]]}],
  exp:[{name:'배송·포장',m:143,pts:[['+','빨리 왔어요',118],['+','포장이 꼼꼼해요',21],['-','용기가 새서 왔어요',4]]},
       {name:'가격·구성',m:61,pts:[['+','증정품이 넉넉해요',38],['-','용량에 비해 비싸요',23]]},
-      {name:'판매자·AS 응대',m:9,pts:[['+','교환이 빨랐어요',6],['-','문의 답이 늦었어요',3]]}],
- sib:['m4','m5','m6']},
+      {name:'판매자·AS 응대',m:9,pts:[['+','교환이 빨랐어요',6],['-','문의 답이 늦었어요',3]]}]},
 
-{id:'p4',dom:'주방용품',mid:'냄비·솥',sub:'편수냄비',subN:8,brand:'무이',name:'통3중 스테인리스 편수냄비 20cm',price:47000,gly:'pot',tint:'gray',
+{id:'p4',dom:'주방용품',mid:'냄비·솥',sub:'편수냄비',brand:'무이',name:'통3중 스테인리스 편수냄비 20cm',price:47000,gly:'pot',tint:'gray',
  nv:{r:4.8,c:64,chk:'9.28'},found:64,excl:52,n:12,month:3,evalN:11,probN:1,seen:'2026.09.21',fix:null,
  exclWhy:[['너무 짧은 글',31],['구체적인 이야기가 없는 글',14],['감탄만 있는 글',5],['판매자 칭찬',2]],
  cats:[
@@ -363,22 +640,74 @@ const P=[
   {k:'grip',name:'무게·손잡이',m:4,g:3,b:1,mm:1,mg:1,mb:0,pts:[['+','손잡이가 튼튼해요',3,1],['-','조금 무거워요',1,0]]},
   {k:'wash',name:'세척·관리',m:5,g:5,b:0,mm:1,mg:1,mb:0,pts:[['+','설거지가 쉬워요',5,1]]},
   {k:'size',name:'크기·마감',m:3,g:3,b:0,mm:0,mg:0,mb:0,pts:[['+','크기가 딱 좋아요',3,0]]}],
- exp:[{name:'배송·포장',m:4,pts:[['+','빨리 왔어요',4]]}],
- sib:['m7','m8','m9']},
+ exp:[{name:'배송·포장',m:4,pts:[['+','빨리 왔어요',4]]}]},
+{id:'p5',dom:'육아용품',mid:'수유·이유식 도구',sub:'젖병',brand:'마마온',name:'PPSU 젖병 260ml',price:21900,gly:'bottle',tint:'green',
+ nv:{r:4.8,c:1386},found:1386,excl:1071,n:315,month:104,evalN:296,probN:33,seen:'2026.09.21',fix:null,
+ exclWhy:[['너무 짧은 글',566],['구체적인 이야기가 없는 글',298],['감탄만 있는 글',121],['서로 너무 닮은 글',38],['판매자 칭찬',29],['다른 옵션을 사신 분의 글',19]],
+ cats:[
+  {k:'wash',name:'세척·소독',m:142,g:128,b:14,mm:52,mg:46,mb:6,pts:[['+','입구가 넓어 씻기 쉬워요',96,34],['+','열탕 소독해도 멀쩡해요',41,19],['-','눈금 틈에 물때가 껴요',14,6]]},
+  {k:'leak',name:'샘·흘림',m:98,g:84,b:14,mm:37,mg:31,mb:6,pts:[['+','뒤집어도 안 새요',71,26],['-','젖꼭지 쪽으로 새요',14,6]]},
+  {k:'accept',name:'아기가 잘 무는지',m:121,g:97,b:24,mm:40,mg:33,mb:7,pts:[['+','아기가 거부 없이 잘 물었다는 후기',88,30],['+','배앓이가 줄었다는 후기',21,9],['-','아기가 거부했다는 후기',24,7]]},
+  {k:'material',name:'소재·냄새',m:64,g:59,b:5,mm:25,mg:23,mb:2,pts:[['+','플라스틱 냄새가 안 나요',52,21],['-','처음에 냄새가 났어요',5,2]]},
+  {k:'use',name:'눈금·사용 편의',m:57,g:44,b:13,mm:21,mg:15,mb:6,pts:[['+','가볍고 잡기 편해요',38,13],['-','눈금이 잘 안 보여요',13,6]]},
+  {k:'durab',name:'변색·스크래치',time:true,m:61,g:48,b:13,pts:[['+','오래 써도 투명해요',48,48],['-','누렇게 변했어요',9,9],['-','긁힘이 생겨요',4,4]]},
+  {k:'defect',name:'초기 불량',defect:true,m:3,g:0,b:3,mm:1,mg:0,mb:1,pts:[['-','뚜껑이 잘 안 닫혔어요',2,1],['-','젖꼭지가 찢어져 왔어요',1,0]]}],
+ exp:[{name:'배송·포장',m:77,pts:[['+','빨리 왔어요',63],['+','포장이 꼼꼼해요',11],['-','상자가 찌그러져 왔어요',3]]},
+      {name:'가격·구성',m:34,pts:[['+','젖꼭지가 함께 와서 좋아요',22],['-','젖꼭지가 비싸요',12]]},
+      {name:'판매자·AS 응대',m:5,pts:[['+','교환이 빨랐어요',3],['-','문의 답이 늦었어요',2]]}]},
 ];
-/* 목록용 가벼운 제품 (상세 데이터 없음). 라벨은 역시 label_of() 로 계산 */
-const MINI={
- m1:{brand:'온담',name:'세라믹 프라이팬 28cm',price:34900,n:133,rate:.231,gly:'pan',tint:'sand'},
- m2:{brand:'프리모',name:'다이아몬드 코팅팬 24cm',price:27500,n:251,rate:.088,gly:'pan',tint:'green'},
- m3:{brand:'노바',name:'티타늄 코팅팬 26cm',price:31000,n:122,rate:.074,gly:'pan',tint:'gray'},
- m4:{brand:'에스랩',name:'판테놀 진정 크림 50ml',price:28000,vol:{v:50,u:'ml'},n:312,rate:.11,gly:'jar',tint:'green'},
- m5:{brand:'수아',name:'시카 수분크림 100ml',price:36000,vol:{v:100,u:'ml'},n:410,rate:.29,gly:'jar',tint:'gray'},
- m6:{brand:'미온',name:'나이아신 톤업 크림 50ml',price:24000,vol:{v:50,u:'ml'},n:22,rate:.09,gly:'jar',tint:'sand'},
- m7:{brand:'한스틸',name:'통3중 편수냄비 18cm',price:52000,n:208,rate:.12,gly:'pot',tint:'gray'},
- m8:{brand:'미리내',name:'법랑 편수냄비 18cm',price:38000,n:276,rate:.091,gly:'pot',tint:'sand'},
- m9:{brand:'온담',name:'스테인리스 밀크팬 16cm',price:29000,n:96,rate:.21,gly:'pot',tint:'green'},
-};
+/* 목록용 제품 (상세 데이터 없음 · 가상). 라벨은 저장하지 않고 label_of() 로 계산
+   evalN 제품 이야기를 한 후기 · probN 그중 문제를 말한 후기 · month 한달사용 후기
+   cs: 후기 카테고리별 [이야기한 후기, 좋다] — 시간 카테고리(⏳)는 한 달 써 본 후기 중 건수 */
+const MINIS=[
+ {id:'m1',sub:'프라이팬',brand:'온담',name:'세라믹 프라이팬 28cm',price:34900,gly:'pan',tint:'sand',n:133,evalN:125,probN:29,month:41,nv:{r:4.7,c:702},cs:{coat:[28,15],heat:[40,34],cook:[52,38],grip:[30,26],wash:[44,39],size:[22,18]},pro:'가벼워서 다루기 쉬워요',con:'코팅이 빨리 약해져요'},
+ {id:'m2',sub:'프라이팬',brand:'프리모',name:'다이아몬드 코팅팬 24cm',price:27500,gly:'pan',tint:'green',n:251,evalN:233,probN:21,month:88,nv:{r:4.8,c:1960},cs:{coat:[62,55],heat:[70,61],cook:[98,92],grip:[55,49],wash:[80,77],size:[31,25]},pro:'설거지가 쉬워요',con:'생각보다 작아요'},
+ {id:'m3',sub:'프라이팬',brand:'노바',name:'티타늄 코팅팬 26cm',price:31000,gly:'pan',tint:'gray',n:122,evalN:114,probN:9,month:37,nv:{r:4.7,c:684},cs:{coat:[30,27],heat:[41,38],cook:[47,44],grip:[33,24],wash:[38,36],size:[18,15]},pro:'안 눌어붙어요',con:'손잡이가 뜨거워져요'},
+ {id:'m10',sub:'프라이팬',brand:'키친플로',name:'IH 코팅팬 28cm',price:25900,gly:'pan',tint:'gray',n:208,evalN:196,probN:35,month:66,nv:{r:4.6,c:1402},cs:{coat:[50,32],heat:[61,50],cook:[72,60],grip:[40,35],wash:[58,54],size:[24,20]},pro:'예열이 빨라요',con:'코팅이 약해져요'},
+ {id:'m11',sub:'프라이팬',brand:'루미',name:'세라믹 프라이팬 26cm',price:36000,gly:'pan',tint:'sand',n:96,evalN:90,probN:10,month:29,nv:{r:4.9,c:540},cs:{coat:[21,17],heat:[33,30],cook:[38,34],grip:[26,23],wash:[35,33],size:[14,12]},pro:'안 눌어붙어요',con:'크기가 작아요'},
+ {id:'m12',sub:'프라이팬',brand:'마레',name:'스테인리스 3중 프라이팬 26cm',price:52000,gly:'steel',tint:'gray',n:164,evalN:152,probN:44,month:52,nv:{r:4.7,c:1033},cs:{coat:[36,26],heat:[70,55],cook:[88,52],grip:[60,34],wash:[51,33],size:[22,19]},pro:'열이 고르게 퍼져요',con:'무거워서 손목이 아파요'},
+ {id:'m13',sub:'프라이팬',brand:'도담',name:'인덕션 코팅팬 30cm',price:29800,gly:'pan',tint:'green',n:57,evalN:52,probN:5,month:14,nv:{r:4.8,c:298},cs:{coat:[10,9],heat:[20,18],cook:[25,23],grip:[18,14],wash:[22,21],size:[12,9]},pro:'넉넉해서 좋아요',con:'조금 무거워요'},
+ {id:'m14',sub:'프라이팬',brand:'쿡앤',name:'논스틱 프라이팬 24cm',price:19900,gly:'pan',tint:'gray',n:118,evalN:109,probN:42,month:35,nv:{r:4.5,c:860},cs:{coat:[31,12],heat:[35,24],cook:[50,28],grip:[27,21],wash:[40,33],size:[16,13]},pro:'가벼워요',con:'코팅이 금방 벗겨져요'},
+ {id:'m15',sub:'프라이팬',brand:'한울',name:'다이아몬드팬 28cm',price:33500,gly:'pan',tint:'sand',n:24,evalN:22,probN:2,month:6,nv:{r:4.9,c:120},cs:{coat:[3,3],heat:[8,7],cook:[9,8],grip:[6,5],wash:[7,7],size:[4,3]},pro:'안 눌어붙어요',con:'손잡이가 뜨거워져요'},
+ {id:'m16',sub:'프라이팬',brand:'에버쿡',name:'하이브리드 프라이팬 28cm',price:41000,gly:'pan',tint:'green',n:143,evalN:134,probN:17,month:47,nv:{r:4.7,c:912},cs:{coat:[34,29],heat:[48,44],cook:[55,49],grip:[37,28],wash:[44,40],size:[21,17]},pro:'열이 고르게 퍼져요',con:'조금 무거워요'},
+
+ {id:'m4',sub:'크림',brand:'에스랩',name:'판테놀 진정 크림 50ml',price:28000,vol:{v:50,u:'ml'},gly:'jar',tint:'green',n:312,evalN:292,probN:32,month:90,nv:{r:4.8,c:1520},cs:{moist:[160,141],absorb:[120,88],irrit:[90,78],calm:[88,82],scent:[40,33],pack:[30,22],effect:[50,37]},pro:'붉은 기가 가라앉았다는 후기',con:'보습이 부족하다는 후기'},
+ {id:'m5',sub:'크림',brand:'수아',name:'시카 수분크림 100ml',price:36000,vol:{v:100,u:'ml'},gly:'jar',tint:'gray',n:410,evalN:385,probN:112,month:120,nv:{r:4.7,c:2210},cs:{moist:[220,170],absorb:[150,70],irrit:[110,70],calm:[70,58],scent:[80,48],pack:[45,30],effect:[70,44]},pro:'오래 촉촉했다는 후기',con:'끈적인다는 후기'},
+ {id:'m6',sub:'크림',brand:'미온',name:'나이아신 톤업 크림 50ml',price:24000,vol:{v:50,u:'ml'},gly:'jar',tint:'sand',n:22,evalN:20,probN:2,month:5,nv:{r:4.6,c:95},cs:{moist:[9,8],absorb:[8,6],irrit:[5,4],calm:[2,2],scent:[4,3],pack:[3,2],effect:[2,2]},pro:'화장이 잘 먹는다는 후기',con:'밀린다는 후기'},
+ {id:'m20',sub:'크림',brand:'온결',name:'장벽 크림 60ml',price:31000,vol:{v:60,u:'ml'},gly:'jar',tint:'green',n:268,evalN:251,probN:24,month:81,nv:{r:4.8,c:1344},cs:{moist:[150,138],absorb:[98,80],irrit:[84,76],calm:[40,35],scent:[30,25],pack:[28,22],effect:[44,36]},pro:'속건조가 줄었다는 후기',con:'용기가 불편하다는 후기'},
+ {id:'m21',sub:'크림',brand:'베리썸',name:'콜라겐 크림 50ml',price:42000,vol:{v:50,u:'ml'},gly:'jar',tint:'sand',n:188,evalN:177,probN:71,month:55,nv:{r:4.7,c:990},cs:{moist:[90,58],absorb:[82,33],irrit:[70,38],calm:[20,12],scent:[48,20],pack:[25,19],effect:[40,15]},pro:'향이 좋다는 후기',con:'트러블이 났다는 후기'},
+ {id:'m22',sub:'크림',brand:'하루온',name:'수분 젤크림 100ml',price:22000,vol:{v:100,u:'ml'},gly:'jar',tint:'gray',n:342,evalN:320,probN:41,month:99,nv:{r:4.8,c:1810},cs:{moist:[170,130],absorb:[160,149],irrit:[88,80],calm:[50,44],scent:[35,30],pack:[40,34],effect:[52,40]},pro:'빨리 흡수된다는 후기',con:'보습이 금방 날아간다는 후기'},
+ {id:'m23',sub:'크림',brand:'라비엔',name:'레티놀 크림 30ml',price:39000,vol:{v:30,u:'ml'},gly:'jar',tint:'sand',n:131,evalN:122,probN:33,month:48,nv:{r:4.6,c:644},cs:{moist:[60,46],absorb:[55,38],irrit:[70,40],calm:[12,8],scent:[20,14],pack:[18,14],effect:[45,30]},pro:'피부결이 좋아졌다는 후기',con:'따가웠다는 후기'},
+
+ {id:'m7',sub:'편수냄비',brand:'한스틸',name:'통3중 편수냄비 18cm',price:52000,gly:'pot',tint:'gray',n:208,evalN:193,probN:23,month:70,nv:{r:4.8,c:1120},cs:{coat:[40,33],heat:[80,72],cook:[60,51],grip:[55,40],wash:[62,52],size:[30,26]},pro:'열이 고르게 퍼져요',con:'조금 무거워요'},
+ {id:'m8',sub:'편수냄비',brand:'미리내',name:'법랑 편수냄비 18cm',price:38000,gly:'pot',tint:'sand',n:276,evalN:259,probN:24,month:92,nv:{r:4.8,c:1650},cs:{coat:[55,47],heat:[70,63],cook:[90,82],grip:[40,34],wash:[88,80],size:[36,31]},pro:'설거지가 쉬워요',con:'가장자리가 잘 깨져요'},
+ {id:'m9',sub:'편수냄비',brand:'온담',name:'스테인리스 편수냄비 16cm',price:29000,gly:'pot',tint:'green',n:96,evalN:89,probN:19,month:30,nv:{r:4.6,c:520},cs:{coat:[20,14],heat:[35,28],cook:[40,28],grip:[30,22],wash:[33,25],size:[25,15]},pro:'가벼워요',con:'생각보다 작아요'},
+ {id:'m24',sub:'편수냄비',brand:'키친플로',name:'IH 편수냄비 20cm',price:27000,gly:'pot',tint:'gray',n:150,evalN:140,probN:38,month:44,nv:{r:4.6,c:870},cs:{coat:[35,22],heat:[50,40],cook:[55,38],grip:[36,28],wash:[45,33],size:[20,17]},pro:'예열이 빨라요',con:'바닥이 변색돼요'},
+ {id:'m25',sub:'편수냄비',brand:'도담',name:'통5중 편수냄비 18cm',price:61000,gly:'pot',tint:'green',n:83,evalN:78,probN:6,month:25,nv:{r:4.9,c:410},cs:{coat:[18,17],heat:[32,30],cook:[28,26],grip:[26,18],wash:[27,25],size:[12,11]},pro:'열이 오래 유지돼요',con:'무거워요'},
+ {id:'m30',sub:'젖병',brand:'베베숲',name:'유리 젖병 240ml',price:18900,gly:'bottle',tint:'sand',n:278,evalN:262,probN:31,month:88,nv:{r:4.8,c:1520},cs:{wash:[120,111],leak:[80,70],accept:[102,80],material:[70,67],use:[48,30],durab:[52,49]},pro:'플라스틱 냄새가 안 나요',con:'무거워요'},
+ {id:'m31',sub:'젖병',brand:'아이누리',name:'실리콘 젖병 240ml',price:24500,gly:'bottle',tint:'gray',n:204,evalN:192,probN:48,month:62,nv:{r:4.7,c:1130},cs:{wash:[88,70],leak:[76,52],accept:[98,84],material:[40,31],use:[44,38],durab:[36,24]},pro:'아기가 잘 물었다는 후기',con:'젖꼭지 쪽으로 새요'},
+ {id:'m32',sub:'젖병',brand:'포근',name:'PPSU 젖병 300ml',price:19800,gly:'bottle',tint:'green',n:186,evalN:175,probN:19,month:60,nv:{r:4.8,c:990},cs:{wash:[82,75],leak:[60,54],accept:[70,57],material:[44,41],use:[36,30],durab:[40,33]},pro:'입구가 넓어 씻기 쉬워요',con:'눈금이 잘 안 보여요'},
+ {id:'m33',sub:'젖병',brand:'꼬모',name:'배앓이 방지 젖병 270ml',price:26000,gly:'bottle',tint:'sand',n:142,evalN:134,probN:51,month:41,nv:{r:4.6,c:860},cs:{wash:[70,40],leak:[58,40],accept:[66,52],material:[30,25],use:[34,24],durab:[33,22]},pro:'배앓이가 줄었다는 후기',con:'부품이 많아 씻기 번거로워요'},
+ {id:'m34',sub:'젖병',brand:'리틀온',name:'PP 젖병 250ml',price:9900,gly:'bottle',tint:'gray',n:118,evalN:111,probN:14,month:36,nv:{r:4.7,c:710},cs:{wash:[50,45],leak:[40,35],accept:[44,37],material:[31,24],use:[30,26],durab:[31,20]},pro:'가볍고 잡기 편해요',con:'금방 누렇게 변해요'},
+ {id:'m35',sub:'젖병',brand:'한울베이비',name:'PPSU 젖병 180ml',price:17500,gly:'bottle',tint:'green',n:26,evalN:24,probN:2,month:7,nv:{r:4.9,c:112},cs:{wash:[10,9],leak:[8,7],accept:[9,8],material:[5,5],use:[4,3],durab:[4,4]},pro:'뒤집어도 안 새요',con:'눈금이 잘 안 보여요'},
+];
+/* ── 소분류 단위 계산 — 목록 · 상세 · 표가 모두 이 함수들만 씁니다 ── */
 const byId=id=>P.find(p=>p.id===id);
+// 상세가 있는 제품과 목록용 제품을 같은 모양으로 맞춤
+const norm=p=>({...p,full:1,cs:Object.fromEntries(p.cats.filter(c=>!c.defect).map(c=>[c.k,[c.m,c.g]])),
+ pro:(topPts(p,'+')[0]||{x:[0,'']}).x[1],con:(topPts(p,'-')[0]||{x:[0,'']}).x[1]});
+const itemOf=id=>{const p=byId(id);if(p)return norm(p);const m=MINIS.find(x=>x.id===id);return m&&{...m,full:0,dom:midOf(m.sub).dom,mid:midOf(m.sub).mid}};
+const allIn=sub=>[...P.filter(p=>p.sub===sub).map(p=>p.id),...MINIS.filter(m=>m.sub===sub).map(m=>m.id)].map(itemOf);
+const subCount=sub=>allIn(sub).length;
+const labOf=x=>label_of(x.n,x.evalN?x.probN/x.evalN:0);
+const rateX=x=>x.evalN?x.probN/x.evalN:0;
+const tplOf=sub=>P.find(p=>p.sub===sub).cats.filter(c=>!c.defect);   // 이 소분류의 후기 카테고리 틀
+const shareK=(x,k)=>{const v=x.cs[k];return v&&v[0]?v[1]/v[0]:null};
+// 구간(상위권·중간·하위권): 그 이야기를 한 후기 30건 이상인 제품이 6종 이상일 때만, 좋다 비율로 3등분
+const tierOf=(x,k)=>{const peers=allIn(x.sub).filter(y=>labOf(y)!=='표본 부족'&&y.cs[k]&&y.cs[k][0]>=30);
+ if(peers.length<6||!peers.find(y=>y.id===x.id))return null;
+ const order=peers.sort((a,b)=>shareK(b,k)-shareK(a,k)).map(y=>y.id),i=order.indexOf(x.id),n=order.length;
+ return i<n/3?'상위권':i<2*n/3?'중간':'하위권'};
 
 /* ── 숫자 정합성 검사 — 어긋나면 화면 위에 알림 (프로토타입 전용) ── */
 function validate(p){const E=[];
@@ -397,9 +726,20 @@ function validate(p){const E=[];
  p.exp.forEach(e=>e.pts.forEach(x=>{if(x[2]>e.m)E.push(e.name+' 건수 초과')}));
  return E}
 
+const LSUBS=['크림','젖병','프라이팬','편수냄비'];
+function validateMini(x){const E=[],t=tplOf(x.sub);
+ if(x.n>x.nv.c)E.push(x.id+': 모은 후기 > 네이버 리뷰');
+ if(!(x.evalN<=x.n&&x.probN<=x.evalN&&x.month<=x.n))E.push(x.id+': 분모 관계 오류');
+ t.forEach(c=>{const v=x.cs[c.k];if(!v){E.push(x.id+': '+c.name+' 없음');return}
+  if(v[1]>v[0])E.push(x.id+': '+c.name+' 좋다 > 언급');
+  if(c.time?v[0]>x.month:v[0]>x.evalN)E.push(x.id+': '+c.name+' 언급 > 분모')});
+ Object.keys(x.cs).forEach(k=>{if(!t.find(c=>c.k===k))E.push(x.id+': 틀에 없는 카테고리 '+k)});
+ return E}
+const validateAll=()=>[...P.flatMap(p=>validate(p).map(e=>p.id+': '+e)),...MINIS.flatMap(validateMini)];
 /* ── 상태 ── */
 const PCW=1024; // 이 폭 이상이면 PC 화면
-const S={pid:'p1',month:false,fav:{},cmp:{},sheet:null,toast:null,view:window.innerWidth>=PCW?'pc':'mo',mega:null,act:null,crowX:0,spyHold:0};
+const S={pid:'p1',month:false,fav:{},cmp:{},sheet:null,toast:null,view:window.innerWidth>=PCW?'pc':'mo',mega:null,act:null,crowXs:{},spyHold:0,
+ screen:'home',brand:null,follow:{},bPrev:null,storyK:null,goAfter:null,user:null,notiPref:{price:true,month:true,label:true,req:true},q:'',sqDone:false,recentQ:[],sOpen:false,requested:{},sPrev:null,focusSearch:false,hdom:'뷰티',hdomSet:false,pOff:false,entry:null,hrank:null,recent:[],phI:0,cdom:'뷰티',cq:'',recentSubs:[],prev:null,catFocus:null,crTop:null,lsub:'프라이팬',lsort:'default',csub:'프라이팬',cpair:[],cdiff:true,lastSub:null,protoOpen:false,f:{good:false,pmin:null,pmax:null,brands:[]}};
 let toastT=0;
 const say=m=>{S.toast=m;draw();clearTimeout(toastT);toastT=setTimeout(()=>{S.toast=null;draw()},2400)};
 
@@ -416,21 +756,18 @@ const worstCat=p=>evalCats(p).filter(c=>c.m>=30).sort((a,b)=>(b.b/b.m)-(a.b/a.m)
 const splitCat=p=>evalCats(p).filter(c=>c.m>=30).sort((a,b)=>Math.abs(share(a)-.5)-Math.abs(share(b)-.5))[0];
 
 /* ── 화면 조각 ── */
-const protoBar=()=>{const E=validate(byId(S.pid));return `<div class="proto"><div class="row"><span class="lab">샘플 (가상)</span>
- ${P.map(p=>`<button class="pchip ${S.pid===p.id?'on':''}" data-a="pick:${p.id}">${LAB(p)} · ${p.sub}</button>`).join('')}
- ${window.innerWidth>=PCW?`<button class="pchip" data-a="view:pc" style="margin-left:6px">PC로 보기</button>`:''}</div></div>
- ${E.length?`<div class="warn">데이터 정합성 확인 필요: ${E.join(' / ')}</div>`:''}`};
-
-const topBar=()=>`<div class="top"><button class="ib" data-a="say:목록으로 돌아가요" aria-label="뒤로">${ic('back',22,'var(--ink)')}</button>
- <button class="sbox" data-a="say:검색 화면은 다음 단계에서 만들어요">${ic('search',18,'var(--meta)')}<span>제품·브랜드 검색</span></button>
+const protoBar=()=>'';   // 예전 맨 위 샘플 띠 — 2026-09-30 「샘플」 버튼(protoFab)으로 대체
+const topBar=()=>`<div class="top"><button class="ib" data-a="list:${byId(S.pid).sub}" aria-label="${byId(S.pid).sub} 목록으로">${ic('back',22,'var(--ink)')}</button>
+ <button class="sbox" data-a="search">${ic('search',18,'var(--meta)')}<span>제품·브랜드 검색</span></button>
+ <button class="ib" data-a="home" aria-label="홈으로">${ic('home',22,'var(--ink)')}</button>
  <button class="ib" data-a="say:링크를 복사했어요" aria-label="공유">${ic('share',21,'var(--ink)')}</button></div>`;
 
 const header=p=>`<div class="pad">
- <div class="crumb"><button data-a="say:${p.dom} 카테고리로 가요">${p.dom}</button><span aria-hidden="true">›</span>
-  <button data-a="say:${p.mid} 목록으로 가요">${p.mid}</button><span aria-hidden="true">›</span>
-  <button data-a="say:${p.sub} ${p.subN}종 목록으로 가요"><b>${p.sub}</b></button></div>
+ <div class="crumb"><button data-a="catsx:${p.dom}">${p.dom}</button><span aria-hidden="true">›</span>
+  <button data-a="catsx:${p.mid}">${p.mid}</button><span aria-hidden="true">›</span>
+  <button data-a="list:${p.sub}"><b>${p.sub}</b></button></div>
  <div class="head">${thumb(p,76,76)}
-  <div style="min-width:0;flex:1"><div class="t-sub">${p.brand}</div>
+  <div style="min-width:0;flex:1">${brandLink(p.brand)}
    <div class="t-h" style="margin-top:1px">${p.name}</div>
    <div style="margin-top:5px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
     <span class="num" style="font-size:17px;font-weight:700;letter-spacing:-.02em">${won(p.price)}</span>
@@ -440,7 +777,7 @@ const dadeulCard=p=>{const L=LAB(p),thin=L==='표본 부족',bad=L==='대체로 
  const gap=(bad||split)&&p.nv.r>=4.5;
  const b=bestCat(p),w=worstCat(p),s=splitCat(p);
  const msg=thin?`후기가 30건 모이면 어느 쪽으로 모였는지 보여드려요.`
-  :split?`${Q(s.name)}에서 말이 갈려요. 좋다는 후기가 ${pct(s.g,s.m)}%예요.`
+  :split?`${Q(s.name)}에서 의견이 갈려요. 좋다는 후기가 ${pct(s.g,s.m)}%예요.`
   :bad?`${Q(w.name)}에서 아쉽다는 이야기가 많아요. 아쉽다는 후기가 ${pct(w.b,w.m)}%예요.`
   :`가장 좋다는 이야기가 많은 곳은 ${Q(b.name)}${J(b.name,'이에요','예요')}.`;
  return `<div class="pad"><div class="dcard">
@@ -461,7 +798,7 @@ const dadeulCard=p=>{const L=LAB(p),thin=L==='표본 부족',bad=L==='대체로 
   </div>
  </div>
  <div class="dmsg">
-  ${gap?`<div class="t-body" style="font-weight:700">별점은 높은데 모은 후기에서는 ${split?'말이 갈려요':'아쉬움이 많아요'}.</div>`:''}
+  ${gap?`<div class="t-body" style="font-weight:700">별점은 높은데 모은 후기에서는 ${split?'의견이 갈려요':'아쉬움이 많아요'}.</div>`:''}
   <div class="t-body" style="${gap?'margin-top:2px;':''}color:var(--ink2)">${bySent(msg)}</div>
  </div></div></div>`};
 
@@ -491,11 +828,11 @@ const chipBar=p=>`<div class="chips"><div class="cwrap">
   <span class="sw ${S.month?'on':''}"><i></i></span></button></div>`;
 
 const catBlock=(p,c)=>{const st=statOf(p,c);
- const small=st.m<10, showTier=!S.month&&c.tier&&c.m>=30&&p.subN>=6&&!c.defect;
+ const tier=!S.month&&!c.defect?tierOf(norm(p),c.k):null, small=st.m<10;
  const pts=c.pts.map(x=>[x[0],x[1],cnt(c,x)]).filter(x=>x[2]>0);
  return `<section class="cat" id="c-${c.k}">
  <div class="chd"><div class="t-h" style="display:flex;align-items:center;gap:6px">${c.time?ic('clock',17,'var(--sub)',2):''}${c.name}</div>
-  ${showTier?`<span class="tier">${p.sub} ${p.subN}종 중 ${c.tier}</span>`:''}</div>
+  ${tier?`<span class="tier">${p.sub} ${subCount(p.sub)}종 중 ${tier}</span>`:''}</div>
  <div class="t-sub num" style="margin-top:3px">${st.bn} ${nf(st.base)}건 중 ${nf(st.m)}건이 이 이야기를 했어요</div>
  ${c.defect?`<div class="stat"><span class="t-num num" style="color:var(--ink2)">${st.b}건</span>
    <span class="t-sub">받자마자 문제를 말한 후기 · ${st.bn==='모은 후기'?'제품 이야기를 한 후기':'한 달 써 본 후기'}의 ${(()=>{const d=st.bn==='모은 후기'?p.evalN:p.month,v=pct(st.b,d);return st.b&&!v?'1% 미만':v+'%'})()}</span></div>`
@@ -506,12 +843,12 @@ const catBlock=(p,c)=>{const st=statOf(p,c);
    <div class="bar" role="img" aria-label="좋다 ${pct(st.g,st.m)}퍼센트, 아쉽다 ${pct(st.b,st.m)}퍼센트"><i class="g" style="width:${st.g/st.m*100}%"></i><i class="b" style="width:${st.b/st.m*100}%"></i></div>`}
  <div style="margin-top:8px">${pts.map(x=>`<div class="pt">${mk(x[0])}<div class="tx t-body">${x[1]}</div><div class="ct num">${x[2]}건</div></div>`).join('')
   ||'<div class="t-sub" style="padding:8px 0">한 달 써 본 분의 이야기는 아직 없어요</div>'}</div>
- ${!small&&!c.defect?`<button class="more" data-a="say:「${c.name}」 이야기만 자세히 보는 화면은 다음 단계에서 만들어요">이 이야기만 자세히 ${ic('chev',14,'var(--brand)',2.2)}</button>`:''}
+ ${!small&&!c.defect?`<button class="more" data-a="story:${c.k}">이 이야기만 자세히 ${ic('chev',14,'var(--brand)',2.2)}</button>`:''}
  </section>`};
 
 const expBlock=p=>`<section class="sect gray" id="c-exp" style="scroll-margin-top:96px;padding-bottom:18px">
  <div class="t-h">구매 경험</div>
- <div class="t-sub" style="margin-top:3px">배송·가격·응대 이야기는 제품이 아니라 판매 과정의 이야기라, 모아보니 결과를 계산할 때 넣지 않아요.</div>
+ <div class="t-sub" style="margin-top:3px">배송·가격·응대는 제품이 아니라 판매 과정의 이야기라서, 제품 평가에는 넣지 않고 따로 모았어요.</div>
  ${p.exp.map(e=>`<div style="margin-top:16px"><div style="display:flex;justify-content:space-between;align-items:baseline">
   <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">${e.name}</span><span class="t-sub num">${e.m}건</span></div>
   ${e.pts.map(x=>`<div class="pt">${mk(x[0])}<div class="tx t-body">${x[1]}</div><div class="ct num">${x[2]}건</div></div>`).join('')}</div>`).join('')}
@@ -522,7 +859,7 @@ const consAll=p=>p.cats.flatMap(c=>c.pts.filter(x=>x[0]==='-'&&x[2]>0).map(x=>({
 const howBlock=p=>{const L=LAB(p),r=rateOf(p),max=Math.max(...p.exclWhy.map(x=>x[1]));
  return `<section class="sect">
  <div class="t-h">어떻게 모았나</div>
- <div class="t-sub" style="margin-top:3px">네이버 리뷰 ${nf(p.found)}건을 모두 읽고, 실제로 써 보고 구체적으로 쓴 ${nf(p.n)}건만 남겼어요.</div>
+ <div class="t-sub" style="margin-top:3px">네이버 리뷰 ${nf(p.found)}건을 모두 읽고, 그중 진짜 후기 ${nf(p.n)}건만 골라냈어요.</div>
  <div style="margin-top:14px;background:var(--surface2);border-radius:14px;padding:14px 16px">
   <div class="ln t-body"><span style="color:var(--sub)">찾은 후기</span><span class="num">${nf(p.found)}건</span></div>
   <div class="ln t-body"><span style="color:var(--sub)">제외한 후기</span><span class="num">-${nf(p.excl)}건</span></div>
@@ -532,24 +869,26 @@ const howBlock=p=>{const L=LAB(p),r=rateOf(p),max=Math.max(...p.exclWhy.map(x=>x
  <div style="margin-top:18px;font-size:15px;font-weight:700">제외한 이유</div>
  <div style="margin-top:4px">${p.exclWhy.map(([t,c])=>`<div class="why"><div style="flex:1;min-width:0;padding-right:14px"><div>${t}</div>
    <div class="w" style="width:${Math.max(4,c/max*100)}%"></div></div><span class="num" style="color:var(--sub)">${nf(c)}건</span></div>`).join('')}</div>
- <div style="margin-top:18px;font-size:15px;font-weight:700">모아보니 결과는 이렇게 정해져요</div>
+ <div style="margin-top:18px;font-size:15px;font-weight:700">${L==='표본 부족'?'아직 결과를 정하지 않았어요':`이렇게 「${L}」${J(L,'이','가')} 됐어요`}</div>
  <div class="t-body" style="margin-top:6px;color:var(--ink2)">${L==='표본 부족'
    ?`모은 후기가 30건이 안 돼서 아직 정하지 않았어요. 몇 건만 더 들어와도 결과가 뒤집힐 수 있어서요.`
-   :`제품 이야기를 한 후기 ${nf(p.evalN)}건 중 문제를 말한 후기가 ${nf(p.probN)}건, <b class="num">${(r*100).toFixed(1)}%</b>예요. ${r<.15?'15% 미만':r<.35?'15~35%':'35% 이상'}이라 「${L}」으로 모였어요.`}</div>
+   :bySent(`제품 이야기를 한 후기 ${nf(p.evalN)}건 중 문제를 말한 후기가 ${nf(p.probN)}건, <b class="num">${(r*100).toFixed(1)}%</b>예요. ${r<.15?'15% 미만':r<.35?'15% 이상 35% 미만':'35% 이상'}이라 ${Q(L)}${J(L,'이에요','예요')}.`)}</div>
  <div class="t-cap" style="margin-top:4px">코팅처럼 시간이 지나야 알 수 있는 이야기는 한 달 써 본 후기에서만 셌어요.</div>
  <button class="more" data-a="sheet:method">기준표 전체 보기 ${ic('chev',14,'var(--brand)',2.2)}</button>
  </section>`};
 
-const siblings=p=>{const items=p.sib.map(id=>byId(id)?{...byId(id),full:1,L:LAB(byId(id))}:{...MINI[id],id,L:label_of(MINI[id].n,MINI[id].rate)});
+const siblings=p=>{const items=sortItems(allIn(p.sub).filter(x=>x.id!==p.id),'default').slice(0,6).map(x=>({...x,L:labOf(x)}));
  return `<section style="padding-top:22px"><div class="pad" style="display:flex;justify-content:space-between;align-items:baseline">
- <div class="t-h">같은 ${p.sub} 더 보기</div><button class="t-sub" data-a="say:${p.sub} ${p.subN}종 목록으로 가요" style="min-height:36px">${p.subN}종 전체</button></div>
- <div class="hs">${items.map(x=>`<button class="mini" data-a="${x.full?'pick:'+x.id:'say:프로토타입에서는 위 샘플 4개만 상세가 있어요'}">
+ <div class="t-h">같은 ${p.sub} 더 보기</div><button class="t-sub" data-a="list:${p.sub}" style="min-height:36px">${subCount(p.sub)}종 전체</button></div>
+ <div class="hs">${items.map(x=>`<button class="mini" data-a="${x.full?'pick:'+x.id:'say:프로토타입에서는 샘플 '+P.length+'개만 상세가 있어요'}">
   ${thumb(x,136,104,'th')}<div class="t-cap" style="margin-top:8px;color:var(--sub)">${x.brand}</div><div class="nm">${x.name}</div>
   <div style="display:flex;align-items:center;gap:5px;margin-top:4px;font-size:12px;color:var(--ink2)"><span class="dot" style="background:${LDOT(x.L)}"></span>${x.L}</div>
   <div class="num" style="font-size:14px;font-weight:700;margin-top:3px">${won(x.price)}</div>
   ${x.vol?`<div class="t-cap num">${unitPrice(x)}</div>`:''}</button>`).join('')}</div></section>`};
 
+const SAFETY='안전 인증(KC) 여부는 다들이 확인하지 않아요. 제품 페이지의 인증 정보를 함께 확인해 주세요.';
 const footer=p=>`<div class="foot">
+ ${p.dom==='육아용품'?`<div class="t-cap" style="color:var(--ink2);margin-bottom:6px">${SAFETY}</div>`:''}
  <div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div>
  <div class="t-cap">고친 자리 · ${p.fix||'아직 없어요'}</div>
  <div class="t-cap">사람이 본 날 · ${p.seen} · 이번 주 표본 감사 5건 확인 · 1건 고침</div>
@@ -571,65 +910,57 @@ const body=p=>`<div class="scr" id="scr">
  </div>`;
 
 const bottomBar=p=>{const thin=LAB(p)==='표본 부족',f=!!S.fav[p.id],c=!!S.cmp[p.id];
- const cmpN=Object.keys(S.cmp).filter(k=>byId(k).sub===p.sub).length;
+ const cmpN=cmpList(p).length;
  const what=p.sub.length<=6?p.sub:'같은 종류';
  return `<div class="bottom">
  <button class="sq" data-a="fav" aria-pressed="${f}" aria-label="찜">${ic('heart',22,f?'var(--brand)':'var(--ink2)',1.8,f?'var(--brand)':'none')}<span>${f?'찜함':'찜'}</span></button>
  <button class="sq" data-a="cmp" aria-pressed="${c}" aria-label="비교함에 담기" style="${c?'border-color:var(--brand);color:var(--brand)':''}">${ic('cmpi',22,c?'var(--brand)':'var(--ink2)')}<span class="num">${c?`담음 ${cmpN}`:'담기'}</span></button>
  ${thin?`<button class="main ${f?'on':''}" data-a="fav">${f?'후기 모이면 알려드릴게요':'후기 모이면 알려주세요'}</button>`
- :`<button class="main" data-a="say:${p.sub} ${p.subN}종 비교 화면은 다음 단계에서 만들어요">${what} ${p.subN}종과 비교</button>`}</div>`};
+ :`<button class="main" data-a="list:${p.sub}">${what} ${subCount(p.sub)}종과 비교</button>`}</div>`};
 
 const sheet=p=>{if(!S.sheet)return'';
- const inner=S.sheet==='cons'?`<div class="pad"><div class="t-h">아쉽다는 이야기만 모아보기</div>
+ const inner=S.sheet==='login'?loginSheet():S.sheet==='noti'?notiSheet():(S.sheet==='sort'||S.sheet==='filter')?listSheet(S.lsub):S.sheet==='cons'?`<div class="pad"><div class="t-h">아쉽다는 이야기만 모아보기</div>
    <div class="t-sub" style="margin-top:3px">제품 이야기 중 아쉽다는 것만, 여러 번 나온 순서예요.</div>
    <div style="margin-top:10px">${consAll(p).map(({c,x})=>`<div class="pt">${mk('-')}<div class="tx"><div class="t-body">${x[1]}</div>
     <div class="t-cap">${c.name}${c.time?` · 한 달 써 본 후기 ${p.month}건 중`:''}</div></div><div class="ct num">${x[2]}건</div></div>`).join('')||'<div class="t-sub">아직 없어요</div>'}</div></div>`
  :`<div class="pad"><div class="t-h">기준표</div>
-   <div class="t-sub" style="margin-top:3px">다들이 따로 판단하지 않아요. 같은 기준을 대면 누구나 같은 결론에 닿아요.</div>
+   <div class="t-sub" style="margin-top:3px">다들이 좋고 나쁨을 정하지 않아요. 문제를 말한 후기가 몇 %인지에 따라 아래 기준대로 나눌 뿐이에요.</div>
    <div style="margin-top:12px">${[['모은 후기 30건 미만','표본 부족'],['문제를 말한 후기 15% 미만','대체로 만족'],['15% 이상 35% 미만','의견 갈림'],['35% 이상','대체로 불만']]
     .map(([a,l])=>`<div class="ln t-body" style="padding:10px 0;border-bottom:.5px solid var(--line)"><span style="color:var(--sub)">${a}</span>
      <span style="display:flex;align-items:center;gap:6px;font-weight:700;color:${LCOL(l)}"><span class="dot" style="background:${LDOT(l)}"></span>${l}</span></div>`).join('')}</div>
-   <div class="t-sub" style="margin-top:12px">배송·가격·응대 이야기는 넣지 않아요. 제품 이야기를 한 후기만 분모로 써요.</div></div>`;
+   <div class="t-sub" style="margin-top:12px">배송·가격·응대 이야기는 빼고, 제품 이야기를 한 후기로만 계산해요.</div></div>`;
  return `<div class="veil" data-a="close"><div class="sheet" data-stop><div class="grab"></div>${inner}</div></div>`};
 
 /* ════ PC 레이아웃 ════ */
-/* ② 에서 확정한 제품 카테고리 (대 · 중 · 소) */
+/* ② 에서 확정한 제품 카테고리 (대 · 중 · 소) — 2026-09-30 육아용품 추가, 순서: 뷰티 · 육아용품 · 주방용품
+   육아용품 런칭 제외: 카시트(안전 인증 영역) · 분유·이유식·간식(식품) · 체온계·콧물흡입기(의료기기) */
 const TAX={
- '주방용품':[['조리팬',['프라이팬','궁중팬·웍','계란말이팬','그릴팬','전골팬']],['냄비·솥',['편수냄비','양수냄비','전골냄비','밀크팬','압력솥','곰솥·들통']],
-  ['무쇠·주물',['무쇠팬','더치오븐','그리들']],['칼·도마',['식도·셰프나이프','과도','주방가위','도마','칼갈이']],
-  ['조리도구',['뒤집개','국자','집게','거품기','계량도구','채반·볼','강판·다지기']],
-  ['주방가전',['에어프라이어','전기포트','토스터·미니오븐','블렌더·믹서','전기밥솥','커피머신','식기세척기','음식물처리기']],
-  ['보관용기',['밀폐용기','유리용기','진공용기','양념통·저장병','도시락','텀블러·보온병']],['식기·컵',['접시','공기·대접','머그·컵','수저·커트러리','쟁반']],
-  ['베이킹',['오븐팬·트레이','케이크틀','머핀틀','실리콘몰드','베이킹도구']],['주방잡화',['앞치마','행주·수세미','고무장갑','식기건조대','수납·정리','음식물쓰레기통']]],
- '뷰티':[['스킨케어',['스킨·토너','에센스·세럼·앰플','로션·에멀전','크림','아이크림','미스트','페이스오일']],['클렌징',['클렌징폼','클렌징오일·밤','클렌징워터·젤','필링·스크럽','립·아이리무버']],
-  ['선케어',['선크림','선스틱','선쿠션','선스프레이']],['마스크·팩',['시트마스크','워시오프팩','슬리핑팩','토너패드']],
-  ['베이스메이크업',['쿠션','파운데이션','프라이머·베이스','컨실러','파우더·팩트']],['색조메이크업',['립','아이섀도','아이라이너','마스카라','블러셔','아이브로우']],
-  ['바디케어',['바디워시','바디로션·크림','핸드크림','바디스크럽','데오드란트']],['헤어케어',['샴푸','트리트먼트·린스','헤어에센스·오일','두피케어','헤어스타일링']],
-  ['뷰티기기·소품',['피부관리기기','헤어드라이어·고데기','퍼프·브러시','네일']]]};
+ '뷰티':[['스킨케어',['스킨·토너','에센스·세럼·앰플','로션·에멀전','크림','아이크림','미스트','페이스오일']],['클렌징',['클렌징폼','클렌징오일·밤','클렌징워터·젤','필링·스크럽','립·아이리무버']],['선케어',['선크림','선스틱','선쿠션','선스프레이']],['마스크·팩',['시트마스크','워시오프팩','슬리핑팩','토너패드']],['베이스메이크업',['쿠션','파운데이션','프라이머·베이스','컨실러','파우더·팩트']],['색조메이크업',['립','아이섀도','아이라이너','마스카라','블러셔','아이브로우']],['바디케어',['바디워시','바디로션·크림','핸드크림','바디스크럽','데오드란트']],['헤어케어',['샴푸','트리트먼트·린스','헤어에센스·오일','두피케어','헤어스타일링']],['뷰티기기·소품',['피부관리기기','헤어드라이어·고데기','퍼프·브러시','네일']]],
+ '육아용품':[['수유·이유식 도구',['젖병','젖꼭지','젖병소독기','분유포트','유축기','이유식 조리기','유아식기','빨대컵']],['기저귀·물티슈',['밴드 기저귀','팬티 기저귀','물티슈','기저귀 휴지통','기저귀 갈이대']],['목욕·스킨케어',['유아 로션·크림','유아 바스·샴푸','유아 선크림','유아 욕조','바스타월·가운']],['외출용품',['유모차','아기띠·힙시트','기저귀 가방','유모차 액세서리']],['침구·수면',['아기 침대','범퍼침대','유아 이불·베개','속싸개·스와들','수면조끼']],['놀이·장난감',['아기체육관','모빌','치발기','딸랑이·촉감완구','블록·쌓기','목욕 장난감']],['유아 가구·안전',['하이체어','유아 소파','책상·의자','안전문','모서리 보호대']]],
+ '주방용품':[['조리팬',['프라이팬','궁중팬·웍','계란말이팬','그릴팬','전골팬']],['냄비·솥',['편수냄비','양수냄비','전골냄비','밀크팬','압력솥','곰솥·들통']],['무쇠·주물',['무쇠팬','더치오븐','그리들']],['칼·도마',['식도·셰프나이프','과도','주방가위','도마','칼갈이']],['조리도구',['뒤집개','국자','집게','거품기','계량도구','채반·볼','강판·다지기']],['주방가전',['에어프라이어','전기포트','토스터·미니오븐','블렌더·믹서','전기밥솥','커피머신','식기세척기','음식물처리기']],['보관용기',['밀폐용기','유리용기','진공용기','양념통·저장병','도시락','텀블러·보온병']],['식기·컵',['접시','공기·대접','머그·컵','수저·커트러리','쟁반']],['베이킹',['오븐팬·트레이','케이크틀','머핀틀','실리콘몰드','베이킹도구']],['주방잡화',['앞치마','행주·수세미','고무장갑','식기건조대','수납·정리','음식물쓰레기통']]]};
+const LABS=['대체로 만족','의견 갈림','대체로 불만','표본 부족'];
 const LORD={'대체로 만족':0,'의견 갈림':1,'대체로 불만':2,'표본 부족':3};
-const sameSub=p=>[{...p,full:1,L:LAB(p),rate:rateOf(p)},...p.sib.map(id=>byId(id)?{...byId(id),full:1,L:LAB(byId(id)),rate:rateOf(byId(id))}:{...MINI[id],id,L:label_of(MINI[id].n,MINI[id].rate)})]
- .sort((a,b)=>LORD[a.L]-LORD[b.L]||b.n-a.n);
-const cmpList=p=>Object.keys(S.cmp).filter(k=>byId(k).sub===p.sub).map(byId);
+const sameSub=p=>sortItems(allIn(p.sub),'default').map(x=>({...x,L:labOf(x),rate:rateX(x)}));
+const cmpList=p=>Object.keys(S.cmp).map(itemOf).filter(x=>x&&x.sub===p.sub);
 
-const pcProto=()=>{const E=validate(byId(S.pid));return `<div class="pproto"><div class="wrap"><span class="lab">샘플 (가상)</span>
- ${P.map(p=>`<button class="pchip ${S.pid===p.id?'on':''}" data-a="pick:${p.id}">${LAB(p)} · ${p.sub}</button>`).join('')}
- <div class="vseg" role="group" aria-label="화면 보기"><button class="${S.view==='mo'?'on':''}" data-a="view:mo">모바일</button><button class="${S.view==='pc'?'on':''}" data-a="view:pc">PC</button></div></div></div>
- ${E.length?`<div class="warn"><div class="wrap">데이터 정합성 확인 필요: ${E.join(' / ')}</div></div>`:''}`};
-
-const pcGnb=p=>{const cn=cmpList(p).length,fn=Object.values(S.fav).filter(Boolean).length;
+const pcProto=()=>'';
+const pcGnb=p=>{const cn=Object.keys(S.cmp).length,fn=Object.values(S.fav).filter(Boolean).length;
  return `<header class="gnb"><div class="wrap">
- <button class="logo" data-a="say:홈 화면은 다음 단계에서 만들어요">${mark(24)}<span>다들</span></button>
+ <button class="logo" data-a="home" aria-label="다들 홈">${mark(24)}<span>다들</span></button>
  <nav class="menu">${Object.keys(TAX).map(d=>`<button class="${S.mega===d?'on':''}" data-a="mega:${d}" aria-expanded="${S.mega===d}">${d}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`).join('')}</nav>
- <button class="gsearch" data-a="say:검색 화면은 다음 단계에서 만들어요">${ic('search',19,'var(--meta)')}<span>제품 · 브랜드 · 고민 검색</span></button>
- <div class="gright"><button class="gbtn" data-a="say:비교함 화면은 다음 단계에서 만들어요">${ic('cmpi',20,'var(--ink2)')}비교함${cn?`<span class="n num">${cn}</span>`:''}</button>
-  <button class="gbtn" data-a="say:찜 화면은 다음 단계에서 만들어요">${ic('heart',20,'var(--ink2)')}찜${fn?`<span class="n num">${fn}</span>`:''}</button></div></div>
- ${S.mega?`<div class="mega"><div class="wrap mwrap">${TAX[S.mega].map(([m,subs])=>`<div><div class="mh">${m}</div>
+ <div class="gsw" data-sroot><label class="gsearch">${ic('search',19,'var(--meta)')}<input data-sq type="search" enterkeyhint="search" autocomplete="off" value="${escA(S.q)}" placeholder="제품 · 브랜드 · 카테고리 검색" aria-label="검색어"></label>
+  ${S.sOpen?`<div class="sdrop" data-sres>${S.q.trim()?sugHTML(S.q):preHTML()}</div>`:''}</div>
+ <div class="gright"><button class="gbtn" data-a="compare:${p.sub||''}">${ic('cmpi',20,'var(--ink2)')}비교함${cn?`<span class="n num">${cn}</span>`:''}</button>
+  <button class="gbtn" data-a="favs">${ic('heart',20,'var(--ink2)')}찜${fn?`<span class="n num">${fn}</span>`:''}</button></div></div>
+ ${S.mega?`<div class="mega" data-catroot><div class="wrap mhead">${catSearch(1)}${recentCats()}<button class="more" data-a="brands" style="margin-left:auto;white-space:nowrap">브랜드로 찾기 ${ic('chev',14,'var(--brand)',2.2)}</button></div>
+  <div class="wrap mres" data-cres ${S.cq.trim()?'':'hidden'}>${S.cq.trim()?catResults(S.cq):''}</div>
+  <div class="wrap mwrap" data-cpanes ${S.cq.trim()?'hidden':''}>${TAX[S.mega].map(([m,subs])=>`<div><div class="mh">${m}</div>
   ${subs.map(x=>`<button class="ms ${x===p.sub&&m===p.mid?'cur':''}" data-a="say:${x} 목록 화면은 다음 단계에서 만들어요">${x}</button>`).join('')}</div>`).join('')}</div></div>`:''}
  </header>`};
 
 const pcLeft=p=>{const thin=LAB(p)==='표본 부족',f=!!S.fav[p.id],c=!!S.cmp[p.id];
  return `<aside class="pleft">
- <div class="phead">${thumb(p,112,112)}<div style="min-width:0;flex:1"><div class="t-sub">${p.brand}</div>
+ <div class="phead">${thumb(p,112,112)}<div style="min-width:0;flex:1">${brandLink(p.brand)}
   <div class="t-h" style="margin-top:2px">${p.name}</div>
   <div style="margin-top:6px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><span class="num" style="font-size:20px;font-weight:700;letter-spacing:-.02em">${won(p.price)}</span>
   ${p.vol?`<span class="t-cap num">${unitPrice(p)}</span>`:''}</div></div></div>
@@ -637,39 +968,39 @@ const pcLeft=p=>{const thin=LAB(p)==='표본 부족',f=!!S.fav[p.id],c=!!S.cmp[p
  <div class="lbtns"><button class="lbtn ${f?'on':''}" data-a="fav" aria-pressed="${f}">${ic('heart',19,f?'var(--brand)':'var(--ink2)',1.8,f?'var(--brand)':'none')}${f?'찜함':'찜하기'}</button>
   <button class="lbtn ${c?'on':''}" data-a="cmp" aria-pressed="${c}">${ic('cmpi',19,c?'var(--brand)':'var(--ink2)')}${c?'비교함에 있음':'비교함에 담기'}</button></div>
  ${thin?`<button class="pmainbtn ${f?'on':''}" data-a="fav">${f?'후기 모이면 알려드릴게요':'후기 모이면 알려주세요'}</button>`
-  :`<button class="pmainbtn" data-a="say:${p.sub} ${p.subN}종 비교 화면은 다음 단계에서 만들어요">같은 ${p.sub} ${p.subN}종과 비교</button>`}
+  :`<button class="pmainbtn" data-a="list:${p.sub}">같은 ${p.sub} ${subCount(p.sub)}종과 비교</button>`}
  ${highlights(p).replace('<div class="pad">','<div>')}
  <button class="pstore" data-a="say:새 창에서 스마트스토어가 열려요"><span style="display:flex;align-items:center;gap:8px">${ic('ext',18,'var(--ink2)')}스마트스토어에서 상세 보기</span><span class="t-sub num">${won(p.price)}</span></button>
  </aside>`};
 
 const pcTable=p=>{const rows=sameSub(p),hasVol=rows.some(x=>x.vol);
  return `<section class="sect" id="c-table"><div class="t-h">같은 ${p.sub} 한눈에</div>
- <div class="t-sub" style="margin-top:3px">문제를 말한 후기 비율은 모아보니 결과를 정한 값 그대로예요. 누르면 그 제품으로 가요.</div>
+ <div class="t-sub" style="margin-top:3px">같은 기준으로 모은 후기를 나란히 놓았어요. 문제를 말한 후기 비율이 낮을수록 아쉽다는 이야기가 적었던 제품이에요.</div>
  <div class="ptw"><table class="ptable"><thead><tr><th>제품</th><th>모아보니</th><th class="r">문제를 말한 후기</th><th class="r">모은 후기</th><th class="r">가격</th>${hasVol?'<th class="r">단위 가격</th>':''}</tr></thead><tbody>
- ${rows.map(x=>`<tr class="${x.id===p.id?'me':''}" data-a="${x.id===p.id?'say:지금 보고 계신 제품이에요':x.full?'pick:'+x.id:'say:프로토타입에서는 샘플 4개만 상세가 있어요'}">
+ ${rows.map(x=>`<tr class="${x.id===p.id?'me':''}" data-a="${x.id===p.id?'say:지금 보고 계신 제품이에요':x.full?'pick:'+x.id:'say:프로토타입에서는 샘플 '+P.length+'개만 상세가 있어요'}">
   <td><div style="display:flex;align-items:center;gap:10px">${thumb(x,44,44)}<div style="min-width:0"><div class="t-cap" style="color:var(--sub)">${x.brand}</div><div style="font-weight:600;letter-spacing:-.02em">${x.name}</div></div></div></td>
   <td><span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-weight:600;color:${LCOL(x.L)}"><span class="dot" style="background:${LDOT(x.L)}"></span>${x.L}</span></td>
   <td class="r num">${x.L==='표본 부족'?'<span class="t-cap">아직 적어요</span>':(x.rate*100).toFixed(1)+'%'}</td>
   <td class="r num">${nf(x.n)}건</td><td class="r num">${won(x.price)}</td>${hasVol?`<td class="r num t-sub">${x.vol?unitPrice(x):'—'}</td>`:''}</tr>`).join('')}
  </tbody></table></div>
- <div class="t-cap" style="margin-top:8px">프로토타입 샘플에는 ${rows.length}종만 넣었어요. 실제로는 ${p.sub} ${p.subN}종이 모두 나와요.</div></section>`};
+ </section>`};
 
 const pcExp=p=>`<section class="sect" id="c-exp"><div class="t-h">구매 경험</div>
- <div class="t-sub" style="margin-top:3px">배송·가격·응대 이야기는 제품이 아니라 판매 과정의 이야기라, 모아보니 결과를 계산할 때 넣지 않아요.</div>
+ <div class="t-sub" style="margin-top:3px">배송·가격·응대는 제품이 아니라 판매 과정의 이야기라서, 제품 평가에는 넣지 않고 따로 모았어요.</div>
  <div class="egrid">${p.exp.map(e=>`<div><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:17px;font-weight:700;letter-spacing:-.02em">${e.name}</span><span class="t-sub num">${e.m}건</span></div>
   ${e.pts.map(x=>`<div class="pt">${mk(x[0])}<div class="tx t-body">${x[1]}</div><div class="ct num">${x[2]}건</div></div>`).join('')}</div>`).join('')}</div></section>`;
 
 const pcHow=p=>{const L=LAB(p),r=rateOf(p),max=Math.max(...p.exclWhy.map(x=>x[1]));
  return `<section class="sect"><div class="t-h">어떻게 모았나</div>
- <div class="t-sub" style="margin-top:3px">네이버 리뷰 ${nf(p.found)}건을 모두 읽고, 실제로 써 보고 구체적으로 쓴 ${nf(p.n)}건만 남겼어요.</div>
+ <div class="t-sub" style="margin-top:3px">네이버 리뷰 ${nf(p.found)}건을 모두 읽고, 그중 진짜 후기 ${nf(p.n)}건만 골라냈어요.</div>
  <div class="howgrid"><div>
   <div style="background:var(--surface2);border-radius:16px;padding:16px 18px">
    <div class="ln t-body"><span style="color:var(--sub)">찾은 후기</span><span class="num">${nf(p.found)}건</span></div>
    <div class="ln t-body"><span style="color:var(--sub)">제외한 후기</span><span class="num">-${nf(p.excl)}건</span></div>
    <div class="ln" style="border-top:1px solid var(--line);margin-top:6px;padding-top:10px"><span class="t-body" style="font-weight:700">모은 후기</span><span class="num" style="font-size:22px;font-weight:700;color:var(--brand)">${nf(p.n)}건</span></div></div>
-  <div style="margin-top:20px;font-size:16px;font-weight:700">모아보니 결과는 이렇게 정해져요</div>
+  <div style="margin-top:20px;font-size:16px;font-weight:700">${L==='표본 부족'?'아직 결과를 정하지 않았어요':`이렇게 「${L}」${J(L,'이','가')} 됐어요`}</div>
   <div class="t-body" style="margin-top:6px;color:var(--ink2)">${L==='표본 부족'?'모은 후기가 30건이 안 돼서 아직 정하지 않았어요. 몇 건만 더 들어와도 결과가 뒤집힐 수 있어서요.'
-   :`제품 이야기를 한 후기 ${nf(p.evalN)}건 중 문제를 말한 후기가 ${nf(p.probN)}건, <b class="num">${(r*100).toFixed(1)}%</b>예요. ${r<.15?'15% 미만':r<.35?'15~35%':'35% 이상'}이라 「${L}」으로 모였어요.`}</div>
+   :bySent(`제품 이야기를 한 후기 ${nf(p.evalN)}건 중 문제를 말한 후기가 ${nf(p.probN)}건, <b class="num">${(r*100).toFixed(1)}%</b>예요. ${r<.15?'15% 미만':r<.35?'15% 이상 35% 미만':'35% 이상'}이라 ${Q(L)}${J(L,'이에요','예요')}.`)}</div>
   <div class="t-cap" style="margin-top:4px">코팅처럼 시간이 지나야 알 수 있는 이야기는 한 달 써 본 후기에서만 셌어요.</div>
   <button class="more" data-a="sheet:method">기준표 전체 보기 ${ic('chev',14,'var(--brand)',2.2)}</button></div>
  <div><div style="font-size:16px;font-weight:700">제외한 이유</div>
@@ -681,10 +1012,10 @@ const pcTray=p=>{const L=cmpList(p);if(!L.length)return'';
  ${L.map(x=>`<div class="titem">${thumb(x,42,42)}<div style="min-width:0"><div class="t-cap" style="color:var(--sub)">${x.brand}</div><div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${x.name}</div></div>
   <button class="x" data-a="rmcmp:${x.id}" aria-label="${x.name} 비교함에서 빼기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--meta)" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`).join('')}
  ${L.length<4?`<div class="tempty">＋ 더 담을 수 있어요</div>`:''}
- <button class="tgo" data-a="say:비교 화면은 다음 단계에서 만들어요">${L.length<2?'하나 더 담으면 비교할 수 있어요':'비교하기'}</button></div></div>`};
+ <button class="tgo" data-a="${L.length<2?'say:같은 '+p.sub+' 하나를 더 담으면 비교할 수 있어요':'compare:'+p.sub}">${L.length<2?'하나 더 담으면 비교할 수 있어요':'비교하기'}</button></div></div>`};
 
 const pcPage=p=>pcProto()+pcGnb(p)+`<div class="wrap">
- <div class="pcrumb"><span>${p.dom}</span><span aria-hidden="true">›</span><span>${p.mid}</span><span aria-hidden="true">›</span><b>${p.sub}</b></div>
+ <div class="pcrumb"><button data-a="mega:${p.dom}">${p.dom}</button><span aria-hidden="true">›</span><button data-a="mega:${p.dom}">${p.mid}</button><span aria-hidden="true">›</span><button data-a="list:${p.sub}" style="font-weight:600;color:var(--ink2);text-decoration:underline;text-underline-offset:3px">${p.sub}</button></div>
  <div class="pmain">${pcLeft(p)}
   <main class="pright">${chipBar(p)}
    <div class="cgrid">${p.cats.filter(c=>c.m>0).map(c=>catBlock(p,c)).join('')}</div>
@@ -695,65 +1026,944 @@ const pcPage=p=>pcProto()+pcGnb(p)+`<div class="wrap">
    <!-- 공구 자리: 기능 스위치 FEATURE.deal 이 켜지면 이 위치에 붙입니다 (지금은 꺼 둠) -->
    ${footer(p)}</main></div></div>`+pcTray(p);
 
+/* ════ 소분류 목록 ════ */
+const unitVal=x=>x.vol?x.price/x.vol.v:Infinity;
+const isThin=x=>labOf(x)==='표본 부족';
+// 정렬: 표본 부족은 어떤 정렬에서도 맨 뒤에 따로 모음
+function sortItems(items,key){const L=items.slice();const thin=(a,b)=>isThin(a)-isThin(b);
+ const f={default:(a,b)=>LORD[labOf(a)]-LORD[labOf(b)]||b.n-a.n, prob:(a,b)=>rateX(a)-rateX(b)||b.n-a.n, n:(a,b)=>b.n-a.n,
+  price:(a,b)=>a.price-b.price, unit:(a,b)=>unitVal(a)-unitVal(b), month:(a,b)=>b.month-a.month, nv:(a,b)=>b.nv.r-a.nv.r||b.nv.c-a.nv.c}[key];
+ if(key.startsWith('cat:')){const k=key.slice(4),ok=x=>x.cs[k]&&x.cs[k][0]>=30;
+  return L.sort((a,b)=>thin(a,b)||ok(b)-ok(a)||(ok(a)?shareK(b,k)-shareK(a,k):(b.cs[k]?b.cs[k][0]:0)-(a.cs[k]?a.cs[k][0]:0))||b.n-a.n)}
+ return L.sort((a,b)=>thin(a,b)||f(a,b))}
+const SORTS=sub=>[['default','모아보니 순'],['prob','문제 언급 적은 순'],['n','모은 후기 많은 순'],['price','가격 낮은 순'],
+ ...(allIn(sub).some(x=>x.vol)?[['unit','단위 가격 낮은 순']]:[]),['month','한 달 써 본 후기 많은 순'],['nv','네이버 별점 높은 순']];
+const sortName=(sub,key)=>key.startsWith('cat:')?`「${tplOf(sub).find(c=>c.k===key.slice(4)).name}」 좋다 순`:SORTS(sub).find(x=>x[0]===key)[1];
+/* 가격 범위: 막대의 양쪽 손잡이로 고름. null 이면 그 끝은 제한 없음 (1,000원 단위) */
+const PSTEP=1000;
+const priceBounds=sub=>{const ps=allIn(sub).map(x=>x.price);return [Math.floor(Math.min(...ps)/PSTEP)*PSTEP,Math.ceil(Math.max(...ps)/PSTEP)*PSTEP]};
+const priceOn=()=>S.f.pmin!=null||S.f.pmax!=null;
+const filtN=()=>(S.f.good?1:0)+(priceOn()?1:0)+S.f.brands.length;
+const filt=items=>items.filter(x=>(!S.f.good||labOf(x)==='대체로 만족')&&(S.f.pmin==null||x.price>=S.f.pmin)&&(S.f.pmax==null||x.price<=S.f.pmax)&&(!S.f.brands.length||S.f.brands.includes(x.brand)));
+// 소분류의 대분류 · 중분류는 카테고리표(TAX)에서 찾음 — 상세 제품이 없는 소분류도 알 수 있게
+function midOf(sub){for(const [dom,mids] of Object.entries(TAX))for(const [mid,subs] of mids)if(subs.includes(sub))return {dom,mid,sub};return {dom:null,mid:null,sub}}
+const sibSubs=sub=>{const {dom,mid}=midOf(sub);return TAX[dom].find(m=>m[0]===mid)[1]};
+const hasSub=sub=>P.some(p=>p.sub===sub);
+
+// 목록 카드 가운데 줄 — 고른 정렬 기준의 숫자를 보여줌
+const keyLine=(x,key)=>{if(isThin(x))return `<span style="color:var(--sub)">모은 후기 ${x.n} / 30건 · 아직 모으는 중</span>`;
+ if(key.startsWith('cat:')){const k=key.slice(4),c=tplOf(x.sub).find(c=>c.k===k),v=x.cs[k];
+  if(!v||v[0]<30)return `<span style="color:var(--sub)">「${c.name}」 이야기 ${v?v[0]:0}건 · 아직 적어요</span>`;
+  const t=tierOf(x,k);return `「${c.name}」 좋다 <b class="num">${pct(v[1],v[0])}%</b>${t?` <span class="tier" style="margin-left:4px">${t}</span>`:''}`}
+ if(key==='month')return `한 달 써 본 후기 <b class="num">${nf(x.month)}건</b>`;
+ if(key==='nv')return `네이버 별점 <b class="num">${x.nv.r}</b> <span style="color:var(--sub)" class="num">· 리뷰 ${nf(x.nv.c)}건</span>`;
+ if(key==='n')return `모은 후기 <b class="num">${nf(x.n)}건</b> <span style="color:var(--sub)" class="num">· 리뷰 ${nf(x.nv.c)}건 중</span>`;
+ return `문제를 말한 후기 <b class="num">${(rateX(x)*100).toFixed(1)}%</b>`};
+
+const distBar=items=>{const cnt=LABS.map(l=>[l,items.filter(x=>labOf(x)===l).length]).filter(x=>x[1]);
+ return `<div class="bar" style="height:8px;margin-top:14px" role="img" aria-label="${cnt.map(([l,n])=>l+' '+n+'개').join(', ')}">${cnt.map(([l,n])=>`<i style="width:${n/items.length*100}%;background:${LDOT(l)}"></i>`).join('')}</div>
+ <div style="display:flex;gap:6px 14px;flex-wrap:wrap;margin-top:9px;font-size:13px;color:var(--ink2)">${cnt.map(([l,n])=>`<span style="display:inline-flex;align-items:center;gap:5px"><span class="dot" style="background:${LDOT(l)}"></span>${l} <b class="num">${n}</b></span>`).join('')}</div>`};
+
+const favBtn=(x,s=22)=>{const f=!!S.fav[x.id];return `<button class="ib2" data-a="fav:${x.id}" aria-pressed="${f}" aria-label="${x.name} 찜">${ic('heart',s,f?'var(--brand)':'var(--meta)',1.8,f?'var(--brand)':'none')}</button>`};
+const cmpBtn=x=>{const c=!!S.cmp[x.id];return `<button class="cbtn ${c?'on':''}" data-a="cmp:${x.id}" aria-pressed="${c}">${c?'담음':'＋ 비교'}</button>`};
+
+const lcard=(x,key)=>{const L=labOf(x);return `<div class="lcard">
+ <button class="lmain" data-a="open:${x.id}">${thumb(x,76,76)}
+  <div style="min-width:0;flex:1"><div class="t-cap" style="color:var(--sub)">${x.brand}</div>
+   <div class="lname">${x.name}</div>
+   <div style="display:flex;align-items:center;gap:6px;margin-top:3px;font-size:13px"><span class="dot" style="background:${LDOT(L)}"></span>
+    <span style="font-weight:700;color:${LCOL(L)}">${L}</span><span class="num" style="color:var(--sub)">· 모은 후기 ${nf(x.n)}건</span></div>
+   <div class="lkey">${keyLine(x,key)}</div>
+   ${isThin(x)?'':`<div class="lpc"><span>${mk('+')}${x.pro}</span><span>${mk('-')}${x.con}</span></div>`}
+  </div></button>
+ <div class="lfoot"><div><span class="num" style="font-size:16px;font-weight:700;letter-spacing:-.02em">${won(x.price)}</span>${x.vol?` <span class="t-cap num">${unitPrice(x)}</span>`:''}</div>
+  <div style="display:flex;gap:6px;align-items:center">${favBtn(x)}${cmpBtn(x)}</div></div></div>`};
+
+const listTop=sub=>`<div class="top"><button class="ib" data-a="cats:${midOf(sub).mid}" aria-label="${midOf(sub).mid} 카테고리로">${ic('back',22,'var(--ink)')}</button>
+ <button class="sbox" data-a="search">${ic('search',18,'var(--meta)')}<span>제품·브랜드 검색</span></button>
+ <button class="ib" data-a="say:링크를 복사했어요" aria-label="공유">${ic('share',21,'var(--ink)')}</button></div>`;
+
+const listBody=sub=>{const all=allIn(sub),key=S.lsort,items=sortItems(filt(all),key),{dom,mid}=midOf(sub);
+ const main=items.filter(x=>!isThin(x)),thin=items.filter(isThin);
+ return `<div class="scr" id="scr">
+ <div class="pad"><div class="crumb"><button data-a="catsx:${dom}">${dom}</button><span aria-hidden="true">›</span><button data-a="catsx:${mid}"><b>${mid}</b></button></div></div>
+ <div class="cwrap"><div class="carr l"><button data-a="cscroll:-1" aria-label="앞으로">${ic('back',18,'var(--ink2)',2.2)}</button></div>
+  <div class="crow" data-key="srow" style="padding-top:4px">${sibSubs(sub).map(s=>`<button class="chip ${s===sub?'on':''}" data-a="${hasSub(s)?'list:'+s:'say:샘플에는 '+s+' 제품이 아직 없어요'}">${s}</button>`).join('')}</div>
+  <div class="carr r"><button data-a="cscroll:1" aria-label="뒤로">${ic('chev',18,'var(--ink2)',2.2)}</button></div></div>
+ <div class="pad" style="padding-top:12px">
+  <h1 class="t-title">${sub} ${all.length}종,<br>후기로 비교해 봐요</h1>
+  <div class="t-sub" style="margin-top:6px">모든 제품을 같은 기준으로, <span style="white-space:nowrap">진짜 후기만</span> 모아 나란히 놓았어요.</div>
+  ${distBar(all)}</div>
+ <div class="ksec"><div class="pad"><div style="font-size:16px;font-weight:700;letter-spacing:-.02em">무엇이 가장 중요하세요?</div>
+  <div class="t-cap" style="margin-top:2px">고르면 그 이야기에서 좋다는 후기가 많은 순으로 다시 세워요.</div></div>
+  <div class="cwrap"><div class="carr l"><button data-a="cscroll:-1" aria-label="앞으로">${ic('back',18,'var(--ink2)',2.2)}</button></div>
+  <div class="crow" data-key="krow">${tplOf(sub).map(c=>`<button class="chip ${key==='cat:'+c.k?'on':''}" data-a="kcat:${c.k}">${c.time?ic('clock',13,key==='cat:'+c.k?'#fff':'var(--sub)',2.2):''}${c.name}</button>`).join('')}</div>
+  <div class="carr r"><button data-a="cscroll:1" aria-label="뒤로">${ic('chev',18,'var(--ink2)',2.2)}</button></div></div></div>
+ <div class="ltool pad"><button class="tbtn" data-a="sheet:sort" style="flex:1;min-width:0">${ic('list',17,'var(--ink2)',2)}<span>${sortName(sub,key)}</span></button>
+  <button class="tbtn" data-a="sheet:filter" style="flex-shrink:0;${filtN()?'color:var(--brand);border-color:var(--brand)':''}">필터${filtN()?` <b class="num">${filtN()}</b>`:''}</button></div>
+ <div class="t-cap pad" style="padding-top:2px;padding-bottom:4px;display:flex;align-items:center;gap:8px;min-height:32px">${items.length}개 제품${filtN()?` · 전체 ${all.length}개 중 <button data-a="freset" style="color:var(--brand);font-weight:700;font-size:13px;min-height:32px">필터 풀기</button>`:''}</div>
+ ${items.length?main.map(x=>lcard(x,key)).join('')+(thin.length?`<div class="thinh pad"><div style="font-size:15px;font-weight:700">아직 후기를 모으는 중</div><div class="t-cap">모은 후기가 30건이 되면 결과를 보여드려요.</div></div>`+thin.map(x=>lcard(x,key)).join(''):'')
+ :`<div class="pad" style="padding-top:30px;padding-bottom:30px;text-align:center"><div class="t-body">조건에 맞는 제품이 없어요</div><button class="more" data-a="freset" style="margin:6px auto 0">필터 풀기</button></div>`}
+ <div class="pad" style="padding-top:26px;padding-bottom:10px"><div style="background:var(--surface2);border-radius:16px;padding:18px">
+  <div style="font-size:15px;font-weight:700">찾는 ${sub}이 없나요?</div><div class="t-sub" style="margin-top:3px">알려주시면 후기를 모아 둘게요.</div>
+  <button class="tbtn" style="margin-top:12px;background:var(--surface)" data-a="search">이 제품 후기 모아주세요</button></div></div>
+ <div class="foot">${midOf(sub).dom==='육아용품'?`<div class="t-cap" style="color:var(--ink2);margin-bottom:6px">${SAFETY}</div>`:''}<div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div>
+ </div>`};
+
+const tabBar=(sub,act=1)=>{const cn=cmpList({sub}).length,fn=Object.values(S.fav).filter(Boolean).length;
+ const cf=cn&&act===1?`<div class="cfloat"><div style="display:flex;align-items:center;gap:6px;min-width:0">${cmpList({sub}).slice(0,3).map(x=>thumb(x,30,30)).join('')}
+   <span style="font-size:14px;font-weight:700;margin-left:4px;white-space:nowrap">${sub} 비교함 <span class="num">${cn}</span></span></div>
+  <button class="cgo" data-a="${cn<2?'say:같은 '+sub+' 하나를 더 담으면 비교할 수 있어요':'compare:'+sub}" ${cn<2?'aria-disabled="true"':''}>${cn<2?'하나 더 담아 주세요':'비교하기'}</button></div>`:'';
+ const tcn=Object.keys(S.cmp).length;
+ return cf+`<nav class="tabs">${[['home','홈','home'],['grid','카테고리','cats:'],['cmpi','비교함','compare:'+(sub||'')],['heart','찜','favs']]
+  .map(([i,t,a],n)=>`<button class="tab ${n===act?'on':''}" ${a&&n!==act?`data-a="${a}"`:''} ${n===act?'aria-current="page"':''}>${ic(i,22,n===act?'var(--brand)':'var(--meta)')}<span>${t}${n===2&&tcn?` ${tcn}`:n===3&&fn?` ${fn}`:''}</span></button>`).join('')}</nav>`};
+
+/* PC 목록 */
+const pcList=sub=>{const all=allIn(sub),key=S.lsort,items=sortItems(filt(all),key),{dom,mid}=midOf(sub);
+ const brands=[...new Set(all.map(x=>x.brand))].sort((a,b)=>a.localeCompare(b,'ko'));
+ const catCol=key.startsWith('cat:')?tplOf(sub).find(c=>c.k===key.slice(4)):null;
+ return pcProto()+pcGnb({sub,mid})+`<div class="wrap">
+ <div class="pcrumb"><button data-a="mega:${dom}">${dom}</button><span aria-hidden="true">›</span><button data-a="mega:${dom}">${mid}</button><span aria-hidden="true">›</span><b>${sub}</b></div>
+ <div class="lgrid"><aside class="lside">
+  <div class="sh">${mid}</div>${sibSubs(sub).map(s=>`<button class="sl ${s===sub?'on':''}" data-a="${hasSub(s)?'list:'+s:'say:샘플에는 '+s+' 제품이 아직 없어요'}">${s}${s===sub?` <span class="num">${all.length}</span>`:''}</button>`).join('')}
+  <div class="sh" style="margin-top:26px">좁혀 보기</div>
+  <button class="ck" data-a="fgood" aria-pressed="${S.f.good}"><span class="box ${S.f.good?'on':''}">${S.f.good?ic('check',14,'#fff',3):''}</span>「대체로 만족」만</button>
+  <div class="sh2">가격 범위</div>${rangeUI(sub)}
+  <div class="sh2">브랜드</div>${brands.map(b=>{const on=S.f.brands.includes(b);return `<button class="ck" data-a="fbrand:${b}" aria-pressed="${on}"><span class="box ${on?'on':''}">${on?ic('check',14,'#fff',3):''}</span>${b} <span class="num" style="color:var(--tiny)">${all.filter(x=>x.brand===b).length}</span></button>`}).join('')}
+  ${filtN()?`<button class="more" data-a="freset" style="margin-top:10px">필터 풀기</button>`:''}
+ </aside>
+ <main style="min-width:0">
+  <h1 class="t-title">${sub} ${all.length}종, 후기로 비교해 봐요</h1>
+  <div class="t-sub" style="margin-top:6px">모든 제품을 같은 기준으로, <span style="white-space:nowrap">진짜 후기만</span> 모아 나란히 놓았어요.</div>
+  <div style="max-width:560px">${distBar(all)}</div>
+  <div style="margin-top:26px;font-size:17px;font-weight:700;letter-spacing:-.02em">무엇이 가장 중요하세요?</div>
+  <div class="t-sub" style="margin-top:2px">고르면 그 이야기에서 좋다는 후기가 많은 순으로 다시 세워요.</div>
+  <div class="kwrap">${tplOf(sub).map(c=>`<button class="chip ${key==='cat:'+c.k?'on':''}" data-a="kcat:${c.k}">${c.time?ic('clock',13,key==='cat:'+c.k?'#fff':'var(--sub)',2.2):''}${c.name}</button>`).join('')}</div>
+  <div class="sortrow"><label class="t-sub" for="lsel">정렬</label>
+   <select id="lsel" class="lsel" data-change="lsort">${key.startsWith('cat:')?`<option value="${key}" selected>${sortName(sub,key)}</option>`:''}${SORTS(sub).map(([k,t])=>`<option value="${k}" ${key===k?'selected':''}>${t}</option>`).join('')}</select>
+   <span class="t-sub num" style="margin-left:auto">${items.length}개 제품${filtN()?` · 전체 ${all.length}개 중`:''}</span></div>
+  ${items.length?`<div class="ptw" style="margin-top:10px"><table class="ptable ltable"><thead><tr><th style="width:42%">제품</th><th>모아보니</th>
+   ${catCol?`<th class="r">「${catCol.name}」 좋다</th>`:''}<th class="r">문제를 말한 후기</th><th class="r">가격</th><th></th></tr></thead><tbody>
+   ${items.map(x=>{const L=labOf(x),v=catCol&&x.cs[catCol.k],t=catCol&&tierOf(x,catCol.k);return `<tr data-a="open:${x.id}">
+    <td><div style="display:flex;align-items:center;gap:12px">${thumb(x,60,60)}<div style="min-width:0"><div class="t-cap" style="color:var(--sub)">${x.brand}</div>
+     <div style="font-weight:600;letter-spacing:-.02em">${x.name}</div>${isThin(x)?'':`<div class="lpc pc"><span>${mk('+')}${x.pro}</span><span>${mk('-')}${x.con}</span></div>`}</div></div></td>
+    <td><span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-weight:600;color:${LCOL(L)}"><span class="dot" style="background:${LDOT(L)}"></span>${L}</span>
+     <div class="t-cap num" style="margin-top:2px;white-space:nowrap">모은 후기 ${nf(x.n)}건${isThin(x)?' / 30':''}</div></td>
+    ${catCol?`<td class="r num">${v&&v[0]>=30&&!isThin(x)?`<b>${pct(v[1],v[0])}%</b>${t?`<div class="t-cap">${t}</div>`:''}`:'<span class="t-cap">아직 적어요</span>'}</td>`:''}
+    <td class="r num">${isThin(x)?'<span class="t-cap">아직 적어요</span>':(rateX(x)*100).toFixed(1)+'%'}</td>
+    <td class="r num" style="white-space:nowrap"><b>${won(x.price)}</b>${x.vol?`<div class="t-cap">${unitPrice(x)}</div>`:''}</td>
+    <td class="r" data-stop><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${cmpBtn(x)}${favBtn(x,20)}</div></td></tr>`}).join('')}
+   </tbody></table></div>`
+  :`<div style="padding:40px 0;text-align:center"><div class="t-body">조건에 맞는 제품이 없어요</div><button class="more" data-a="freset" style="margin:6px auto 0">필터 풀기</button></div>`}
+  <div style="margin-top:28px;background:var(--surface2);border-radius:16px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px">
+   <div><div style="font-size:16px;font-weight:700">찾는 ${sub}이 없나요?</div><div class="t-sub" style="margin-top:2px">알려주시면 후기를 모아 둘게요.</div></div>
+   <button class="tbtn" style="background:var(--surface)" data-a="search">이 제품 후기 모아주세요</button></div>
+  <div class="foot">${midOf(sub).dom==='육아용품'?`<div class="t-cap" style="color:var(--ink2);margin-bottom:6px">${SAFETY}</div>`:''}<div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div>
+ </main></div></div>`+pcTray({sub})};
+
+/* ════ 비교 화면 ════
+   같은 소분류끼리만 · 이긴 쪽 표시 없음(더 높은 「좋다」만 굵게) · 요약 문장은 숫자에서 코드가 만듦 */
+const cmpSubs=()=>[...new Set(Object.keys(S.cmp).map(itemOf).filter(Boolean).map(x=>x.sub))];
+const pickCsub=pref=>{const subs=cmpSubs();return subs.includes(pref)?pref:(subs[0]||pref)};
+const DIFF_MIN=.05;   // 5%p 넘게 차이 나는 줄만 먼저 보여줌
+const okK=(x,k)=>!isThin(x)&&x.cs[k]&&x.cs[k][0]>=30;
+// 줄 정의 — 모바일(두 개)과 PC(최대 네 개)가 같은 줄을 씀
+function cmpRows(items,sub){const rows=[];
+ const cell=(h,sub2='')=>`<div class="cv">${h}</div>${sub2?`<div class="t-cap num">${sub2}</div>`:''}`;
+ rows.push({g:'기본',label:'모아보니',cells:items.map(x=>{const L=labOf(x);return cell(`<span style="display:inline-flex;align-items:center;gap:6px;font-weight:700;color:${LCOL(L)}"><span class="dot" style="background:${LDOT(L)}"></span>${L}</span>`)})});
+ rows.push({g:'기본',label:'모은 후기',cells:items.map(x=>cell(`<span class="num">${nf(x.n)}건</span>`,`네이버 리뷰 ${nf(x.nv.c)}건 중`))});
+ rows.push({g:'기본',label:'문제를 말한 후기',cells:items.map(x=>isThin(x)?cell('<span class="t-sub">아직 적어요</span>'):cell(`<span class="num">${(rateX(x)*100).toFixed(1)}%</span>`))});
+ rows.push({g:'기본',label:'네이버 별점',cells:items.map(x=>cell(`<span style="display:inline-flex;align-items:center;gap:3px">${ic('star',15,'var(--star)',1.2,'var(--star)')}<span class="num">${x.nv.r}</span></span>`))});
+ rows.push({g:'기본',label:'가격',cells:items.map(x=>cell(`<span class="num">${won(x.price)}</span>`,x.vol?unitPrice(x):''))});
+ tplOf(sub).forEach(c=>{const vals=items.map(x=>okK(x,c.k)?shareK(x,c.k):null),real=vals.filter(v=>v!=null);
+  const hi=real.length>1?Math.max(...real):null,spread=real.length>1?Math.max(...real)-Math.min(...real):0;
+  rows.push({g:'후기 카테고리별 「좋다」 비율',label:c.name,time:c.time,k:c.k,spread,small:real.length<2||spread<DIFF_MIN,
+   cells:items.map((x,i)=>{const v=x.cs[c.k];if(vals[i]==null)return cell('<span class="t-sub">아직 적어요</span>',`${v?v[0]:0}건`);
+    const top=hi!=null&&vals[i]===hi&&real.filter(r=>r===hi).length===1;
+    return `<div class="cv num" style="${top?'font-weight:800;color:var(--brand)':''}">${pct(v[1],v[0])}%</div>
+     <div class="cbar"><i style="width:${vals[i]*100}%"></i></div><div class="t-cap num">${nf(v[0])}건 중</div>`})})});
+ rows.push({g:'가장 많이 나온 이야기',label:'좋다는 이야기',cells:items.map(x=>isThin(x)?cell('<span class="t-sub">아직 적어요</span>'):`<div class="cpt">${mk('+')}<span>${x.pro}</span></div>`)});
+ rows.push({g:'가장 많이 나온 이야기',label:'아쉽다는 이야기',cells:items.map(x=>isThin(x)?cell('<span class="t-sub">아직 적어요</span>'):`<div class="cpt">${mk('-')}<span>${x.con}</span></div>`)});
+ rows.push({g:'한 달 써 본 뒤',label:'한 달 써 본 후기',cells:items.map(x=>cell(`<span class="num">${nf(x.month)}건</span>`))});
+ return rows}
+// 요약 — 차이가 가장 큰 후기 카테고리 하나 (같은 데이터면 늘 같은 문장)
+function cmpSummary(items,sub){const rows=cmpRows(items,sub).filter(r=>r.k&&!r.small).sort((a,b)=>b.spread-a.spread);
+ if(!rows.length)return {h:'아직 후기가 적어, 어디가 다른지 말하기 일러요',d:'후기가 30건 넘게 모인 카테고리가 두 제품 이상 있어야 나란히 견줄 수 있어요.'};
+ const r=rows[0],c=tplOf(sub).find(c=>c.k===r.k),two=items.length===2;
+ const vs=items.map(x=>okK(x,c.k)?`${x.brand} ${pct(x.cs[c.k][1],x.cs[c.k][0])}%`:null).filter(Boolean).join(' · ');
+ return {h:`${two?'두 제품이 가장 다른 곳은':'가장 차이가 큰 곳은'} ${Q(c.name)}${J(c.name,'이에요','예요')}`,d:`좋다는 후기 ${vs}`}}
+
+const cmpPairOf=items=>{let p=(S.cpair||[]).filter(id=>items.some(x=>x.id===id));
+ items.forEach(x=>{if(p.length<2&&!p.includes(x.id))p.push(x.id)});S.cpair=p;return p.map(id=>items.find(x=>x.id===id))};
+
+// 비교함이 비었거나 하나만 있을 때 — 담긴 제품은 보여주고 뺄 수 있게
+const cmpEmpty=(sub,items)=>{const n=items.length;
+ if(!sub)return `<div style="padding:44px 24px;text-align:center"><div class="t-h">비교함이 비어 있어요</div>
+  <div class="t-sub" style="margin-top:6px">보고 싶은 제품 목록에서 「＋ 비교」를 누르면 여기에 모여요. 같은 종류끼리 최대 4개까지 담을 수 있어요.</div>
+  <button class="tbtn" style="margin-top:16px" data-a="${S.view==='pc'?'mega:주방용품':'say:카테고리 화면은 다음 단계에서 만들어요'}">카테고리 둘러보기</button></div>`;
+ return `<div style="padding:32px 20px 44px;text-align:center">
+ ${n?`<div class="t-cap" style="margin-bottom:8px;text-align:left">${sub} 비교함에 담긴 제품</div>
+  ${items.map(x=>{const L=labOf(x);return `<div class="cone">
+   <button data-a="open:${x.id}" style="display:flex;gap:12px;align-items:center;flex:1;min-width:0;text-align:left">${thumb(x,56,56)}
+    <div style="min-width:0"><div class="t-cap" style="color:var(--sub)">${x.brand}</div><div class="chn">${x.name}</div>
+     <div style="display:flex;align-items:center;gap:5px;margin-top:2px;font-size:13px;font-weight:600;color:${LCOL(L)}"><span class="dot" style="background:${LDOT(L)}"></span>${L}</div></div></button>
+   <button class="tbtn" data-a="rmcmp:${x.id}" aria-label="${x.name} 비교함에서 빼기" style="flex-shrink:0">빼기</button></div>`}).join('')}`:''}
+ <div class="t-h" style="margin-top:${n?26:0}px">${n?'하나 더 담으면 비교할 수 있어요':'비교함이 비어 있어요'}</div>
+ <div class="t-sub" style="margin-top:6px">${sub} 목록에서 「＋ 비교」를 누르면 여기에 모여요. 같은 종류끼리 최대 4개까지 담을 수 있어요.</div>
+ <button class="tbtn" style="margin-top:16px" data-a="list:${sub}">${sub} 목록으로 가기</button></div>`};
+
+const subSwitch=sub=>{const subs=cmpSubs();if(subs.length<2)return'';
+ return `<div class="cwrap"><div class="crow" data-key="csw" style="padding-top:4px">${subs.map(s=>`<button class="chip ${s===sub?'on':''}" data-a="csub:${s}">${s} <span class="num">${cmpList({sub:s}).length}</span></button>`).join('')}</div></div>`};
+
+/* 모바일 */
+const cmpTop=sub=>`<div class="top"><button class="ib" data-a="${sub?'list:'+sub:'home'}" aria-label="${sub?sub+' 목록으로':'홈으로'}">${ic('back',22,'var(--ink)')}</button>
+ <div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em">비교함</div>
+ <button class="ib" data-a="say:비교 링크를 복사했어요. 받는 분은 로그인 없이 같은 표를 봐요" aria-label="비교 결과 공유">${ic('share',21,'var(--ink)')}</button></div>`;
+const cmpBody=sub=>{const all=cmpList({sub});
+ if(all.length<2)return `<div class="scr" id="scr">${subSwitch(sub)}${cmpEmpty(sub,all)}</div>`;
+ const pair=cmpPairOf(all),rows=cmpRows(pair,sub),sm=cmpSummary(pair,sub),hide=rows.filter(r=>r.k&&r.small).length;
+ let g='';
+ return `<div class="scr" id="scr">${subSwitch(sub)}
+ <div class="pad" style="padding-top:14px"><h1 class="t-title">${sub} 비교</h1>
+  <div class="t-sub" style="margin-top:4px">같은 기준으로 모은 진짜 후기로 나란히 봐요.</div></div>
+ ${all.length>2?`<div class="pad" style="padding-top:14px"><div class="t-cap" style="margin-bottom:6px">담은 ${all.length}개 중 두 개를 골라 나란히 봐요</div>
+  <div class="fchips">${all.map(x=>`<button class="chip ${S.cpair.includes(x.id)?'on':''}" data-a="cpick:${x.id}">${x.brand}</button>`).join('')}</div></div>`:''}
+ <div class="chead">${pair.map(x=>`<div class="chc">
+  <button class="cx" data-a="rmcmp:${x.id}" aria-label="${x.name} 비교함에서 빼기"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--meta)" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <button data-a="open:${x.id}" style="display:block;text-align:left">${thumb(x,48,48)}<div class="t-cap" style="color:var(--sub);margin-top:6px">${x.brand}</div><div class="chn">${x.name}</div></button></div>`).join('')}</div>
+ <div class="pad"><div class="csum"><div class="t-body" style="font-weight:700">${sm.h}</div><div class="t-sub num" style="margin-top:2px">${sm.d}</div></div>
+  <button class="mtog" style="width:100%;padding:12px 0 4px" data-a="cdiff" aria-pressed="${S.cdiff}"><span>차이가 큰 항목만 보기 <span class="t-cap">(5%p 넘게)</span></span><span class="sw ${S.cdiff?'on':''}"><i></i></span></button></div>
+ ${rows.filter(r=>!(S.cdiff&&r.k&&r.small)).map(r=>{const gh=r.g!==g?(g=r.g,`<div class="cgh pad">${r.g}</div>`):'';
+  return gh+`<div class="crw"><div class="crl">${r.time?ic('clock',13,'var(--sub)',2.2):''}${r.label}${r.time?'<span class="t-cap" style="margin-left:4px">· 한 달 써 본 후기 중</span>':''}</div>
+   <div class="crc">${r.cells.map(c=>`<div>${c}</div>`).join('')}</div></div>`}).join('')}
+ ${S.cdiff&&hide?`<button class="more pad" data-a="cdiff" style="display:flex;padding-top:10px">접어 둔 ${hide}가지도 보기 ${ic('chev',14,'var(--brand)',2.2)}</button>`:''}
+ <div class="foot"><div class="t-cap">숫자가 더 높은 쪽만 굵게 표시했어요. 어느 제품이 낫다고 정하지 않아요.</div>
+  <div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div></div>`};
+
+/* PC — 담은 것 전부(최대 4개)를 한 표에 */
+const pcCompare=sub=>{const all=cmpList({sub}),mid=sub?midOf(sub).mid:null;
+ const head=pcProto()+pcGnb({sub,mid})+`<div class="wrap"><div class="pcrumb">${sub?`<button data-a="list:${sub}" style="color:var(--meta)">${sub} 목록</button><span aria-hidden="true">›</span>`:''}<b>비교함</b></div>`;
+ if(all.length<2)return head+`<div style="max-width:560px;margin:0 auto">${subSwitch(sub)}${cmpEmpty(sub,all)}</div></div>`;
+ const rows=cmpRows(all,sub),sm=cmpSummary(all,sub),hide=rows.filter(r=>r.k&&r.small).length,cols=`220px repeat(${all.length+(all.length<4?1:0)},minmax(0,1fr))`;
+ let g='';
+ return head+`<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap">
+  <div><h1 class="t-title">${sub} 비교</h1><div class="t-sub" style="margin-top:4px">같은 기준으로 모은 진짜 후기로 나란히 봐요.</div></div>
+  <button class="tbtn" data-a="say:비교 링크를 복사했어요. 받는 분은 로그인 없이 같은 표를 봐요">${ic('share',17,'var(--ink2)',2)}비교 결과 공유</button></div>
+ ${subSwitch(sub)}
+ <div class="csum" style="margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap">
+  <div><div class="t-body" style="font-weight:700">${sm.h}</div><div class="t-sub num" style="margin-top:2px">${sm.d}</div></div>
+  <button class="mtog" style="padding:0;gap:12px" data-a="cdiff" aria-pressed="${S.cdiff}"><span>차이가 큰 항목만 보기</span><span class="sw ${S.cdiff?'on':''}"><i></i></span></button></div>
+ <div class="pcg" style="--cols:${cols}">
+  <div class="pcgh"><div class="pcgl t-sub num">${all.length}개 담음</div>
+   ${all.map(x=>`<div class="pcgc"><button class="cx" data-a="rmcmp:${x.id}" aria-label="${x.name} 비교함에서 빼기"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--meta)" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button data-a="open:${x.id}" style="display:flex;gap:12px;align-items:center;text-align:left;width:100%">${thumb(x,56,56)}<div style="min-width:0"><div class="t-cap" style="color:var(--sub)">${x.brand}</div><div class="chn">${x.name}</div></div></button></div>`).join('')}
+   ${all.length<4?`<div class="pcgc"><button class="cadd" data-a="list:${sub}">＋ ${sub} 더 담기</button></div>`:''}</div>
+  ${rows.filter(r=>!(S.cdiff&&r.k&&r.small)).map(r=>{const gh=r.g!==g?(g=r.g,`<div class="pcgg">${r.g}</div>`):'';
+   return gh+`<div class="pcgr"><div class="pcgl">${r.time?ic('clock',14,'var(--sub)',2.2):''}${r.label}${r.time?'<div class="t-cap">한 달 써 본 후기 중</div>':''}</div>
+    ${r.cells.map(c=>`<div class="pcgc">${c}</div>`).join('')}${all.length<4?'<div class="pcgc"></div>':''}</div>`}).join('')}
+ </div>
+ ${S.cdiff&&hide?`<button class="more" data-a="cdiff" style="margin-top:8px">접어 둔 ${hide}가지도 보기 ${ic('chev',14,'var(--brand)',2.2)}</button>`:''}
+ <div class="foot" style="padding-bottom:60px"><div class="t-cap">숫자가 더 높은 쪽만 굵게 표시했어요. 어느 제품이 낫다고 정하지 않아요.</div>
+  <div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div></div>`};
+
+/* ════ 홈 ════
+   처음 온 사람: 검색 · 신뢰 문장 · 카테고리 · 고민별 · 별점만 보면 놓치는 이야기
+   다시 온 사람: 위에 「찜한 제품 소식」 · 「최근 본 제품」이 더해짐 */
+const ALL=()=>[...P.map(p=>p.id),...MINIS.map(m=>m.id)].map(itemOf);
+// 신뢰 문장 — 읽은 리뷰와 제외한 리뷰의 합 (샘플 기준)
+const readStats=()=>{const xs=ALL();const found=xs.reduce((a,x)=>a+(x.full?x.found:x.nv.c),0),n=xs.reduce((a,x)=>a+x.n,0);return {found,excl:found-n,n}};
+// 찜한 제품 소식 (가상) — 실제로는 주간 수집 때 전주와 비교해 생김
+const NEWS={p1:'한 달 써 본 후기가 18건 더 모였어요',m2:'가격이 2,000원 내렸어요',p3:'모은 후기가 41건 늘었어요',m30:'가격이 1,500원 내렸어요',m13:'한 달 써 본 후기가 9건 더 모였어요'};
+// 새로 모은 제품 (가상)
+const NEWLY=['m20','m13','m25','m23','m32','m34','m22','m16'];
+// 고민별 모음 — 후기 카테고리 기준으로 줄 세운 목록으로 연결
+const THEMES={'뷰티':[['끈적이지 않는 크림','크림','absorb'],['오래 촉촉한 크림','크림','moist'],['자극이 적은 크림','크림','irrit'],['향이 순한 크림','크림','scent']],
+ '육아용품':[['잘 안 새는 젖병','젖병','leak'],['세척이 쉬운 젖병','젖병','wash'],['아기가 잘 무는 젖병','젖병','accept'],['냄새 없는 젖병','젖병','material']],
+ '주방용품':[['오래가는 코팅','프라이팬','coat'],['설거지 쉬운 팬','프라이팬','wash'],['가벼운 팬','프라이팬','grip'],['열이 고르게 퍼지는 냄비','편수냄비','heat']]};
+const MID2SUB={'조리팬':'프라이팬','냄비·솥':'편수냄비','스킨케어':'크림','수유·이유식 도구':'젖병'};
+// 별점만 보면 놓치는 이야기 — 별점 4.5 이상인데 「의견 갈림」·「대체로 불만」 (코드가 뽑음)
+const gapItems=dom=>ALL().filter(x=>midOf(x.sub).dom===dom&&x.nv.r>=4.5&&['의견 갈림','대체로 불만'].includes(labOf(x)))
+ .sort((a,b)=>rateX(b)-rateX(a));
+const weakCat=x=>tplOf(x.sub).filter(c=>okK(x,c.k)).sort((a,b)=>shareK(x,a.k)-shareK(x,b.k))[0];
+const PH=['인덕션 프라이팬','건성 크림','가벼운 냄비','끈적이지 않는 크림','코팅 오래가는 팬'];
+
+const miniCard=(x,sub2)=>{const L=labOf(x);return `<button class="mini" data-a="open:${x.id}">${thumb(x,136,104,'th')}
+ <div class="t-cap" style="margin-top:8px;color:var(--sub)">${x.brand}</div><div class="nm">${x.name}</div>
+ <div style="display:flex;align-items:center;gap:5px;margin-top:4px;font-size:12px;color:var(--ink2)"><span class="dot" style="background:${LDOT(L)}"></span>${L}</div>
+ ${sub2?`<div class="t-cap" style="margin-top:2px">${sub2}</div>`:''}</button>`};
+const gapCard=x=>{const L=labOf(x),w=weakCat(x);return `<button class="gcard" data-a="open:${x.id}">${thumb(x,64,64)}
+ <div style="min-width:0;flex:1"><div class="t-cap" style="color:var(--sub)">${x.brand} · ${x.sub}</div><div class="chn" style="font-size:15px">${x.name}</div>
+  <div style="margin-top:5px;font-size:13px;color:var(--ink2);display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+   <span style="display:inline-flex;align-items:center;gap:3px">${ic('star',13,'var(--star)',1.2,'var(--star)')}<b class="num">${x.nv.r}</b></span><span aria-hidden="true">→</span>
+   <span style="display:inline-flex;align-items:center;gap:5px;font-weight:700;color:${LCOL(L)}"><span class="dot" style="background:${LDOT(L)}"></span>${L}</span></div>
+  ${w?`<div class="t-cap" style="margin-top:3px">${Q(w.name)} 좋다는 후기 ${pct(x.cs[w.k][1],x.cs[w.k][0])}%</div>`:''}</div></button>`};
+
+const homeParts=()=>{const dom=effDom(),I=interest(),st=readStats(),favs=Object.keys(S.fav).filter(k=>S.fav[k]).map(itemOf).filter(Boolean);
+ const news=favs.filter(x=>NEWS[x.id]),recent=S.recent.map(itemOf).filter(Boolean);
+ return {dom,st,favs,news,recent,I,gaps:wOrder(gapItems(dom),wItem(I),'gap').slice(0,3),newly:wOrder(NEWLY.map(itemOf).filter(x=>midOf(x.sub).dom===dom),wItem(I),'new')}};
+
+const heroText=st=>`<h1 class="t-title" style="font-size:24px">네이버 리뷰 수천 개,<br>진짜 후기만 골라 드려요</h1>
+ <div class="t-sub num" style="margin-top:8px">지금까지 리뷰 <b style="color:var(--ink)">${nf(st.found)}건</b>을 모두 읽고, <b style="color:var(--ink)">${nf(st.excl)}건</b>을 제외했어요.</div>
+ <button class="more" data-a="sheet:method">어떻게 고르나요 ${ic('chev',14,'var(--brand)',2.2)}</button>`;
+const domSeg=dom=>`<div class="dseg" role="tablist">${Object.keys(TAX).map(d=>`<button role="tab" aria-selected="${d===dom}" class="${d===dom?'on':''}" data-a="hdom:${d}">${d}</button>`).join('')}</div>`;
+const midTiles=dom=>`<div class="mids">${TAX[dom].map(([m])=>`<button class="mid" data-a="${MID2SUB[m]?'list:'+MID2SUB[m]:'say:샘플에는 '+m+' 제품이 아직 없어요'}">${m}</button>`).join('')}</div>`;
+const newsBox=(favs,news)=>favs.length?`<div class="newsb"><div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:15px;font-weight:700">찜한 제품 소식</div>
+ <button class="t-sub" data-a="favs" style="min-height:32px">찜 ${favs.length}개 전체</button></div>
+ ${news.length?news.map(x=>`<button class="nrow" data-a="open:${x.id}">${thumb(x,40,40)}<div style="min-width:0;flex:1;text-align:left"><div class="t-cap" style="color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${x.brand} · ${x.name}</div>
+  <div style="font-size:14px;font-weight:600;letter-spacing:-.02em">${NEWS[x.id]}</div></div>${ic('chev',16,'var(--meta)',2)}</button>`).join('')
+ :`<div class="t-sub" style="padding:6px 0 2px">찜한 제품에 새 소식은 아직 없어요. 달라지는 게 있으면 여기에 알려드릴게요.</div>`}</div>`:'';
+const themeChips=dom=>`<div class="fchips">${THEMES[dom].map(([t,sub,k])=>`<button class="chip" data-a="theme:${sub}:${k}">${t}</button>`).join('')}</div>`;
+
+/* ── 홈 콘텐츠 (모두 데이터에서 자동 계산 · 손으로 고르지 않음) ── */
+const domSubs=dom=>LSUBS.filter(s=>midOf(s).dom===dom);
+const rankSub=()=>{const subs=domSubs(effDom());if(subs.includes(S.hrank))return S.hrank;const t=topSubs(interest()).find(x=>subs.includes(x));return t||subs[0]};
+// ① 걸러 내기 — 제외 이유 비율은 상세 데이터가 있는 제품 기준
+const exclAgg=()=>{const m={};P.forEach(p=>p.exclWhy.forEach(([t,c])=>{m[t]=(m[t]||0)+c}));const tot=Object.values(m).reduce((a,b)=>a+b,0);
+ return Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([t,c])=>[t,c/tot])};
+const funnelCard=(st,compact)=>{const ex=st.excl/st.found,ten=Math.round(ex*10),rs=exclAgg().slice(0,4),max=rs[0][1];
+ return `<div class="funnel"><div style="font-size:16px;font-weight:700;letter-spacing:-.02em">리뷰 10건 중 ${ten}건은 쓸 만한 정보가 없었어요</div>
+ <div class="fbar" role="img" aria-label="제외 ${Math.round(ex*100)}퍼센트, 진짜 후기 ${100-Math.round(ex*100)}퍼센트"><i class="fx" style="width:${ex*100}%"></i><i class="fn" style="width:${(1-ex)*100}%"></i></div>
+ <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:13px"><span style="color:var(--sub)">제외 <b class="num" style="color:var(--ink)">${Math.round(ex*100)}%</b></span><span style="color:var(--brand);font-weight:700">진짜 후기 <span class="num">${100-Math.round(ex*100)}%</span></span></div>
+ ${compact?`<button class="more" data-a="sheet:method" style="min-height:32px">어떤 글을 뺐는지 보기 ${ic('chev',14,'var(--brand)',2.2)}</button></div>`:`<div class="t-cap" style="margin-top:12px;font-weight:700;color:var(--sub)">이런 글을 뺐어요</div>
+ ${rs.map(([t,r])=>`<div class="why" style="font-size:13px"><div style="flex:1;min-width:0;padding-right:12px"><div>${t}</div><div class="w" style="width:${Math.max(6,r/max*100)}%"></div></div><span class="num" style="color:var(--sub)">${Math.round(r*100)}%</span></div>`).join('')}
+ <div class="t-cap" style="margin-top:6px">제외 이유 비율은 상세가 있는 샘플 ${P.length}개 기준이에요</div></div>`}`};
+// ⑥ 처음 온 사람에게만 — 이렇게 써요
+const stepsStrip=()=>`<div class="steps">${[['1','종류를 고르고','카테고리나 검색으로'],['2','진짜 후기로 보고','좋다 · 아쉽다를 한눈에'],['3','나란히 견줘요','비슷한 제품끼리']].map(([n,t,d])=>`<div class="step"><span class="sn num">${n}</span><div><div style="font-size:15px;font-weight:700;letter-spacing:-.02em">${t}</div><div class="t-cap">${d}</div></div></div>`).join('')}</div>`;
+// ② 모아보니 「대체로 만족」인 제품 — 모은 후기 많은 순
+const rankTabs=sub=>`<div class="fchips">${domSubs(S.hdom).map(s=>`<button class="chip ${s===sub?'on':''}" data-a="hrank:${s}">${s}</button>`).join('')}</div>`;
+const rankBlock=(sub,n)=>{const xs=sortItems(allIn(sub),'n').filter(x=>labOf(x)==='대체로 만족').slice(0,n);
+ return `${xs.map(x=>`<button class="rrow" data-a="open:${x.id}">${thumb(x,56,56)}<div style="min-width:0;flex:1;text-align:left"><div class="t-cap" style="color:var(--sub)">${x.brand}</div><div class="chn" style="font-size:15px">${x.name}</div>
+  <div class="t-cap num" style="margin-top:2px"><span style="white-space:nowrap">문제를 말한 후기 ${(rateX(x)*100).toFixed(1)}% ·</span> <span style="white-space:nowrap">모은 후기 ${nf(x.n)}건</span></div></div>
+  <div style="text-align:right;flex-shrink:0"><div class="num" style="font-weight:700">${won(x.price)}</div>${x.vol?`<div class="t-cap num">${unitPrice(x)}</div>`:''}</div></button>`).join('')}
+ <button class="more" data-a="list:${sub}">${sub} ${subCount(sub)}종 전체 보기 ${ic('chev',14,'var(--brand)',2.2)}</button>`};
+// ③ 후기로 만든 구매 가이드 — 모든 제품의 진짜 후기에서 가장 많이 나온 이야기
+const guideBlock=sub=>{const xs=allIn(sub),rows=tplOf(sub).map(c=>({c,m:xs.reduce((a,x)=>a+(x.cs[c.k]?x.cs[c.k][0]:0),0)})).sort((a,b)=>b.m-a.m).slice(0,3);
+ return `${rows.map((r,i)=>`<button class="gdrow" data-a="theme:${sub}:${r.c.k}"><span class="sn num">${i+1}</span>
+  <div style="flex:1;min-width:0;text-align:left"><div style="font-size:15px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:4px">${r.c.time?ic('clock',14,'var(--sub)',2.2):''}${r.c.name}</div>
+  <div class="t-cap num">후기 ${nf(r.m)}건에서 이야기했어요${r.c.time?' · 한 달 써 본 후기만 셌어요':''}</div></div>
+  <span class="t-cap" style="color:var(--brand);font-weight:700;display:flex;align-items:center;gap:2px;flex-shrink:0">이 기준으로 보기${ic('chev',13,'var(--brand)',2.2)}</span></button>`).join('')}`};
+// ④ 고민별 카드 — 그 기준에서 지금 맨 앞인 제품을 미리 보여줌
+const themeCards=dom=>`<div class="tcards">${wOrder(THEMES[dom],t=>1+((interest().subs[t[1]]||0)>0?2:0),'theme').map(([t,sub,k])=>{const top=sortItems(allIn(sub),'cat:'+k).find(x=>okK(x,k));
+ return `<button class="tcard" data-a="theme:${sub}:${k}"><div style="font-size:15px;font-weight:700;letter-spacing:-.02em">${t}</div>
+  ${top?`<div style="display:flex;gap:10px;align-items:center;margin-top:10px">${thumb(top,40,40)}<div style="min-width:0;text-align:left"><div class="t-cap">지금 맨 앞</div>
+   <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${top.brand} ${top.name}</div>
+   <div class="t-cap num" style="color:var(--brand);font-weight:700">좋다 ${pct(top.cs[k][1],top.cs[k][0])}%</div></div></div>`:'<div class="t-cap" style="margin-top:8px">아직 후기가 모이는 중이에요</div>'}</button>`}).join('')}</div>`;
+// ⑤ 나란히 보면 달라요 — 둘 다 「대체로 만족」인데 한 카테고리에서 차이가 가장 큰 두 제품
+//    (홈에서 불만 제품끼리의 비교를 권하지 않음 — 그건 「별점만 보면 놓치는 이야기」가 다룸)
+function pairFor(sub){const xs=allIn(sub).filter(x=>!isThin(x));let best=null;
+ for(let i=0;i<xs.length;i++)for(let j=i+1;j<xs.length;j++){const a=xs[i],b=xs[j];if(labOf(a)!=='대체로 만족'||labOf(b)!=='대체로 만족')continue;
+  tplOf(sub).forEach(c=>{if(!okK(a,c.k)||!okK(b,c.k))return;const d=Math.abs(shareK(a,c.k)-shareK(b,c.k));if(!best||d>best.d)best={a,b,c,d}})}
+ return best}
+const pairCard=p=>{const va=pct(p.a.cs[p.c.k][1],p.a.cs[p.c.k][0]),vb=pct(p.b.cs[p.c.k][1],p.b.cs[p.c.k][0]),L=labOf(p.a);
+ return `<div class="pcard"><div class="t-cap">${p.a.sub} · 둘 다 <b style="color:${LCOL(L)}">「${L}」</b>인데</div>
+ <div class="pvs">
+  ${[p.a,p.b].map((x,i)=>`${i?'<span class="t-cap" style="font-weight:700;flex-shrink:0">vs</span>':''}<button data-a="open:${x.id}" style="display:flex;gap:8px;align-items:center;min-width:0;text-align:left">${thumb(x,44,44)}<div style="min-width:0"><div class="t-cap" style="color:var(--sub)">${x.brand}</div><div class="chn" style="font-size:13px">${x.name}</div></div></button>`).join('')}</div>
+ <div class="t-body" style="margin-top:12px;font-weight:700">가장 다른 곳은 ${Q(p.c.name)}${J(p.c.name,'이에요','예요')}</div>
+ <div class="t-sub num">좋다는 후기 ${p.a.brand} ${va}% · ${p.b.brand} ${vb}%</div>
+ <button class="tbtn" style="margin-top:12px;width:100%;justify-content:center" data-a="pair:${p.a.id},${p.b.id}">둘 다 비교함에 담고 나란히 보기</button></div>`};
+const pairs=dom=>wOrder(domSubs(dom).map(pairFor).filter(Boolean),p=>wItem(interest())(p.a),'pair');
+
+/* ════ 홈 맞춤 노출 ════
+   무엇을 보여줄지만 바뀜 — 라벨 · 숫자 · 정렬 규칙(모아보니 순 등)은 절대 바뀌지 않음
+   신호: 처음 들어온 검색어(entry) 5 · 찜 4 · 본 제품 3 · 비교함 3 · 다들 안에서 검색한 말 3 · 본 목록 2  (최근일수록 크게, 0.8배씩 줄어듦)
+   처음 온 사람의 다른 서비스 검색 기록은 쓰지 않음(쓸 수도 없음) — 들어온 검색어와 처음 연 페이지만 씀 */
+const W_ENTRY=5,W_FAV=4,W_VIEW=3,W_CMP=3,W_Q=3,W_LIST=2,DECAY=.8;
+const ALLSUBS=Object.values(TAX).flatMap(ms=>ms.flatMap(m=>m[1]));
+// 들어온 검색어 → 관심 소분류 (카테고리 이름이 검색어 안에 있거나, 제품·브랜드 이름과 맞으면)
+const entrySubs=kw=>{const q=normC(kw);const byCat=ALLSUBS.filter(s=>hasSub(s)&&(q.includes(normC(s))||normC(s).includes(q)));
+ const byProd=ALL().filter(x=>q.includes(normC(x.brand))||normC(x.brand+x.name).includes(q)).map(x=>x.sub);return [...new Set([...byCat,...byProd])].slice(0,2)};
+function interest(){const subs={},brands={};if(S.pOff)return {subs,brands,has:false};
+ const add=(sub,w,brand)=>{if(!sub)return;subs[sub]=(subs[sub]||0)+w;if(brand)brands[brand]=(brands[brand]||0)+w};
+ if(S.entry)entrySubs(S.entry.kw).forEach(s=>add(s,W_ENTRY));
+ Object.keys(S.fav).filter(k=>S.fav[k]).forEach(id=>{const x=itemOf(id);if(x)add(x.sub,W_FAV,x.brand)});
+ S.recent.forEach((id,i)=>{const x=itemOf(id);if(x)add(x.sub,W_VIEW*Math.pow(DECAY,i),x.brand)});
+ Object.keys(S.cmp).forEach(id=>{const x=itemOf(id);if(x)add(x.sub,W_CMP,x.brand)});
+ S.recentSubs.forEach((s,i)=>add(s,W_LIST*Math.pow(DECAY,i)));
+ S.recentQ.forEach((q,i)=>entrySubs(q).forEach(s=>add(s,W_Q*Math.pow(DECAY,i))));   // 다들 안에서 검색한 말
+ return {subs,brands,has:Object.keys(subs).length>0}}
+const topSubs=I=>Object.entries(I.subs).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
+// 대분류: 직접 고르기 전에는 가장 관심 있는 소분류의 대분류로 엶
+const effDom=()=>{if(S.hdomSet||S.pOff)return S.hdom;const t=topSubs(interest())[0];return t?midOf(t).dom:S.hdom};
+// 새로고침마다 바뀌는 씨앗 — 한 번 연 화면 안에서는 고정 (누를 때마다 바뀌면 혼란)
+let SEED=Math.floor(Math.random()*2147483647);
+const hashS=t=>{let h=2166136261;for(const c of String(t))h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0};
+const rnd=key=>{let x=(hashS(key)^SEED)>>>0;x=Math.imul(x^(x>>>15),x|1);x^=x+Math.imul(x^(x>>>7),x|61);return (((x^(x>>>14))>>>0)+.5)/4294967297};
+// 가중 무작위 순서 — 관심이 클수록 앞에 올 확률이 높지만 매번 같은 것만 나오지는 않음
+const wOrder=(arr,wf,key)=>arr.map(x=>({x,k:Math.pow(rnd(key+':'+(x.id||JSON.stringify(x))),1/Math.max(.05,wf(x)))})).sort((a,b)=>b.k-a.k).map(o=>o.x);
+const wItem=I=>{const mx=Math.max(1,...Object.values(I.subs)),mb=Math.max(1,...Object.values(I.brands));
+ return x=>1+4*((I.subs[x.sub]||0)/mx)+1.5*((I.brands[x.brand]||0)/mb)};
+// 관심 가질 만한 제품 — 관심 소분류의 「대체로 만족」 중, 이미 본 것 · 찜한 것 빼고
+const forYou=I=>{const subs=topSubs(I).slice(0,3);if(!subs.length)return [];const seen=new Set([...S.recent,...Object.keys(S.fav).filter(k=>S.fav[k])]);
+ const pool=subs.flatMap(allIn).filter(x=>labOf(x)==='대체로 만족'&&!seen.has(x.id));return wOrder(pool,wItem(I),'fy').slice(0,4)};
+// 어떤 신호로 골랐는지 사실대로 적음
+const whySrc=()=>{const favN=Object.keys(S.fav).filter(k=>S.fav[k]).length,src=[];
+ if(S.recent.length)src.push('보신 제품');if(favN)src.push('찜');if(S.recentQ.length)src.push('검색하신 말');if(Object.keys(S.cmp).length)src.push('비교함');
+ return src.length?src.join(' · ')+J(src[src.length-1],'을','를')+' 바탕으로':''};
+const whyLine=I=>S.pOff?`<span>맞춤을 껐어요 · 모든 분께 같은 기준으로 보여드려요</span><button data-a="poff" class="plink">맞춤 켜기</button>`
+ :I.has?`<span>${S.entry&&!S.recent.length&&!Object.keys(S.fav).length?`「${S.entry.kw}」 검색으로 오셔서`:whySrc()} 골랐어요.</span><span>새로고침하면 다른 제품이 나와요.</span><button data-a="poff" class="plink">맞춤 끄기</button>`
+ :`<span>새로고침하면 다른 제품이 나와요</span>`;
+const forYouSec=(I,pc)=>{const xs=forYou(I);if(!xs.length)return '';const t=topSubs(I)[0],entryOnly=S.entry&&!S.recent.length&&!Object.keys(S.fav).filter(k=>S.fav[k]).length;
+ const title=entryOnly?`「${S.entry.kw}」 찾아 오셨죠?`:`최근 ${S.recent.length||Object.keys(S.fav).filter(k=>S.fav[k]).length?'보신':'찾아보신'} ${t}${J(t,'과','와')} 비슷한 제품`;
+ const sub2=entryOnly?`진짜 후기로 모은 ${t} ${subCount(t)}종을 나란히 비교해 보세요.`:'모아보니 「대체로 만족」인 제품 중에서, 아직 안 보신 것만 골랐어요.';
+ return `<section class="${pc?'':'hsec'} fysec" ${pc?'style="margin-top:36px"':''}><div class="${pc?'':'pad'}"><div class="t-h">${title}</div><div class="t-sub" style="margin-top:2px">${sub2}</div>
+  <div class="why2">${whyLine(I)}</div></div>
+  <div class="hs">${xs.map(x=>miniCard(x,`${x.sub} · 모은 후기 ${nf(x.n)}건`)).join('')}</div>
+  ${entryOnly?`<div class="${pc?'':'pad'}"><button class="tbtn" style="margin-top:10px" data-a="list:${t}">${t} ${subCount(t)}종 모두 비교하기</button></div>`:''}</section>`};
+
+/* 모바일 홈 */
+const homeTop=()=>`<div class="top"><div style="flex:1"><button class="logo" data-a="home" aria-label="다들 홈" style="font-size:20px;min-height:44px">${mark(22)}<span>다들</span></button></div>
+ <button class="ib" data-a="favs" aria-label="찜">${ic('heart',22,'var(--ink)')}</button>
+ <button class="ib" data-a="say:알림 화면은 다음 단계에서 만들어요" aria-label="알림"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 004 0"/></svg></button></div>`;
+const homeBody=()=>{const h=homeParts(),sub=rankSub(),first=!h.favs.length&&!h.recent.length,pr=pairs(h.dom);
+ return `<div class="scr" id="scr"><div class="pad" style="padding-top:12px">
+ <button class="hsearch" data-a="search">${ic('search',20,'var(--meta)')}<span data-ph>「${PH[S.phI%PH.length]}」</span></button>
+ <div style="margin-top:22px">${heroText(h.st).replace(/<button class="more" data-a="sheet:method">[\s\S]*?<\/button>/,'')}</div>
+ ${h.favs.length?`<div style="margin-top:16px">${newsBox(h.favs,h.news)}</div>`:''}</div>
+ ${h.I.has?forYouSec(h.I):''}<div class="pad">
+ <div style="margin-top:14px">${funnelCard(h.st,true)}</div>
+ ${first?`<div style="margin-top:10px">${stepsStrip()}</div>`:''}
+ <div style="margin-top:20px">${domSeg(h.dom)}</div>
+ ${midTiles(h.dom)}</div>
+ <section class="hsec"><div class="pad"><div class="t-h">모아보니 「대체로 만족」인 제품</div><div class="t-sub" style="margin-top:2px">모은 후기가 많은 순이에요.</div>
+  <div style="margin-top:12px">${rankTabs(sub)}</div><div style="margin-top:4px">${rankBlock(sub,3)}</div></div></section>
+ <section class="hsec"><div class="pad"><div class="t-h">고민별로 찾아보기</div><div class="t-sub" style="margin-top:2px">후기에서 많이 나온 이야기로 줄 세워 뒀어요.</div>
+  <div style="margin-top:12px">${themeCards(h.dom)}</div>${h.I.has?'':`<div class="why2">${whyLine(h.I)}</div>`}</div></section>
+ ${h.gaps.length?`<section class="hsec"><div class="pad"><div class="t-h">별점만 보면 놓치는 이야기</div>
+  <div class="t-sub" style="margin-top:2px">별점은 4.5 이상인데, 진짜 후기를 모아 보니 의견이 갈리거나 아쉽다는 이야기가 많은 제품이에요.</div>
+  <div style="margin-top:10px">${h.gaps.map(gapCard).join('')}</div></div></section>`:''}
+ <section class="hsec"><div class="pad"><div class="t-h">${sub} 살 때 사람들이 가장 많이 말한 것</div><div class="t-sub" style="margin-top:2px">모든 ${sub}의 진짜 후기에서 가장 많이 나온 이야기예요.</div>
+  <div style="margin-top:8px">${guideBlock(sub)}</div></div></section>
+ ${pr.length?`<section class="hsec"><div class="pad"><div class="t-h">나란히 보면 달라요</div><div class="t-sub" style="margin-top:2px">같은 결과여도 들여다보면 다른 곳이 있어요.</div></div>
+  <div class="hs pcs">${pr.map(pairCard).join('')}</div></section>`:''}
+ ${h.recent.length?`<section class="hsec"><div class="pad t-h">최근 본 제품</div><div class="hs">${h.recent.map(x=>miniCard(x)).join('')}</div></section>`:''}
+ ${h.newly.length?`<section class="hsec"><div class="pad"><div class="t-h">새로 모은 제품</div><div class="t-sub" style="margin-top:2px">이번 주에 진짜 후기를 모아 올린 제품이에요.</div></div>
+  <div class="hs">${h.newly.map(x=>miniCard(x,`${x.sub} · 모은 후기 ${nf(x.n)}건`)).join('')}</div></section>`:''}
+ <div class="pad" style="padding-top:26px"><button class="rowbtn" style="padding:0;border-top:.5px solid var(--line)" data-a="sheet:method"><span class="t-body" style="font-weight:600">기준표 · 다들의 약속</span>${ic('chev',16,'var(--meta)',2)}</button></div>
+ <div class="foot"><div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div></div>`};
+
+/* PC 홈 */
+const pcHome=()=>{const h=homeParts(),sub=rankSub(),first=!h.favs.length&&!h.recent.length,pr=pairs(h.dom);
+ return pcProto()+pcGnb({sub:null,mid:null})+`<div class="wrap" style="padding-bottom:60px">
+ <div class="phero"><div style="padding-top:12px">${heroText(h.st).replace('<br>',' ')}
+   ${first?`<div style="margin-top:26px">${stepsStrip()}</div>`:''}</div>
+  <div style="width:400px;flex-shrink:0">${funnelCard(h.st)}</div></div>
+ ${!first?`<div class="h2col" style="margin-top:28px">${h.favs.length?newsBox(h.favs,h.news):'<div></div>'}
+   ${h.recent.length?`<div class="newsb"><div style="font-size:15px;font-weight:700;margin-bottom:6px">최근 본 제품</div>${h.recent.slice(0,3).map(x=>`<button class="nrow" data-a="open:${x.id}">${thumb(x,40,40)}<div style="min-width:0;flex:1;text-align:left"><div class="t-cap" style="color:var(--sub)">${x.brand}</div><div style="font-size:14px;font-weight:600">${x.name}</div></div>${ic('chev',16,'var(--meta)',2)}</button>`).join('')}</div>`:'<div></div>'}</div>`:''}
+ ${h.I.has?forYouSec(h.I,true):''}
+ <div style="display:flex;align-items:center;gap:16px;margin-top:36px">${domSeg(h.dom)}<div class="t-sub">원하는 종류를 골라 보세요</div></div>
+ ${midTiles(h.dom)}
+ <section style="margin-top:44px"><div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap">
+   <div><div class="t-h">모아보니 「대체로 만족」인 제품</div><div class="t-sub" style="margin-top:2px">모은 후기가 많은 순이에요.</div></div>${rankTabs(sub)}</div>
+  <div class="rgrid">${rankBlock(sub,6).replace(/<button class="more"/,'</div><button class="more"').replace(/^/,'<div class="rcols">')}</div></section>
+ <div class="hgrid">
+  <section><div class="t-h">고민별로 찾아보기</div><div class="t-sub" style="margin-top:2px">후기에서 많이 나온 이야기로 줄 세워 뒀어요.</div>
+   <div style="margin-top:14px">${themeCards(h.dom)}</div>${h.I.has?'':`<div class="why2">${whyLine(h.I)}</div>`}</section>
+  <section><div class="t-h">별점만 보면 놓치는 이야기</div><div class="t-sub" style="margin-top:2px">별점은 4.5 이상인데, 진짜 후기를 모아 보니 의견이 갈리거나 아쉽다는 이야기가 많은 제품이에요.</div>
+   <div style="margin-top:8px">${h.gaps.map(gapCard).join('')||'<div class="t-sub">지금은 없어요</div>'}</div></section>
+ </div>
+ <div class="hgrid">
+  <section><div class="t-h">${sub} 살 때 사람들이 가장 많이 말한 것</div><div class="t-sub" style="margin-top:2px">모든 ${sub}의 진짜 후기에서 가장 많이 나온 이야기예요.</div>
+   <div style="margin-top:8px">${guideBlock(sub)}</div></section>
+  <section><div class="t-h">나란히 보면 달라요</div><div class="t-sub" style="margin-top:2px">같은 결과여도 들여다보면 다른 곳이 있어요.</div>
+   <div style="display:grid;gap:14px;margin-top:14px">${pr.map(pairCard).join('')||'<div class="t-sub">지금은 없어요</div>'}</div></section>
+ </div>
+ ${h.newly.length?`<section style="margin-top:44px"><div class="t-h">새로 모은 제품</div><div class="t-sub" style="margin-top:2px">이번 주에 진짜 후기를 모아 올린 제품이에요.</div>
+  <div class="hs">${h.newly.map(x=>miniCard(x,`${x.sub} · 모은 후기 ${nf(x.n)}건`)).join('')}</div></section>`:''}
+ <div class="foot"><button class="more" data-a="sheet:method" style="margin-bottom:8px">기준표 · 다들의 약속 ${ic('chev',14,'var(--brand)',2.2)}</button>
+  <div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div></div>`};
+
+/* ════ 카테고리 메뉴 (모바일 화면 · PC 펼침 메뉴 공통) ════ */
+// 카테고리 이름 찾기: 공백·가운뎃점 무시 · 흔한 다른 표기 · 초성
+const CHO='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ';
+const cho=t=>[...t].map(c=>{const n=c.charCodeAt(0)-0xAC00;return n>=0&&n<11172?CHO[Math.floor(n/588)]:c}).join('');
+const ALIAS=[['후라이','프라이'],['썬','선'],['냄비','냄비'],['쿠숀','쿠션'],['에센스','에센스'],['세럼','세럼']];
+const normC=t=>{let s=t.replace(/[\s·]/g,'');ALIAS.forEach(([a,b])=>{s=s.split(a).join(b)});return s};
+function catMatches(q){q=normC(q.trim());if(!q)return[];const onlyCho=/^[ㄱ-ㅎ]+$/.test(q),out=[];
+ Object.entries(TAX).forEach(([dom,mids])=>mids.forEach(([mid,subs])=>subs.forEach(sub=>{const n=normC(sub),m=normC(mid);
+  const hit=onlyCho?cho(n).includes(q):(n.includes(q)||m.includes(q));
+  if(hit)out.push({dom,mid,sub,score:(onlyCho?cho(n).startsWith(q):n.startsWith(q))?0:n.includes(q)||onlyCho?1:2})})));
+ return out.sort((a,b)=>a.score-b.score||(hasSub(b.sub)-hasSub(a.sub))).slice(0,30)}
+const subCountTxt=sub=>hasSub(sub)?`${subCount(sub)}종`:'준비 중';
+const subGo=sub=>hasSub(sub)?'list:'+sub:'say:'+sub+'은 아직 준비 중이에요';
+const catResults=q=>{const r=catMatches(q);
+ return r.length?r.map(x=>`<button class="crow2 ${hasSub(x.sub)?'':'off'}" data-a="${subGo(x.sub)}"><span style="text-align:left"><b style="font-weight:600">${x.sub}</b>
+  <span class="t-cap" style="display:block">${x.dom} › ${x.mid}</span></span><span class="t-cap num" style="display:flex;align-items:center;gap:2px">${subCountTxt(x.sub)}${hasSub(x.sub)?ic('chev',14,'var(--meta)',2):''}</span></button>`).join('')
+ :`<div style="padding:30px 4px;text-align:center"><div class="t-body">「${q.replace(/[<>&"]/g,'')}」 카테고리는 없어요</div>
+  <div class="t-sub" style="margin-top:4px">제품 이름이나 브랜드라면 검색으로 찾아보세요.</div>
+  <button class="tbtn" style="margin-top:12px" data-a="sgo:${escA(q)}">「${escA(q)}」 제품 검색으로 찾기</button></div>`};
+const catSearch=(pc)=>`<label class="csearch ${pc?'pc':''}">${ic('search',18,'var(--meta)')}
+ <input data-cq type="search" value="${S.cq.replace(/"/g,'&quot;')}" placeholder="${pc?'카테고리 이름으로 찾기 · 예: 선크림, ㅅㅋ':'카테고리 찾기 · 예: 선크림'}" aria-label="카테고리 이름으로 찾기" autocomplete="off" enterkeyhint="search"></label>`;
+const recentCats=()=>S.recentSubs.length?`<div class="fchips" style="margin-top:10px"><span class="t-cap" style="align-self:center;margin-right:2px">최근 본</span>
+ ${S.recentSubs.slice(0,5).map(s=>`<button class="chip" data-a="list:${s}">${s}</button>`).join('')}</div>`:'';
+// 입력할 때는 화면 전체를 다시 그리지 않고 결과 칸만 바꿈 (다시 그리면 입력이 끊김)
+function catLive(inp){S.cq=inp.value;const root=inp.closest('[data-catroot]');if(!root)return;
+ const on=!!S.cq.trim();root.querySelectorAll('[data-cpanes]').forEach(e=>e.hidden=on);
+ const res=root.querySelector('[data-cres]');if(res){res.hidden=!on;res.innerHTML=on?catResults(S.cq):''}}
+
+/* 모바일 카테고리 화면 */
+const catsTop=()=>`<div class="top">${S.prev?`<button class="ib" data-a="catclose" aria-label="닫기"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>`:''}
+ <div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em;${S.prev?'':'padding-left:6px'}">카테고리</div></div>`;
+const catsBody=()=>{const dom=S.cdom,on=!!S.cq.trim();
+ return `<div class="catwrap" data-catroot>
+ <div style="padding:12px 0 12px">${catSearch()}<div class="pad">${recentCats()}<button class="more" data-a="brands" style="min-height:34px">브랜드로 찾기 ${ic('chev',14,'var(--brand)',2.2)}</button></div></div>
+ <div data-cpanes ${on?'hidden':''} style="padding:0 16px 12px">${domSeg(dom).replace(/data-a="hdom:/g,'data-a="cdom:')}</div>
+ <div class="cpanes" data-cpanes ${on?'hidden':''}>
+  <nav class="crail" id="cl" aria-label="중분류">${TAX[dom].map(([m])=>`<button data-m="${m}" data-a="cjump:${m}">${m.replace(/·/g,'\u2060·')}</button>`).join('')}</nav>
+  <div class="cright" id="cr">${TAX[dom].map(([m,subs])=>`<section class="cgrp" data-g="${m}"><h3>${m}</h3>
+   ${subs.map(s=>`<button class="crow2 ${hasSub(s)?'':'off'}" data-a="${subGo(s)}"><span>${s}</span><span class="t-cap num" style="display:flex;align-items:center;gap:2px">${subCountTxt(s)}${hasSub(s)?ic('chev',14,'var(--meta)',2):''}</span></button>`).join('')}</section>`).join('')}
+   <div class="t-cap" style="padding:18px 0 30px">프로토타입 · 제품이 있는 곳은 ${LSUBS.join(' · ')}뿐이에요</div></div></div>
+ <div class="cres" data-cres ${on?'':'hidden'}>${on?catResults(S.cq):''}</div></div>`};
+// 오른쪽을 스크롤하면 왼쪽 표시가 따라옴
+function catSpy(){const cr=document.getElementById('cr'),cl=document.getElementById('cl');if(!cr||!cl||Date.now()<S.spyHold)return;
+ let cur=null;cr.querySelectorAll('[data-g]').forEach(g=>{if(g.offsetTop-cr.offsetTop<=cr.scrollTop+12)cur=g.dataset.g});
+ if(!cur)cur=cr.querySelector('[data-g]').dataset.g;catRail(cur)}
+function catRail(m){const cl=document.getElementById('cl');if(!cl)return;let el=null;
+ cl.querySelectorAll('[data-m]').forEach(b=>{const on=b.dataset.m===m;b.classList.toggle('on',on);b.setAttribute('aria-current',on?'true':'false');if(on)el=b});
+ if(el){if(el.offsetTop<cl.scrollTop)cl.scrollTop=el.offsetTop-8;else if(el.offsetTop+el.offsetHeight>cl.scrollTop+cl.clientHeight)cl.scrollTop=el.offsetTop+el.offsetHeight-cl.clientHeight+8}}
+function catJump(m,smooth){const cr=document.getElementById('cr'),g=cr&&cr.querySelector(`[data-g="${m}"]`);if(!g)return;
+ S.spyHold=Date.now()+700;catRail(m);cr.scrollTo({top:g.offsetTop-cr.offsetTop,behavior:smooth?'smooth':'auto'})}
+function bindCats(){const cr=document.getElementById('cr');if(!cr)return;
+ if(S.catFocus){catJump(S.catFocus,false);S.catFocus=null}else if(S.crTop!=null){cr.scrollTop=S.crTop}
+ cr.addEventListener('scroll',()=>{S.crTop=cr.scrollTop;requestAnimationFrame(catSpy)},{passive:true});catSpy()}
+// 어디서 열든 알맞은 위치로: 대분류 이름 · 중분류 이름 · 빈 값(최근 본 소분류 기준)
+function openCats(v){const isDom=!!TAX[v],isMid=!isDom&&Object.values(TAX).some(ms=>ms.some(([m])=>m===v));
+ const last=S.lastSub?midOf(S.lastSub):null;
+ S.cdom=isDom?v:isMid?Object.keys(TAX).find(d=>TAX[d].some(([m])=>m===v)):last?last.dom:S.hdom;
+ S.catFocus=isMid?v:(!v&&last?last.mid:null);S.crTop=null;S.cq=''}
+
+/* 가격 범위 막대 — 손잡이 두 개 (끌거나 방향키로 조절) */
+const rpos=(v,lo,hi)=>hi>lo?(v-lo)/(hi-lo):0;
+const rangeUI=sub=>{const [lo,hi]=priceBounds(sub),a=S.f.pmin??lo,b=S.f.pmax??hi,pa=rpos(a,lo,hi),pb=rpos(b,lo,hi);
+ return `<div class="rng" data-lo="${lo}" data-hi="${hi}">
+ <div class="rvals"><span class="num" data-rv="a">${won(a)}</span><span aria-hidden="true">~</span><span class="num" data-rv="b">${won(b)}</span></div>
+ <div class="rtrack"><i class="rfill" style="left:calc(14px + (100% - 28px) * ${pa});right:calc(14px + (100% - 28px) * ${1-pb})"></i>
+  <input type="range" data-r="a" min="${lo}" max="${hi}" step="${PSTEP}" value="${a}" aria-label="최저 가격" aria-valuetext="${won(a)}" style="z-index:${pa>.5?4:3}">
+  <input type="range" data-r="b" min="${lo}" max="${hi}" step="${PSTEP}" value="${b}" aria-label="최고 가격" aria-valuetext="${won(b)}" style="z-index:${pa>.5?3:4}"></div>
+ <div class="rends t-cap num"><span>${won(lo)}</span><span>${won(hi)}</span></div></div>`};
+// 끄는 동안에는 화면을 다시 그리지 않고 막대와 숫자만 움직임 (다시 그리면 손잡이를 놓침)
+function rangeLive(inp){const w=inp.closest('.rng'),lo=+w.dataset.lo,hi=+w.dataset.hi,A=w.querySelector('[data-r="a"]'),B=w.querySelector('[data-r="b"]');
+ let a=+A.value,b=+B.value;
+ if(a>b-PSTEP){if(inp===A){a=Math.max(lo,b-PSTEP);A.value=a}else{b=Math.min(hi,a+PSTEP);B.value=b}}
+ const pa=rpos(a,lo,hi),pb=rpos(b,lo,hi),f=w.querySelector('.rfill');
+ f.style.left=`calc(14px + (100% - 28px) * ${pa})`;f.style.right=`calc(14px + (100% - 28px) * ${1-pb})`;
+ A.style.zIndex=pa>.5?4:3;B.style.zIndex=pa>.5?3:4;
+ w.querySelector('[data-rv="a"]').textContent=won(a);w.querySelector('[data-rv="b"]').textContent=won(b);
+ A.setAttribute('aria-valuetext',won(a));B.setAttribute('aria-valuetext',won(b));return [a,b,lo,hi]}
+
+/* 목록용 창: 정렬 · 필터 */
+const listSheet=sub=>{if(S.sheet==='sort')return `<div class="pad"><div class="t-h">정렬</div><div style="margin-top:8px">${SORTS(sub).map(([k,t])=>`<button class="srow" data-a="lsort:${k}"><span>${t}</span>${S.lsort===k?ic('check',20,'var(--brand)',2.6):''}</button>`).join('')}</div>
+  <div class="t-cap" style="margin-top:10px">「무엇이 가장 중요하세요?」에서 고른 기준도 정렬이에요. 여기서 다른 순서를 고르면 풀려요.</div></div>`;
+ const all=allIn(sub),brands=[...new Set(all.map(x=>x.brand))].sort((a,b)=>a.localeCompare(b,'ko'));
+ return `<div class="pad"><div class="t-h">필터</div>
+  <button class="srow" data-a="fgood"><span>「대체로 만족」만 보기</span><span class="sw ${S.f.good?'on':''}"><i></i></span></button>
+  <div class="sh2">가격 범위</div>${rangeUI(sub)}
+  <div class="sh2">브랜드</div><div class="fchips">${brands.map(b=>`<button class="chip ${S.f.brands.includes(b)?'on':''}" data-a="fbrand:${b}">${b}</button>`).join('')}</div>
+  <div style="display:flex;gap:8px;margin-top:20px"><button class="tbtn" style="flex:0 0 auto" data-a="freset">초기화</button>
+   <button class="main" style="height:48px" data-a="close">${filt(all).length}개 제품 보기</button></div></div>`};
 /* ── 후기 카테고리 칩 줄: 화살표 · 누른 칩 표시 · 스크롤 따라가기 ── */
-function arrows(){const r=document.getElementById('crow');if(!r)return;
- document.querySelector('.carr.l')?.classList.toggle('show',r.scrollLeft>2);
- document.querySelector('.carr.r')?.classList.toggle('show',r.scrollLeft+r.clientWidth<r.scrollWidth-2)}
+/* 가로로 넘기는 칩 줄은 모두 같은 틀(.cwrap > .carr · .crow · .carr)을 씀 */
+function arrowsFor(r){const w=r.closest('.cwrap');if(!w)return;
+ w.querySelector('.carr.l')?.classList.toggle('show',r.scrollLeft>2);
+ w.querySelector('.carr.r')?.classList.toggle('show',r.scrollLeft+r.clientWidth<r.scrollWidth-2)}
+function arrows(){document.querySelectorAll('.cwrap .crow').forEach(arrowsFor)}
+const rowKey=r=>r.id||r.dataset.key||'row';
 function reveal(k){const r=document.getElementById('crow'),c=r&&r.querySelector(`[data-k="${k}"]`);if(!c)return;
  const pad=64,L=c.offsetLeft,R=L+c.offsetWidth;   // 화살표 · 흐림에 가리지 않게 여유를 둠
  if(L<r.scrollLeft+pad)r.scrollTo({left:Math.max(0,L-pad),behavior:'smooth'});
  else if(R>r.scrollLeft+r.clientWidth-pad)r.scrollTo({left:R-r.clientWidth+pad,behavior:'smooth'})}
 function setAct(k){if(S.act===k)return reveal(k);S.act=k;
- document.querySelectorAll('.crow .chip').forEach(c=>{const on=c.dataset.k===k;c.classList.toggle('on',on);
+ document.querySelectorAll('#crow .chip').forEach(c=>{const on=c.dataset.k===k;c.classList.toggle('on',on);
   const sv=c.querySelector('svg');if(sv)sv.setAttribute('stroke',on?'#fff':'var(--sub)')});reveal(k)}
-function spy(){if(Date.now()<S.spyHold)return;const bar=document.querySelector('.chips');if(!bar)return;
+function spy(){if(Date.now()<S.spyHold||S.screen!=='detail')return;const bar=document.querySelector('.chips');if(!bar)return;
  const lim=bar.getBoundingClientRect().bottom+12;let cur=null;
- document.querySelectorAll('.crow .chip').forEach(c=>{const t=document.getElementById('c-'+c.dataset.k);if(t&&t.getBoundingClientRect().top<=lim)cur=c.dataset.k});
+ document.querySelectorAll('#crow .chip').forEach(c=>{const t=document.getElementById('c-'+c.dataset.k);if(t&&t.getBoundingClientRect().top<=lim)cur=c.dataset.k});
  if(cur&&cur!==S.act)setAct(cur)}
-function bindChips(){const r=document.getElementById('crow');if(!r)return;r.scrollLeft=S.crowX||0;
- r.addEventListener('scroll',()=>{S.crowX=r.scrollLeft;arrows()},{passive:true});arrows();
- const sc=document.getElementById('scr');if(sc)sc.addEventListener('scroll',()=>requestAnimationFrame(spy),{passive:true})}
+function bindChips(){document.querySelectorAll('.cwrap .crow').forEach(r=>{const k=rowKey(r);r.scrollLeft=S.crowXs[k]||0;
+  r.addEventListener('scroll',()=>{S.crowXs[k]=r.scrollLeft;arrowsFor(r)},{passive:true})});arrows();
+ const sc=document.getElementById('scr');if(sc&&document.getElementById('crow'))sc.addEventListener('scroll',()=>requestAnimationFrame(spy),{passive:true})}
 window.addEventListener('scroll',()=>{if(S.view==='pc')requestAnimationFrame(spy)},{passive:true});
 window.addEventListener('resize',arrows);
+
+/* ════ 검색 ════
+   입력 전(최근 검색 · 많이 찾는 말 · 바로 가기) → 입력 중(카테고리 · 브랜드 · 제품 자동완성) → 결과 → 결과 없음(후기 모아주세요)
+   찾기 규칙: 공백 · 가운뎃점 무시 · 다른 표기 · 초성 · 여러 단어(모두 맞아야 함) */
+const POPQ=['선크림','젖병','인덕션 프라이팬','수분크림','유모차','에어프라이어','기저귀','편수냄비'];  // 가상
+const escA=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const tokens=q=>q.trim().split(/\s+/).map(normC).filter(Boolean);
+const tokHit=(t,text)=>/^[ㄱ-ㅎ]+$/.test(t)?cho(text).includes(t):text.includes(t);
+const itemText=x=>normC(x.brand+x.name+x.sub+midOf(x.sub).mid);
+function searchAll(q){const ts=tokens(q);if(!ts.length)return {subs:[],brands:[],items:[],loose:false,ts};
+ let subs=ALLSUBS.filter(s=>{const n=normC(s);return ts.some(t=>tokHit(t,n)||(t.length>=2&&t.includes(n)))});
+ // 검색어에 더 긴 카테고리 이름이 통째로 들어 있으면 그 안의 짧은 이름은 뺌 — 「선크림」에 「크림」이 끼지 않게 (「젖병」은 「젖병소독기」 때문에 빠지지 않음)
+ subs=subs.filter(s=>{const n=normC(s);return !subs.some(o=>o!==s&&normC(o).length>n.length&&normC(o).includes(n)&&ts.some(t=>t.includes(normC(o))))}).sort((a,b)=>hasSub(b)-hasSub(a));
+ const brands=[...new Set(ALL().map(x=>x.brand))].filter(b=>ts.some(t=>tokHit(t,normC(b))));
+ let items=ALL().filter(x=>ts.every(t=>tokHit(t,itemText(x)))),loose=false;
+ // 일부 단어만 맞으면(「건성 크림」) 비우지 않고 맞은 카테고리 전체를 보여주되 그 사실을 알림
+ if(!items.length){const hs=subs.filter(hasSub);if(hs.length){items=hs.flatMap(allIn);loose=true}}
+ return {subs:subs.slice(0,8),brands,items:sortItems(items,'default'),loose,ts}}
+const reqCount=q=>3+hashS(normC(q))%37;   // 가상 — 실제로는 같은 요청을 한 사람 수
+
+const preHTML=()=>`<div class="sblk">
+ ${S.recentQ.length?`<div class="shd"><span>최근 검색</span><button class="plink" data-a="sclr">모두 지우기</button></div>
+  <div class="fchips">${S.recentQ.map(q=>`<span class="rq"><button data-a="sgo:${escA(q)}">${escA(q)}</button><button class="rqx" data-a="sdel:${escA(q)}" aria-label="${escA(q)} 지우기">×</button></span>`).join('')}</div>`:''}
+ <div class="shd" style="margin-top:${S.recentQ.length?22:0}px"><span>지금 많이 찾는 말</span><span class="t-cap">샘플</span></div>
+ <div class="popq">${POPQ.map((q,i)=>`<button data-a="sgo:${escA(q)}"><span class="num pn">${i+1}</span>${q}</button>`).join('')}</div>
+ <div class="shd" style="margin-top:22px"><span>바로 가기</span></div>
+ <div class="fchips">${LSUBS.map(s=>`<button class="chip" data-a="list:${s}">${s} <span class="num" style="color:var(--meta)">${subCount(s)}</span></button>`).join('')}</div></div>`;
+
+const sugHTML=q=>{const r=searchAll(q),items=r.loose?[]:r.items.slice(0,5);
+ const row=(a,main,side)=>`<button class="srow2" data-a="${a}">${main}<span class="t-cap num" style="flex-shrink:0">${side||''}</span></button>`;
+ return `<div class="sblk" style="padding-top:6px">
+ ${r.subs.length?`<div class="sgh">카테고리</div>${r.subs.slice(0,4).map(s=>row(hasSub(s)?'list:'+s:'say:'+s+'은 아직 준비 중이에요',`<span style="flex:1;min-width:0;text-align:left"><b style="font-weight:600;${hasSub(s)?'':'color:var(--tiny)'}">${s}</b> <span class="t-cap">${midOf(s).dom} › ${midOf(s).mid}</span></span>`,hasSub(s)?subCount(s)+'종':'준비 중')).join('')}`:''}
+ ${r.brands.length?`<div class="sgh">브랜드</div>${r.brands.slice(0,3).map(b=>row('brand:'+escA(b),`<span style="flex:1;text-align:left;font-weight:600">${b}</span>`,ALL().filter(x=>x.brand===b).length+'개 제품')).join('')}`:''}
+ ${items.length?`<div class="sgh">제품</div>${items.map(x=>{const L=labOf(x);return `<button class="srow2" data-a="open:${x.id}">${thumb(x,40,40)}<span style="flex:1;min-width:0;text-align:left"><span class="t-cap" style="color:var(--sub)">${x.brand}</span>
+  <span style="display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${x.name}</span></span>
+  <span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:${LCOL(L)};flex-shrink:0"><span class="dot" style="background:${LDOT(L)}"></span>${L}</span></button>`}).join('')}`:''}
+ ${!r.subs.length&&!r.brands.length&&!r.items.length?`<div class="t-sub" style="padding:14px 0">맞는 카테고리 · 브랜드 · 제품이 없어요. 검색하면 후기를 모아 달라고 요청할 수 있어요.</div>`:''}
+ <button class="sall" data-a="sgo:${escA(q)}">${ic('search',16,'var(--brand)',2.2)}<span style="text-wrap:balance"><span style="white-space:nowrap">「${escA(q)}」</span> 검색 결과 <span style="white-space:nowrap">${r.items.length?`<b class="num">${r.items.length}개</b> `:''}모두 보기</span></span></button></div>`};
+
+const reqBlock=(q,big)=>{const done=!!S.requested[q],n=reqCount(q)+(done?1:0);
+ return `<div class="reqb ${big?'big':''}"><div style="font-size:${big?17:15}px;font-weight:700;letter-spacing:-.02em">${big?`「${escA(q)}」${J(q,'은','는')} 아직 후기를 모은 제품이 아니에요`:'찾는 제품이 없나요?'}</div>
+ <div class="t-sub" style="margin-top:4px">${big?'알려주시면 브랜드 공식 스토어의 후기를 모아 둘게요.':'알려주시면 후기를 모아 둘게요.'} <span class="num">지금까지 ${n}명이 찾으셨어요.</span></div>
+ ${done?`<div class="t-body" style="margin-top:12px;color:var(--brand);font-weight:700;display:flex;align-items:center;gap:6px">${ic('check',18,'var(--brand)',2.6)}요청했어요. 후기가 모이면 찜 탭에서 알려드릴게요</div>`
+  :`<button class="tbtn" style="margin-top:12px;background:var(--surface)" data-a="sreq:${escA(q)}">「${escA(q)}」 후기 모아주세요</button>`}</div>`};
+
+const resHTML=(q,pc)=>{const r=searchAll(q),hs=r.subs.filter(hasSub);
+ if(!r.items.length)return `<div class="sblk">${reqBlock(q,true)}
+  ${r.subs.length?`<div class="shd" style="margin-top:24px"><span>이런 카테고리는 어때요?</span></div><div class="fchips">${r.subs.slice(0,6).map(s=>`<button class="chip" data-a="${hasSub(s)?'list:'+s:'say:'+s+'은 아직 준비 중이에요'}">${s}</button>`).join('')}</div>`:''}
+  <div class="shd" style="margin-top:24px"><span>지금 많이 찾는 말</span></div><div class="fchips">${POPQ.slice(0,6).map(x=>`<button class="chip" data-a="sgo:${escA(x)}">${x}</button>`).join('')}</div></div>`;
+ return `<div class="sblk">
+ ${hs.map(s=>{const xs=allIn(s);return `<button class="subcard" data-a="list:${s}"><div style="min-width:0;flex:1;text-align:left"><div class="t-cap">${midOf(s).dom} › ${midOf(s).mid}</div>
+  <div style="font-size:17px;font-weight:700;letter-spacing:-.02em;margin-top:1px">${s} ${xs.length}종, 후기로 비교하기</div>
+  <div class="bar" style="height:6px;margin-top:8px;max-width:260px">${LABS.map(l=>[l,xs.filter(x=>labOf(x)===l).length]).filter(x=>x[1]).map(([l,n])=>`<i style="width:${n/xs.length*100}%;background:${LDOT(l)}"></i>`).join('')}</div></div>
+  ${ic('chev',20,'var(--brand)',2.2)}</button>`}).join('')}
+ ${r.brands.length?`<div class="fchips" style="margin-top:12px"><span class="t-cap" style="align-self:center">브랜드</span>${r.brands.map(b=>`<button class="chip" data-a="brand:${escA(b)}">${b}</button>`).join('')}</div>`:''}
+ ${r.loose?(()=>{const miss=r.ts.filter(t=>!hs.some(s=>normC(s).includes(t)||t.includes(normC(s)))).join(' ');return `<div class="snote">「${escA(miss)}」${J(miss,'과','와')} 맞는 제품은 없어서, ${hs.join(' · ')} 전체를 보여드려요.</div>`})():''}
+ <div class="t-cap num" style="margin-top:16px">제품 ${r.items.length}개 · 모아보니 순</div></div>
+ <div class="${pc?'sgrid':''}">${r.items.map(x=>lcard(x,'default')).join('')}</div>
+ <div class="sblk">${reqBlock(q,false)}</div>`};
+
+/* 모바일 검색 화면 */
+const searchTop=()=>`<div class="top"><button class="ib" data-a="sback" aria-label="뒤로">${ic('back',22,'var(--ink)')}</button>
+ <label class="sfield">${ic('search',18,'var(--meta)')}<input data-sq type="search" enterkeyhint="search" autocomplete="off" value="${escA(S.q)}" placeholder="제품 · 브랜드 · 카테고리 검색" aria-label="검색어">
+  <button class="sx" data-a="sclear" aria-label="검색어 지우기" ${S.q?'':'hidden'}>×</button></label></div>`;
+const searchBody=()=>`<div class="scr" id="scr" data-sroot><div data-sres>${S.q.trim()?(S.sqDone?resHTML(S.q):sugHTML(S.q)):preHTML()}</div>
+ <div class="foot"><div class="t-cap">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div></div>`;
+/* PC 검색 결과 */
+const pcSearch=()=>pcProto()+pcGnb({sub:null,mid:null})+`<div class="wrap" style="padding-bottom:140px">
+ <div class="pcrumb"><button data-a="home" style="color:var(--meta)">홈</button><span aria-hidden="true">›</span><b>검색</b></div>
+ <h1 class="t-title">「${escA(S.q)}」 검색 결과</h1>
+ <div style="max-width:980px">${resHTML(S.q,true)}</div>
+ <div class="foot"><div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div></div>`+pcTray({sub:S.lsub});
+
+// 입력하는 동안에는 결과 칸만 바꿈 (화면 전체를 다시 그리면 입력이 끊김)
+function searchLive(inp){S.q=inp.value;S.sqDone=false;const root=inp.closest('[data-sroot]')||document;
+ const res=root.querySelector('[data-sres]');if(res)res.innerHTML=S.q.trim()?sugHTML(S.q):preHTML();
+ const x=inp.parentElement.querySelector('.sx');if(x)x.hidden=!S.q}
+function submitSearch(q){q=String(q||'').trim();if(!q)return;
+ if(S.screen!=='search')S.sPrev={screen:S.screen,pid:S.pid,lsub:S.lsub,csub:S.csub};
+ Object.assign(S,{q,sqDone:true,sOpen:false,mega:null,sheet:null,screen:'search',resetTop:1,recentQ:[q,...S.recentQ.filter(x=>x!==q)].slice(0,8)});
+ draw();if(document.activeElement)document.activeElement.blur()}
+
+/* ════ 찜 ════
+   다시 오게 만드는 중심 — 목록보다 「찜한 제품에서 무엇이 달라졌는지」를 먼저 보여줌
+   찜은 연결 없이 됨(기기에 저장) · 알림을 받으려면 그때만 연결 */
+const favItems=()=>Object.keys(S.fav).filter(k=>S.fav[k]).map(itemOf).filter(Boolean);
+const NOTI=[['price','가격이 내리면'],['month','한 달 써 본 후기가 늘면'],['label','모아보니 결과가 바뀌면'],['req','요청한 제품의 후기가 모이면']];
+const notiBox=pc=>S.user?`<div class="notib on">${ic('check',18,'var(--brand)',2.6)}<div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:700">알림을 받고 있어요</div>
+  <div class="t-cap">${S.user.ch==='kakao'?'카카오톡':'네이버'}으로 · ${NOTI.filter(([k])=>S.notiPref[k]).length}가지 알림</div></div><button class="tbtn" data-a="sheet:noti">설정</button></div>`
+ :`<div class="notib"><div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:700">찜한 제품이 달라지면 알려드릴까요?</div>
+  <div class="t-cap">가격이 내리거나 한 달 써 본 후기가 늘면 알려드려요.</div></div><button class="tbtn" style="background:var(--brand);color:#fff;border-color:var(--brand)" data-a="sheet:login">알림 받기</button></div>`;
+const favRow=x=>{const L=labOf(x);return `<div class="frow"><button class="lmain" data-a="open:${x.id}">${thumb(x,64,64)}
+ <div style="min-width:0;flex:1"><div class="t-cap" style="color:var(--sub)">${x.brand}</div><div class="lname">${x.name}</div>
+  <div style="display:flex;align-items:center;gap:6px;margin-top:3px;font-size:13px"><span class="dot" style="background:${LDOT(L)}"></span><span style="font-weight:700;color:${LCOL(L)}">${L}</span><span class="num" style="color:var(--sub)">· 모은 후기 ${nf(x.n)}건</span></div>
+  ${NEWS[x.id]?`<div class="fnews">${NEWS[x.id]}</div>`:`<div class="t-cap" style="margin-top:3px">${isThin(x)?`후기가 30건 모이면 알려드릴게요 (지금 ${x.n}건)`:'지난주와 달라진 게 없어요'}</div>`}</div></button>
+ <div class="lfoot" style="padding-left:78px"><div><span class="num" style="font-size:15px;font-weight:700">${won(x.price)}</span>${x.vol?` <span class="t-cap num">${unitPrice(x)}</span>`:''}</div>
+  <div style="display:flex;gap:6px;align-items:center">${favBtn(x)}${cmpBtn(x)}</div></div></div>`};
+const favGroups=()=>{const xs=favItems();return [...new Set([...LSUBS,...xs.map(x=>x.sub)])].map(sub=>[sub,sortItems(xs.filter(x=>x.sub===sub),'default')]).filter(g=>g[1].length)};
+const reqList=()=>Object.keys(S.requested).filter(q=>S.requested[q]);
+const favBody=pc=>{const gs=favGroups(),n=favItems().length,news=favItems().filter(x=>NEWS[x.id]),reqs=reqList(),I=interest();
+ const empty=!n;   // 요청만 있어도 찜이 없으면 안내를 보여줌 (요청은 옆 칸에 따로 나옴)
+ const side=`${notiBox(pc)}
+ ${news.length?`<div class="newsb" style="margin-top:14px"><div style="font-size:15px;font-weight:700;margin-bottom:4px">이번 주 달라진 곳 <span class="num" style="color:var(--brand)">${news.length}</span></div>
+  ${news.map(x=>`<button class="nrow" data-a="open:${x.id}">${thumb(x,40,40)}<div style="min-width:0;flex:1;text-align:left"><div class="t-cap" style="color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${x.brand} · ${x.name}</div>
+   <div style="font-size:14px;font-weight:600;letter-spacing:-.02em">${NEWS[x.id]}</div></div>${ic('chev',16,'var(--meta)',2)}</button>`).join('')}</div>`:''}
+ ${reqs.length?`<div class="newsb" style="margin-top:14px"><div style="font-size:15px;font-weight:700">후기를 모아 달라고 요청한 제품</div>
+  ${reqs.map(q=>`<div class="nrow" style="justify-content:space-between"><div style="min-width:0"><div style="font-size:14px;font-weight:600">「${escA(q)}」</div><div class="t-cap num">모으는 중 · ${reqCount(q)+1}명이 기다려요</div></div>
+   <button class="plink" data-a="unreq:${escA(q)}">요청 취소</button></div>`).join('')}</div>`:''}`;
+ const main=empty?`<div style="padding:30px 4px 10px;text-align:center"><div class="t-h">아직 찜한 제품이 없어요</div>
+  <div class="t-sub" style="margin-top:6px">마음에 드는 제품에 ♡를 누르면 여기에 모여요.<br>가격이 내리거나 한 달 써 본 후기가 늘면 알려드려요.</div>
+  <button class="tbtn" style="margin-top:14px" data-a="cats:">카테고리 둘러보기</button></div>
+  ${I.has&&forYou(I).length?`<div style="margin-top:22px"><div class="t-h">관심 가질 만한 제품</div><div class="hs" style="padding-left:0;padding-right:0">${forYou(I).map(x=>miniCard(x,`${x.sub} · 모은 후기 ${nf(x.n)}건`)).join('')}</div></div>`:''}`
+ :gs.map(([sub,xs])=>`<section class="fgrp"><div class="fgh"><span><b>${sub}</b> <span class="num" style="color:var(--meta)">${xs.length}</span></span>
+   ${xs.filter(x=>!isThin(x)).length>=2?`<button class="plink" style="font-size:13px" data-a="favcmp:${sub}">${xs.length>4?'4개까지 ':''}비교함에 담아 비교하기</button>`:''}</div>
+   <div class="${pc?'fgrid':''}">${xs.map(favRow).join('')}</div></section>`).join('');
+ return {side,main,n,empty}};
+
+/* 모바일 */
+const favTop=()=>`<div class="top"><div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em;padding-left:6px">찜 <span class="num" style="color:var(--meta);font-weight:500">${favItems().length}</span></div></div>`;
+const favScreen=()=>{const f=favBody(false);return `<div class="scr" id="scr"><div class="pad" style="padding-top:14px">${f.side}</div>
+ <div class="pad">${f.main}</div>
+ <div class="foot"><div class="t-cap">찜은 이 기기에 저장돼요. 알림을 받으려고 연결하면 다른 기기에서도 이어져요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 소식과 숫자는 모두 가상이에요</div></div></div>`};
+/* PC */
+const pcFavs=()=>{const f=favBody(true);return pcProto()+pcGnb({sub:null,mid:null})+`<div class="wrap" style="padding-bottom:140px">
+ <div class="pcrumb"><button data-a="home" style="color:var(--meta)">홈</button><span aria-hidden="true">›</span><b>찜</b></div>
+ <h1 class="t-title">찜 <span class="num" style="color:var(--meta);font-weight:500">${f.n}</span></h1>
+ <div class="favgrid"><aside>${f.side}</aside><main style="min-width:0">${f.main}</main></div>
+ <div class="foot"><div class="t-cap">찜은 이 기기에 저장돼요. 알림을 받으려고 연결하면 다른 기기에서도 이어져요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 소식과 숫자는 모두 가상이에요</div></div></div>`+pcTray({sub:S.lsub})};
+
+/* 창: 연결(로그인) · 알림 설정 */
+const loginSheet=()=>`<div class="pad"><div class="t-h">알림을 받으려면 연결해 주세요</div>
+ <div class="t-sub" style="margin-top:4px">받는 건 알림 보낼 연락처 하나뿐이에요. 이름도 주소도 받지 않아요.</div>
+ <button class="lgbtn kakao" data-a="login:kakao">카카오로 계속하기</button><button class="lgbtn naver" data-a="login:naver">네이버로 계속하기</button>
+ <div class="t-cap" style="margin-top:12px">찜과 비교함은 연결하지 않아도 그대로 쓸 수 있어요.</div></div>`;
+const notiSheet=()=>`<div class="pad"><div class="t-h">알림 설정</div><div class="t-sub" style="margin-top:4px">${S.user.ch==='kakao'?'카카오톡':'네이버'}으로 알려드려요.</div>
+ <div style="margin-top:8px">${NOTI.map(([k,t])=>`<button class="srow" data-a="notipref:${k}"><span>${t}</span><span class="sw ${S.notiPref[k]?'on':''}"><i></i></span></button>`).join('')}</div>
+ <button class="plink" style="margin-top:14px;color:var(--sub)" data-a="logout">연결 끊기</button></div>`;
+
+/* ════ 이 이야기만 자세히 — 후기 카테고리 하나를 깊게 ════
+   ★ 2026-09-30 결정: 이 화면과 후기 분류(템플릿 · 포인트 사전)는 수집한 후기 빅데이터를 검토한 뒤,
+     현실적으로 반영 가능한 범위에서 다시 다듬음. 지금은 샘플 데이터로 만든 초안
+   원문은 보여주지 않음(포인트와 건수만) · 숫자는 상세와 같은 데이터에서 옴 */
+const storyData=(p,c)=>{const all={m:c.m,g:c.g,b:c.b},mon=c.time?{m:c.m,g:c.g,b:c.b}:{m:c.mm,g:c.mg,b:c.mb};
+ return {all,mon,base:c.time?p.month:p.n,bn:c.time?'한 달 써 본 후기':'모은 후기'}};
+// 한 달 뒤 달라지는지 — 전체와 한 달 써 본 후기의 좋다 비율 차이
+const monthShift=(p,c)=>{if(c.time)return {txt:'이 이야기는 시간이 지나야 알 수 있어서, 처음부터 한 달 써 본 후기만 셌어요.',kind:'time'};
+ const d=storyData(p,c);if(!d.mon.m)return {txt:'한 달 써 본 분의 이야기는 아직 없어요.',kind:'few'};
+ if(d.mon.m<10)return {txt:`한 달 써 본 분의 이야기가 아직 ${d.mon.m}건뿐이라 비교하기 일러요.`,kind:'few'};
+ // 차이는 화면에 보이는 반올림 숫자로 계산 — 「40% → 35%」인데 「비슷해요」가 나오지 않게
+ const a=d.all.g/d.all.m,b=d.mon.g/d.mon.m,diff=Math.round(b*100)-Math.round(a*100),note=d.mon.m<30?`한 달 써 본 후기는 아직 ${d.mon.m}건이라 참고로만 봐 주세요.`:'';
+ return {a,b,diff,kind:'cmp',note,txt:Math.abs(diff)<5?'한 달 써 본 뒤에도 좋다는 비율이 비슷해요.':diff<0?`한 달 써 본 뒤에는 좋다는 비율이 ${-diff}%p 줄어요.`:`한 달 써 본 뒤에는 좋다는 비율이 ${diff}%p 늘어요.`}};
+
+const storyParts=(p,k,pc)=>{const c=p.cats.find(x=>x.k===k),d=storyData(p,c),st=S.month&&!c.time?d.mon:d.all,ms=monthShift(p,c);
+ const pts=c.pts.map(x=>({s:x[0],t:x[1],n:c.time?x[2]:S.month?x[3]:x[2],mn:x[3]})).filter(x=>x.n>0);
+ const good=pts.filter(x=>x.s==='+').sort((a,b)=>b.n-a.n),bad=pts.filter(x=>x.s==='-').sort((a,b)=>b.n-a.n);
+ const peers=allIn(p.sub).filter(x=>okK(x,k)).sort((a,b)=>shareK(b,k)-shareK(a,k)),few=allIn(p.sub).filter(x=>!okK(x,k)),tier=tierOf(norm(p),k);
+ const ptRows=(arr,s)=>arr.length?arr.map(x=>`<div class="spt">${mk(s)}<div style="flex:1;min-width:0"><div class="t-body">${x.t}</div>
+   <div class="sbar"><i style="width:${Math.max(3,x.n/st.m*100)}%;background:${s==='+'?'var(--good)':'var(--bad)'}"></i></div></div>
+   <div class="ct num" style="text-align:right">${nf(x.n)}건<div class="t-cap">${pct(x.n,st.m)}%</div></div></div>`).join(''):`<div class="t-sub" style="padding:8px 0">아직 없어요</div>`;
+ const head=`<div class="t-cap" style="color:var(--sub)">${p.brand} · ${p.name}</div>
+  <h1 class="t-title" style="display:flex;align-items:center;gap:6px;margin-top:2px">${c.time?ic('clock',20,'var(--sub)',2):''}${c.name}</h1>
+  <div class="t-sub num" style="margin-top:4px">${S.month&&!c.time?'한 달 써 본 후기':d.bn} ${nf(S.month&&!c.time?p.month:d.base)}건 중 ${nf(st.m)}건이 이 이야기를 했어요</div>
+  <div class="stat" style="margin-top:12px"><span class="t-num num" style="color:var(--brand)">좋다 ${pct(st.g,st.m)}%</span><span class="t-body num" style="color:var(--ink2)">아쉽다 ${pct(st.b,st.m)}%</span>
+   ${tier&&!S.month?`<span class="tier" style="margin-left:auto">${p.sub} ${subCount(p.sub)}종 중 ${tier}</span>`:''}</div>
+  <div class="bar" style="height:10px;border-radius:5px"><i class="g" style="width:${st.g/st.m*100}%"></i><i class="b" style="width:${st.b/st.m*100}%"></i></div>
+  ${c.time?'':`<button class="mtog" style="width:100%;padding:14px 0 0" data-a="month" aria-pressed="${S.month}"><span>한 달 써 본 분 이야기만 보기 <span class="num" style="color:var(--meta)">(${p.month}건)</span></span><span class="sw ${S.month?'on':''}"><i></i></span></button>`}`;
+ const points=`<section class="stsec"><div class="t-h">나온 이야기 전부</div><div class="t-sub" style="margin-top:2px">이 이야기를 한 후기 중 몇 %가 말했는지예요. 한 후기가 여러 이야기를 할 수 있어요.</div>
+  <div class="sgh" style="margin-top:14px">좋다는 이야기</div>${ptRows(good,'+')}
+  <div class="sgh" style="margin-top:14px">아쉽다는 이야기</div>${ptRows(bad,'-')}</section>`;
+ const month=`<section class="stsec"><div class="t-h">한 달 뒤에도 그럴까요?</div>
+  ${ms.kind==='cmp'?`<div class="mcmp"><div><div class="t-cap">모은 후기 전체</div><div class="t-num num" style="font-size:26px">${Math.round(ms.a*100)}%</div><div class="t-cap num">${nf(d.all.m)}건 중</div></div>
+   <div class="marr" aria-hidden="true">→</div>
+   <div><div class="t-cap">한 달 써 본 후기</div><div class="t-num num" style="font-size:26px;color:${ms.diff<=-5?'var(--ink2)':'var(--brand)'}">${Math.round(ms.b*100)}%</div><div class="t-cap num">${nf(d.mon.m)}건 중</div></div></div>`:''}
+  <div class="t-body" style="margin-top:10px;color:var(--ink2);text-wrap:balance">${ms.txt}</div>${ms.note?`<div class="t-cap" style="margin-top:2px">${ms.note}</div>`:''}</section>`;
+ const cmp=`<section class="stsec"><div class="t-h">같은 ${p.sub}끼리 이 이야기만</div><div class="t-sub" style="margin-top:2px">「${c.name}」 좋다는 비율이 높은 순이에요.</div>
+  <div style="margin-top:10px">${peers.map(x=>{const v=shareK(x,k),me=x.id===p.id;return `<button class="prow ${me?'me':''}" data-a="${me?'say:지금 보고 계신 제품이에요':x.full?'pick:'+x.id:'say:프로토타입에서는 샘플 '+P.length+'개만 상세가 있어요'}">
+   <span class="pnm"><span class="pb">${x.brand}</span> <span class="pn2">${x.name}</span></span>
+   <span class="pbar"><i style="width:${v*100}%"></i></span><span class="num pv">${Math.round(v*100)}%</span></button>`}).join('')}</div>
+  ${few.length?`<div class="t-cap" style="margin-top:8px">이 이야기를 한 후기가 30건이 안 되는 ${few.length}개 제품은 뺐어요.</div>`:''}
+  <button class="more" data-a="theme:${p.sub}:${k}">이 기준으로 ${p.sub} 목록 보기 ${ic('chev',14,'var(--brand)',2.2)}</button></section>`;
+ const foot=`<div class="foot"><div class="t-cap">리뷰 원문은 옮겨 오지 않아요. 원래 글은 스마트스토어에서 볼 수 있어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div>`;
+ return {head,points,month,cmp,foot,c}};
+
+const storyTop=()=>`<div class="top"><button class="ib" data-a="storyback" aria-label="제품으로 돌아가기">${ic('back',22,'var(--ink)')}</button>
+ <div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em">이 이야기만 자세히</div>
+ <button class="ib" data-a="home" aria-label="홈으로">${ic('home',22,'var(--ink)')}</button></div>`;
+const storyBody=()=>{const p=byId(S.pid),s=storyParts(p,S.storyK);
+ return `<div class="scr" id="scr"><div class="pad" style="padding-top:16px">${s.head}</div>
+ <div class="pad">${s.month}${s.points}${s.cmp}</div>${s.foot}</div>`};
+const pcStory=()=>{const p=byId(S.pid),s=storyParts(p,S.storyK,true);
+ return pcProto()+pcGnb({sub:p.sub,mid:p.mid})+`<div class="wrap" style="padding-bottom:120px">
+ <div class="pcrumb"><button data-a="list:${p.sub}" style="color:var(--meta)">${p.sub}</button><span aria-hidden="true">›</span><button data-a="storyback" style="color:var(--meta)">${p.brand} ${p.name}</button><span aria-hidden="true">›</span><b>${s.c.name}</b></div>
+ <div class="stgrid"><div>${s.head}${s.points}</div><div>${s.month}${s.cmp}</div></div>${s.foot}</div>`};
+
+/* ════ 브랜드 ════
+   다들은 브랜드를 평가하지 않음 — 브랜드 평점 · 브랜드 라벨 없음. 제품을 모아 보여주고, 라벨은 제품마다 따로 */
+const brandItems=b=>ALL().filter(x=>x.brand===b);
+const allBrands=()=>[...new Set(ALL().map(x=>x.brand))].sort((a,b)=>a.localeCompare(b,'ko'));
+const choKey=b=>{const c=cho(b[0]);return /[ㄱ-ㅎ]/.test(c)?({ㄲ:'ㄱ',ㄸ:'ㄷ',ㅃ:'ㅂ',ㅆ:'ㅅ',ㅉ:'ㅈ'}[c]||c):'A~Z'};
+const brandLink=b=>`<button class="blink" data-a="brand:${escA(b)}">${b}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>`;
+
+const brandParts=(b,pc)=>{const xs=brandItems(b),subs=[...new Set(xs.map(x=>x.sub))],doms=[...new Set(xs.map(x=>midOf(x.sub).dom))],f=!!S.follow[b];
+ const head=`<div class="t-cap">${doms.join(' · ')}</div><h1 class="t-title" style="margin-top:2px">${b}</h1>
+  <div class="t-sub num" style="margin-top:4px">제품 ${xs.length}개 · ${subs.join(' · ')}</div>
+  <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+   <button class="tbtn ${f?'on':''}" data-a="follow:${escA(b)}" aria-pressed="${f}" style="${f?'border-color:var(--brand);color:var(--brand);background:var(--brandBg)':''}">${f?ic('check',16,'var(--brand)',2.6)+'새 제품 알림 받는 중':'새 제품이 모이면 알려주세요'}</button>
+   <button class="tbtn" data-a="say:새 창에서 ${escA(b)} 브랜드스토어가 열려요">${ic('ext',16,'var(--ink2)')}브랜드스토어</button></div>
+  <div class="bnote">${bySent('다들은 브랜드를 평가하지 않아요. 같은 브랜드라도 제품마다 후기를 따로 모아요.')}</div>
+  ${distBar(xs)}`;
+ const groups=subs.map(s=>{const g=sortItems(xs.filter(x=>x.sub===s),'default');return `<section class="bgrp"><div class="fgh"><span><b>${s}</b> <span class="num" style="color:var(--meta)">${g.length}</span></span>
+  <button class="plink" style="font-size:13px" data-a="list:${s}">같은 ${s} ${subCount(s)}종과 비교</button></div>
+  <div class="${pc?'sgrid':''}" style="${pc?'padding:10px 0 0':''}">${g.map(x=>lcard(x,'default')).join('')}</div></section>`}).join('');
+ return {head,groups}};
+
+const brandTop=t=>`<div class="top"><button class="ib" data-a="brandback" aria-label="뒤로">${ic('back',22,'var(--ink)')}</button>
+ <div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em">${t}</div>
+ <button class="ib" data-a="home" aria-label="홈으로">${ic('home',22,'var(--ink)')}</button></div>`;
+const brandBody=()=>{const s=brandParts(S.brand);return `<div class="scr" id="scr"><div class="pad" style="padding-top:16px">${s.head}</div>
+ <div class="pad">${s.groups}</div><div class="pad" style="padding-top:18px"><button class="more" data-a="brands">다른 브랜드 둘러보기 ${ic('chev',14,'var(--brand)',2.2)}</button></div>
+ <div class="foot"><div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div></div>`};
+// 브랜드 모아보기 — 가나다순, 초성으로 묶음
+const brandIndex=pc=>{const bs=allBrands(),keys=[...new Set(bs.map(choKey))];
+ return `<div class="t-sub" style="margin-top:4px">다들이 후기를 모은 브랜드 ${bs.length}곳이에요. 브랜드 공식 스토어가 있는 곳만 모아요.</div>
+ <div class="fchips" style="margin-top:12px">${keys.map(k=>`<button class="chip" data-a="bjump:${k}">${k}</button>`).join('')}</div>
+ ${keys.map(k=>`<section class="bidx" id="bk-${k}"><div class="sgh" style="font-size:14px">${k}</div><div class="${pc?'bcols':''}">
+  ${bs.filter(b=>choKey(b)===k).map(b=>{const xs=brandItems(b);return `<button class="srow2" data-a="brand:${escA(b)}"><span style="flex:1;min-width:0;text-align:left"><b style="font-weight:600">${b}</b>
+   <span class="t-cap" style="display:block">${[...new Set(xs.map(x=>x.sub))].join(' · ')}</span></span><span class="t-cap num">${xs.length}개</span>${ic('chev',14,'var(--meta)',2)}</button>`}).join('')}</div></section>`).join('')}`};
+const brandsBody=()=>`<div class="scr" id="scr"><div class="pad" style="padding-top:12px">${brandIndex(false)}</div>
+ <div class="foot"><div class="t-cap">프로토타입 · 이 화면의 브랜드와 숫자는 모두 가상이에요</div></div></div>`;
+/* PC */
+// PC 에서 들어오기 전 화면으로 — 이름을 적어 어디로 돌아가는지 보이게
+const bBackLink=()=>{const pv=S.bPrev,lab=S.bFromIdx?'브랜드 모아보기':!pv?null:pv.screen==='detail'?(byId(pv.pid).brand+' '+byId(pv.pid).name):pv.screen==='list'?pv.lsub+' 목록':pv.screen==='search'?'검색 결과':pv.screen==='home'?'홈':'이전 화면';
+ return lab?`<button class="bback" data-a="brandback">${ic('back',16,'var(--ink2)',2.2)}${lab}</button>`:''};
+const pcBrand=()=>{const s=brandParts(S.brand,true);return pcProto()+pcGnb({sub:null,mid:null})+`<div class="wrap" style="padding-bottom:140px">
+ ${bBackLink()}<div class="pcrumb" style="padding-top:6px"><button data-a="home" style="color:var(--meta)">홈</button><span aria-hidden="true">›</span><button data-a="brands" style="color:var(--meta)">브랜드</button><span aria-hidden="true">›</span><b>${S.brand}</b></div>
+ <div style="max-width:620px">${s.head}</div><div style="max-width:980px">${s.groups}</div>
+ <div class="foot"><div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div></div>`+pcTray({sub:S.lsub})};
+const pcBrands=()=>pcProto()+pcGnb({sub:null,mid:null})+`<div class="wrap" style="padding-bottom:80px">
+ <div class="pcrumb"><button data-a="home" style="color:var(--meta)">홈</button><span aria-hidden="true">›</span><b>브랜드</b></div>
+ <h1 class="t-title">브랜드 모아보기</h1><div style="max-width:980px">${brandIndex(true)}</div></div>`;
+
+/* ── 프로토타입 전용 「샘플」 버튼 — 실제 서비스에는 없음 ──
+   보기 어려운 상태(다시 온 사람 · 빈 비교함 · 표본 부족 상세 등)를 바로 열기 위한 바로가기 */
+const protoFab=()=>{if(S.sheet)return '';   // 창이 열려 있으면 숨김 — 창의 버튼을 가리지 않게
+ const E=validateAll(),wide=window.innerWidth>=PCW;
+ const grp=(t,items)=>`<div class="pfg"><div class="pft">${t}</div>${items.map(([l,a,on])=>`<button class="pfi ${on?'on':''}" data-a="${a}">${l}</button>`).join('')}</div>`;
+ const panel=S.protoOpen?`<div class="pfp" role="dialog" aria-label="프로토타입 바로가기">
+  <div style="font-size:15px;font-weight:700">프로토타입 바로가기</div><div class="t-cap" style="margin-top:2px">실제 서비스에는 없는 버튼이에요. 제품과 숫자는 모두 가상이에요.</div>
+  ${E.length?`<div class="warn" style="margin-top:10px;border-radius:10px">데이터 정합성 확인 필요: ${E.join(' / ')}</div>`:''}
+  ${wide?grp('화면',[['모바일로 보기','view:mo',S.view==='mo'],['PC로 보기','view:pc',S.view==='pc']]):''}
+  ${grp('처음 · 다시 온 사람',[['홈 (처음 온 사람 · 기록 없음)','home',false],['검색으로 처음 온 사람 (「아기 젖병」)','demoEntry',false],['다시 온 사람의 홈 (크림 · 프라이팬 관심)','demo1',false],['새로고침 (다시 섞기)','reseed',false]])}
+  ${grp('목록',LSUBS.map(x=>[x+' 목록','list:'+x,S.screen==='list'&&S.lsub===x]))}
+  ${grp('제품 상세',P.map(p=>[`${LAB(p)} · ${p.brand} ${p.sub}`,'pick:'+p.id,S.screen==='detail'&&S.pid===p.id]))}
+  ${grp('비교함',[['비교 예시 (프라이팬 4개)','demo',S.screen==='compare'&&!!S.csub],['빈 비교함 (처음 온 사람)','demo0',S.screen==='compare'&&!S.csub]])}</div>`:'';
+ return `<div class="pfab">${panel}<button class="pfb ${E.length?'bad':''}" data-a="proto" aria-expanded="${!!S.protoOpen}">샘플${E.length?' · 확인 필요':''}</button></div>`};
 
 /* ── 그리기 ── */
 function fitLeft(){const L=document.querySelector('.pleft');if(!L)return;const tray=document.querySelector('.tray');
  L.classList.toggle('stick',L.offsetHeight<=window.innerHeight-88-(tray?tray.offsetHeight:0)-16)}
-function draw(){const p=byId(S.pid),app=document.getElementById('app');
+function goAfterDraw(){if(!S.goAfter)return;const t=document.getElementById('c-'+S.goAfter);S.goAfter=null;if(t)t.scrollIntoView({block:'start'})}
+function focusQ(){if(!S.focusSearch)return;S.focusSearch=false;const i=document.querySelector('[data-sq]');if(i){i.focus();const n=i.value.length;try{i.setSelectionRange(n,n)}catch(e){}}}
+function draw(){
+ // PC 에는 카테고리 화면이 따로 없음(펼침 메뉴가 대신함) — 모바일에서 PC 로 바꾸면 원래 화면으로
+ if(S.screen==='cats'&&S.view==='pc'){if(S.prev)Object.assign(S,S.prev);else S.screen='home';S.prev=null;S.mega=S.cdom}
+ const p=byId(S.pid),app=document.getElementById('app'),list=S.screen==='list';
+ // 최근 본 소분류 — 빈 비교함에서 어느 목록으로 안내할지 정할 때 씀
+ if(list){S.lastSub=S.lsub;S.recentSubs=[S.lsub,...S.recentSubs.filter(x=>x!==S.lsub)].slice(0,6)}else if(S.screen==='detail')S.lastSub=p.sub;
+ const toast=S.toast?`<div class="toast" role="status">${S.toast}</div>`:'';
  if(S.view==='pc'){const y=window.scrollY;
   document.body.classList.add('pcmode');app.className='pcroot';
-  app.innerHTML=pcPage(p)+sheet(p)+(S.toast?`<div class="toast" role="status">${S.toast}</div>`:'');
-  window.scrollTo(0,S.resetTop?0:y);S.keepTop=0;S.resetTop=0;fitLeft();bindChips();return}
+  app.innerHTML=protoFab()+(S.screen==='brand'?pcBrand():S.screen==='brands'?pcBrands():S.screen==='story'?pcStory():S.screen==='favs'?pcFavs():S.screen==='search'?pcSearch():S.screen==='home'?pcHome():S.screen==='compare'?pcCompare(S.csub):list?pcList(S.lsub):pcPage(p))+sheet(p)+toast;
+  window.scrollTo(0,S.resetTop?0:y);S.keepTop=0;S.resetTop=0;fitLeft();bindChips();focusQ();goAfterDraw();return}
  document.body.classList.remove('pcmode');app.className='phone';
  const old=document.getElementById('scr');const top=old?old.scrollTop:0;
- app.innerHTML=protoBar()+topBar()+body(p)+bottomBar(p)+sheet(p)+(S.toast?`<div class="toast" role="status">${S.toast}</div>`:'');
- const sc=document.getElementById('scr');if(sc)sc.scrollTop=S.keepTop?top:(S.resetTop?0:top);S.keepTop=0;S.resetTop=0;bindChips()}
+ app.innerHTML=protoFab()+(S.screen==='brand'?brandTop('브랜드')+brandBody():S.screen==='brands'?brandTop('브랜드 모아보기')+brandsBody():S.screen==='story'?storyTop()+storyBody():S.screen==='favs'?favTop()+favScreen()+tabBar(null,3):S.screen==='search'?searchTop()+searchBody():S.screen==='cats'?catsTop()+catsBody()+tabBar(null,1):S.screen==='home'?homeTop()+homeBody()+tabBar(S.lastSub,0):S.screen==='compare'?cmpTop(S.csub)+cmpBody(S.csub)+tabBar(S.csub,2):list?listTop(S.lsub)+listBody(S.lsub)+tabBar(S.lsub):topBar()+body(p)+bottomBar(p))+sheet(p)+toast;
+ const sc=document.getElementById('scr');if(sc)sc.scrollTop=S.keepTop?top:(S.resetTop?0:top);S.keepTop=0;S.resetTop=0;bindChips();bindCats();focusQ();goAfterDraw()}
 
+const goList=sub=>{S.prev=null;S.cq='';S.screen='list';S.lsub=sub;S.lsort='default';S.f={good:false,pmin:null,pmax:null,brands:[]};S.sheet=null;S.mega=null;S.crowXs={};S.resetTop=1;draw()};
 document.addEventListener('click',e=>{
  if(e.target.closest('[data-stop]')&&!e.target.closest('[data-a]'))return;
  const el=e.target.closest('[data-a]');
- if(S.mega&&!e.target.closest('.mega')&&!(el&&el.dataset.a.startsWith('mega:'))){S.mega=null;S.keepTop=1;draw();if(!el)return}
+ if(S.protoOpen&&!e.target.closest('.pfb')){S.protoOpen=false;if(!el||!e.target.closest('.pfp')){S.keepTop=1;draw();if(!el)return}}
+ if(S.sOpen&&!e.target.closest('.gsw')){S.sOpen=false;if(!el){S.keepTop=1;draw();return}}
+ if(S.mega&&!e.target.closest('.mega')&&!(el&&el.dataset.a.startsWith('mega:'))){S.mega=null;S.cq='';S.keepTop=1;draw();if(!el)return}
  if(!el)return;
  const [a,...r]=el.dataset.a.split(':');const v=r.join(':');const p=byId(S.pid);
  switch(a){
-  case'pick':S.pid=v;S.month=false;S.sheet=null;S.act=null;S.crowX=0;S.resetTop=1;draw();break;
+  case'pick':S.recent=[v,...S.recent.filter(x=>x!==v)].slice(0,8);S.screen='detail';S.pid=v;S.month=false;S.sheet=null;S.act=null;delete S.crowXs.crow;S.resetTop=1;draw();break;
+  case'open':{const x=itemOf(v);if(x&&x.full){S.recent=[v,...S.recent.filter(y=>y!==v)].slice(0,8);S.screen='detail';S.pid=v;S.month=false;S.sheet=null;S.act=null;S.crowXs={};S.resetTop=1;draw()}
+   else say(`프로토타입에서는 상세가 샘플 ${P.length}개에만 있어요`);break}
+  case'list':goList(v);break;
   case'say':say(v);break;
+  case'proto':S.protoOpen=!S.protoOpen;S.keepTop=1;draw();break;
   case'month':S.month=!S.month;S.keepTop=1;draw();break;
   case'go':{setAct(v);S.spyHold=Date.now()+900;const t=document.getElementById('c-'+v);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});break}
-  case'cscroll':{const r=document.getElementById('crow');if(r)r.scrollBy({left:Number(v)*Math.round(r.clientWidth*.6),behavior:'smooth'});break}
-  case'fav':S.fav[p.id]=!S.fav[p.id];S.keepTop=1;draw();
-   say(S.fav[p.id]?(LAB(p)==='표본 부족'?'후기가 30건 모이면 찜 탭에서 알려드릴게요':'찜했어요. 가격이 내리거나 한 달 써 본 후기가 늘면 찜 탭에서 알려드릴게요'):'찜을 풀었어요');break;
-  case'cmp':if(S.cmp[p.id])delete S.cmp[p.id];else{const same=Object.keys(S.cmp).filter(k=>byId(k).sub===p.sub);
-    if(same.length>=4){say(`${p.sub} 비교함은 4개까지 담을 수 있어요`);break}S.cmp[p.id]=1}
-   S.keepTop=1;draw();say(S.cmp[p.id]?`${p.sub} 비교함에 담았어요`:'비교함에서 뺐어요');break;
+  case'cscroll':{const w=el.closest('.cwrap'),row=w&&w.querySelector('.crow');if(row)row.scrollBy({left:Number(v)*Math.round(row.clientWidth*.6),behavior:'smooth'});break}
+  case'fav':{const x=itemOf(v||S.pid);S.fav[x.id]=!S.fav[x.id];S.keepTop=1;draw();
+   say(S.fav[x.id]?(labOf(x)==='표본 부족'?'후기가 30건 모이면 찜 탭에서 알려드릴게요':'찜했어요. 가격이 내리거나 한 달 써 본 후기가 늘면 찜 탭에서 알려드릴게요'):'찜을 풀었어요');break}
+  case'cmp':{const x=itemOf(v||S.pid);if(S.cmp[x.id])delete S.cmp[x.id];else{const same=cmpList(x);
+    if(same.length>=4){say(`${x.sub} 비교함은 4개까지 담을 수 있어요`);break}S.cmp[x.id]=1}
+   S.keepTop=1;draw();say(S.cmp[x.id]?`${x.sub} 비교함에 담았어요`:'비교함에서 뺐어요');break}
   case'sheet':S.sheet=v;S.keepTop=1;draw();break;
   case'close':S.sheet=null;S.keepTop=1;draw();break;
-  case'view':S.view=v;S.mega=null;S.act=null;S.crowX=0;S.resetTop=1;draw();break;
-  case'mega':S.mega=S.mega===v?null:v;S.keepTop=1;draw();break;
-  case'rmcmp':delete S.cmp[v];S.keepTop=1;draw();break;
+  case'view':S.view=v;S.mega=null;S.act=null;S.crowXs={};S.resetTop=1;draw();break;
+  case'mega':S.mega=S.mega===v?null:v;S.cq='';S.keepTop=1;draw();break;
+  case'rmcmp':delete S.cmp[v];S.keepTop=1;draw();say('비교함에서 뺐어요');break;
+  /* 목록: 정렬 · 기준 · 필터 */
+  case'kcat':S.lsort=S.lsort==='cat:'+v?'default':'cat:'+v;S.keepTop=1;draw();break;
+  case'lsort':S.lsort=v;S.sheet=null;S.keepTop=1;draw();break;
+  case'fgood':S.f.good=!S.f.good;S.keepTop=1;draw();break;
+  case'fbrand':S.f.brands=S.f.brands.includes(v)?S.f.brands.filter(b=>b!==v):[...S.f.brands,v];S.keepTop=1;draw();break;
+  case'freset':S.f={good:false,pmin:null,pmax:null,brands:[]};S.keepTop=1;draw();break;
+  /* 비교 */
+  case'compare':S.screen='compare';S.csub=pickCsub(v||S.lastSub||null);S.sheet=null;S.mega=null;S.crowXs={};S.resetTop=1;draw();break;
+  case'csub':S.csub=v;S.cpair=[];S.resetTop=1;draw();break;
+  case'cpick':if(!S.cpair.includes(v)){S.cpair=[S.cpair[1],v].filter(Boolean)}S.keepTop=1;draw();break;
+  case'cdiff':S.cdiff=!S.cdiff;S.keepTop=1;draw();break;
+  /* 브랜드 */
+  case'brand':if(!['brand','brands'].includes(S.screen))S.bPrev={screen:S.screen,pid:S.pid,lsub:S.lsub,csub:S.csub,storyK:S.storyK};S.bFromIdx=S.screen==='brands';S.brand=v;S.screen='brand';S.sheet=null;S.mega=null;S.sOpen=false;S.crowXs={};S.resetTop=1;draw();break;
+  case'brands':if(!['brand','brands'].includes(S.screen))S.bPrev={screen:S.screen,pid:S.pid,lsub:S.lsub,csub:S.csub,storyK:S.storyK};S.screen='brands';S.sheet=null;S.mega=null;S.sOpen=false;S.resetTop=1;draw();break;
+  case'brandback':if(S.screen==='brand'&&S.bFromIdx){S.screen='brands';S.bFromIdx=false}else{Object.assign(S,S.bPrev||{screen:'home'});S.bPrev=null}S.resetTop=1;draw();break;
+  case'bjump':{const t=document.getElementById('bk-'+v);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});break}
+  case'follow':S.follow[v]=!S.follow[v];S.keepTop=1;draw();say(S.follow[v]?(S.user?`${v}의 새 제품이 모이면 알려드릴게요`:`${v}의 새 제품이 모이면 찜 탭에서 알려드릴게요`):'알림을 껐어요');break;
+  /* 이 이야기만 자세히 */
+  case'story':S.storyK=v;S.screen='story';S.sheet=null;S.resetTop=1;draw();break;
+  case'storyback':S.screen='detail';S.goAfter=S.storyK;S.act=S.storyK;S.resetTop=1;draw();break;
+  /* 찜 */
+  case'favs':S.screen='favs';S.sheet=null;S.mega=null;S.sOpen=false;S.crowXs={};S.resetTop=1;draw();break;
+  case'login':S.user={ch:v};S.sheet=null;S.keepTop=1;draw();say('연결했어요. 찜한 제품이 달라지면 알려드릴게요');break;
+  case'logout':S.user=null;S.sheet=null;S.keepTop=1;draw();say('연결을 끊었어요. 찜은 이 기기에 그대로 있어요');break;
+  case'notipref':S.notiPref[v]=!S.notiPref[v];S.keepTop=1;draw();break;
+  case'unreq':delete S.requested[v];S.keepTop=1;draw();say('요청을 취소했어요');break;
+  case'favcmp':{const xs=favGroups().find(g=>g[0]===v)[1].filter(x=>!isThin(x)),now=cmpList({sub:v}).map(x=>x.id);
+   xs.forEach(x=>{if(!S.cmp[x.id]&&Object.keys(S.cmp).filter(k=>itemOf(k).sub===v).length<4)S.cmp[x.id]=1});
+   S.cpair=xs.slice(0,2).map(x=>x.id);S.screen='compare';S.csub=v;S.crowXs={};S.resetTop=1;draw();say('찜한 '+v+J(v,'을','를')+' 비교함에 담았어요');break}
+  /* 검색 */
+  case'search':if(v){submitSearch(v);break}
+   if(S.view==='pc'){S.sOpen=true;S.mega=null;S.focusSearch=true;S.keepTop=1;draw();break}
+   if(S.screen!=='search')S.sPrev={screen:S.screen,pid:S.pid,lsub:S.lsub,csub:S.csub};S.screen='search';S.q='';S.sqDone=false;S.sheet=null;S.focusSearch=true;S.resetTop=1;draw();break;
+  case'sgo':submitSearch(v);break;
+  case'sback':Object.assign(S,S.sPrev||{screen:'home'});S.sPrev=null;S.resetTop=1;draw();break;
+  case'sclear':S.q='';S.sqDone=false;S.focusSearch=true;S.keepTop=1;draw();break;
+  case'sdel':S.recentQ=S.recentQ.filter(x=>x!==v);S.keepTop=1;S.focusSearch=S.view==='pc';draw();break;
+  case'sclr':S.recentQ=[];S.keepTop=1;S.focusSearch=S.view==='pc';draw();break;
+  case'sreq':S.requested[v]=true;S.keepTop=1;draw();say('요청했어요. 후기가 모이면 찜 탭에서 알려드릴게요');break;
+  /* 카테고리 메뉴 — PC 에서는 펼침 메뉴로 엶 */
+  case'cats':case'catsx':openCats(v);if(S.view==='pc'){S.mega=S.cdom;S.keepTop=1;draw();break}
+   S.prev=a==='catsx'?{screen:S.screen,pid:S.pid,lsub:S.lsub,csub:S.csub}:null;S.screen='cats';S.sheet=null;S.resetTop=1;draw();break;
+  case'catclose':Object.assign(S,S.prev||{screen:'home'});S.prev=null;S.cq='';S.resetTop=1;draw();break;
+  case'cdom':S.cdom=v;S.crTop=0;S.keepTop=1;draw();break;
+  case'cjump':catJump(v,true);break;
+  /* 홈 */
+  case'home':if(S.screen==='home'&&!el.closest('.pfp')){const sc=document.getElementById('scr');if(S.view==='pc')window.scrollTo({top:0,behavior:'smooth'});else if(sc)sc.scrollTo({top:0,behavior:'smooth'});break}
+   if(el.closest('.pfp'))Object.assign(S,{fav:{},recent:[],recentSubs:[],cmp:{},lastSub:null,entry:null,hdomSet:false,hrank:null,pOff:false});S.screen='home';S.sheet=null;S.mega=null;S.crowXs={};S.resetTop=1;draw();break;
+  case'hdom':S.hdom=v;S.hdomSet=true;S.hrank=null;S.keepTop=1;draw();break;
+  case'poff':S.pOff=!S.pOff;S.keepTop=1;draw();say(S.pOff?'맞춤을 껐어요. 모든 분께 같은 기준으로 보여드려요':'맞춤을 켰어요');break;
+  case'reseed':SEED=Math.floor(Math.random()*2147483647);S.resetTop=1;draw();say('새로고침했어요');break;
+  case'demoEntry':Object.assign(S,{fav:{},recent:[],recentSubs:[],cmp:{},lastSub:null,entry:{kw:'아기 젖병'},hdomSet:false,hrank:null,pOff:false,screen:'home',resetTop:1});draw();break;
+  case'hrank':S.hrank=v;S.keepTop=1;draw();break;
+  case'pair':{const ids=v.split(','),sub=itemOf(ids[0]).sub,now=cmpList({sub}).map(x=>x.id),add=ids.filter(id=>!now.includes(id));
+   if(now.length+add.length>4){say(`${sub} 비교함 자리가 모자라요. 비교함에서 하나를 빼고 다시 눌러 주세요`);break}
+   add.forEach(id=>S.cmp[id]=1);S.cpair=ids;S.screen='compare';S.csub=sub;S.crowXs={};S.resetTop=1;draw();say('둘 다 비교함에 담았어요');break}
+  case'theme':{const [sub,k]=v.split(':');goList(sub);S.lsort='cat:'+k;S.keepTop=1;draw();break}
+  case'demo1':Object.assign(S,{fav:{p1:true,m2:true,p3:true},recent:['p3','p1','p2'],recentSubs:['크림','프라이팬'],entry:null,hdomSet:false,hrank:null,pOff:false,screen:'home',resetTop:1});draw();break;
+  case'demo0':S.cmp={};S.lastSub=null;S.screen='compare';S.csub=null;S.mega=null;S.resetTop=1;draw();break;
+  case'demo':S.cmp={p1:1,m2:1,m12:1,p2:1};S.cpair=[];S.screen='compare';S.csub='프라이팬';S.crowXs={};S.resetTop=1;draw();break;
  }});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(S.mega||S.sheet)){S.mega=null;S.sheet=null;S.keepTop=1;draw()}});
+document.addEventListener('input',e=>{if(e.target.matches('.rng input'))rangeLive(e.target);else if(e.target.matches('[data-cq]'))catLive(e.target);else if(e.target.matches('[data-sq]'))searchLive(e.target)});
+document.addEventListener('focusin',e=>{if(e.target.matches('.gsw [data-sq]')&&!S.sOpen){S.sOpen=true;S.mega=null;S.focusSearch=true;S.keepTop=1;draw()}});
+document.addEventListener('change',e=>{if(e.target.matches('.rng input')){const [a,b,lo,hi]=rangeLive(e.target);
+  S.f.pmin=a<=lo?null:a;S.f.pmax=b>=hi?null:b;S.keepTop=1;draw();return}
+ const el=e.target.closest('[data-change]');if(!el)return;
+ if(el.dataset.change==='lsort'){S.lsort=el.value;S.keepTop=1;draw()}});
+document.addEventListener('keydown',e=>{if(e.target.matches('[data-sq]')){
+  if(e.key==='Enter'){e.preventDefault();submitSearch(e.target.value);return}
+  if(e.key==='Escape'){if(e.target.value){e.target.value='';searchLive(e.target)}else if(S.sOpen){S.sOpen=false;S.keepTop=1;draw()}return}}
+ if(e.key==='Escape'&&e.target.matches('[data-cq]')&&e.target.value){e.target.value='';catLive(e.target);return}
+ if(e.key==='Escape'&&(S.mega||S.sheet)){S.mega=null;S.sheet=null;S.keepTop=1;draw()}});
 window.addEventListener('resize',()=>{if(window.innerWidth<PCW&&S.view==='pc'){S.view='mo';draw()}else fitLeft()});
+// 홈 검색창 예시 문구를 바꿔 가며 보여줌 (화면을 다시 그리지 않고 글자만 바꿈)
+setInterval(()=>{S.phI++;document.querySelectorAll('[data-ph]').forEach(e=>e.textContent=`「${PH[S.phI%PH.length]}」`)},2800);
 draw();
 </script>
 </body>
