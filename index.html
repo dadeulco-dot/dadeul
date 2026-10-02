@@ -723,6 +723,13 @@ div.lrow{grid-template-columns:116px minmax(0,1fr) auto}
 .opsvd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px}
 .opsv{display:inline-flex;align-items:center;height:24px;padding:0 9px;border-radius:12px;font-size:12px;font-weight:800}
 .opsv.ok{background:var(--brandBg);color:var(--brand)}.opsv.mid{background:var(--accentBg);color:var(--accent)}.opsv.no{background:var(--surface2);color:var(--ink2)}
+/* 로고 SVG */
+.dlogo{display:block;color:var(--ink)}
+/* 탭 화면 상단 막대 — 다섯 화면 같은 높이 · 같은 제목 크기 · 같은 오른쪽 아이콘 묶음 */
+.top.rtop{height:56px;padding:0 8px 0 20px;gap:2px}
+.top.rtop.hasb{padding-left:6px}
+.rtt{flex:1;min-width:0;font-size:20px;font-weight:700;letter-spacing:-.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rti{display:flex;align-items:center;gap:0}
 </style>
 </head>
 <body>
@@ -753,6 +760,14 @@ const I={
  list:'<path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r=".6"/><circle cx="4" cy="12" r=".6"/><circle cx="4" cy="18" r=".6"/>',
 };
 const ic=(n,s=20,c='currentColor',w=1.8,fill='none')=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="${fill}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]}</svg>`;
+/* 로고 — 명조체 「다들」 + 자간 넓힌 「DADEUL」 두 줄 워드마크.
+   기기에 있는 명조체를 씀(맥 애플명조 · 윈도우 바탕 · 안드로이드 Noto Serif). 실제 서비스는 로고 SVG 로 바꿔 끼우기 */
+// 로고 SVG — Noto Serif KR Medium 「다들」 + Noto Sans KR 「DADEUL」 글자 모양을 도형으로 뽑음 (기기 글꼴과 상관없이 같은 모양 · 글자색을 따라감)
+const LOGO_VB='39 10 2019 1603',LOGO_KO='M682.0 988.0H730.0C748.0 928.0 759.0 826.0 759.0 766.0V498.0L927.0 495.0C935.0 495.0 944.0 493.0 950.0 488.0C956.0 483.0 962.0 467.0 962.0 448.0C961.0 439.0 955.0 432.0 945.0 429.0C927.0 425.0 886.0 423.0 856.0 424.0L824.0 444.0L759.0 447.0V130.0L762.0 75.0C762.0 64.0 758.0 57.0 749.0 53.0C718.0 41.0 651.0 27.0 612.0 26.0C603.0 26.0 601.0 27.0 599.0 31.0L590.0 58.0C626.0 71.0 658.0 90.0 675.0 112.0V578.0C544.0 615.0 345.0 640.0 225.0 643.0C211.0 644.0 207.0 638.0 207.0 625.0V401.0V268.0L511.0 258.0C517.0 258.0 523.0 256.0 526.0 252.0C531.0 246.0 536.0 232.0 536.0 213.0C536.0 205.0 531.0 200.0 523.0 198.0C502.0 194.0 461.0 192.0 436.0 192.0L407.0 209.0C376.0 212.0 255.0 217.0 209.0 217.0C179.0 211.0 104.0 207.0 71.0 207.0C65.0 207.0 62.0 209.0 61.0 213.0L55.0 238.0C81.0 244.0 106.0 256.0 121.0 270.0V613.0C121.0 634.0 122.0 651.0 126.0 661.0C137.0 695.0 163.0 716.0 200.0 716.0C210.0 716.0 222.0 716.0 235.0 715.0C358.0 705.0 538.0 672.0 675.0 626.0V794.0C675.0 839.0 678.0 948.0 682.0 988.0ZM1912.0 445.0 1874.0 462.0C1804.0 467.0 1306.0 473.0 1244.0 472.0C1211.0 471.0 1164.0 467.0 1129.0 461.0L1121.0 476.0C1120.0 480.0 1121.0 484.0 1124.0 487.0C1150.0 508.0 1188.0 531.0 1226.0 542.0C1251.0 534.0 1304.0 525.0 1330.0 523.0C1384.0 519.0 1830.0 514.0 1900.0 515.0C1930.0 515.0 1992.0 517.0 2018.0 520.0C2029.0 515.0 2042.0 498.0 2042.0 480.0C2042.0 470.0 2037.0 464.0 2028.0 462.0C2005.0 453.0 1950.0 447.0 1912.0 445.0ZM1410.0 242.0V181.0V156.0L1840.0 150.0C1847.0 150.0 1852.0 149.0 1856.0 144.0C1861.0 139.0 1866.0 125.0 1866.0 107.0C1866.0 99.0 1862.0 93.0 1853.0 91.0C1831.0 88.0 1789.0 85.0 1762.0 86.0L1733.0 100.0C1680.0 103.0 1483.0 106.0 1412.0 105.0C1383.0 100.0 1311.0 96.0 1279.0 96.0C1273.0 96.0 1269.0 98.0 1268.0 102.0L1263.0 127.0C1287.0 134.0 1310.0 145.0 1324.0 158.0V294.0C1324.0 348.0 1350.0 375.0 1418.0 374.0L1850.0 367.0C1856.0 367.0 1861.0 366.0 1864.0 362.0C1869.0 358.0 1875.0 346.0 1875.0 328.0C1875.0 319.0 1870.0 314.0 1862.0 313.0C1841.0 309.0 1796.0 306.0 1766.0 307.0L1737.0 322.0C1679.0 325.0 1499.0 328.0 1433.0 327.0C1416.0 327.0 1410.0 320.0 1410.0 303.0ZM1837.0 805.0C1842.0 801.0 1847.0 789.0 1847.0 776.0C1847.0 772.0 1845.0 768.0 1841.0 766.0L1823.0 757.0C1831.0 734.0 1841.0 687.0 1843.0 659.0L1856.0 632.0C1858.0 626.0 1858.0 621.0 1854.0 618.0C1844.0 613.0 1821.0 602.0 1810.0 597.0C1804.0 595.0 1797.0 595.0 1792.0 597.0L1761.0 612.0C1699.0 614.0 1443.0 617.0 1390.0 617.0C1364.0 617.0 1324.0 614.0 1297.0 608.0L1291.0 620.0C1289.0 624.0 1289.0 627.0 1294.0 631.0C1315.0 648.0 1345.0 666.0 1376.0 678.0C1400.0 671.0 1438.0 664.0 1458.0 663.0C1498.0 661.0 1689.0 659.0 1754.0 660.0C1755.0 679.0 1754.0 733.0 1751.0 755.0L1733.0 760.0C1695.0 762.0 1509.0 765.0 1439.0 765.0C1411.0 761.0 1340.0 759.0 1310.0 759.0C1304.0 759.0 1300.0 762.0 1299.0 765.0L1296.0 786.0C1318.0 791.0 1339.0 800.0 1352.0 813.0V904.0C1352.0 949.0 1372.0 968.0 1435.0 969.0L1885.0 966.0C1890.0 966.0 1895.0 965.0 1899.0 961.0C1904.0 957.0 1910.0 943.0 1910.0 924.0C1910.0 916.0 1905.0 910.0 1896.0 908.0C1877.0 904.0 1834.0 901.0 1807.0 901.0L1776.0 916.0C1715.0 919.0 1527.0 920.0 1456.0 919.0C1443.0 919.0 1438.0 913.0 1438.0 900.0V849.0V810.0Z',LOGO_EN='M84.80500000000018 1592.7H140.90500000000017C207.20500000000015 1592.7 243.20500000000015 1551.6000000000001 243.20500000000015 1482.0C243.20500000000015 1411.8 207.20500000000015 1372.8 139.70500000000018 1372.8H84.80500000000018ZM112.40500000000017 1569.9V1395.3H137.30500000000018C189.20500000000015 1395.3 214.70500000000015 1426.2 214.70500000000015 1482.0C214.70500000000015 1537.5 189.20500000000015 1569.9 137.30500000000018 1569.9ZM425.1630000000001 1592.7H453.06300000000016L474.3630000000001 1525.5H554.7630000000001L575.7630000000001 1592.7H605.1630000000001L530.4630000000002 1372.8H499.5630000000001ZM481.26300000000015 1503.6000000000001 492.0630000000001 1469.7C499.8630000000001 1444.8 507.0630000000001 1421.1000000000001 513.9630000000002 1395.3H515.1630000000001C522.3630000000002 1420.8 529.2630000000001 1444.8 537.3630000000002 1469.7L547.8630000000002 1503.6000000000001ZM799.721 1592.7H855.821C922.1210000000001 1592.7 958.1210000000001 1551.6000000000001 958.1210000000001 1482.0C958.1210000000001 1411.8 922.1210000000001 1372.8 854.6210000000001 1372.8H799.721ZM827.321 1569.9V1395.3H852.221C904.1210000000001 1395.3 929.6210000000001 1426.2 929.6210000000001 1482.0C929.6210000000001 1537.5 904.1210000000001 1569.9 852.221 1569.9ZM1169.1789999999999 1592.7H1299.079V1569.0H1196.779V1488.9H1280.1789999999999V1465.2H1196.779V1396.2H1295.779V1372.8H1169.1789999999999ZM1586.9369999999997 1596.6000000000001C1631.6369999999997 1596.6000000000001 1665.8369999999998 1572.6000000000001 1665.8369999999998 1502.1000000000001V1372.8H1639.1369999999997V1502.7C1639.1369999999997 1555.5 1616.0369999999998 1572.3 1586.9369999999997 1572.3C1558.1369999999997 1572.3 1535.6369999999997 1555.5 1535.6369999999997 1502.7V1372.8H1508.0369999999998V1502.1000000000001C1508.0369999999998 1572.6000000000001 1541.9369999999997 1596.6000000000001 1586.9369999999997 1596.6000000000001ZM1888.2949999999996 1592.7H2012.1949999999997V1569.0H1915.8949999999998V1372.8H1888.2949999999996Z';
+const logoMark=(h=40)=>`<svg class="dlogo" viewBox="${LOGO_VB}" height="${h}" width="${Math.round(h*1.2598)}" aria-hidden="true" fill="currentColor"><path d="${LOGO_KO}"/><path d="${LOGO_EN}"/></svg>`;
+/* 하단 탭 다섯 화면의 상단 막대 — 왼쪽 제목(홈은 로고) · 오른쪽 [화면 전용 아이콘] [검색] [알림] */
+const ibSearch=()=>`<button class="ib" data-a="search" aria-label="검색">${ic('search',22,'var(--ink)')}</button>`;
+const rootTop=(title,o={})=>`<div class="top rtop ${o.back?'hasb':''}">${o.back||''}<div class="rtt">${title}</div><div class="rti">${o.extra||''}${o.noSearch?'':ibSearch()}${bellBtn()}</div></div>`;
 const mark=(s=16)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h4a8 8 0 010 16H4z" fill="none" stroke="var(--brand)" stroke-width="2.4"/><path d="M11 4h3a8 8 0 010 16h-3" fill="none" stroke="var(--brand)" stroke-width="2.4" opacity=".55"/></svg>`;
 const mk=s=>`<span class="mk ${s==='+'?'g':'b'}">${ic(s==='+'?'plus':'minus',12,s==='+'?'var(--brand)':'var(--ink2)',2.4)}</span>`;
 
@@ -1001,7 +1016,7 @@ const dadeulCard=p=>{const L=LAB(p),thin=L==='표본 부족',bad=L==='대체로 
  return `<div class="pad"><div class="dcard">
  <div class="dcols">
   <div class="dcol">
-   <div class="dk">${mark(15)}<span>다들 · 모아보니</span></div>
+   <div class="dk"><span>다들 · 모아보니</span></div>
    ${thin?`<div class="t-title" style="margin-top:8px;color:var(--sub);font-size:20px">아직 모으는 중</div>
      <div class="prog" role="img" aria-label="30건 중 ${p.n}건"><i style="width:${Math.min(100,p.n/30*100)}%"></i></div>
      <div class="t-sub num" style="margin-top:6px">모은 후기 ${p.n} / 30건</div>`
@@ -1170,7 +1185,7 @@ const cmpList=p=>Object.keys(S.cmp).map(itemOf).filter(x=>x&&x.sub===p.sub);
 const pcProto=()=>'';
 const pcGnb=p=>{const cn=Object.keys(S.cmp).length,fn=Object.values(S.fav).filter(Boolean).length+(S.moaOn?Object.values(S.joins).filter(Boolean).length:0);
  return `<header class="gnb"><div class="wrap">
- <button class="logo" data-a="home" aria-label="다들 홈">${mark(24)}<span>다들</span></button>
+ <button class="logo" data-a="home" aria-label="다들 홈">${logoMark(44)}</button>
  <nav class="menu">${Object.keys(TAX).map(d=>`<button class="${S.mega===d?'on':''}" data-a="mega:${d}" aria-expanded="${S.mega===d}">${d}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`).join('')}</nav>
  <div class="gsw" data-sroot><label class="gsearch">${ic('search',19,'var(--meta)')}<input data-sq type="search" enterkeyhint="search" autocomplete="off" value="${escA(S.q)}" placeholder="제품 · 브랜드 · 카테고리 검색" aria-label="검색어"></label>
   ${S.sOpen?`<div class="sdrop" data-sres>${S.q.trim()?sugHTML(S.q):preHTML()}</div>`:''}</div>
@@ -1442,9 +1457,8 @@ const subSwitch=sub=>{const subs=cmpSubs();if(subs.length<2)return'';
  return `<div class="cwrap"><div class="crow" data-key="csw" style="padding-top:4px">${subs.map(s=>`<button class="chip ${s===sub?'on':''}" data-a="csub:${s}">${s} <span class="num">${cmpList({sub:s}).length}</span></button>`).join('')}</div></div>`};
 
 /* 모바일 */
-const cmpTop=sub=>`<div class="top"><button class="ib" data-a="${sub?'list:'+sub:'home'}" aria-label="${sub?sub+' 목록으로':'홈으로'}">${ic('back',22,'var(--ink)')}</button>
- <div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em">비교함</div>
- <button class="ib" data-a="say:비교 링크를 복사했어요. 받는 분은 로그인 없이 같은 표를 봐요" aria-label="비교 결과 공유">${ic('share',21,'var(--ink)')}</button></div>`;
+// 목록 · 상세에서 왔을 때만 뒤로 (탭으로 왔으면 다른 탭과 같은 모양)
+const cmpTop=sub=>rootTop('비교함',{back:S.cmpPrev?`<button class="ib" data-a="cmpback" aria-label="${S.cmpPrev.screen==='list'?S.cmpPrev.lsub+' 목록으로':'제품으로'}">${ic('back',22,'var(--ink)')}</button>`:'',extra:`<button class="ib" data-a="say:비교 링크를 복사했어요. 받는 분은 로그인 없이 같은 표를 봐요" aria-label="비교 결과 공유">${ic('share',21,'var(--ink)')}</button>`});
 const cmpBody=sub=>{const all=cmpList({sub});
  if(all.length<2)return `<div class="scr" id="scr">${subSwitch(sub)}${cmpEmpty(sub,all)}</div>`;
  const pair=cmpPairOf(all),rows=cmpRows(pair,sub),sm=cmpSummary(pair,sub),hide=rows.filter(r=>r.k&&r.small).length;
@@ -1637,9 +1651,7 @@ const forYouSec=(I,pc)=>{const xs=forYou(I);if(!xs.length)return '';const t=topS
   ${entryOnly?`<div class="${pc?'':'pad'}"><button class="tbtn" style="margin-top:10px" data-a="list:${t}">${t} ${subCount(t)}종 모두 비교하기</button></div>`:''}</section>`};
 
 /* 모바일 홈 */
-const homeTop=()=>`<div class="top"><div style="flex:1"><button class="logo" data-a="home" aria-label="다들 홈" style="font-size:20px;min-height:44px">${mark(22)}<span>다들</span></button></div>
- <button class="ib" data-a="favs" aria-label="찜">${ic('heart',22,'var(--ink)')}</button>
- ${bellBtn()}</div>`;
+const homeTop=()=>`<div class="top rtop"><button class="logo" data-a="home" aria-label="다들 홈">${logoMark(40)}</button><div class="rti" style="margin-left:auto">${bellBtn()}</div></div>`;
 const homeBody=()=>{const h=homeParts(),sub=rankSub(),first=!h.favs.length&&!h.recent.length,pr=pairs(h.dom);
  return `<div class="scr" id="scr"><div class="pad" style="padding-top:12px">
  <button class="hsearch" data-a="search">${ic('search',20,'var(--meta)')}<span data-ph>「${PH[S.phI%PH.length]}」</span></button>
@@ -1729,8 +1741,7 @@ function catLive(inp){S.cq=inp.value;const root=inp.closest('[data-catroot]');if
  const res=root.querySelector('[data-cres]');if(res){res.hidden=!on;res.innerHTML=on?catResults(S.cq):''}}
 
 /* 모바일 카테고리 화면 */
-const catsTop=()=>`<div class="top">${S.prev?`<button class="ib" data-a="catclose" aria-label="닫기"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>`:''}
- <div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em;${S.prev?'':'padding-left:6px'}">카테고리</div></div>`;
+const catsTop=()=>rootTop('카테고리',{back:S.prev?`<button class="ib" data-a="catclose" aria-label="닫기"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>`:''});
 const catsBody=()=>{const dom=S.cdom,on=!!S.cq.trim();
  return `<div class="catwrap" data-catroot>
  <div style="padding:12px 0 12px">${catSearch()}<div class="pad">${recentCats()}<button class="more" data-a="brands" style="min-height:34px">브랜드로 찾기 ${ic('chev',14,'var(--brand)',2.2)}</button></div></div>
@@ -1931,7 +1942,7 @@ const favBody=pc=>{const gs=favGroups(),n=favItems().length,news=favItems().filt
  return {noti:notiBox(pc),side,main,n,empty}};
 
 /* 모바일 */
-const favTop=()=>`<div class="top"><div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em;padding-left:6px">찜${favSegOn()?'':` <span class="num" style="color:var(--meta);font-weight:500">${favItems().length}</span>`}</div></div>`;
+const favTop=()=>rootTop(`찜${favSegOn()?'':` <span class="num" style="color:var(--meta);font-weight:500">${favItems().length}</span>`}`);
 const favScreen=()=>{const f=favBody(false),moa=favSeg()==='moa';return `<div class="scr" id="scr"><div class="pad" style="padding-top:14px">${f.noti}${favSegEl()}${moa?'':f.side}</div>
  <div class="pad">${moa?moaMine():f.main}</div>
  <div class="foot"><div class="t-cap">찜은 이 기기에 저장돼요. 알림을 받으려고 연결하면 다른 기기에서도 이어져요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 소식과 숫자는 모두 가상이에요</div></div></div>`};
@@ -2212,13 +2223,12 @@ const reviewMini=x=>{const L=labOf(x),pros=x.full?topPts(byId(x.id),'+').slice(0
   <div style="margin-top:6px">${[...pros.map(p2=>['+',...p2]),...cons.map(p2=>['-',...p2])].map(([sg,t,n])=>`<div class="pt">${mk(sg)}<div class="tx" style="font-size:14px;line-height:1.45">${t}</div>${n?`<div class="ct num">${n}건</div>`:''}</div>`).join('')}</div>
   <div class="t-cap num" style="margin-top:6px">진짜 후기 ${nf(x.n)}건 기준</div>
   <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="tbtn" data-a="open:${x.id}">진짜 후기 전체 보기</button><button class="tbtn" data-a="say:새 창에서 스마트스토어가 열려요">${ic('ext',16,'var(--ink2)')}스마트스토어</button></div></div>`};
-const moaTop=()=>`<div class="top"><div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em;padding-left:6px">${S.moaSeg==='mine'?`<button data-a="moaseg:live" style="display:inline-flex;align-items:center;gap:4px">${ic('back',20,'var(--ink)')}내 참여</button>`:'모아 사기'}</div>
- ${S.moaSeg==='mine'?'':`<button class="tbtn" style="min-height:36px;padding:0 12px" data-a="moaseg:mine">내 참여${Object.keys(S.joins).filter(x=>S.joins[x]).length?` <b class="num" style="color:var(--brand)">${Object.keys(S.joins).filter(x=>S.joins[x]).length}</b>`:''}</button>`}${bellBtn()}</div>`;
+const moaTop=()=>S.moaSeg==='mine'?rootTop('내 참여',{back:`<button class="ib" data-a="moaseg:live" aria-label="모아 사기로">${ic('back',22,'var(--ink)')}</button>`}):rootTop('모아 사기');
 const moaBody=()=>{if(S.moaSeg==='mine')return `<div class="scr" id="scr"><div class="pad" style="padding-top:8px">${moaMine()}</div>
  <div class="foot"><div class="t-cap">${FEE}</div></div></div>`;
  const xs=mList();
  return `<div class="scr" id="scr"><div class="pad" style="padding-top:10px"><div class="mintro"><span>사려는 사람이 모이면, 다들이 브랜드와 가격을 이야기해요</span>
-  <button class="plink" data-a="sheet:moahow">어떻게 진행되나요</button></div>${buyBanner()}</div>
+  <span style="display:flex;gap:14px"><button class="plink" data-a="sheet:moahow">어떻게 진행되나요</button><button class="plink" data-a="moaseg:mine">내 참여${joinedDeals().length?` ${joinedDeals().length}`:''}</button></span></div>${buyBanner()}</div>
  <div class="msticky">${mcatRows()}<div class="ltool pad" style="border-top:0;padding-top:10px">
   <button class="tbtn" data-a="sheet:msort" style="flex:1;min-width:0">${ic('list',17,'var(--ink2)',2)}<span>${MSORTS.find(m=>m[0]===S.msort)[1]}</span></button>
   <button class="tbtn" data-a="sheet:mfilter" style="flex-shrink:0;${mfN()?'color:var(--brand);border-color:var(--brand)':''}">필터${mfN()?` <b class="num">${mfN()}</b>`:''}</button></div></div>
@@ -2538,7 +2548,7 @@ document.addEventListener('click',e=>{
   case'fbrand':S.f.brands=S.f.brands.includes(v)?S.f.brands.filter(b=>b!==v):[...S.f.brands,v];S.keepTop=1;draw();break;
   case'freset':S.f={good:false,pmin:null,pmax:null,brands:[]};S.keepTop=1;draw();break;
   /* 비교 */
-  case'compare':S.screen='compare';S.csub=pickCsub(v||S.lastSub||null);S.sheet=null;S.mega=null;S.crowXs={};S.resetTop=1;draw();break;
+  case'compare':if(S.screen!=='compare')S.cmpPrev=['list','detail'].includes(S.screen)?{screen:S.screen,pid:S.pid,lsub:S.lsub,lsort:S.lsort}:null;S.screen='compare';S.csub=pickCsub(v||S.lastSub||null);S.sheet=null;S.mega=null;S.crowXs={};S.resetTop=1;draw();break;
   case'csub':S.csub=v;S.cpair=[];S.resetTop=1;draw();break;
   case'cpick':if(!S.cpair.includes(v)){S.cpair=[S.cpair[1],v].filter(Boolean)}S.keepTop=1;draw();break;
   case'cdiff':S.cdiff=!S.cdiff;S.keepTop=1;draw();break;
@@ -2564,6 +2574,7 @@ document.addEventListener('click',e=>{
   case'opsgoopen':{const d=dealOf(v),pin=S.opsOffer[v]??dReached(d).p;if(offerVerdict(d,pin)!=='open'){say('이 가격은 바로 열 수 없어요 — 다시 협상하거나 거절해 주세요');break}
    if(pin!==dReached(d).p)d.offer=pin;d.state='open';d.saleEnd=Date.now()+(S.opsEndDays[v]??5)*864e5;S.keepTop=1;draw();say(`${won(pin)}으로 열었어요. 참여자에게 먼저 알림이 가요`);break}
   case'opsend':{const d=dealOf(v);d.state='done';d.saleEnd=Date.now()-1;S.keepTop=1;draw();say('구매 기간을 끝냈어요');break}
+  case'cmpback':Object.assign(S,S.cmpPrev||{screen:'home'});S.cmpPrev=null;S.resetTop=1;draw();break;
   case'favseg':S.favSeg=v;S.resetTop=1;draw();break;
   case'moalive':S.screen='moa';S.moaSeg='live';S.resetTop=1;draw();break;
   case'moaseg':S.moaSeg=v;S.resetTop=1;draw();break;
