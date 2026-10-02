@@ -465,7 +465,9 @@ body.pcmode .pfab{left:20px;bottom:100px}
 .reqb{background:var(--surface2);border-radius:16px;padding:18px;margin:14px 0 10px}
 .reqb.big{background:none;padding:18px 0 4px;margin-top:0}
 /* PC: 상단 검색창 + 펼침 */
-.gsw{flex:1;max-width:540px;position:relative}
+.gsw{flex:1;max-width:540px;min-width:0;position:relative}
+/* 좁은 PC: 검색창이 줄어들고 메뉴 간격을 좁힘 (상단 버튼이 넘치지 않게) */
+@media (max-width:1180px){.gnb .wrap{gap:12px}.menu button{padding:0 9px}.gbtn{padding:0 8px;gap:4px}}
 .gsw .gsearch{max-width:none;width:100%;cursor:text}
 .sdrop{position:absolute;left:0;right:0;top:52px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 40px -18px rgba(0,0,0,.35);max-height:70vh;overflow-y:auto;z-index:20}
 .sdrop .sblk{padding:16px 18px 8px}
@@ -511,11 +513,216 @@ body.pcmode .pfab{left:20px;bottom:100px}
 .blink{display:inline-flex;align-items:center;gap:2px;font-size:13px;color:var(--sub);min-height:28px;text-decoration:underline;text-decoration-color:var(--faint);text-underline-offset:3px}
 .blink:hover{color:var(--ink)}
 .pcroot .blink{font-size:14px}
+.moaline{display:flex;align-items:center;gap:8px;width:calc(100% - 40px);margin:24px 20px 0;min-height:48px;padding:0 14px;border:1px solid var(--line);border-radius:12px;font-size:14px;font-weight:600;color:var(--ink2)}
+.pcroot .moaline{width:100%;margin:28px 0 0}
 .bnote{margin-top:14px;font-size:12px;color:var(--tiny)}
 .bgrp{margin-top:26px}
 .bback{display:inline-flex;align-items:center;gap:4px;margin-top:16px;min-height:32px;font-size:14px;font-weight:600;color:var(--ink2)}.bback:hover{color:var(--ink)}
 .bidx{margin-top:10px}
 .bcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:28px}
+/* ════ 알림 ════ */
+.bell{position:relative}
+.bdot{position:absolute;top:6px;right:5px;min-width:17px;height:17px;border-radius:9px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;line-height:1}
+.gbtn .bdot{position:static;margin-left:2px}
+.nitem{display:flex;gap:12px;align-items:flex-start;width:100%;padding:12px 10px;border-radius:12px;margin:0 -10px;width:calc(100% + 20px)}
+.nitem.unread{background:var(--brandBg)}
+.nitem .thumb{border-radius:10px}
+.nitem+.nitem{margin-top:2px}
+.nq{width:44px;height:44px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.udot{width:8px;height:8px;border-radius:4px;background:var(--brand);flex-shrink:0;margin-top:8px}
+.nhow{display:grid;gap:8px;margin-top:14px}
+.nh{display:flex;gap:12px;align-items:center;background:var(--surface2);border-radius:14px;padding:12px 14px}
+/* ════ 모아 사기 ════ */
+.msec{margin-top:26px}
+.dcardm{display:flex;gap:12px;align-items:flex-start;width:100%;padding:14px 0;border-bottom:.5px solid var(--line);text-align:left}
+.dline{margin-top:6px;font-size:14px;color:var(--ink)}.dline b{color:var(--brand)}
+.mbar{height:6px;border-radius:3px;background:var(--line2);overflow:hidden;margin-top:6px}.mbar i{display:block;height:100%;background:var(--brand);border-radius:3px}
+.mine{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;color:var(--brand);background:var(--brandBg);border-radius:6px;padding:3px 8px}
+.mgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 28px}
+.mrow{padding:14px 0;border-bottom:.5px solid var(--line)}
+.mstat{margin-top:16px;border-radius:14px;padding:14px 16px;background:var(--surface2)}
+.mstat.open,.mstat.gathering{background:var(--brandBg)}
+.dsec{margin-top:26px}
+.lad{display:grid;gap:6px}
+.lrow{display:grid;grid-template-columns:auto 116px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;min-height:48px;padding:6px 12px;border:1px solid var(--line);border-radius:12px;text-align:left}
+div.lrow{grid-template-columns:116px minmax(0,1fr) auto}
+.lrow.on{border-color:var(--brand);background:var(--brandBg)}
+.lrow.deal{border-color:var(--brand)}
+.lp{font-size:15px;font-weight:700;white-space:nowrap}
+.loff{display:inline-block;min-width:34px;font-size:13px;font-weight:800;color:var(--brand)}
+.lb{position:relative;height:8px;border-radius:4px;background:var(--line2);overflow:visible}.lb i{display:block;height:100%;border-radius:4px;background:var(--brand);opacity:.75}
+.lcn{font-size:13px;text-align:right;line-height:1.3;white-space:nowrap;min-width:44px}   /* 가격 계단 사람 수 (「어떻게 모았나」의 .ln 과 이름이 겹치지 않게) */
+.lcn .over{display:block;font-size:12px;font-weight:700;color:var(--brand);white-space:nowrap}
+.rdo{width:20px;height:20px;border-radius:10px;border:1.5px solid var(--faint);position:relative;flex-shrink:0}
+.rdo.on{border-color:var(--brand)}.rdo.on::after{content:"";position:absolute;inset:4px;border-radius:6px;background:var(--brand)}
+.rmini{border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.hsteps{display:grid;gap:6px;margin-top:10px}.hsteps>div{display:flex;align-items:center;gap:10px;font-size:14px}
+.hsteps .sn,.hrow .sn{background:var(--surface2);color:var(--ink2)}
+.hrow{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:.5px solid var(--line2)}
+.jbar{flex:1;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:52px}
+.main[aria-disabled="true"]{background:var(--surface2);color:var(--sub);border:1px solid var(--line)}
+.dgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:48px;align-items:start;margin-top:4px}
+.dgrid .main{width:100%;height:54px}
+.mreview{margin-top:18px}
+/* 모아 사기 — 쇼핑몰형 */
+.mintro{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px;color:var(--ink2)}
+.buyb{display:flex;align-items:center;gap:10px;margin-top:12px;background:var(--brandBg);border-radius:14px;padding:12px 14px}
+.msticky{position:sticky;top:0;z-index:5;background:var(--surface);padding-bottom:4px;border-bottom:.5px solid var(--line)}
+.mtabs{display:flex;align-items:center;gap:2px;padding:6px 14px 0 20px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.mtabs::-webkit-scrollbar{display:none}
+.mtabs button[role=tab]{height:44px;padding:0 10px;font-size:15px;font-weight:600;color:var(--sub);border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0}
+.mtabs button[role=tab].on{color:var(--ink);border-bottom-color:var(--ink);font-weight:700}
+.mall{margin-left:auto;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mgrid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 12px;margin-top:6px}
+.mgrid4,.mgrid2.four{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px 18px;margin-top:14px}
+.pcroot .dsec .mgrid2{grid-template-columns:repeat(4,minmax(0,1fr));gap:24px 18px}
+.mcard{display:flex;flex-direction:column;justify-content:flex-start;align-self:start;width:100%;text-align:left;min-width:0}
+.mimg{position:relative}
+.mth{width:100%!important;height:auto!important;aspect-ratio:1/1;border-radius:14px}
+.mth svg{width:78%;height:auto}
+.mbg{position:absolute;left:8px;top:8px;font-size:12px;font-weight:700;padding:4px 8px;border-radius:7px;background:var(--surface);color:var(--ink2);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.mbg.on{background:var(--brand);color:#fff}.mbg.mute{color:var(--sub)}
+@media (prefers-color-scheme:dark){.mbg.on{color:#0E1512}}
+.mn{font-size:14px;font-weight:600;letter-spacing:-.02em;line-height:1.4;margin-top:1px;text-wrap:balance;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mpr{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap;margin-top:5px}
+.moff{font-size:14px;font-weight:800;color:var(--brand)}
+.mpv{font-size:16px;font-weight:800;letter-spacing:-.02em}
+.mlab{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--ink2);margin-top:5px;flex-wrap:wrap}.mlab .num{color:var(--sub)}
+.dhero{display:flex;flex-direction:column;gap:14px}
+.dhero .dth{width:100%!important;height:auto!important;aspect-ratio:4/3;border-radius:16px}
+.dhero .dth svg{width:52%;height:auto}
+.dhero.pc{flex-direction:row;gap:24px;align-items:flex-start}.dhero.pc .dth{width:300px!important;aspect-ratio:1/1;flex-shrink:0}.dhero.pc .dth svg{width:70%}
+.dinfo{min-width:0;flex:1}
+.dpr{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-top:10px}
+/* 왼쪽 칸이 화면보다 길면 칸 안에서 따로 스크롤 (고정은 유지) */
+.lside.mside{max-height:calc(100vh - 104px);overflow-y:auto;overscroll-behavior:contain;padding-right:6px;scrollbar-width:thin}
+.mtree{display:flex;flex-direction:column}
+.mtree button{display:flex;justify-content:space-between;width:100%;text-align:left;padding:7px 10px;border-radius:8px;font-size:14px;color:var(--ink2)}
+.mtree button .num{color:var(--tiny);font-size:12px}
+.mtree button:hover{background:var(--surface2)}
+.mtree button.on{background:var(--brandBg);color:var(--brand);font-weight:700}
+.mtree .mt1{font-weight:700;color:var(--ink);margin-top:6px}.mtree .mt2{padding-left:20px}.mtree .mt3{padding-left:34px;font-size:13px}
+.hmoa{background:var(--surface2)}
+.hsec.hmoa{border-top:0;margin-top:26px;padding-bottom:22px}
+.hmoa.pc{margin-top:44px;border-radius:20px;padding:26px 28px}
+.hmh{display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+.hmoa .mth{background-color:var(--surface)}
+/* 참여 인원별 할인 단계 */
+.trow{display:grid;grid-template-columns:44px 92px minmax(0,1fr) auto;gap:10px;align-items:center;min-height:48px;padding:6px 12px;border:1px solid var(--line);border-radius:12px}
+.trow .loff{min-width:0}
+.trow.hit{background:var(--brandBg);border-color:transparent}
+.trow.cur{border-color:var(--brand);background:var(--brandBg)}
+.trow .lb i{opacity:.8}
+.mact{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;padding-left:68px}
+/* 구매 기간 D-day — 빨강 없이 진한 배지 · 하루 미만이면 실시간 시간 */
+.dday{display:inline-flex;align-items:center;height:26px;padding:0 9px;border-radius:7px;background:var(--ink);color:var(--surface);font-size:13px;font-weight:800;letter-spacing:.01em;font-variant-numeric:tabular-nums;white-space:nowrap;flex-shrink:0}
+.dday.onimg{position:absolute;right:8px;top:8px}
+.dday.onimg.left{right:auto;left:8px}
+.dday.big{height:30px;font-size:15px;margin-left:4px}
+.whyjoin{display:flex;gap:10px;align-items:flex-start;margin-top:12px;background:var(--brandBg);border-radius:12px;padding:12px 14px;font-size:14px;color:var(--ink2);line-height:1.5}
+.jbar .dday{height:40px;font-size:14px}
+/* 상세 상태 상자 — 색 없이 라인 박스 (「이 제품, 살 만할까요?」와 같은 모양) · 줄마다 위아래 간격을 같게 */
+.mstat2{margin-top:16px;border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:16px 16px 4px}
+.mstat2 .sh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:12px}
+.mstat2 .st{font-size:17px;font-weight:800;letter-spacing:-.02em;line-height:1.35}
+.stag{flex-shrink:0;height:26px;padding:0 10px;border-radius:13px;border:1px solid var(--brand);color:var(--brand);font-size:13px;font-weight:700;display:inline-flex;align-items:center}
+.mstat2.mute .stag{border-color:var(--line);color:var(--ink2)}
+.srows{border-top:1px solid var(--line)}
+.srw{display:grid;grid-template-columns:68px minmax(0,1fr);gap:10px;align-items:baseline;padding:11px 0}
+.srw+.srw{border-top:1px solid var(--line2)}
+.sk{font-size:13px;color:var(--sub);font-weight:600}
+.sv{font-size:14px;color:var(--ink);line-height:1.45;min-width:0}
+.sv.between{display:flex;align-items:center;justify-content:space-between;gap:6px 8px;flex-wrap:wrap}
+.sv .nw{white-space:nowrap}
+.sv b{font-weight:800}
+.sv .dday{height:24px;font-size:12px}
+.snt{display:flex;gap:6px;align-items:flex-start;border-top:1px solid var(--line);padding:11px 0 12px;font-size:13px;color:var(--ink2);line-height:1.5}
+.snt svg{flex-shrink:0;margin-top:2px}
+/* 가격 두 줄 비교 — 홈 「나란히 보면 달라요」의 .pvs 와 이름이 겹치지 않게 mpvs */
+.mpvs{display:grid;grid-template-columns:auto auto 1fr;gap:4px 8px;align-items:baseline}
+.mpvs .mpv2{display:contents}
+.mpv2{display:inline-flex;align-items:baseline;gap:8px;white-space:nowrap}
+.mpl{font-size:13px;color:var(--sub)}
+.mpv2 b{font-size:16px;letter-spacing:-.02em}
+.mpc{font-size:13px;font-weight:800;color:var(--brand)}
+.mpv2.mute b{color:var(--sub);font-weight:600;text-decoration:line-through;text-decoration-color:var(--faint)}
+.mpv2.mute .mpc{color:var(--sub);font-weight:600}
+/* 가격 — 이름표(제안가 · 확정가 · 소비자가) 열 맞춤 */
+.mpg{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:6px;row-gap:1px;align-items:baseline;margin-top:5px}
+.mpk{font-size:12px;color:var(--sub)}
+.mpw{display:flex;align-items:baseline;gap:5px;min-width:0;font-size:12px;color:var(--sub)}
+.dpg{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:10px;row-gap:4px;align-items:baseline;margin-top:10px}
+.dpk{font-size:13px;color:var(--sub);font-weight:600}
+.dpw{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;min-width:0}
+.dpn{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.dpw .dday{align-self:center}
+/* 이렇게 진행돼요 — 하단 항목 줄 */
+.mrules{margin-top:14px;background:var(--surface2);border-radius:14px;padding:6px 14px}
+.mrules .srw{grid-template-columns:80px minmax(0,1fr)}
+.mrules .srw+.srw{border-top:1px dashed var(--line)}
+.mrules .sv{font-size:14px}
+/* 찜 탭 — 찜 | 모아 사기 전환 · 내 참여 줄 */
+.fseg{display:flex;margin-top:14px}
+.fseg button{flex:1;position:relative}
+.pcroot .fseg{display:inline-flex;margin-top:0}
+.pcroot .fseg button{flex:0 0 auto;padding:0 22px}
+.sdot{position:absolute;top:8px;right:10px;width:7px;height:7px;border-radius:4px;background:var(--brand)}
+.mrow2{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:.5px solid var(--line)}
+.mrow2 .lmain{flex:1;min-width:0}
+.mrl{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px}
+.mrl .mrp{font-size:15px;letter-spacing:-.02em}
+.mrl .dday{height:22px;font-size:11px;padding:0 7px}
+.mact2{flex-shrink:0;align-self:center}
+.mbuy{background:var(--brand);color:#fff;border-color:var(--brand)}
+@media (prefers-color-scheme:dark){.mbuy{color:#0E1512}}
+.phone .mrow2{flex-wrap:wrap}.phone .mact2{width:100%;padding-left:68px;margin-top:-2px}
+.phone .mact2 .mbuy{width:100%;justify-content:center}
+/* ════ 운영 콘솔 ════ */
+.opshead{position:sticky;top:0;z-index:20;background:var(--ink);color:var(--surface)}
+.opshw{display:flex;align-items:center;gap:12px;height:56px}.opshw b{font-size:17px}.opshw .t-sub{color:var(--faint)}
+.opshead .tbtn{background:transparent;color:var(--surface);border-color:rgba(255,255,255,.3)}
+.opsnav{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-top:18px}
+.opsnav button{height:46px;padding:0 16px;font-size:15px;font-weight:600;color:var(--sub);border-bottom:2px solid transparent}
+.opsnav button.on{color:var(--ink);border-bottom-color:var(--ink);font-weight:800}
+.opsnav .num{color:var(--brand);margin-left:2px}
+.opsmain{margin-top:16px}
+.opsbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.opsg{margin-top:22px}
+.opsgh{display:flex;align-items:center;gap:10px;padding-bottom:8px}.opsgh b{font-size:16px}
+.opsw{overflow-x:auto}
+.opst{width:100%;border-collapse:collapse;font-size:14px}
+@media (max-width:1180px){.opsp b{max-width:160px}}
+.opst th{text-align:left;font-size:12px;color:var(--sub);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.opst td{padding:10px;border-bottom:1px solid var(--line2);vertical-align:middle}
+.opst .r{text-align:right}
+.opst tr.opsdim td{opacity:.55}
+.opsp{display:flex;align-items:center;gap:10px;text-align:left;min-width:0}
+.opsp>span{display:flex;flex-direction:column;min-width:0}.opsp b{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+.opsp .thumb{border-radius:8px}
+.opsl{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;white-space:nowrap}
+.opsx{display:inline-block;margin:2px 4px 2px 0;font-size:12px;padding:2px 7px;border-radius:6px;background:var(--surface2);color:var(--ink2)}
+.opsok{font-size:12px;font-weight:700;color:var(--brand)}
+.opsprep td{background:var(--surface2);padding:12px}
+.opsbox{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:14px 16px}
+.opsh{font-size:15px;font-weight:800}
+.opstiers{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px}
+.opstier{display:flex;flex-direction:column;gap:6px;border:1px solid var(--line);border-radius:10px;padding:10px}
+.opstier.hid{opacity:.45}
+.opsin{display:inline-flex;align-items:center;gap:4px;font-size:14px}
+.opsin input,.opslink,.opsns input{height:34px;border:1px solid var(--line);border-radius:8px;padding:0 8px;font:inherit;font-size:14px;color:var(--ink);background:var(--surface);width:84px}
+.opsin.big input{width:130px;height:40px;font-size:17px;font-weight:700}
+.opslink{width:200px}
+.opsrow{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+.opsf{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.opsgo{background:var(--brand);color:#fff;border-color:var(--brand)}
+.opsgo[aria-disabled="true"]{background:var(--surface2);color:var(--sub);border-color:var(--line)}
+@media (prefers-color-scheme:dark){.opsgo{color:#0E1512}}
+.opsns{display:flex;gap:4px}.opsns label{display:flex;flex-direction:column;align-items:center;gap:2px}.opsns input{width:58px;height:30px;font-size:13px;text-align:right}.opsns .hid{opacity:.4}
+.opsgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:12px}
+.opsk{font-size:12px;font-weight:700;color:var(--sub);margin-bottom:4px}
+.opsvd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px}
+.opsv{display:inline-flex;align-items:center;height:24px;padding:0 9px;border-radius:12px;font-size:12px;font-weight:800}
+.opsv.ok{background:var(--brandBg);color:var(--brand)}.opsv.mid{background:var(--accentBg);color:var(--accent)}.opsv.no{background:var(--surface2);color:var(--ink2)}
 </style>
 </head>
 <body>
@@ -539,8 +746,10 @@ const I={
  star:'<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8 6.8 19.6l1-5.8L3.5 9.7l5.9-.8z"/>',
  cmpi:'<rect x="3.5" y="5" width="7.5" height="14" rx="1.5"/><rect x="13" y="5" width="7.5" height="14" rx="1.5"/>',
  home:'<path d="M4 10.5L12 4l8 6.5V19a1 1 0 01-1 1h-4.5v-5.5h-5V20H5a1 1 0 01-1-1z"/>',
+ moa:'<circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9" r="2.5"/><path d="M3 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><path d="M14.5 14.2c.5-.1 1-.2 1.5-.2 2.3 0 4.2 1.6 4.8 4.4"/>',
  grid:'<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>',
  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.2"/>',
  list:'<path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r=".6"/><circle cx="4" cy="12" r=".6"/><circle cx="4" cy="18" r=".6"/>',
 };
 const ic=(n,s=20,c='currentColor',w=1.8,fill='none')=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="${fill}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]}</svg>`;
@@ -566,7 +775,15 @@ const LCOL=l=>l==='대체로 만족'?'var(--brand)':l==='의견 갈림'?'var(--a
 const LDOT=l=>l==='대체로 만족'?'var(--brand)':l==='의견 갈림'?'var(--accent)':l==='대체로 불만'?'var(--bad)':'var(--faint)';
 
 // 받침에 맞는 조사 — 「세척·관리」예요 / 「보습·유지력」이에요
-const hasJong=w=>{const c=w.replace(/[^가-힣]/g,'').slice(-1);return c?((c.charCodeAt(0)-0xAC00)%28)>0:false};
+// 받침 판단 — 끝이 단위 · 숫자 · 영문이면 읽는 소리로 (「300ml」은 리터 → 받침 없음, 「500g」은 그램 → 받침 있음)
+const hasJong=w=>{const t=String(w).trim();
+ if(/\d\s*(ml|mL|L|l|cm|mm|m)$/.test(t))return false;   // 리터 · 미터
+ if(/\d\s*(g|kg)$/.test(t))return true;                  // 그램
+ const last=t.slice(-1);
+ if(/[0-9]/.test(last))return '1367 80'.includes(last)&&last!==' ';   // 일 삼 육 칠 팔 · 0(십 · 백 · 천)
+ if(/[A-Za-z]/.test(last))return 'LMNRlmnr'.includes(last);   // 엘 엠 엔 알
+ if(/[가-힣]/.test(last))return ((last.charCodeAt(0)-0xAC00)%28)>0;
+ const c=t.replace(/[^가-힣0-9A-Za-z]/g,'');return c?hasJong(c):false};
 const J=(w,a,b)=>hasJong(w)?a:b;
 const Q=w=>`<span style="white-space:nowrap">「${w}」</span>`;
 // 짧은 설명문은 문장 단위로 줄을 바꾼다 (CLAUDE.md 5장)
@@ -739,7 +956,8 @@ const validateAll=()=>[...P.flatMap(p=>validate(p).map(e=>p.id+': '+e)),...MINIS
 /* ── 상태 ── */
 const PCW=1024; // 이 폭 이상이면 PC 화면
 const S={pid:'p1',month:false,fav:{},cmp:{},sheet:null,toast:null,view:window.innerWidth>=PCW?'pc':'mo',mega:null,act:null,crowXs:{},spyHold:0,
- screen:'home',brand:null,follow:{},bPrev:null,storyK:null,goAfter:null,user:null,notiPref:{price:true,month:true,label:true,req:true},q:'',sqDone:false,recentQ:[],sOpen:false,requested:{},sPrev:null,focusSearch:false,hdom:'뷰티',hdomSet:false,pOff:false,entry:null,hrank:null,recent:[],phI:0,cdom:'뷰티',cq:'',recentSubs:[],prev:null,catFocus:null,crTop:null,lsub:'프라이팬',lsort:'default',csub:'프라이팬',cpair:[],cdiff:true,lastSub:null,protoOpen:false,f:{good:false,pmin:null,pmax:null,brands:[]}};
+ screen:'home',favSeg:'fav',opsTab:'cand',opsGroup:'brand',opsEx:false,opsBig:{},opsOpen:null,opsDraft:{},opsOffer:{},opsEndDays:{},opsLink:{},moaOn:true,moaSeg:'live',moaDom:'전체',mcat:{dom:null,mid:null,sub:null},mf:{states:['gathering','talking','open'],pmin:null,pmax:null,off:0,soon:false,brands:[],mine:false},msort:'hot',   /* mf 초기값은 MF0() 와 같게 — 상태를 만들 때는 MF0 가 아직 정의 전 */
+ joins:{},moaNext:{},did:null,mPrev:null,pendJoin:null,dPrev:null,readNoti:{},nPrev:null,brand:null,follow:{},bPrev:null,storyK:null,goAfter:null,user:null,notiPref:{price:true,month:true,label:true,req:true},q:'',sqDone:false,recentQ:[],sOpen:false,requested:{},sPrev:null,focusSearch:false,hdom:'뷰티',hdomSet:false,pOff:false,entry:null,hrank:null,recent:[],phI:0,cdom:'뷰티',cq:'',recentSubs:[],prev:null,catFocus:null,crTop:null,lsub:'프라이팬',lsort:'default',csub:'프라이팬',cpair:[],cdiff:true,lastSub:null,protoOpen:false,f:{good:false,pmin:null,pmax:null,brands:[]}};
 let toastT=0;
 const say=m=>{S.toast=m;draw();clearTimeout(toastT);toastT=setTimeout(()=>{S.toast=null;draw()},2400)};
 
@@ -757,7 +975,7 @@ const splitCat=p=>evalCats(p).filter(c=>c.m>=30).sort((a,b)=>Math.abs(share(a)-.
 
 /* ── 화면 조각 ── */
 const protoBar=()=>'';   // 예전 맨 위 샘플 띠 — 2026-09-30 「샘플」 버튼(protoFab)으로 대체
-const topBar=()=>`<div class="top"><button class="ib" data-a="list:${byId(S.pid).sub}" aria-label="${byId(S.pid).sub} 목록으로">${ic('back',22,'var(--ink)')}</button>
+const topBar=()=>`<div class="top"><button class="ib" data-a="dback" aria-label="뒤로">${ic('back',22,'var(--ink)')}</button>
  <button class="sbox" data-a="search">${ic('search',18,'var(--meta)')}<span>제품·브랜드 검색</span></button>
  <button class="ib" data-a="home" aria-label="홈으로">${ic('home',22,'var(--ink)')}</button>
  <button class="ib" data-a="say:링크를 복사했어요" aria-label="공유">${ic('share',21,'var(--ink)')}</button></div>`;
@@ -886,8 +1104,11 @@ const siblings=p=>{const items=sortItems(allIn(p.sub).filter(x=>x.id!==p.id),'de
   <div class="num" style="font-size:14px;font-weight:700;margin-top:3px">${won(x.price)}</div>
   ${x.vol?`<div class="t-cap num">${unitPrice(x)}</div>`:''}</button>`).join('')}</div></section>`};
 
+// 리뷰 상세 → 모아 사기는 맨 아래 한 줄뿐 (CLAUDE.md 2-8). 열린 제품만 · 탭이 켜져 있을 때만
+const moaLine=p=>{const d=activeDealFor(p.id);if(!d)return '';const t=d.state==='gathering'?'이 제품, 모아 사기에서 사람을 모으는 중이에요':d.state==='proposing'?'이 제품, 모아 사기에서 브랜드와 이야기하는 중이에요':`이 제품, 모아 사기에서 ${won(dDealPrice(d))}에 열렸어요`;   // 리뷰 화면이라 D-day는 넣지 않음
+ return `<button class="moaline" data-a="deal:${d.id}">${ic('moa',18,'var(--brand)')}<span style="flex:1;text-align:left">${t}</span>${ic('chev',16,'var(--brand)',2.2)}</button>`};
 const SAFETY='안전 인증(KC) 여부는 다들이 확인하지 않아요. 제품 페이지의 인증 정보를 함께 확인해 주세요.';
-const footer=p=>`<div class="foot">
+const footer=p=>`${moaLine(p)}<div class="foot">
  ${p.dom==='육아용품'?`<div class="t-cap" style="color:var(--ink2);margin-bottom:6px">${SAFETY}</div>`:''}
  <div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div>
  <div class="t-cap">고친 자리 · ${p.fix||'아직 없어요'}</div>
@@ -919,7 +1140,10 @@ const bottomBar=p=>{const thin=LAB(p)==='표본 부족',f=!!S.fav[p.id],c=!!S.cm
  :`<button class="main" data-a="list:${p.sub}">${what} ${subCount(p.sub)}종과 비교</button>`}</div>`};
 
 const sheet=p=>{if(!S.sheet)return'';
- const inner=S.sheet==='login'?loginSheet():S.sheet==='noti'?notiSheet():(S.sheet==='sort'||S.sheet==='filter')?listSheet(S.lsub):S.sheet==='cons'?`<div class="pad"><div class="t-h">아쉽다는 이야기만 모아보기</div>
+ const inner=S.sheet==='mcats'?`<div class="pad"><div class="t-h">카테고리</div><div class="t-cap" style="margin-top:2px">모아 사기가 열린 곳만 보여드려요</div><div class="mtree" style="margin-top:10px">${mcatTree()}</div></div>`
+  :S.sheet==='msort'?`<div class="pad"><div class="t-h">정렬</div><div style="margin-top:8px">${MSORTS.map(([k,t])=>`<button class="srow" data-a="msort:${k}"><span>${t}</span>${S.msort===k?ic('check',20,'var(--brand)',2.6):''}</button>`).join('')}</div></div>`
+  :S.sheet==='mfilter'?`<div class="pad"><div class="t-h">필터</div>${mfilters()}<div style="display:flex;gap:8px;margin-top:20px"><button class="tbtn" style="flex:0 0 auto" data-a="mreset">초기화</button><button class="main" style="height:48px" data-a="close">${mList().length}개 보기</button></div></div>`
+  :S.sheet==='moahow'?moaHowSheet():S.sheet==='login'?loginSheet():S.sheet==='noti'?notiSheet():(S.sheet==='sort'||S.sheet==='filter')?listSheet(S.lsub):S.sheet==='cons'?`<div class="pad"><div class="t-h">아쉽다는 이야기만 모아보기</div>
    <div class="t-sub" style="margin-top:3px">제품 이야기 중 아쉽다는 것만, 여러 번 나온 순서예요.</div>
    <div style="margin-top:10px">${consAll(p).map(({c,x})=>`<div class="pt">${mk('-')}<div class="tx"><div class="t-body">${x[1]}</div>
     <div class="t-cap">${c.name}${c.time?` · 한 달 써 본 후기 ${p.month}건 중`:''}</div></div><div class="ct num">${x[2]}건</div></div>`).join('')||'<div class="t-sub">아직 없어요</div>'}</div></div>`
@@ -944,18 +1168,19 @@ const sameSub=p=>sortItems(allIn(p.sub),'default').map(x=>({...x,L:labOf(x),rate
 const cmpList=p=>Object.keys(S.cmp).map(itemOf).filter(x=>x&&x.sub===p.sub);
 
 const pcProto=()=>'';
-const pcGnb=p=>{const cn=Object.keys(S.cmp).length,fn=Object.values(S.fav).filter(Boolean).length;
+const pcGnb=p=>{const cn=Object.keys(S.cmp).length,fn=Object.values(S.fav).filter(Boolean).length+(S.moaOn?Object.values(S.joins).filter(Boolean).length:0);
  return `<header class="gnb"><div class="wrap">
  <button class="logo" data-a="home" aria-label="다들 홈">${mark(24)}<span>다들</span></button>
  <nav class="menu">${Object.keys(TAX).map(d=>`<button class="${S.mega===d?'on':''}" data-a="mega:${d}" aria-expanded="${S.mega===d}">${d}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`).join('')}</nav>
  <div class="gsw" data-sroot><label class="gsearch">${ic('search',19,'var(--meta)')}<input data-sq type="search" enterkeyhint="search" autocomplete="off" value="${escA(S.q)}" placeholder="제품 · 브랜드 · 카테고리 검색" aria-label="검색어"></label>
   ${S.sOpen?`<div class="sdrop" data-sres>${S.q.trim()?sugHTML(S.q):preHTML()}</div>`:''}</div>
- <div class="gright"><button class="gbtn" data-a="compare:${p.sub||''}">${ic('cmpi',20,'var(--ink2)')}비교함${cn?`<span class="n num">${cn}</span>`:''}</button>
-  <button class="gbtn" data-a="favs">${ic('heart',20,'var(--ink2)')}찜${fn?`<span class="n num">${fn}</span>`:''}</button></div></div>
+ <div class="gright">${S.moaOn?`<button class="gbtn ${['moa','deal'].includes(S.screen)?'on':''}" data-a="moa">${ic('moa',20,'var(--ink2)')}모아 사기</button>`:''}<button class="gbtn" data-a="compare:${p.sub||''}">${ic('cmpi',20,'var(--ink2)')}비교함${cn?`<span class="n num">${cn}</span>`:''}</button>
+  <button class="gbtn" data-a="favs">${ic('heart',20,'var(--ink2)')}찜${fn?`<span class="n num">${fn}</span>`:''}</button>
+  <button class="gbtn" data-a="noti" aria-label="알림${unreadN()?` · 안 읽은 알림 ${unreadN()}개`:''}">${bellIcon('var(--ink2)').replace('width="22" height="22"','width="20" height="20"')}알림${unreadN()?`<span class="bdot num">${unreadN()}</span>`:''}</button></div></div>
  ${S.mega?`<div class="mega" data-catroot><div class="wrap mhead">${catSearch(1)}${recentCats()}<button class="more" data-a="brands" style="margin-left:auto;white-space:nowrap">브랜드로 찾기 ${ic('chev',14,'var(--brand)',2.2)}</button></div>
   <div class="wrap mres" data-cres ${S.cq.trim()?'':'hidden'}>${S.cq.trim()?catResults(S.cq):''}</div>
   <div class="wrap mwrap" data-cpanes ${S.cq.trim()?'hidden':''}>${TAX[S.mega].map(([m,subs])=>`<div><div class="mh">${m}</div>
-  ${subs.map(x=>`<button class="ms ${x===p.sub&&m===p.mid?'cur':''}" data-a="say:${x} 목록 화면은 다음 단계에서 만들어요">${x}</button>`).join('')}</div>`).join('')}</div></div>`:''}
+  ${subs.map(x=>`<button class="ms ${x===p.sub&&m===p.mid?'cur':''}" data-a="${hasSub(x)?'list:'+x:'say:'+x+J(x,'은','는')+' 아직 준비 중이에요'}">${x}</button>`).join('')}</div>`).join('')}</div></div>`:''}
  </header>`};
 
 const pcLeft=p=>{const thin=LAB(p)==='표본 부족',f=!!S.fav[p.id],c=!!S.cmp[p.id];
@@ -1110,13 +1335,14 @@ const listBody=sub=>{const all=allIn(sub),key=S.lsort,items=sortItems(filt(all),
  <div class="foot">${midOf(sub).dom==='육아용품'?`<div class="t-cap" style="color:var(--ink2);margin-bottom:6px">${SAFETY}</div>`:''}<div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div>
  </div>`};
 
-const tabBar=(sub,act=1)=>{const cn=cmpList({sub}).length,fn=Object.values(S.fav).filter(Boolean).length;
- const cf=cn&&act===1?`<div class="cfloat"><div style="display:flex;align-items:center;gap:6px;min-width:0">${cmpList({sub}).slice(0,3).map(x=>thumb(x,30,30)).join('')}
+const tabBar=(sub,act=1)=>{const key=typeof act==='number'?['home','cats','cmp','fav'][act]:act;   // 칸 이름으로 활성 구분 (탭이 늘어도 밀리지 않게)
+ const cn=cmpList({sub}).length,fn=Object.values(S.fav).filter(Boolean).length+(S.moaOn?Object.values(S.joins).filter(Boolean).length:0);   // 찜 + 모아 사기 참여
+ const cf=cn&&key==='cats'&&S.screen==='list'?`<div class="cfloat"><div style="display:flex;align-items:center;gap:6px;min-width:0">${cmpList({sub}).slice(0,3).map(x=>thumb(x,30,30)).join('')}
    <span style="font-size:14px;font-weight:700;margin-left:4px;white-space:nowrap">${sub} 비교함 <span class="num">${cn}</span></span></div>
   <button class="cgo" data-a="${cn<2?'say:같은 '+sub+' 하나를 더 담으면 비교할 수 있어요':'compare:'+sub}" ${cn<2?'aria-disabled="true"':''}>${cn<2?'하나 더 담아 주세요':'비교하기'}</button></div>`:'';
  const tcn=Object.keys(S.cmp).length;
- return cf+`<nav class="tabs">${[['home','홈','home'],['grid','카테고리','cats:'],['cmpi','비교함','compare:'+(sub||'')],['heart','찜','favs']]
-  .map(([i,t,a],n)=>`<button class="tab ${n===act?'on':''}" ${a&&n!==act?`data-a="${a}"`:''} ${n===act?'aria-current="page"':''}>${ic(i,22,n===act?'var(--brand)':'var(--meta)')}<span>${t}${n===2&&tcn?` ${tcn}`:n===3&&fn?` ${fn}`:''}</span></button>`).join('')}</nav>`};
+ const tabs=[['home','home','홈','home'],['cats','grid','카테고리','cats:'],['cmp','cmpi','비교함','compare:'+(sub||'')],...(S.moaOn?[['moa','moa','모아 사기','moa']]:[]),['fav','heart','찜','favs']];
+ return cf+`<nav class="tabs">${tabs.map(([k,i,t,a])=>`<button class="tab ${k===key?'on':''}" ${a&&k!==key?`data-a="${a}"`:''} ${k===key?'aria-current="page"':''}>${ic(i,22,k===key?'var(--brand)':'var(--meta)')}<span>${t}${k==='cmp'&&tcn?` ${tcn}`:k==='fav'&&fn?` ${fn}`:''}</span></button>`).join('')}</nav>`};
 
 /* PC 목록 */
 const pcList=sub=>{const all=allIn(sub),key=S.lsort,items=sortItems(filt(all),key),{dom,mid}=midOf(sub);
@@ -1200,7 +1426,7 @@ const cmpPairOf=items=>{let p=(S.cpair||[]).filter(id=>items.some(x=>x.id===id))
 const cmpEmpty=(sub,items)=>{const n=items.length;
  if(!sub)return `<div style="padding:44px 24px;text-align:center"><div class="t-h">비교함이 비어 있어요</div>
   <div class="t-sub" style="margin-top:6px">보고 싶은 제품 목록에서 「＋ 비교」를 누르면 여기에 모여요. 같은 종류끼리 최대 4개까지 담을 수 있어요.</div>
-  <button class="tbtn" style="margin-top:16px" data-a="${S.view==='pc'?'mega:주방용품':'say:카테고리 화면은 다음 단계에서 만들어요'}">카테고리 둘러보기</button></div>`;
+  <button class="tbtn" style="margin-top:16px" data-a="${S.view==='pc'?'mega:주방용품':'cats:'}">카테고리 둘러보기</button></div>`;
  return `<div style="padding:32px 20px 44px;text-align:center">
  ${n?`<div class="t-cap" style="margin-bottom:8px;text-align:left">${sub} 비교함에 담긴 제품</div>
   ${items.map(x=>{const L=labOf(x);return `<div class="cone">
@@ -1413,7 +1639,7 @@ const forYouSec=(I,pc)=>{const xs=forYou(I);if(!xs.length)return '';const t=topS
 /* 모바일 홈 */
 const homeTop=()=>`<div class="top"><div style="flex:1"><button class="logo" data-a="home" aria-label="다들 홈" style="font-size:20px;min-height:44px">${mark(22)}<span>다들</span></button></div>
  <button class="ib" data-a="favs" aria-label="찜">${ic('heart',22,'var(--ink)')}</button>
- <button class="ib" data-a="say:알림 화면은 다음 단계에서 만들어요" aria-label="알림"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 004 0"/></svg></button></div>`;
+ ${bellBtn()}</div>`;
 const homeBody=()=>{const h=homeParts(),sub=rankSub(),first=!h.favs.length&&!h.recent.length,pr=pairs(h.dom);
  return `<div class="scr" id="scr"><div class="pad" style="padding-top:12px">
  <button class="hsearch" data-a="search">${ic('search',20,'var(--meta)')}<span data-ph>「${PH[S.phI%PH.length]}」</span></button>
@@ -1426,6 +1652,7 @@ const homeBody=()=>{const h=homeParts(),sub=rankSub(),first=!h.favs.length&&!h.r
  ${midTiles(h.dom)}</div>
  <section class="hsec"><div class="pad"><div class="t-h">모아보니 「대체로 만족」인 제품</div><div class="t-sub" style="margin-top:2px">모은 후기가 많은 순이에요.</div>
   <div style="margin-top:12px">${rankTabs(sub)}</div><div style="margin-top:4px">${rankBlock(sub,3)}</div></div></section>
+ ${homeMoa(false)}
  <section class="hsec"><div class="pad"><div class="t-h">고민별로 찾아보기</div><div class="t-sub" style="margin-top:2px">후기에서 많이 나온 이야기로 줄 세워 뒀어요.</div>
   <div style="margin-top:12px">${themeCards(h.dom)}</div>${h.I.has?'':`<div class="why2">${whyLine(h.I)}</div>`}</div></section>
  ${h.gaps.length?`<section class="hsec"><div class="pad"><div class="t-h">별점만 보면 놓치는 이야기</div>
@@ -1455,6 +1682,7 @@ const pcHome=()=>{const h=homeParts(),sub=rankSub(),first=!h.favs.length&&!h.rec
  <section style="margin-top:44px"><div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap">
    <div><div class="t-h">모아보니 「대체로 만족」인 제품</div><div class="t-sub" style="margin-top:2px">모은 후기가 많은 순이에요.</div></div>${rankTabs(sub)}</div>
   <div class="rgrid">${rankBlock(sub,6).replace(/<button class="more"/,'</div><button class="more"').replace(/^/,'<div class="rcols">')}</div></section>
+ ${homeMoa(true)}
  <div class="hgrid">
   <section><div class="t-h">고민별로 찾아보기</div><div class="t-sub" style="margin-top:2px">후기에서 많이 나온 이야기로 줄 세워 뒀어요.</div>
    <div style="margin-top:14px">${themeCards(h.dom)}</div>${h.I.has?'':`<div class="why2">${whyLine(h.I)}</div>`}</section>
@@ -1533,8 +1761,10 @@ function openCats(v){const isDom=!!TAX[v],isMid=!isDom&&Object.values(TAX).some(
 
 /* 가격 범위 막대 — 손잡이 두 개 (끌거나 방향키로 조절) */
 const rpos=(v,lo,hi)=>hi>lo?(v-lo)/(hi-lo):0;
-const rangeUI=sub=>{const [lo,hi]=priceBounds(sub),a=S.f.pmin??lo,b=S.f.pmax??hi,pa=rpos(a,lo,hi),pb=rpos(b,lo,hi);
- return `<div class="rng" data-lo="${lo}" data-hi="${hi}">
+const rangeUI=sub=>{const [lo,hi]=priceBounds(sub);return rangeBox(lo,hi,S.f.pmin??lo,S.f.pmax??hi,'list')};
+// 가격 범위 막대 부품 — scope: list(리뷰 목록) · moa(모아 사기)
+const rangeBox=(lo,hi,a,b,scope)=>{const pa=rpos(a,lo,hi),pb=rpos(b,lo,hi);
+ return `<div class="rng" data-scope="${scope}" data-lo="${lo}" data-hi="${hi}">
  <div class="rvals"><span class="num" data-rv="a">${won(a)}</span><span aria-hidden="true">~</span><span class="num" data-rv="b">${won(b)}</span></div>
  <div class="rtrack"><i class="rfill" style="left:calc(14px + (100% - 28px) * ${pa});right:calc(14px + (100% - 28px) * ${1-pb})"></i>
   <input type="range" data-r="a" min="${lo}" max="${hi}" step="${PSTEP}" value="${a}" aria-label="최저 가격" aria-valuetext="${won(a)}" style="z-index:${pa>.5?4:3}">
@@ -1669,11 +1899,12 @@ function submitSearch(q){q=String(q||'').trim();if(!q)return;
    다시 오게 만드는 중심 — 목록보다 「찜한 제품에서 무엇이 달라졌는지」를 먼저 보여줌
    찜은 연결 없이 됨(기기에 저장) · 알림을 받으려면 그때만 연결 */
 const favItems=()=>Object.keys(S.fav).filter(k=>S.fav[k]).map(itemOf).filter(Boolean);
+const chName=()=>S.user&&S.user.ch==='kakao'?'카카오톡':'네이버';   // 「카카오톡으로」 · 「네이버로」
 const NOTI=[['price','가격이 내리면'],['month','한 달 써 본 후기가 늘면'],['label','모아보니 결과가 바뀌면'],['req','요청한 제품의 후기가 모이면']];
 const notiBox=pc=>S.user?`<div class="notib on">${ic('check',18,'var(--brand)',2.6)}<div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:700">알림을 받고 있어요</div>
-  <div class="t-cap">${S.user.ch==='kakao'?'카카오톡':'네이버'}으로 · ${NOTI.filter(([k])=>S.notiPref[k]).length}가지 알림</div></div><button class="tbtn" data-a="sheet:noti">설정</button></div>`
- :`<div class="notib"><div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:700">찜한 제품이 달라지면 알려드릴까요?</div>
-  <div class="t-cap">가격이 내리거나 한 달 써 본 후기가 늘면 알려드려요.</div></div><button class="tbtn" style="background:var(--brand);color:#fff;border-color:var(--brand)" data-a="sheet:login">알림 받기</button></div>`;
+  <div class="t-cap">${chName()}${J(chName(),'으로','로')} · ${NOTI.filter(([k])=>S.notiPref[k]).length}가지 알림</div></div><button class="tbtn" data-a="sheet:noti">설정</button></div>`
+ :`<div class="notib"><div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:700">${S.moaOn?'찜하거나 참여한 제품이 달라지면 알려드릴까요?':'찜한 제품이 달라지면 알려드릴까요?'}</div>
+  <div class="t-cap">${S.moaOn?'가격이 내리거나 모아 사기가 열리면 알려드려요.':'가격이 내리거나 한 달 써 본 후기가 늘면 알려드려요.'}</div></div><button class="tbtn" style="background:var(--brand);color:#fff;border-color:var(--brand)" data-a="sheet:login">알림 받기</button></div>`;
 const favRow=x=>{const L=labOf(x);return `<div class="frow"><button class="lmain" data-a="open:${x.id}">${thumb(x,64,64)}
  <div style="min-width:0;flex:1"><div class="t-cap" style="color:var(--sub)">${x.brand}</div><div class="lname">${x.name}</div>
   <div style="display:flex;align-items:center;gap:6px;margin-top:3px;font-size:13px"><span class="dot" style="background:${LDOT(L)}"></span><span style="font-weight:700;color:${LCOL(L)}">${L}</span><span class="num" style="color:var(--sub)">· 모은 후기 ${nf(x.n)}건</span></div>
@@ -1684,8 +1915,7 @@ const favGroups=()=>{const xs=favItems();return [...new Set([...LSUBS,...xs.map(
 const reqList=()=>Object.keys(S.requested).filter(q=>S.requested[q]);
 const favBody=pc=>{const gs=favGroups(),n=favItems().length,news=favItems().filter(x=>NEWS[x.id]),reqs=reqList(),I=interest();
  const empty=!n;   // 요청만 있어도 찜이 없으면 안내를 보여줌 (요청은 옆 칸에 따로 나옴)
- const side=`${notiBox(pc)}
- ${news.length?`<div class="newsb" style="margin-top:14px"><div style="font-size:15px;font-weight:700;margin-bottom:4px">이번 주 달라진 곳 <span class="num" style="color:var(--brand)">${news.length}</span></div>
+ const side=`${news.length?`<div class="newsb" style="margin-top:14px"><div style="font-size:15px;font-weight:700;margin-bottom:4px">이번 주 달라진 곳 <span class="num" style="color:var(--brand)">${news.length}</span></div>
   ${news.map(x=>`<button class="nrow" data-a="open:${x.id}">${thumb(x,40,40)}<div style="min-width:0;flex:1;text-align:left"><div class="t-cap" style="color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${x.brand} · ${x.name}</div>
    <div style="font-size:14px;font-weight:600;letter-spacing:-.02em">${NEWS[x.id]}</div></div>${ic('chev',16,'var(--meta)',2)}</button>`).join('')}</div>`:''}
  ${reqs.length?`<div class="newsb" style="margin-top:14px"><div style="font-size:15px;font-weight:700">후기를 모아 달라고 요청한 제품</div>
@@ -1698,26 +1928,25 @@ const favBody=pc=>{const gs=favGroups(),n=favItems().length,news=favItems().filt
  :gs.map(([sub,xs])=>`<section class="fgrp"><div class="fgh"><span><b>${sub}</b> <span class="num" style="color:var(--meta)">${xs.length}</span></span>
    ${xs.filter(x=>!isThin(x)).length>=2?`<button class="plink" style="font-size:13px" data-a="favcmp:${sub}">${xs.length>4?'4개까지 ':''}비교함에 담아 비교하기</button>`:''}</div>
    <div class="${pc?'fgrid':''}">${xs.map(favRow).join('')}</div></section>`).join('');
- return {side,main,n,empty}};
+ return {noti:notiBox(pc),side,main,n,empty}};
 
 /* 모바일 */
-const favTop=()=>`<div class="top"><div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em;padding-left:6px">찜 <span class="num" style="color:var(--meta);font-weight:500">${favItems().length}</span></div></div>`;
-const favScreen=()=>{const f=favBody(false);return `<div class="scr" id="scr"><div class="pad" style="padding-top:14px">${f.side}</div>
- <div class="pad">${f.main}</div>
+const favTop=()=>`<div class="top"><div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em;padding-left:6px">찜${favSegOn()?'':` <span class="num" style="color:var(--meta);font-weight:500">${favItems().length}</span>`}</div></div>`;
+const favScreen=()=>{const f=favBody(false),moa=favSeg()==='moa';return `<div class="scr" id="scr"><div class="pad" style="padding-top:14px">${f.noti}${favSegEl()}${moa?'':f.side}</div>
+ <div class="pad">${moa?moaMine():f.main}</div>
  <div class="foot"><div class="t-cap">찜은 이 기기에 저장돼요. 알림을 받으려고 연결하면 다른 기기에서도 이어져요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 소식과 숫자는 모두 가상이에요</div></div></div>`};
 /* PC */
 const pcFavs=()=>{const f=favBody(true);return pcProto()+pcGnb({sub:null,mid:null})+`<div class="wrap" style="padding-bottom:140px">
  <div class="pcrumb"><button data-a="home" style="color:var(--meta)">홈</button><span aria-hidden="true">›</span><b>찜</b></div>
- <h1 class="t-title">찜 <span class="num" style="color:var(--meta);font-weight:500">${f.n}</span></h1>
- <div class="favgrid"><aside>${f.side}</aside><main style="min-width:0">${f.main}</main></div>
+ <h1 class="t-title">찜${favSegOn()?'':` <span class="num" style="color:var(--meta);font-weight:500">${f.n}</span>`}</h1>
+ <div class="favgrid"><aside>${f.noti}${favSeg()==='moa'?'':f.side}</aside><main style="min-width:0">${favSegEl()}${favSeg()==='moa'?moaMine():f.main}</main></div>
  <div class="foot"><div class="t-cap">찜은 이 기기에 저장돼요. 알림을 받으려고 연결하면 다른 기기에서도 이어져요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 소식과 숫자는 모두 가상이에요</div></div></div>`+pcTray({sub:S.lsub})};
 
 /* 창: 연결(로그인) · 알림 설정 */
-const loginSheet=()=>`<div class="pad"><div class="t-h">알림을 받으려면 연결해 주세요</div>
- <div class="t-sub" style="margin-top:4px">받는 건 알림 보낼 연락처 하나뿐이에요. 이름도 주소도 받지 않아요.</div>
+const loginSheet=()=>`<div class="pad"><div class="t-h">${S.pendJoin?'참여하시려면 연결해 주세요':'알림을 받으려면 연결해 주세요'}</div>
  <button class="lgbtn kakao" data-a="login:kakao">카카오로 계속하기</button><button class="lgbtn naver" data-a="login:naver">네이버로 계속하기</button>
- <div class="t-cap" style="margin-top:12px">찜과 비교함은 연결하지 않아도 그대로 쓸 수 있어요.</div></div>`;
-const notiSheet=()=>`<div class="pad"><div class="t-h">알림 설정</div><div class="t-sub" style="margin-top:4px">${S.user.ch==='kakao'?'카카오톡':'네이버'}으로 알려드려요.</div>
+ <div class="t-cap" style="margin-top:12px">${S.pendJoin?'성사되면 연결하신 곳으로 알려드려요.':'찜과 비교함은 연결하지 않아도 그대로 쓸 수 있어요.'}</div></div>`;
+const notiSheet=()=>`<div class="pad"><div class="t-h">알림 설정</div><div class="t-sub" style="margin-top:4px">${chName()}${J(chName(),'으로','로')} 알려드려요.</div>
  <div style="margin-top:8px">${NOTI.map(([k,t])=>`<button class="srow" data-a="notipref:${k}"><span>${t}</span><span class="sw ${S.notiPref[k]?'on':''}"><i></i></span></button>`).join('')}</div>
  <button class="plink" style="margin-top:14px;color:var(--sub)" data-a="logout">연결 끊기</button></div>`;
 
@@ -1824,6 +2053,417 @@ const pcBrands=()=>pcProto()+pcGnb({sub:null,mid:null})+`<div class="wrap" style
  <div class="pcrumb"><button data-a="home" style="color:var(--meta)">홈</button><span aria-hidden="true">›</span><b>브랜드</b></div>
  <h1 class="t-title">브랜드 모아보기</h1><div style="max-width:980px">${brandIndex(true)}</div></div>`;
 
+/* ════ 알림 ════
+   찜 · 요청 · 브랜드 알림에서 생긴 소식을 시간순으로 (샘플은 가상 — 실제로는 주간 수집 때 전주와 비교해 생김)
+   연결 전에는 다들 안에서만 보여주고, 연결하면 카카오톡 · 네이버로도 보냄 */
+const WHEN=['오늘','오늘','어제','2일 전','3일 전','5일 전','8일 전','10일 전','12일 전'];
+const whenGroup=w=>w==='오늘'?'오늘':['어제','2일 전','3일 전','5일 전'].includes(w)?'이번 주':'지난주';
+function notiList(){const L=[];
+ favItems().filter(x=>NEWS[x.id]).forEach(x=>L.push({id:'n-'+x.id,kind:'찜',x,t:NEWS[x.id],a:'open:'+x.id}));
+ favItems().filter(x=>isThin(x)).forEach(x=>L.push({id:'n-thin-'+x.id,kind:'찜',x,t:`후기가 ${x.n}건 모였어요. 30건이 되면 결과를 보여드려요`,a:'open:'+x.id}));
+ reqList().forEach(q=>L.push({id:'n-req-'+q,kind:'요청',q,t:`요청하신 「${q}」 후기를 모으기 시작했어요`,a:'sgo:'+q}));
+ Object.keys(S.follow).filter(b=>S.follow[b]).forEach(b=>{const x=sortItems(brandItems(b),'n')[0];if(x)L.push({id:'n-br-'+b,kind:'브랜드',x,b,t:`${b}의 ${x.sub} 후기를 새로 모았어요`,a:'brand:'+b})});
+ // 모아 사기 — 참여하신 분께만 (열리자마자 먼저)
+ if(S.moaOn)DEALS.filter(d=>myJoin(d)&&(canBuy(d)||d.state==='failed')).forEach(d=>{const x=dItem(d),pp=dPropPrice(d),p=dDealPrice(d);
+  L.unshift({id:'n-moa-'+d.id,kind:'모아 사기',x,a:'deal:'+d.id,t:d.state==='failed'?`참여하신 「${x.name}」${J(x.name,'은','는')} 이번엔 성사되지 않았어요. 사람이 다시 모이면 다시 제안할게요.`
+   :d.offer&&d.offer!==pp?`참여하신 「${x.name}」${J(x.name,'은','는')} ${won(pp)}으로 제안했지만, 브랜드가 ${won(p)}${J(won(p),'을','를')} 제시해 그 가격으로 열었어요. 사고 싶으시면 제품 페이지의 구매 링크로 사 주세요.`
+   :`참여하신 「${x.name}」${J(x.name,'이','가')} ${won(p)}에 열렸어요. 수량이 한정될 수 있어 먼저 알려드려요. 제품 페이지의 구매 링크로 사실 수 있어요.`})});
+ return L.map((n,i)=>({...n,when:WHEN[Math.min(i,WHEN.length-1)]}))}
+const unreadN=()=>notiList().filter(n=>!S.readNoti[n.id]).length;
+const bellIcon=(c='var(--ink)')=>`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 004 0"/></svg>`;
+const bellBtn=()=>{const u=unreadN();return `<button class="ib bell" data-a="noti" aria-label="알림${u?` · 안 읽은 알림 ${u}개`:''}">${bellIcon()}${u?`<span class="bdot num">${u}</span>`:''}</button>`};
+
+const notiBody=pc=>{const L=notiList(),u=L.filter(n=>!S.readNoti[n.id]).length;
+ const conn=S.user?`<div class="notib on" style="margin-bottom:6px">${ic('check',18,'var(--brand)',2.6)}<div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:700">${chName()}${J(chName(),'으로','로')}도 받고 있어요</div></div><button class="tbtn" data-a="sheet:noti">설정</button></div>`
+  :`<div class="notib" style="margin-bottom:6px"><div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:700">지금은 다들 안에서만 보여드려요</div><div class="t-cap">연결하면 카카오톡이나 네이버로도 알려드려요.</div></div><button class="tbtn" data-a="sheet:login">연결하기</button></div>`;
+ if(!L.length)return conn+`<div style="padding:34px 4px 10px;text-align:center"><div class="t-h">아직 알림이 없어요</div>
+  <div class="t-sub" style="margin-top:6px">이럴 때 알려드려요.</div>
+  <div class="nhow">${[['heart','제품을 찜하면','가격이 내리거나 한 달 써 본 후기가 늘 때'],['search','검색에서 「후기 모아주세요」를 누르면','후기를 모으기 시작할 때'],['check','브랜드에서 「새 제품 알림」을 켜면','그 브랜드의 새 제품이 모일 때']].map(([i,a,b])=>`<div class="nh">${ic(i,18,'var(--brand)',2)}<div style="text-align:left"><div style="font-size:14px;font-weight:700">${a}</div><div class="t-cap">${b}</div></div></div>`).join('')}</div>
+  <button class="tbtn" style="margin-top:16px" data-a="cats:">카테고리 둘러보기</button></div>`;
+ const groups=['오늘','이번 주','지난주'].map(g=>[g,L.filter(n=>whenGroup(n.when)===g)]).filter(x=>x[1].length);
+ return conn+`<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="t-sub num">안 읽은 알림 ${u}개</span>${u?`<button class="plink" data-a="notiread">모두 읽음</button>`:''}</div>
+ ${groups.map(([g,ns])=>`<div class="sgh" style="margin-top:16px">${g}</div>${ns.map(n=>{const unread=!S.readNoti[n.id];
+  return `<button class="nitem ${unread?'unread':''}" data-a="nopen:${escA(n.id)}">${n.x?thumb(n.x,44,44):`<span class="nq">${ic('search',18,'var(--brand)',2.2)}</span>`}
+   <div style="flex:1;min-width:0;text-align:left"><div class="t-cap" style="color:var(--sub)">${n.kind} · ${n.x?escA(n.x.brand+' '+n.x.name):'「'+escA(n.q)+'」'}</div>
+    <div style="font-size:15px;font-weight:${unread?700:500};letter-spacing:-.02em;line-height:1.45">${escA(n.t)}</div><div class="t-cap">${n.when}</div></div>
+   ${unread?'<span class="udot" aria-label="안 읽음"></span>':''}</button>`}).join('')}`).join('')}`};
+const notiTop=()=>`<div class="top"><button class="ib" data-a="notiback" aria-label="뒤로">${ic('back',22,'var(--ink)')}</button>
+ <div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em">알림</div>${S.user?`<button class="ib" data-a="sheet:noti" aria-label="알림 설정"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg></button>`:''}</div>`;
+const notiScreen=()=>`<div class="scr" id="scr"><div class="pad" style="padding-top:14px">${notiBody(false)}</div>
+ <div class="foot"><div class="t-cap">프로토타입 · 알림 내용은 찜, 요청, 브랜드 알림에 맞춘 가상 예시예요</div></div></div>`;
+const pcNoti=()=>pcProto()+pcGnb({sub:null,mid:null})+`<div class="wrap" style="padding-bottom:80px">
+ <div class="pcrumb"><button data-a="home" style="color:var(--meta)">홈</button><span aria-hidden="true">›</span><b>알림</b></div>
+ <h1 class="t-title">알림</h1><div style="max-width:680px;margin-top:10px">${notiBody(true)}</div>
+ <div class="foot"><div class="t-cap">프로토타입 · 알림 내용은 찜, 요청, 브랜드 알림에 맞춘 가상 예시예요</div></div></div>`;
+
+/* ════ 모아 사기 ════
+   리뷰와 섞지 않는 별도 탭 (런칭 때 노출 — 프로토타입은 「샘플」 버튼으로 켜고 끔) · 「대체로 만족」만 (CLAUDE.md 2-8)
+   2026-10-01 방식 — 수요를 먼저 모으고, 모인 제품만 브랜드에 역제안
+   ① 소비자는 가격을 고르지 않고 「참여하기」만 (낮은 가격 쏠림 · 담합 원천 차단)
+   ② 인원이 많을수록 할인이 커지는 「다들 제안가」 단계: 20 · 25 · 30 · 35 · 40% / 100 · 200 · 300 · 500 · 800명
+      (인원은 처음 값 — 운영자가 제품마다 바꿈: d.tierN)
+   ③ 모집 마감 → 첫 단계를 넘은 제품만 브랜드에 제안 → 수락이면 그 단계 가격, 브랜드가 다른 가격을 내면 다들이 판단해 바로 열거나 거절
+   ④ 열리면 **누구나** 구매 기간 동안 살 수 있음 · 참여자는 열리자마자 먼저 알림 (2026-10-02)
+   ⑤ 브랜드 가격 판단: 보호선(20% 이상 할인 + 90일 최저가 이하) 밖이면 거절 · 도달 단계에서 한 단계(5%p) 이내면 열기 · 그 밖이면 다시 협상
+   ⑥ 열림(구매 기간)에서만 D-day · 하루 미만이면 실시간 시간 — 브랜드와 합의한 실제 종료일만. 리뷰 화면 · 모으는 단계는 날짜만 */
+const TIER_OFF=[20,25,30,35,40];
+const TIER_N0=[100,200,300,500,800];
+const tickOf=c=>c<30000?100:c<100000?500:1000;   // 눈금 — 촘촘하게 해 표시 할인율과 실제 할인율을 가깝게 (내림이라 실제가 더 큼)
+const tierPrice=(C,off)=>{const t=tickOf(C);return Math.floor(C*(100-off)/100/t)*t};
+function tiersOf(d){const C=itemOf(d.pid).price,N=d.tierN||TIER_N0;return TIER_OFF.map((off,i)=>({off,p:tierPrice(C,off),need:N[i]})).filter(t=>t.p<=d.low90)}
+const hiddenTiers=d=>TIER_OFF.filter(off=>tierPrice(itemOf(d.pid).price,off)>d.low90);
+const priceRoom=d=>tiersOf(d).length>=2;   // 남는 단계가 2개 미만이면 「가격 여지 없음」 → 후보 아님
+const GUARD_OFF=20;
+const guardOk=(d,price)=>price<=d.low90&&price<=Math.floor(itemOf(d.pid).price*(100-GUARD_OFF)/100);
+// 브랜드가 낸 가격을 어떻게 할지 — 운영 콘솔에서 자동 표시
+const offerVerdict=(d,price)=>{if(!guardOk(d,price))return 'reject';const r=dReached(d);if(!r)return 'reject';
+ return offOf(d,r.p)-Math.round((1-price/dPrice(d))*100)<=5?'open':'review'};   // open 열어도 됨 · review 다시 협상 · reject 거절
+const DEALS=[
+ {id:'d1',pid:'p1',at:15,low90:36900,n:268,state:'open',until:'9월 20일',endInH:74},
+ {id:'d2',pid:'m2',at:4,low90:25900,n:96,state:'gathering',until:'10월 20일'},
+ {id:'d6',pid:'p5',at:6,low90:20900,n:142,state:'gathering',until:'10월 18일'},
+ {id:'d7',pid:'m4',at:7,low90:27000,n:99,state:'gathering',until:'10월 15일'},
+ {id:'d3',pid:'m8',at:10,low90:35900,n:214,state:'proposing',until:'9월 30일'},
+ {id:'d4',pid:'m7',at:25,low90:49000,n:341,state:'done',until:'9월 5일'},
+ {id:'d5',pid:'m20',at:30,low90:29900,n:131,state:'failed',until:'9월 1일',why:'브랜드가 제안을 받지 않았어요'},
+ {id:'d9',pid:'m30',at:1,low90:17900,n:74,state:'gathering',until:'10월 25일',tierN:[50,100,150,250,400]},   // 운영자 조정 예: 찜이 적은 새 제품
+ {id:'d10',pid:'m32',at:9,low90:18900,n:226,state:'open',offer:15500,until:'9월 28일',endInH:9.5},   // 브랜드가 다른 가격 → 다들 판단으로 열림 · 하루 미만
+ {id:'d12',pid:'m16',at:0,low90:31000,n:52,state:'gathering',until:'10월 28일'},   // 세일 이력이 깊어 20% 단계는 숨김
+ {id:'d13',pid:'m11',at:12,low90:33900,n:310,state:'open',until:'9월 24일',endInH:30},
+ {id:'d15',pid:'m13',at:20,low90:28500,n:180,state:'done',until:'9월 10일'},
+];
+// 구매 종료 시각 (실제 서비스는 브랜드와 합의한 날짜 · 프로토타입은 열 때부터 몇 시간 뒤로 둠)
+const T0=Date.now();DEALS.forEach(d=>{if(d.endInH!=null)d.saleEnd=T0+d.endInH*3600e3});
+const myJoin=d=>!!S.joins[d.id];
+const dCount=d=>d.n+(myJoin(d)&&d.state==='gathering'?1:0);
+const dReached=d=>{const c=dCount(d);let r=null;tiersOf(d).forEach(t=>{if(c>=t.need)r=t});return r};
+const dNext=d=>tiersOf(d).find(t=>dCount(d)<t.need)||null;
+const dPrice=d=>dItem(d).price;
+// 단계 가격이면 단계의 할인율 그대로(25%), 단계에 없는 가격(브랜드 가격)만 실제 값을 반올림 — 같은 가격이 25%와 26%로 따로 보이지 않게
+const offOf=(d,p)=>{const t=tiersOf(d).find(t=>t.p===p);return t?t.off:Math.round((1-p/dPrice(d))*100)};
+const dPropPrice=d=>dReached(d)?dReached(d).p:null;                                   // 다들 제안가 (도달 단계)
+const dDealPrice=d=>d.offer||(['proposing','open','done'].includes(d.state)?dPropPrice(d):null);   // 열린 가격 (브랜드가 다른 가격을 냈으면 그 가격)
+const dNowPrice=d=>d.state==='gathering'?(dReached(d)||tiersOf(d)[0]).p:dDealPrice(d);
+const dOff=d=>{const p=d.state==='gathering'?(dReached(d)||{}).p:dDealPrice(d);return p?offOf(d,p):0};
+const dPeople=dCount;
+const canBuy=d=>d.state==='open'&&leftMs(d)>0;   // 열리면 누구나
+const leftMs=d=>d.saleEnd?d.saleEnd-Date.now():0;
+// D-day · 하루 미만이면 실시간 시간 (빨강 없이)
+const ddayText=d=>{const ms=leftMs(d);if(ms<=0)return '끝났어요';if(ms>=864e5)return 'D-'+Math.floor(ms/864e5);
+ const t=Math.floor(ms/1e3),h=Math.floor(t/3600),m=Math.floor(t%3600/60),s2=t%60;return [h,m,s2].map(v=>String(v).padStart(2,'0')).join(':')+' 남음'};
+const ddayEl=(d,cls)=>`<span class="dday ${cls||''} ${leftMs(d)<864e5?'live':''}" data-cd="${d.id}">${ddayText(d)}</span>`;
+const endText=d=>{const t=new Date(d.saleEnd),h=t.getHours();return `${t.getMonth()+1}월 ${t.getDate()}일 ${h<12?'오전':'오후'} ${h%12||12}시`};
+const activeDealFor=pid=>S.moaOn?DEALS.find(d=>d.pid===pid&&(['gathering','proposing'].includes(d.state)||canBuy(d))):null;
+// 상태 문구 — ① 지금 무슨 일이 · ② 내가 하면 어떻게
+function dStatus(d){const p=dDealPrice(d),c=dCount(d),j=myJoin(d),pp=dPropPrice(d);
+ if(dPaused(d))return {one:'새 모집을 잠시 멈췄어요',two:'진짜 후기의 결과가 바뀌어서예요. 다시 「대체로 만족」이 되면 알려드려요.'};
+ if(d.state==='gathering')return {one:'사람을 모으는 중이에요',two:j?`참여 중이에요. ${d.until}까지 모은 뒤 다들이 브랜드에 제안해요. 열리면 먼저 알려드려요.`:`${d.until}까지 모은 뒤 다들이 브랜드에 제안해요. 참여해도 꼭 사야 하는 건 아니에요.`};
+ if(d.state==='proposing')return {one:`${c}명이 모여 ${offOf(d,p)}% 단계로 브랜드에 제안했어요`,two:j?'열리면 먼저 알려드려요.':'열리면 누구나 살 수 있어요. 열림 알림은 참여하신 분께 먼저 가요.'};
+ const diff=d.offer&&d.offer!==pp?`다들은 ${won(pp)}(${offOf(d,pp)}%)${J(won(pp),'을','를')} 제안했고, 브랜드가 ${won(d.offer)}${J(won(d.offer),'을','를')} 제시했어요.`:'다들이 제안한 가격 그대로 열렸어요.';
+ if(d.state==='open')return canBuy(d)?{one:`${won(p)}에 열렸어요 (${offOf(d,p)}% 할인)`,two:`${diff} ${endText(d)}까지 누구나 살 수 있어요. 수량이 다 팔리면 일찍 끝날 수 있어요.`}
+  :{one:`${won(p)}에 열렸던 모아 사기가 끝났어요`,two:diff};
+ if(d.state==='done')return {one:`${won(p)}에 열렸어요 (${offOf(d,p)}% 할인)`,two:`${diff} ${nf(c)}명이 참여했어요.`};
+ return {one:'이번엔 성사되지 않았어요',two:`${d.why}. 사람이 다시 모이면 다시 제안해요.`}}
+const dSt=d=>['done','failed'].includes(d.state)||(d.state==='open'&&!canBuy(d))?'past':d.state==='proposing'?'talking':d.state;
+const MSTATES=[['gathering','사람을 모으는 중'],['talking','브랜드에 제안 중'],['open','지금 살 수 있어요'],['past','지난 모아 사기']];
+const MSORTS=[['hot','추천순 (참여 많은 순)'],['near','다음 단계에 가까운 순'],['end','곧 끝나는 순'],['off','지금 할인율 높은 순'],['price','소비자가 낮은 순'],['new','새로 열린 순']];
+const nearKey=d=>{if(d.state!=='gathering')return 1e9;const nx=dNext(d);return nx?(nx.need-dCount(d))/nx.need:1};
+const mfOk=d=>{const f=S.mf,x=dItem(d),nx=dNext(d);return f.states.includes(dSt(d))&&(f.pmin==null||x.price>=f.pmin)&&(f.pmax==null||x.price<=f.pmax)&&(!f.off||dOff(d)>=f.off)
+ &&(!f.soon||(d.state==='gathering'&&nx&&nx.need-dCount(d)<=nx.need*.2))&&(!f.brands.length||f.brands.includes(x.brand))&&(!f.mine||myJoin(d))};
+const endKey=d=>canBuy(d)?leftMs(d):1e15;
+const msortF={end:(a,b)=>endKey(a)-endKey(b),hot:(a,b)=>dCount(b)-dCount(a),near:(a,b)=>nearKey(a)-nearKey(b),off:(a,b)=>dOff(b)-dOff(a),price:(a,b)=>dPrice(a)-dPrice(b),new:(a,b)=>a.at-b.at};
+
+/* ── 그대로 쓰는 부분 (카테고리 메뉴 · 리뷰 요약 · 화면 틀) ── */
+const FEE='모아 사기로 다들은 브랜드에게 수수료를 받아요. 결제는 브랜드 페이지에서 해요.';
+const dealOf=id=>DEALS.find(d=>d.id===id);
+const dItem=d=>itemOf(d.pid);
+const dPaused=d=>d.state==='gathering'&&labOf(dItem(d))!=='대체로 만족';   // 2-8: 라벨이 바뀌면 새 모집 멈춤
+const MF0=()=>({states:['gathering','talking','open'],pmin:null,pmax:null,off:0,soon:false,brands:[],mine:false});
+const mfN=()=>{const f=S.mf;return (f.states.join()!=='gathering,talking,open'?1:0)+(f.pmin!=null||f.pmax!=null?1:0)+(f.off?1:0)+(f.soon?1:0)+f.brands.length+(f.mine?1:0)};
+const mList=()=>DEALS.filter(d=>mfOk(d)&&mcatOk(d)).sort(msortF[S.msort]);
+// 카테고리 메뉴는 모아 사기가 열린 곳만, 개수와 함께 (지금 필터 기준)
+const mCount=(lv,v)=>DEALS.filter(d=>mfOk(d)&&midOf(dItem(d).sub)[lv]===v).length;
+const mDoms=()=>Object.keys(TAX).filter(d=>mCount('dom',d));
+const mMids=dom=>TAX[dom].map(m=>m[0]).filter(m=>mCount('mid',m));
+const mSubs=mid=>Object.values(TAX).flat().find(m=>m[0]===mid)[1].filter(s=>mCount('sub',s));
+const mcatName=()=>S.mcat.sub||S.mcat.mid||S.mcat.dom||'전체';
+const mcatOk=d=>{const {dom,mid}=midOf(dItem(d).sub);return (!S.mcat.dom||S.mcat.dom===dom)&&(!S.mcat.mid||S.mcat.mid===mid)&&(!S.mcat.sub||S.mcat.sub===dItem(d).sub)};
+const moaBounds=()=>{const ps=DEALS.map(dPrice);return [Math.floor(Math.min(...ps)/PSTEP)*PSTEP,Math.ceil(Math.max(...ps)/PSTEP)*PSTEP]};
+
+/* 상품 카드 (그리드) */
+const mcatRows=()=>{const doms=mDoms(),c=S.mcat;
+ const row=(items,on,act,all,allAct)=>`<div class="cwrap"><div class="crow" data-key="m${act}" style="padding-top:8px;padding-bottom:0">${all?`<button class="chip ${!on?'on':''}" data-a="${allAct}">${all}</button>`:''}${items.map(([v,n])=>`<button class="chip ${on===v?'on':''}" data-a="${act}:${v}">${v} <span class="num" style="opacity:.7">${n}</span></button>`).join('')}</div></div>`;
+ return `<div class="mtabs" role="tablist">${[['전체',DEALS.filter(mfOk).length],...doms.map(d=>[d,mCount('dom',d)])].map(([d,n])=>`<button role="tab" aria-selected="${(c.dom||'전체')===d}" class="${(c.dom||'전체')===d?'on':''}" data-a="mdom:${d}">${d}</button>`).join('')}
+  <button class="mall" data-a="sheet:mcats" aria-label="카테고리 전체 보기">${ic('grid',18,'var(--ink2)')}</button></div>
+ ${c.dom?row(mMids(c.dom).map(m=>[m,mCount('mid',m)]),c.mid,'mmid',`${c.dom} 전체`,'mdom:'+c.dom):''}
+ ${c.mid?row(mSubs(c.mid).map(s=>[s,mCount('sub',s)]),c.sub,'msub',`${c.mid} 전체`,'mmid:'+c.mid):''}`};
+/* 카테고리 트리 (PC 왼쪽 · 모바일 「전체 카테고리」 창) */
+const mcatTree=()=>`<button class="mt0 ${!S.mcat.dom?'on':''}" data-a="mdom:전체">전체 <span class="num">${DEALS.filter(mfOk).length}</span></button>
+ ${mDoms().map(d=>`<button class="mt1 ${S.mcat.dom===d&&!S.mcat.mid?'on':''}" data-a="mdom:${d}">${d} <span class="num">${mCount('dom',d)}</span></button>
+  ${mMids(d).map(m=>`<button class="mt2 ${S.mcat.mid===m&&!S.mcat.sub?'on':''}" data-a="mmid:${m}">${m} <span class="num">${mCount('mid',m)}</span></button>
+   ${mSubs(m).map(s=>`<button class="mt3 ${S.mcat.sub===s?'on':''}" data-a="msub:${s}">${s} <span class="num">${mCount('sub',s)}</span></button>`).join('')}`).join('')}`).join('')}`;
+/* 필터 (PC 왼쪽 · 모바일 창) */
+const mEmpty=()=>`<div style="padding:40px 0;text-align:center"><div class="t-body">조건에 맞는 모아 사기가 없어요</div>
+ <button class="tbtn" style="margin-top:10px" data-a="mreset">조건 풀기</button></div>`;
+const reviewMini=x=>{const L=labOf(x),pros=x.full?topPts(byId(x.id),'+').slice(0,2).map(o=>[o.x[1],o.x[2]]):[[x.pro,null]],cons=x.full?topPts(byId(x.id),'-').slice(0,2).map(o=>[o.x[1],o.x[2]]):[[x.con,null]];
+ return `<div class="rmini"><div style="display:flex;gap:14px;align-items:baseline;flex-wrap:wrap">
+  <span><span class="t-cap">다들 · 모아보니</span> <b style="font-size:17px;color:${LCOL(L)}">${L}</b></span>
+  <span class="t-sub num">네이버 ★${x.nv.r} · 리뷰 ${nf(x.nv.c)}건</span></div>
+  <div style="margin-top:6px">${[...pros.map(p2=>['+',...p2]),...cons.map(p2=>['-',...p2])].map(([sg,t,n])=>`<div class="pt">${mk(sg)}<div class="tx" style="font-size:14px;line-height:1.45">${t}</div>${n?`<div class="ct num">${n}건</div>`:''}</div>`).join('')}</div>
+  <div class="t-cap num" style="margin-top:6px">진짜 후기 ${nf(x.n)}건 기준</div>
+  <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="tbtn" data-a="open:${x.id}">진짜 후기 전체 보기</button><button class="tbtn" data-a="say:새 창에서 스마트스토어가 열려요">${ic('ext',16,'var(--ink2)')}스마트스토어</button></div></div>`};
+const moaTop=()=>`<div class="top"><div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em;padding-left:6px">${S.moaSeg==='mine'?`<button data-a="moaseg:live" style="display:inline-flex;align-items:center;gap:4px">${ic('back',20,'var(--ink)')}내 참여</button>`:'모아 사기'}</div>
+ ${S.moaSeg==='mine'?'':`<button class="tbtn" style="min-height:36px;padding:0 12px" data-a="moaseg:mine">내 참여${Object.keys(S.joins).filter(x=>S.joins[x]).length?` <b class="num" style="color:var(--brand)">${Object.keys(S.joins).filter(x=>S.joins[x]).length}</b>`:''}</button>`}${bellBtn()}</div>`;
+const moaBody=()=>{if(S.moaSeg==='mine')return `<div class="scr" id="scr"><div class="pad" style="padding-top:8px">${moaMine()}</div>
+ <div class="foot"><div class="t-cap">${FEE}</div></div></div>`;
+ const xs=mList();
+ return `<div class="scr" id="scr"><div class="pad" style="padding-top:10px"><div class="mintro"><span>사려는 사람이 모이면, 다들이 브랜드와 가격을 이야기해요</span>
+  <button class="plink" data-a="sheet:moahow">어떻게 진행되나요</button></div>${buyBanner()}</div>
+ <div class="msticky">${mcatRows()}<div class="ltool pad" style="border-top:0;padding-top:10px">
+  <button class="tbtn" data-a="sheet:msort" style="flex:1;min-width:0">${ic('list',17,'var(--ink2)',2)}<span>${MSORTS.find(m=>m[0]===S.msort)[1]}</span></button>
+  <button class="tbtn" data-a="sheet:mfilter" style="flex-shrink:0;${mfN()?'color:var(--brand);border-color:var(--brand)':''}">필터${mfN()?` <b class="num">${mfN()}</b>`:''}</button></div></div>
+ <div class="pad"><div class="t-cap num" style="display:flex;align-items:center;gap:8px;min-height:32px">${mcatName()} · ${xs.length}개${mfN()?` <button class="plink" data-a="mreset">조건 풀기</button>`:''}</div>
+  ${xs.length?`<div class="mgrid2">${xs.map(mcard).join('')}</div>`:mEmpty()}</div>
+ <div class="foot"><div class="t-cap">${FEE}</div><div class="t-cap" style="margin-top:6px">프로토타입 · 모아 사기 제품과 숫자는 모두 가상이에요</div></div></div>`};
+const dealTop=()=>`<div class="top"><button class="ib" data-a="dealback" aria-label="뒤로">${ic('back',22,'var(--ink)')}</button>
+ <div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em">모아 사기</div><button class="ib" data-a="say:링크를 복사했어요" aria-label="공유">${ic('share',21,'var(--ink)')}</button></div>`;
+const dealBody=()=>{const d=dealOf(S.did),q=dealParts(d,false);return `<div class="scr" id="scr"><div class="pad" style="padding-top:12px">${q.head}${q.lad}${q.rev}${q.how}${q.related}</div>
+ <div class="foot"><div class="t-cap">프로토타입 · 모아 사기 제품과 숫자는 모두 가상이에요</div></div></div><div class="bottom">${dealBottom(d)}</div>`};
+/* PC */
+const pcMoa=()=>{const xs=mList();return pcProto()+pcGnb({sub:null,mid:null})+`<div class="wrap" style="padding-bottom:100px">
+ <div class="pcrumb"><button data-a="home" style="color:var(--meta)">홈</button><span aria-hidden="true">›</span>${S.moaSeg==='mine'?'<button data-a="moaseg:live" style="color:var(--meta)">모아 사기</button><span aria-hidden="true">›</span><b>내 참여</b>':'<b>모아 사기</b>'}</div>
+ <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap"><div><h1 class="t-title">${S.moaSeg==='mine'?'내 참여':'모아 사기'}</h1>
+  <div class="t-sub" style="margin-top:4px">사려는 사람이 모이면, 다들이 브랜드와 가격을 이야기해요 · <button class="plink" style="font-size:inherit" data-a="sheet:moahow">어떻게 진행되나요</button></div></div>
+  ${S.moaSeg==='mine'?'':`<button class="tbtn" data-a="moaseg:mine">내 참여${Object.keys(S.joins).filter(x=>S.joins[x]).length?` <b class="num" style="color:var(--brand)">${Object.keys(S.joins).filter(x=>S.joins[x]).length}</b>`:''}</button>`}</div>
+ ${S.moaSeg==='mine'?`<div style="max-width:720px;margin-top:14px">${moaMine()}</div>`:`<div style="margin-top:14px">${buyBanner()}</div>
+ <div class="lgrid" style="margin-top:14px"><aside class="lside mside"><div class="sh">카테고리</div><div class="mtree">${mcatTree()}</div>
+  <div class="sh" style="margin-top:22px">필터</div>${mfilters()}${mfN()?`<button class="more" data-a="mreset" style="margin-top:10px">조건 풀기</button>`:''}</aside>
+  <main style="min-width:0"><div class="sortrow" style="margin-top:0"><span class="t-sub num">${mcatName()} · ${xs.length}개</span>
+   <select class="lsel" data-change="msort" style="margin-left:auto" aria-label="정렬">${MSORTS.map(([k,t])=>`<option value="${k}" ${S.msort===k?'selected':''}>${t}</option>`).join('')}</select></div>
+   ${xs.length?`<div class="mgrid4">${xs.map(mcard).join('')}</div>`:mEmpty()}</main></div>`}
+ <div class="foot"><div class="t-cap">${FEE}</div><div class="t-cap" style="margin-top:6px">프로토타입 · 모아 사기 제품과 숫자는 모두 가상이에요</div></div></div>`};
+const pcDeal=()=>{const d=dealOf(S.did),q=dealParts(d,true);return pcProto()+pcGnb({sub:null,mid:null})+`<div class="wrap" style="padding-bottom:100px">
+ <div class="pcrumb"><button data-a="moa" style="color:var(--meta)">모아 사기</button><span aria-hidden="true">›</span><span>${midOf(q.x.sub).mid}</span><span aria-hidden="true">›</span><b>${q.x.brand} ${q.x.name}</b></div>
+ <div class="dgrid"><div>${q.head}${q.lad}<div style="margin-top:16px;max-width:460px">${dealBottom(d)}</div></div><div>${q.rev}${q.how}</div></div>
+ ${q.related}<div class="foot"><div class="t-cap">프로토타입 · 모아 사기 제품과 숫자는 모두 가상이에요</div></div></div>`};
+/* 홈의 모아 사기 소개 — 첫 화면 아래 별도 칸. 리뷰 섹션에 영향 없음 · 탭을 숨기면 함께 사라짐 */
+
+/* 상품 카드 */
+const mBadge=d=>d.state==='open'?(canBuy(d)?'':'<span class="mbg mute">끝났어요</span>')   /* 열린 제품은 D-day 배지가 「지금 살 수 있어요」를 대신함 */
+ :d.state==='proposing'?'<span class="mbg">제안 중</span>':d.state==='done'?'<span class="mbg mute">지난</span>':d.state==='failed'?'<span class="mbg mute">지난</span>'
+ :dPaused(d)?'<span class="mbg mute">잠시 멈춤</span>':(()=>{const nx=dNext(d);return nx&&nx.need-dCount(d)<=nx.need*.2?'<span class="mbg on">곧 다음 단계</span>':d.at<=2?'<span class="mbg">새로 열림</span>':''})();
+// 카드 가격 한 줄 — 이름표 · 할인율 · 가격 (소비자가 줄과 열을 맞춤)
+const mpRow=(lab,off,p)=>`<span class="mpk">${lab}</span><span class="mpw"><span class="moff num">${off}%</span><span class="mpv num">${won(p)}</span></span>`;
+const mcard=d=>{const x=dItem(d),L=labOf(x);let price,prog='';
+ if(d.state==='gathering'){const r=dReached(d),nx=dNext(d),c=dCount(d),t=r||tiersOf(d)[0];
+  price=mpRow('제안가',t.off,t.p);
+  const goal=nx||t;prog=`<div class="mbar"><i style="width:${Math.min(100,c/goal.need*100)}%"></i></div><div class="t-cap num">${!r?`${t.need}명이 모이면 · ${t.need-c}명 남음`:nx?`지금 ${c}명 · 다음 ${nx.off}%까지 ${nx.need-c}명`:`지금 ${c}명 · 마지막 단계까지 모였어요`}</div>`}
+ else if(d.state==='failed')price=`<span class="mpk"></span><span class="t-sub">이번엔 성사되지 않았어요</span>`;
+ else{const p=dDealPrice(d);
+  price=mpRow(d.state==='proposing'?'제안가':'확정가',offOf(d,p),p);prog=canBuy(d)?`<div class="t-cap num">${endText(d)}까지</div>`:`<div class="t-cap num">${dCount(d)}명이 참여${d.state==='proposing'?'했어요':'했어요'}</div>`}
+ return `<button class="mcard" data-a="deal:${d.id}"><div class="mimg">${thumb(x,160,160,'thumb mth')}${mBadge(d)}${canBuy(d)?ddayEl(d,'onimg left'):''}</div>
+  <div class="t-cap" style="color:var(--sub);margin-top:8px">${x.brand}</div><div class="mn">${x.name.replace(/ (?=\S+$)/,'\u00a0')}</div>
+  <div class="mpg">${price}<span class="mpk">소비자가</span><span class="mpw num">${won(x.price)}</span></div>${prog}
+  <div class="mlab"><span class="dot" style="background:${LDOT(L)}"></span>${L}<span class="num">★${x.nv.r}</span></div>
+  ${myJoin(d)?`<div class="mine">참여 중</div>`:''}</button>`};
+
+/* 필터 (PC 왼쪽 · 모바일 창) */
+const mfilters=()=>{const f=S.mf,[lo,hi]=moaBounds(),brands=[...new Set(DEALS.map(d=>dItem(d).brand))].sort((a,b)=>a.localeCompare(b,'ko'));
+ return `<div class="sh2">진행 상태</div>${MSTATES.map(([k,t])=>{const on=f.states.includes(k);return `<button class="ck" data-a="mst:${k}" aria-pressed="${on}"><span class="box ${on?'on':''}">${on?ic('check',14,'#fff',3):''}</span>${t}</button>`}).join('')}
+ <div class="sh2">소비자가</div>${rangeBox(lo,hi,f.pmin??lo,f.pmax??hi,'moa')}
+ <div class="sh2">지금 할인율</div><div class="fchips">${[[0,'전체'],[20,'20% 이상'],[25,'25% 이상'],[30,'30% 이상']].map(([v,t])=>`<button class="chip ${f.off===v?'on':''}" data-a="moff:${v}">${t}</button>`).join('')}</div>
+ <div class="sh2">더 좁혀 보기</div>
+ <button class="ck" data-a="msoon" aria-pressed="${f.soon}"><span class="box ${f.soon?'on':''}">${f.soon?ic('check',14,'#fff',3):''}</span>곧 다음 단계 (20% 안쪽 남음)</button>
+ <button class="ck" data-a="mmine" aria-pressed="${f.mine}"><span class="box ${f.mine?'on':''}">${f.mine?ic('check',14,'#fff',3):''}</span>내가 참여한 것만</button>
+ <div class="sh2">브랜드</div><div class="fchips">${brands.map(b=>`<button class="chip ${f.brands.includes(b)?'on':''}" data-a="mbrand:${escA(b)}">${b}</button>`).join('')}</div>`};
+const buyBanner=()=>{const bs=DEALS.filter(d=>canBuy(d)&&myJoin(d));if(!bs.length)return '';
+ return `<div class="buyb">${ic('check',18,'var(--brand)',2.6)}<div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:700">참여하신 모아 사기가 열렸어요</div>
+ <div class="t-cap">${bs.map(d=>dItem(d).brand+' '+dItem(d).name).join(' · ')}</div></div><button class="tbtn" data-a="${bs.length===1?'deal:'+bs[0].id:'moaseg:mine'}">${bs.length===1?'사러 가기':'보기'}</button></div>`};
+/* 내 참여 — 상태별로 묶음 (찜 탭의 「모아 사기」 칸과 모아 사기 탭의 「내 참여」가 같은 목록) */
+const joinedDeals=()=>Object.keys(S.joins).filter(k=>S.joins[k]).map(dealOf).filter(Boolean);
+const moaRow=d=>{const x=dItem(d),c=dCount(d),nx=dNext(d),r=dReached(d),p=dDealPrice(d);let info='',act='';
+ if(canBuy(d)){info=`<div class="mrl"><span class="mpk">확정가</span><span class="moff num">${offOf(d,p)}%</span><b class="num mrp">${won(p)}</b>${ddayEl(d)}</div>`;
+  act=`<button class="tbtn mbuy" data-a="say:새 창에서 브랜드 페이지가 열려요">브랜드 페이지에서 사기 ↗</button>`}
+ else if(dPaused(d))info=`<div class="mrl t-cap">새 모집을 잠시 멈췄어요</div>`;
+ else if(d.state==='gathering'){const g=nx||r;info=`<div class="mrl t-cap num">지금 ${nf(c)}명${r?` · ${r.off}% 단계`:''}${nx?` · 다음 ${nx.off}%까지 ${nx.need-c}명`:''}</div><div class="mbar"><i style="width:${Math.min(100,c/g.need*100)}%"></i></div>`;
+  act=`<button class="plink" style="color:var(--sub)" data-a="moaleave:${d.id}">참여 취소</button>`}
+ else if(d.state==='proposing')info=`<div class="mrl t-cap num">${nf(c)}명 · ${offOf(d,p)}% 단계(${won(p)})로 제안했어요</div>`;
+ else if(d.state==='failed')info=`<div class="mrl t-cap">이번엔 성사되지 않았어요 · ${d.why}</div>`;
+ else info=`<div class="mrl t-cap num">${won(p)}(${offOf(d,p)}%)에 열렸어요 · 구매 기간이 끝났어요</div>`;
+ return `<div class="mrow2"><button class="lmain" data-a="deal:${d.id}">${thumb(x,56,56)}<div style="min-width:0;flex:1;text-align:left">
+  <div class="t-cap" style="color:var(--sub)">${x.brand}</div><div class="lname">${x.name}</div>${info}</div></button>${act?`<div class="mact2">${act}</div>`:''}</div>`};
+const moaMine=()=>{const js=joinedDeals();
+ if(!js.length)return `<div style="padding:34px 4px;text-align:center"><div class="t-h">아직 참여한 모아 사기가 없어요</div><div class="t-sub" style="margin-top:6px">「참여하기」를 누르면 여기에 모여요.</div>
+  <button class="tbtn" style="margin-top:14px" data-a="moalive">진행 중인 모아 사기 보기</button></div>`;
+ const groups=[['지금 살 수 있어요',js.filter(canBuy)],['사람을 모으는 중',js.filter(d=>d.state==='gathering')],['브랜드에 제안 중',js.filter(d=>d.state==='proposing')],['지난 모아 사기',js.filter(d=>dSt(d)==='past')]];
+ return groups.filter(g=>g[1].length).map(([t,xs])=>`<section class="fgrp"><div class="fgh"><span><b>${t}</b> <span class="num" style="color:var(--meta)">${xs.length}</span></span></div>${xs.map(moaRow).join('')}</section>`).join('')};
+// 찜 탭 위의 두 칸 전환 — 모아 사기가 열려 있을 때만 · 열린 참여 제품이 있으면 점
+const favSegOn=()=>S.moaOn;
+const favSegEl=()=>{if(!favSegOn())return '';const fn=favItems().length,jn=joinedDeals().length,dot=joinedDeals().some(canBuy);
+ return `<div class="dseg fseg" role="tablist">${[['fav','찜',fn],['moa','모아 사기',jn]].map(([k,t,n])=>`<button role="tab" aria-selected="${S.favSeg===k}" class="${S.favSeg===k?'on':''}" data-a="favseg:${k}">${t} <span class="num">${n}</span>${k==='moa'&&dot?'<span class="sdot" aria-label="열린 제품 있음"></span>':''}</button>`).join('')}</div>`};
+const favSeg=()=>favSegOn()?S.favSeg:'fav';
+
+/* 참여 인원별 할인 단계 */
+const tiersUI=d=>{const ts=tiersOf(d),c=dCount(d),r=dReached(d),nx=dNext(d),hid=hiddenTiers(d),deal=dDealPrice(d);
+ return `<div class="lad">${ts.map(t=>{const hit=c>=t.need,cur=r===t;return `<div class="trow ${hit?'hit':''} ${cur?'cur':''}">
+  <span class="loff num">${t.off}%</span><span class="lp num">${won(t.p)}</span>
+  <span class="lb"><i style="width:${Math.min(100,c/t.need*100)}%"></i></span>
+  <span class="lcn num">${nf(t.need)}명${hit?'<span class="over">도달</span>':''}</span></div>`}).join('')}</div>
+ <div class="t-sub num" style="margin-top:8px;font-weight:600">${d.state==='gathering'?(nx?`지금 ${c}명 · 다음 ${nx.off}%까지 ${nx.need-c}명`:`지금 ${c}명 · 마지막 단계까지 모였어요`):`${c}명이 모였어요`}</div>
+ <div class="t-cap" style="margin-top:4px">${bySent(`모두 다들 제안가예요. 사람이 많이 모일수록 더 큰 할인을 브랜드에 제안해요. 확정 가격은 브랜드 답변 뒤 정해져요.${hid.length?` 세일 때 이미 팔린 가격보다 비싼 단계(${hid.join(' · ')}%)는 뺐어요.`:''}`)}</div>`};
+const dealBottom=d=>{const j=myJoin(d);
+ if(dPaused(d))return `<button class="main ${S.moaNext[d.id]?'on':''}" data-a="moanext:${d.id}">${S.moaNext[d.id]?'다시 열리면 알려드릴게요':'다시 열리면 알려주세요'}</button>`;
+ if(d.state==='gathering')return j?`<div class="jbar"><div><div style="font-size:15px;font-weight:700">참여 중이에요</div><div class="t-cap">열리면 먼저 알려드려요</div></div><button class="tbtn" data-a="moaleave:${d.id}">참여 취소</button></div>`
+  :`<button class="main" data-a="moajoin:${d.id}">참여하기</button>`;
+ if(canBuy(d))return `<div class="jbar">${ddayEl(d)}<button class="main" style="flex:1" data-a="say:새 창에서 브랜드 페이지가 열려요">브랜드 페이지에서 사기 ↗</button></div>`;
+ if(d.state==='proposing'&&j)return `<button class="main on" aria-disabled="true">열리면 먼저 알려드려요</button>`;
+ return `<button class="main ${S.moaNext[d.id]?'on':''}" data-a="moanext:${d.id}">${S.moaNext[d.id]?'다음 모아 사기를 알려드릴게요':'다음 모아 사기 알려주세요'}</button>`};
+
+/* 상세의 상태 상자 — 제목 한 줄 + 항목별 줄 + 작은 안내 (줄글 대신) */
+function dStatusBox(d){const c=dCount(d),j=myJoin(d),pp=dPropPrice(d),p=dDealPrice(d),nx=dNext(d),r=dReached(d);
+ const row=(k,v,cls)=>`<div class="srw"><span class="sk">${k}</span><span class="sv ${cls||''}">${v}</span></div>`;
+ const pr=(lab,price,tone)=>`<span class="mpv2 ${tone||''}"><span class="mpl">${lab}</span><b class="num">${won(price)}</b><span class="num mpc">${offOf(d,price)}%</span></span>`;   // 이름이 다른 화면(.pl · .pc)과 겹치지 않게
+ let title,tag='',rows=[],note='',tone='';
+ if(dPaused(d)){title='새 모집을 잠시 멈췄어요';tone='mute';note='진짜 후기의 결과가 바뀌어서예요. 다시 「대체로 만족」이 되면 알려드려요.'}
+ else if(d.state==='gathering'){title='사람을 모으는 중이에요';tag=j?'참여 중':'';
+  rows=[row('모집 마감',`${d.until}까지`),row('지금 인원',`<span><b class="num">${nf(c)}명</b>${r?` · ${r.off}% 단계 도달`:''}</span>`),row(nx?'다음 단계':'단계',nx?`<span>${nx.off}%까지 <b class="num">${nx.need-c}명</b> 남음</span>`:'마지막 단계까지 모였어요')];
+  note=j?'열리면 참여하신 분께 먼저 알려드려요.':'참여해도 꼭 사야 하는 건 아니에요. 열리면 누구나 살 수 있어요.'}
+ else if(d.state==='proposing'){title='브랜드에 제안했어요';tag=j?'참여 중':'';
+  rows=[row('모인 인원',`<b class="num">${nf(c)}명</b>`),row('제안 가격',pr('다들 제안',pp))];note=j?'열리면 먼저 알려드려요.':'열리면 누구나 살 수 있어요. 열림 알림은 참여하신 분께 먼저 가요.'}
+ else if(d.state==='open'||d.state==='done'){const live=canBuy(d);title=live?`${won(p)}에 열렸어요`:`${won(p)}에 열렸던 모아 사기예요`;tag=`${offOf(d,p)}% 할인`;tone=live?'':'mute';
+  rows=[live?row('구매 기간',`<span class="nw">${endText(d)}까지</span>${ddayEl(d)}`,'between'):row('참여 인원',`<b class="num">${nf(c)}명</b>`),
+   row('가격',d.offer&&d.offer!==pp?`<span class="mpvs">${pr('다들 제안',pp,'mute')}${pr('브랜드 확정',d.offer)}</span>`:`${pr('다들 제안 그대로',p)}`)];
+  note=live?'누구나 살 수 있어요. 수량이 다 팔리면 일찍 끝날 수 있어요.':'구매 기간이 끝났어요. 다음 모아 사기를 알려드릴까요?'}
+ else{title='이번엔 성사되지 않았어요';tone='mute';rows=[row('모인 인원',`<b class="num">${nf(c)}명</b>`),row('이유',d.why)];note='사람이 다시 모이면 다시 제안해요.'}
+ return `<div class="mstat2 ${tone}"><div class="sh"><div class="st">${title}</div>${tag?`<span class="stag">${tag}</span>`:''}</div>
+  ${rows.length?`<div class="srows">${rows.join('')}</div>`:''}
+  ${note?`<div class="snt">${ic('info',15,'var(--meta)',2)}<span>${bySent(note)}</span></div>`:''}</div>`}
+
+/* 상세 */
+const dealParts=(d,pc)=>{const x=dItem(d),st=dStatus(d),L=labOf(x);
+ const dRow=(lab,off,p,extra)=>`<span class="dpk">${lab}</span><span class="dpw"><span class="moff num" style="font-size:15px">${off}%</span><span class="num dpn">${won(p)}</span>${extra||''}</span>`;
+ let pr='';if(d.state==='gathering'){const t=dReached(d)||tiersOf(d)[0];pr=dRow('제안가',t.off,t.p,`<span class="t-cap">${dReached(d)?'지금 단계':'첫 단계'}</span>`)}
+ else if(d.state!=='failed'){const p=dDealPrice(d);pr=dRow(d.state==='proposing'?'제안가':'확정가',offOf(d,p),p,canBuy(d)?ddayEl(d,'big'):'')}
+ pr=`<div class="dpg">${pr}<span class="dpk">소비자가</span><span class="dpw t-sub num">${won(x.price)} · 네이버 판매가</span></div>`;
+ const head=`<div class="${pc?'dhero pc':'dhero'}"><div class="mimg" style="flex-shrink:0">${thumb(x,pc?300:200,pc?300:200,'thumb dth')}${canBuy(d)?ddayEl(d,'onimg'):''}</div><div class="dinfo">
+  <button class="blink" data-a="brand:${escA(x.brand)}">${x.brand}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+  <div class="t-h" style="margin-top:1px;font-size:${pc?22:19}px">${x.name}</div>
+  <div class="mlab" style="margin-top:6px"><span class="dot" style="background:${LDOT(L)}"></span>${L}<span class="num">★${x.nv.r} · 리뷰 ${nf(x.nv.c)}건</span></div>
+  ${pr}</div></div>
+  ${dStatusBox(d)}`;
+ const nx=dNext(d),why=d.state==='gathering'&&!dPaused(d)?`<div class="whyjoin">${ic('moa',18,'var(--brand)')}<div>${bySent(`${nx?`한 명이 더 참여할수록 다음 단계(${nx.off}%)에 가까워져요.`:'마지막 단계까지 모였어요.'} 열리면 참여하신 분께 먼저 알려드려요.`)}</div></div>`:'';
+ const lad=`<section class="dsec"><div class="t-h">참여 인원별 할인</div><div style="margin-top:10px">${tiersUI(d)}</div>${why}</section>`;
+ const rev=`<section class="dsec"><div class="t-h">이 제품, 살 만할까요?</div><div style="margin-top:10px">${reviewMini(x)}</div></section>`;
+ const how=`<section class="dsec"><div class="t-h">이렇게 진행돼요</div>
+  <div class="hsteps">${['참여하기','모집 마감','다들이 브랜드에 제안','열리면 참여하신 분께 먼저 알림','구매 기간 동안 누구나 브랜드 페이지에서 구매'].map((t,i)=>`<div><span class="sn num">${i+1}</span>${t}</div>`).join('')}</div>
+  <div class="mrules">${[['브랜드 가격','다른 가격을 내면 다들이 판단해요'],['거절 기준','20% 미만 할인 · 세일 때보다 비싼 가격'],['가격 공개','바뀐 가격은 제품 페이지에 그대로 밝혀요'],['결제','브랜드 페이지에서 해요'],['수수료','다들은 브랜드에게 수수료를 받아요']]
+   .map(([k,v])=>`<div class="srw"><span class="sk">${k}</span><span class="sv">${v}</span></div>`).join('')}</div></section>`;
+ const mid=midOf(x.sub).mid,rel=DEALS.filter(o=>o.id!==d.id&&midOf(dItem(o).sub).mid===mid&&(['gathering','proposing'].includes(o.state)||canBuy(o))).sort(msortF.hot).slice(0,4);
+ const related=rel.length?`<section class="dsec"><div class="t-h">${mid}의 다른 모아 사기</div><div class="mgrid2" style="margin-top:6px">${rel.map(mcard).join('')}</div></section>`:'';
+ return {head,lad,rev,how,related,x}};
+
+/* 홈의 모아 사기 소개 — 첫 화면 아래 별도 칸 */
+const homeMoa=pc=>{if(!S.moaOn)return '';const g=DEALS.filter(d=>d.state==='gathering'&&!dPaused(d)),xs=g.slice().sort(msortF.near).slice(0,pc?4:3);
+ return `<section class="${pc?'':'hsec'} hmoa ${pc?'pc':''}"><div class="${pc?'':'pad'}"><div class="hmh"><div><div class="t-cap" style="color:var(--brand);font-weight:700">모아 사기</div>
+  <div class="t-h" style="margin-top:2px">사려는 사람이 모이면, 다들이 브랜드와 가격을 이야기해요</div>
+  <div class="t-sub" style="margin-top:4px">진짜 후기에서 「대체로 만족」인 제품만 열어요. 모일수록 할인이 커지고, 지금 <b class="num" style="color:var(--ink)">${g.length}개</b> 제품에 사람을 모으는 중이에요.</div></div>
+  ${pc?`<button class="tbtn" style="background:var(--brand);color:#fff;border-color:var(--brand);flex-shrink:0" data-a="moa">모아 사기 보러 가기</button>`:''}</div>
+  <div class="mgrid2 ${pc?'four':''}" style="margin-top:10px">${xs.map(mcard).join('')}</div>
+  ${pc?'':`<button class="main" style="width:100%;height:50px;margin-top:12px" data-a="moa">모아 사기 보러 가기</button>`}</div></section>`};
+/* 창 */
+const moaHowSheet=()=>`<div class="pad"><div class="t-h">어떻게 진행되나요</div>
+ ${[['「참여하기」만 누르세요','가격은 고르지 않아요. 참여해도 꼭 사야 하는 건 아니에요.'],['사람이 많이 모일수록 할인이 커져요','100명 20% · 200명 25% · 300명 30% · 500명 35% · 800명 40%처럼, 모인 인원에 맞는 「다들 제안가」가 정해져요.'],['모집이 끝나면 다들이 브랜드에 제안해요','첫 단계를 넘은 제품만 제안해요. 20% 미만이나 세일 때보다 비싼 가격은 다들이 받지 않아요.'],['열리면 누구나 살 수 있어요','참여하신 분께는 열리자마자 먼저 알려드려요. 브랜드가 다른 가격을 내면 다들이 판단해 열고, 바뀐 가격은 그대로 밝혀요. 구매 기간 동안 브랜드 페이지에서 사요.']]
+  .map(([t,d2],i)=>`<div class="hrow"><span class="sn num">${i+1}</span><div><div style="font-size:15px;font-weight:700">${t}</div><div class="t-sub">${d2}</div></div></div>`).join('')}
+ <div class="t-cap" style="margin-top:12px">인원 기준은 제품마다 조금씩 다를 수 있어요. ${FEE}</div></div>`;
+
+
+/* ════ 운영 콘솔 (PC 전용) — 모아 사기 ════
+   ① 후보 → ② 모으는 중 → ③ 브랜드 답변 → ④ 열림 → ⑤ 지난
+   콘솔에서 바꾼 것은 DEALS 를 바로 고쳐 소비자 화면에 그대로 반영됨 */
+// 후보 판단에 쓰는 값 (가상) — 실제로는 찜 수는 서비스 데이터, 90일 최저가는 주간 가격 기록
+const opsJjim=x=>20+hashS('jj'+x.id)%380;
+const opsLow90=x=>{const d=DEALS.find(o=>o.pid===x.id);return d?d.low90:Math.floor(x.price*(.86+(hashS('lw'+x.id)%10)/100)/100)*100};
+const OPS_MIN_N=100,OPS_MIN_JJ=50;   // 수요 기준 (처음 값): 모은 후기 100건 · 찜 50명
+// 후보 기준 — 자동으로 거르는 것 · 대기업은 운영자가 판단
+function opsCheck(x){const low90=opsLow90(x),tmp={pid:x.id,low90},tiers=tiersOf(tmp),r=[];
+ r.push(['대체로 만족',labOf(x)==='대체로 만족']);
+ r.push(['1.5만~30만 원',x.price>=15000&&x.price<=300000]);
+ r.push(['가격 여지',tiers.length>=2]);
+ r.push([`수요 (후기 ${OPS_MIN_N}+ · 찜 ${OPS_MIN_JJ}+)`,x.n>=OPS_MIN_N&&opsJjim(x)>=OPS_MIN_JJ]);
+ r.push(['대기업 아님 (운영자)',!S.opsBig[x.brand]]);
+ return {checks:r,ok:r.every(c=>c[1]),tiers,low90}}
+const opsCands=()=>ALL().filter(x=>!DEALS.some(d=>d.pid===x.id));
+const OPS_TABS=[['cand','후보'],['gather','모으는 중'],['propose','브랜드 답변'],['open','열림'],['past','지난']];
+const opsCount=k=>k==='cand'?opsCands().filter(x=>opsCheck(x).ok).length:k==='gather'?DEALS.filter(d=>d.state==='gathering').length:k==='propose'?DEALS.filter(d=>d.state==='proposing').length:k==='open'?DEALS.filter(canBuy).length:DEALS.filter(d=>dSt(d)==='past').length;
+const opsProd=x=>`<button class="opsp" data-a="${x.full?'pick:'+x.id:'say:프로토타입에서는 샘플 '+P.length+'개만 상세가 있어요'}">${thumb(x,40,40)}<span><span class="t-cap" style="color:var(--sub)">${x.brand}</span><b>${x.name}</b></span></button>`;
+const opsLab=x=>{const L=labOf(x);return `<span class="opsl" style="color:${LCOL(L)}"><span class="dot" style="background:${LDOT(L)}"></span>${L}</span>`};
+const opsVd={open:['열어도 됨','ok'],review:['다시 협상','mid'],reject:['거절','no']};
+const opsDays=n=>{const t=new Date(Date.now()+n*864e5);return `${t.getMonth()+1}월 ${t.getDate()}일`};
+
+/* ① 후보 */
+function opsCand(){const xs=opsCands(),key=S.opsGroup==='brand'?(x=>x.brand):(x=>x.sub);
+ const shown=xs.filter(x=>S.opsEx||opsCheck(x).ok),groups=[...new Set(shown.map(key))].sort((a,b)=>a.localeCompare(b,'ko'));
+ const exN=xs.filter(x=>!opsCheck(x).ok).length;
+ return `<div class="opsbar"><div class="dseg">${[['brand','브랜드별'],['sub','카테고리별']].map(([k,t])=>`<button class="${S.opsGroup===k?'on':''}" data-a="opsgroup:${k}">${t}</button>`).join('')}</div>
+  <button class="ck" style="width:auto" data-a="opsex" aria-pressed="${S.opsEx}"><span class="box ${S.opsEx?'on':''}">${S.opsEx?ic('check',14,'#fff',3):''}</span>기준에 안 맞는 제품도 보기 <span class="num" style="color:var(--tiny)">${exN}</span></button>
+  <span class="t-sub" style="margin-left:auto">자동 기준을 통과한 제품만 후보예요. 열지 말지는 운영자가 정해요.</span></div>
+ ${groups.map(g=>{const gx=shown.filter(x=>key(x)===g),isB=S.opsGroup==='brand';return `<section class="opsg"><div class="opsgh"><b>${g}</b><span class="num t-cap">${gx.length}개</span>
+   ${isB?`<button class="ck" style="width:auto;margin-left:auto" data-a="opsbig:${escA(g)}" aria-pressed="${!!S.opsBig[g]}"><span class="box ${S.opsBig[g]?'on':''}">${S.opsBig[g]?ic('check',14,'#fff',3):''}</span>대기업 · 계열사로 표시</button>`:`<span class="t-cap" style="margin-left:auto">${midOf(g).dom} › ${midOf(g).mid}</span>`}</div>
+  <div class="opsw"><table class="opst"><thead><tr><th>제품</th><th>진짜 후기</th><th class="r">소비자가</th><th class="r">90일 최저가</th><th>열 수 있는 단계</th><th class="r">모은 후기</th><th class="r">찜</th><th>기준</th><th></th></tr></thead><tbody>
+  ${gx.map(x=>{const c=opsCheck(x),open=S.opsOpen===x.id;return `<tr class="${c.ok?'':'opsdim'}"><td>${opsProd(x)}</td><td>${opsLab(x)}</td><td class="r num">${won(x.price)}</td><td class="r num">${won(c.low90)}</td>
+   <td class="num" style="white-space:nowrap">${c.tiers.length?`${c.tiers[0].off}~${c.tiers[c.tiers.length-1].off}% · ${c.tiers.length}단계`:'<span class="t-cap">없음</span>'}</td><td class="r num">${nf(x.n)}</td><td class="r num">${opsJjim(x)}</td>
+   <td>${c.checks.filter(k=>!k[1]).map(k=>`<span class="opsx">${k[0]}</span>`).join('')||'<span class="opsok">모두 통과</span>'}</td>
+   <td class="r">${c.ok?`<button class="tbtn" data-a="opsprep:${x.id}">${open?'접기':'열기 준비'}</button>`:''}</td></tr>
+   ${open?`<tr class="opsprep"><td colspan="9">${opsPrep(x,c)}</td></tr>`:''}`}).join('')}</tbody></table></div></section>`}).join('')||'<div class="t-sub" style="padding:30px 0">지금 후보가 없어요</div>'}`};
+function opsPrep(x,c){const dr=S.opsDraft[x.id]||(S.opsDraft[x.id]={tierN:TIER_N0.slice(),days:14});const tmp={pid:x.id,low90:c.low90,tierN:dr.tierN};
+ return `<div class="opsbox"><div class="opsh">「${x.brand} ${x.name}」 모아 사기 열기</div>
+  <div class="opstiers">${TIER_OFF.map((off,i)=>{const p=tierPrice(x.price,off),hid=p>c.low90;return `<label class="opstier ${hid?'hid':''}"><span class="num"><b>${off}%</b> ${won(p)}</span>
+   <span class="opsin"><input type="number" min="1" step="10" value="${dr.tierN[i]}" data-ops="tier:${x.id}:${i}" aria-label="${off}% 단계 인원" ${hid?'disabled':''}>명</span>${hid?'<span class="t-cap">90일 최저가보다 비싸 숨김</span>':''}</label>`}).join('')}</div>
+  <div class="t-cap" style="margin-top:6px">처음 값 100 · 200 · 300 · 500 · 800명. 찜이 적은 제품은 낮춰 주세요. 위 단계일수록 인원이 많아야 해요.</div>
+  <div class="opsrow"><label class="opsf">모집 기간 <span class="opsin"><input type="number" min="3" max="60" value="${dr.days}" data-ops="days:${x.id}">일</span> <span class="t-cap">→ ${opsDays(dr.days)}까지</span></label>
+   <span style="margin-left:auto;display:flex;gap:8px"><button class="tbtn" data-a="opsprep:${x.id}">취소</button><button class="tbtn opsgo" data-a="opsopen:${x.id}">모아 사기 열기</button></span></div></div>`}
+
+/* ② 모으는 중 */
+function opsGather(){const ds=DEALS.filter(d=>d.state==='gathering');if(!ds.length)return '<div class="t-sub" style="padding:30px 0">지금 모으는 중인 모아 사기가 없어요</div>';
+ return `<div class="opsw"><table class="opst"><thead><tr><th>제품</th><th class="r">참여</th><th>도달 단계</th><th>다음 단계</th><th>모집 마감</th><th>인원 기준 (바꿀 수 있어요)</th><th></th></tr></thead><tbody>
+ ${ds.map(d=>{const x=dItem(d),c=dCount(d),r=dReached(d),nx=dNext(d),N=d.tierN||TIER_N0;return `<tr><td>${opsProd(x)}</td><td class="r num"><b>${nf(c)}</b>명</td>
+  <td>${r?`<b class="num">${r.off}%</b> <span class="t-cap num">${won(r.p)}</span>`:'<span class="t-cap">아직 없음</span>'}</td><td class="num">${nx?`${nx.off}%까지 ${nx.need-c}명`:'마지막 단계'}</td><td>${d.until}</td>
+  <td><div class="opsns">${TIER_OFF.map((off,i)=>{const hid=tierPrice(dPrice(d),off)>d.low90;return `<label class="${hid?'hid':''}"><span class="t-cap">${off}%</span><input type="number" min="1" step="10" value="${N[i]}" data-ops="dtier:${d.id}:${i}" ${hid?'disabled':''} aria-label="${off}% 단계 인원"></label>`}).join('')}</div></td>
+  <td class="r"><div style="display:flex;gap:6px;justify-content:flex-end">${r?`<button class="tbtn opsgo" data-a="opsclose:${d.id}">마감하고 제안</button>`:`<button class="tbtn" data-a="opsclose:${d.id}">마감 (첫 단계 미달)</button>`}<button class="tbtn" data-a="deal:${d.id}">고객 화면</button></div></td></tr>`}).join('')}</tbody></table></div>`}
+
+/* ③ 브랜드 답변 */
+function opsVerdictHtml(d,price){const v=offerVerdict(d,price),r=dReached(d),off=Math.round((1-price/dPrice(d))*100),[t,c]=opsVd[v];
+ const why=v==='reject'?(!guardOk(d,price)?(price>d.low90?'90일 최저가보다 비싸요':'20% 미만 할인이에요'):'제안할 단계가 없어요'):price===r.p?'제안가 그대로예요':off>r.off?`제안보다 ${off-r.off}%p 더 할인 (브랜드 ${off}%)`:`제안 ${r.off}% → 브랜드 ${off}% · ${r.off-off}%p 적게 할인${v==='review'?' (한 단계 넘음)':''}`;
+ return `<span class="opsv ${c}">${t}</span><span class="t-cap">${why}</span>`}
+function opsPropose(){const ds=DEALS.filter(d=>d.state==='proposing');if(!ds.length)return '<div class="t-sub" style="padding:30px 0">브랜드 답변을 기다리는 모아 사기가 없어요</div>';
+ return ds.map(d=>{const x=dItem(d),r=dReached(d),pin=S.opsOffer[d.id]??r.p,v=offerVerdict(d,pin);return `<div class="opsbox" style="margin-top:14px">
+  <div style="display:flex;align-items:center;gap:12px">${opsProd(x)}<span class="t-sub num" style="margin-left:auto">${nf(dCount(d))}명 · 모집 ${d.until}에 마감</span></div>
+  <div class="opsgrid">
+   <div><div class="opsk">다들 제안가</div><div class="num"><b style="font-size:20px">${won(r.p)}</b> <span class="mpc">${r.off}%</span></div><div class="t-cap num">소비자가 ${won(dPrice(d))} · 90일 최저가 ${won(d.low90)}</div></div>
+   <div><div class="opsk">브랜드 답변 가격</div><span class="opsin big"><input type="number" step="100" value="${pin}" data-offer="${d.id}" aria-label="브랜드 답변 가격">원</span>
+    <div class="opsvd" data-vd="${d.id}">${opsVerdictHtml(d,pin)}</div></div>
+   <div><div class="opsk">구매 기간</div><span class="opsin"><input type="number" min="1" max="30" value="${S.opsEndDays[d.id]??5}" data-ops="end:${d.id}">일</span><div class="t-cap">열면 그날부터 · D-day로 보여요</div></div></div>
+  <div class="opsrow"><span class="t-cap">판단 기준 — 20% 미만 · 90일 최저가보다 비싸면 거절 · 제안 단계에서 한 단계(5%p) 이내면 열기 · 그 밖은 다시 협상</span>
+   <span style="margin-left:auto;display:flex;gap:8px"><button class="tbtn" data-a="opsreject:${d.id}">거절됨 (성사 안 됨)</button><button class="tbtn opsgo" data-a="opsgoopen:${d.id}" data-oo="${d.id}" ${v==='open'?'':'aria-disabled="true"'}>이 가격으로 열기</button></span></div></div>`}).join('')}
+
+/* ④ 열림 · ⑤ 지난 */
+function opsOpen(){const ds=DEALS.filter(canBuy);if(!ds.length)return '<div class="t-sub" style="padding:30px 0">지금 열려 있는 모아 사기가 없어요</div>';
+ return `<div class="opsw"><table class="opst"><thead><tr><th>제품</th><th>확정가</th><th>다들 제안가</th><th>구매 기간</th><th class="r">참여</th><th>구매 링크</th><th></th></tr></thead><tbody>
+ ${ds.map(d=>{const x=dItem(d),p=dDealPrice(d),pp=dPropPrice(d);return `<tr><td>${opsProd(x)}</td><td class="num"><b>${won(p)}</b> <span class="mpc">${offOf(d,p)}%</span></td><td class="num t-sub">${d.offer&&d.offer!==pp?`${won(pp)} (${offOf(d,pp)}%)`:'같음'}</td>
+  <td><span class="t-cap">${endText(d)}까지</span> ${ddayEl(d)}</td><td class="r num">${nf(dCount(d))}명</td>
+  <td><input class="opslink" type="url" placeholder="브랜드가 준 구매 링크" value="${escA(S.opsLink[d.id]||'')}" data-ops="link:${d.id}" aria-label="구매 링크"></td>
+  <td class="r"><div style="display:flex;gap:6px;justify-content:flex-end"><button class="tbtn" data-a="opsend:${d.id}">구매 기간 끝내기</button><button class="tbtn" data-a="deal:${d.id}">고객 화면</button></div></td></tr>`}).join('')}</tbody></table></div>`}
+function opsPast(){const ds=DEALS.filter(d=>dSt(d)==='past');if(!ds.length)return '<div class="t-sub" style="padding:30px 0">지난 모아 사기가 없어요</div>';
+ return `<div class="opsw"><table class="opst"><thead><tr><th>제품</th><th>결과</th><th>가격</th><th class="r">참여</th><th>모집 마감</th></tr></thead><tbody>
+ ${ds.map(d=>{const x=dItem(d),p=dDealPrice(d);return `<tr><td>${opsProd(x)}</td><td>${d.state==='failed'?`<span class="opsv no">성사 안 됨</span> <span class="t-cap">${d.why}</span>`:'<span class="opsv ok">성사</span>'}</td>
+  <td class="num">${p?`${won(p)} <span class="mpc">${offOf(d,p)}%</span>`:'-'}</td><td class="r num">${nf(dCount(d))}명</td><td>${d.until}</td></tr>`}).join('')}</tbody></table></div>`}
+
+const opsPage=()=>`<div class="opshead"><div class="wrap opshw"><b>다들 운영 콘솔</b><span class="t-sub">모아 사기</span>
+  <button class="tbtn" style="margin-left:auto" data-a="home">← 서비스 화면으로</button></div></div>
+ <div class="wrap" style="padding-bottom:80px"><nav class="opsnav">${OPS_TABS.map(([k,t])=>`<button class="${S.opsTab===k?'on':''}" data-a="opstab:${k}">${t} <span class="num">${opsCount(k)}</span></button>`).join('')}</nav>
+ <div class="opsmain">${S.opsTab==='cand'?opsCand():S.opsTab==='gather'?opsGather():S.opsTab==='propose'?opsPropose():S.opsTab==='open'?opsOpen():opsPast()}</div>
+ <div class="foot"><div class="t-cap">프로토타입 · 콘솔에서 바꾼 내용은 이 화면을 닫기 전까지 소비자 화면에 그대로 반영돼요. 찜 수 · 90일 최저가는 가상이에요.</div></div></div>`;
+
 /* ── 프로토타입 전용 「샘플」 버튼 — 실제 서비스에는 없음 ──
    보기 어려운 상태(다시 온 사람 · 빈 비교함 · 표본 부족 상세 등)를 바로 열기 위한 바로가기 */
 const protoFab=()=>{if(S.sheet)return '';   // 창이 열려 있으면 숨김 — 창의 버튼을 가리지 않게
@@ -1836,6 +2476,8 @@ const protoFab=()=>{if(S.sheet)return '';   // 창이 열려 있으면 숨김 �
   ${grp('처음 · 다시 온 사람',[['홈 (처음 온 사람 · 기록 없음)','home',false],['검색으로 처음 온 사람 (「아기 젖병」)','demoEntry',false],['다시 온 사람의 홈 (크림 · 프라이팬 관심)','demo1',false],['새로고침 (다시 섞기)','reseed',false]])}
   ${grp('목록',LSUBS.map(x=>[x+' 목록','list:'+x,S.screen==='list'&&S.lsub===x]))}
   ${grp('제품 상세',P.map(p=>[`${LAB(p)} · ${p.brand} ${p.sub}`,'pick:'+p.id,S.screen==='detail'&&S.pid===p.id]))}
+  ${grp('운영',[['운영 콘솔 (PC)','console',S.screen==='console']])}
+  ${grp('모아 사기',[[S.moaOn?'모아 사기 탭 숨기기 (런칭 전 모습)':'모아 사기 탭 보기 (런칭 후 모습)','moaon',false],['모아 사기 · 성사된 제품이 있는 사람','demoMoa',false]])}
   ${grp('비교함',[['비교 예시 (프라이팬 4개)','demo',S.screen==='compare'&&!!S.csub],['빈 비교함 (처음 온 사람)','demo0',S.screen==='compare'&&!S.csub]])}</div>`:'';
  return `<div class="pfab">${panel}<button class="pfb ${E.length?'bad':''}" data-a="proto" aria-expanded="${!!S.protoOpen}">샘플${E.length?' · 확인 필요':''}</button></div>`};
 
@@ -1853,11 +2495,11 @@ function draw(){
  const toast=S.toast?`<div class="toast" role="status">${S.toast}</div>`:'';
  if(S.view==='pc'){const y=window.scrollY;
   document.body.classList.add('pcmode');app.className='pcroot';
-  app.innerHTML=protoFab()+(S.screen==='brand'?pcBrand():S.screen==='brands'?pcBrands():S.screen==='story'?pcStory():S.screen==='favs'?pcFavs():S.screen==='search'?pcSearch():S.screen==='home'?pcHome():S.screen==='compare'?pcCompare(S.csub):list?pcList(S.lsub):pcPage(p))+sheet(p)+toast;
+  app.innerHTML=protoFab()+(S.screen==='console'?opsPage():S.screen==='moa'?pcMoa():S.screen==='deal'?pcDeal():S.screen==='noti'?pcNoti():S.screen==='brand'?pcBrand():S.screen==='brands'?pcBrands():S.screen==='story'?pcStory():S.screen==='favs'?pcFavs():S.screen==='search'?pcSearch():S.screen==='home'?pcHome():S.screen==='compare'?pcCompare(S.csub):list?pcList(S.lsub):pcPage(p))+sheet(p)+toast;
   window.scrollTo(0,S.resetTop?0:y);S.keepTop=0;S.resetTop=0;fitLeft();bindChips();focusQ();goAfterDraw();return}
  document.body.classList.remove('pcmode');app.className='phone';
  const old=document.getElementById('scr');const top=old?old.scrollTop:0;
- app.innerHTML=protoFab()+(S.screen==='brand'?brandTop('브랜드')+brandBody():S.screen==='brands'?brandTop('브랜드 모아보기')+brandsBody():S.screen==='story'?storyTop()+storyBody():S.screen==='favs'?favTop()+favScreen()+tabBar(null,3):S.screen==='search'?searchTop()+searchBody():S.screen==='cats'?catsTop()+catsBody()+tabBar(null,1):S.screen==='home'?homeTop()+homeBody()+tabBar(S.lastSub,0):S.screen==='compare'?cmpTop(S.csub)+cmpBody(S.csub)+tabBar(S.csub,2):list?listTop(S.lsub)+listBody(S.lsub)+tabBar(S.lsub):topBar()+body(p)+bottomBar(p))+sheet(p)+toast;
+ app.innerHTML=protoFab()+(S.screen==='console'?`<div class="top"><div style="flex:1;font-size:17px;font-weight:700;padding-left:6px">운영 콘솔</div></div><div class="scr" id="scr"><div style="padding:60px 24px;text-align:center"><div class="t-h">운영 콘솔은 PC에서만 열려요</div><div class="t-sub" style="margin-top:6px">화면이 넓어야 후보 표와 브랜드 답변을 한눈에 볼 수 있어요.</div><button class="tbtn" style="margin-top:14px" data-a="home">서비스 화면으로</button></div></div>`:S.screen==='moa'?moaTop()+moaBody()+tabBar(null,'moa'):S.screen==='deal'?dealTop()+dealBody():S.screen==='noti'?notiTop()+notiScreen():S.screen==='brand'?brandTop('브랜드')+brandBody():S.screen==='brands'?brandTop('브랜드 모아보기')+brandsBody():S.screen==='story'?storyTop()+storyBody():S.screen==='favs'?favTop()+favScreen()+tabBar(null,3):S.screen==='search'?searchTop()+searchBody():S.screen==='cats'?catsTop()+catsBody()+tabBar(null,1):S.screen==='home'?homeTop()+homeBody()+tabBar(S.lastSub,0):S.screen==='compare'?cmpTop(S.csub)+cmpBody(S.csub)+tabBar(S.csub,2):list?listTop(S.lsub)+listBody(S.lsub)+tabBar(S.lsub):topBar()+body(p)+bottomBar(p))+sheet(p)+toast;
  const sc=document.getElementById('scr');if(sc)sc.scrollTop=S.keepTop?top:(S.resetTop?0:top);S.keepTop=0;S.resetTop=0;bindChips();bindCats();focusQ();goAfterDraw()}
 
 const goList=sub=>{S.prev=null;S.cq='';S.screen='list';S.lsub=sub;S.lsort='default';S.f={good:false,pmin:null,pmax:null,brands:[]};S.sheet=null;S.mega=null;S.crowXs={};S.resetTop=1;draw()};
@@ -1870,8 +2512,8 @@ document.addEventListener('click',e=>{
  if(!el)return;
  const [a,...r]=el.dataset.a.split(':');const v=r.join(':');const p=byId(S.pid);
  switch(a){
-  case'pick':S.recent=[v,...S.recent.filter(x=>x!==v)].slice(0,8);S.screen='detail';S.pid=v;S.month=false;S.sheet=null;S.act=null;delete S.crowXs.crow;S.resetTop=1;draw();break;
-  case'open':{const x=itemOf(v);if(x&&x.full){S.recent=[v,...S.recent.filter(y=>y!==v)].slice(0,8);S.screen='detail';S.pid=v;S.month=false;S.sheet=null;S.act=null;S.crowXs={};S.resetTop=1;draw()}
+  case'pick':if(S.screen!=='detail')S.dPrev={screen:S.screen,lsub:S.lsub,lsort:S.lsort,csub:S.csub,brand:S.brand,storyK:S.storyK,q:S.q,sqDone:S.sqDone};S.recent=[v,...S.recent.filter(x=>x!==v)].slice(0,8);S.screen='detail';S.pid=v;S.month=false;S.sheet=null;S.act=null;delete S.crowXs.crow;S.resetTop=1;draw();break;
+  case'open':{const x=itemOf(v);if(x&&x.full){if(S.screen!=='detail')S.dPrev={screen:S.screen,lsub:S.lsub,lsort:S.lsort,csub:S.csub,brand:S.brand,storyK:S.storyK,q:S.q,sqDone:S.sqDone};S.recent=[v,...S.recent.filter(y=>y!==v)].slice(0,8);S.screen='detail';S.pid=v;S.month=false;S.sheet=null;S.act=null;S.crowXs={};S.resetTop=1;draw()}
    else say(`프로토타입에서는 상세가 샘플 ${P.length}개에만 있어요`);break}
   case'list':goList(v);break;
   case'say':say(v);break;
@@ -1885,7 +2527,7 @@ document.addEventListener('click',e=>{
     if(same.length>=4){say(`${x.sub} 비교함은 4개까지 담을 수 있어요`);break}S.cmp[x.id]=1}
    S.keepTop=1;draw();say(S.cmp[x.id]?`${x.sub} 비교함에 담았어요`:'비교함에서 뺐어요');break}
   case'sheet':S.sheet=v;S.keepTop=1;draw();break;
-  case'close':S.sheet=null;S.keepTop=1;draw();break;
+  case'close':S.sheet=null;S.pendJoin=null;S.keepTop=1;draw();break;
   case'view':S.view=v;S.mega=null;S.act=null;S.crowXs={};S.resetTop=1;draw();break;
   case'mega':S.mega=S.mega===v?null:v;S.cq='';S.keepTop=1;draw();break;
   case'rmcmp':delete S.cmp[v];S.keepTop=1;draw();say('비교함에서 뺐어요');break;
@@ -1900,6 +2542,59 @@ document.addEventListener('click',e=>{
   case'csub':S.csub=v;S.cpair=[];S.resetTop=1;draw();break;
   case'cpick':if(!S.cpair.includes(v)){S.cpair=[S.cpair[1],v].filter(Boolean)}S.keepTop=1;draw();break;
   case'cdiff':S.cdiff=!S.cdiff;S.keepTop=1;draw();break;
+  /* 상세 뒤로 — 들어오기 전 화면으로 (없으면 그 제품의 목록) */
+  // 목록에서 왔으면 보던 정렬 · 필터를 그대로 (예전에는 초기화됐음)
+  case'dback':if(S.dPrev){Object.assign(S,S.dPrev);S.dPrev=null;S.resetTop=1;draw()}else goList(byId(S.pid).sub);break;
+  /* 모아 사기 */
+  case'moa':S.screen='moa';S.sheet=null;S.mega=null;S.sOpen=false;S.resetTop=1;draw();break;
+  /* 운영 콘솔 */
+  case'console':S.screen='console';if(window.innerWidth>=PCW)S.view='pc';S.sheet=null;S.mega=null;S.resetTop=1;draw();break;
+  case'opstab':S.opsTab=v;S.opsOpen=null;S.resetTop=1;draw();break;
+  case'opsgroup':S.opsGroup=v;S.keepTop=1;draw();break;
+  case'opsex':S.opsEx=!S.opsEx;S.keepTop=1;draw();break;
+  case'opsbig':S.opsBig[v]=!S.opsBig[v];S.keepTop=1;draw();say(S.opsBig[v]?`${v} 제품을 후보에서 뺐어요 (대기업 · 계열사)`:`${v}를 다시 후보에 넣었어요`);break;
+  case'opsprep':S.opsOpen=S.opsOpen===v?null:v;S.keepTop=1;draw();break;
+  case'opsopen':{const x=itemOf(v),c=opsCheck(x),dr=S.opsDraft[v]||{tierN:TIER_N0.slice(),days:14},N=dr.tierN;
+   const vis=TIER_OFF.map((off,i)=>[tierPrice(x.price,off)<=c.low90,N[i]]).filter(t=>t[0]).map(t=>t[1]);
+   if(vis.some((n,i)=>i&&n<=vis[i-1])){say('위 단계일수록 인원이 많아야 해요');break}
+   const id='d'+(DEALS.length+1+Math.floor(Math.random()*900));DEALS.push({id,pid:v,at:0,low90:c.low90,n:0,state:'gathering',until:opsDays(dr.days),tierN:N.slice()});
+   S.opsOpen=null;S.keepTop=1;draw();say(`「${x.name}」 모아 사기를 열었어요 — 모아 사기 탭에 바로 보여요`);break}
+  case'opsclose':{const d=dealOf(v);if(dReached(d)){d.state='proposing';say('마감했어요. 브랜드 답변 칸으로 옮겼어요')}else{d.state='failed';d.why='모집 마감까지 첫 단계 인원이 모이지 않았어요';say('첫 단계에 못 미쳐 성사 안 됨으로 마감했어요')}S.keepTop=1;draw();break}
+  case'opsreject':{const d=dealOf(v);d.state='failed';d.why='브랜드가 제안을 받지 않았어요';S.keepTop=1;draw();say('성사 안 됨으로 기록했어요. 참여자에게 알림이 가요');break}
+  case'opsgoopen':{const d=dealOf(v),pin=S.opsOffer[v]??dReached(d).p;if(offerVerdict(d,pin)!=='open'){say('이 가격은 바로 열 수 없어요 — 다시 협상하거나 거절해 주세요');break}
+   if(pin!==dReached(d).p)d.offer=pin;d.state='open';d.saleEnd=Date.now()+(S.opsEndDays[v]??5)*864e5;S.keepTop=1;draw();say(`${won(pin)}으로 열었어요. 참여자에게 먼저 알림이 가요`);break}
+  case'opsend':{const d=dealOf(v);d.state='done';d.saleEnd=Date.now()-1;S.keepTop=1;draw();say('구매 기간을 끝냈어요');break}
+  case'favseg':S.favSeg=v;S.resetTop=1;draw();break;
+  case'moalive':S.screen='moa';S.moaSeg='live';S.resetTop=1;draw();break;
+  case'moaseg':S.moaSeg=v;S.resetTop=1;draw();break;
+  case'mdom':S.mcat={dom:v==='전체'?null:v,mid:null,sub:null};S.sheet=null;S.keepTop=1;draw();break;
+  case'mmid':S.mcat={dom:midOf(Object.values(TAX).flat().find(m=>m[0]===v)[1][0]).dom,mid:v,sub:null};S.sheet=null;S.keepTop=1;draw();break;
+  case'msub':S.mcat={dom:midOf(v).dom,mid:midOf(v).mid,sub:v};S.sheet=null;S.keepTop=1;draw();break;
+  case'mst':S.mf.states=S.mf.states.includes(v)?S.mf.states.filter(x=>x!==v):[...S.mf.states,v];S.keepTop=1;draw();break;
+  case'moff':S.mf.off=+v;S.keepTop=1;draw();break;
+  case'msoon':S.mf.soon=!S.mf.soon;S.keepTop=1;draw();break;
+  case'mmine':S.mf.mine=!S.mf.mine;S.keepTop=1;draw();break;
+  case'mbrand':S.mf.brands=S.mf.brands.includes(v)?S.mf.brands.filter(b=>b!==v):[...S.mf.brands,v];S.keepTop=1;draw();break;
+  case'mreset':S.mf=MF0();S.mcat={dom:null,mid:null,sub:null};S.keepTop=1;draw();break;
+  case'msort':S.msort=v;S.sheet=null;S.keepTop=1;draw();break;
+  case'moadom':S.moaDom=v;S.keepTop=1;draw();break;
+  case'deal':if(S.screen!=='deal')S.mPrev={screen:S.screen,pid:S.pid,lsub:S.lsub,dPrev:S.dPrev};S.did=v;S.screen='deal';S.sheet=null;S.resetTop=1;draw();break;
+  case'dealback':Object.assign(S,S.mPrev||{screen:'moa'});S.mPrev=null;S.resetTop=1;draw();break;
+  case'moajoin':{const d=dealOf(v);if(d.state!=='gathering')break;
+   if(!S.user){S.pendJoin=[v];S.sheet='login';S.keepTop=1;draw();break}
+   S.joins[v]=true;S.keepTop=1;draw();say(`참여했어요. ${d.until}까지 모은 뒤 브랜드에 제안해요`);break}
+  case'moaleave':delete S.joins[v];S.keepTop=1;draw();say('참여를 취소했어요');break;
+  case'moanext':S.moaNext[v]=!S.moaNext[v];S.keepTop=1;draw();say(S.moaNext[v]?'다음 모아 사기가 열리면 알려드릴게요':'알림을 껐어요');break;
+  case'moaon':S.moaOn=!S.moaOn;if(!S.moaOn&&['moa','deal'].includes(S.screen))S.screen='home';S.resetTop=1;draw();say(S.moaOn?'모아 사기 탭을 보여줘요 (런칭 후 모습)':'모아 사기 탭을 숨겼어요 (런칭 전 모습)');break;
+  case'demoMoa':Object.assign(S,{moaOn:true,user:{ch:'kakao'},joins:{d1:true,d10:true,d2:true,d3:true,d5:true},screen:'moa',moaSeg:'live',moaDom:'전체',resetTop:1});draw();break;
+  /* 알림 */
+  case'noti':if(S.screen!=='noti')S.nPrev={screen:S.screen,pid:S.pid,lsub:S.lsub,csub:S.csub,brand:S.brand};S.screen='noti';S.sheet=null;S.mega=null;S.sOpen=false;S.resetTop=1;draw();break;
+  case'notiback':Object.assign(S,S.nPrev||{screen:'home'});S.nPrev=null;S.resetTop=1;draw();break;
+  case'notiread':notiList().forEach(n=>S.readNoti[n.id]=true);S.keepTop=1;draw();break;
+  case'nopen':{const n=notiList().find(x=>x.id===v);if(!n)break;S.readNoti[n.id]=true;const [a2,...r2]=n.a.split(':'),v2=r2.join(':');
+   if(a2==='open'){const x=itemOf(v2);if(x&&x.full){if(S.screen!=='detail')S.dPrev={screen:S.screen,lsub:S.lsub,lsort:S.lsort,csub:S.csub,brand:S.brand,storyK:S.storyK,q:S.q,sqDone:S.sqDone};S.recent=[v2,...S.recent.filter(y=>y!==v2)].slice(0,8);S.screen='detail';S.pid=v2;S.act=null;S.crowXs={};S.resetTop=1;draw()}else{S.keepTop=1;draw();say('프로토타입에서는 샘플 '+P.length+'개만 상세가 있어요')}}
+   else if(a2==='deal'){S.mPrev={screen:'noti'};S.did=v2;S.screen='deal';S.resetTop=1;draw()}
+   else if(a2==='sgo')submitSearch(v2);else if(a2==='brand'){S.bPrev={screen:'noti'};S.bFromIdx=false;S.brand=v2;S.screen='brand';S.resetTop=1;draw()}break}
   /* 브랜드 */
   case'brand':if(!['brand','brands'].includes(S.screen))S.bPrev={screen:S.screen,pid:S.pid,lsub:S.lsub,csub:S.csub,storyK:S.storyK};S.bFromIdx=S.screen==='brands';S.brand=v;S.screen='brand';S.sheet=null;S.mega=null;S.sOpen=false;S.crowXs={};S.resetTop=1;draw();break;
   case'brands':if(!['brand','brands'].includes(S.screen))S.bPrev={screen:S.screen,pid:S.pid,lsub:S.lsub,csub:S.csub,storyK:S.storyK};S.screen='brands';S.sheet=null;S.mega=null;S.sOpen=false;S.resetTop=1;draw();break;
@@ -1911,7 +2606,7 @@ document.addEventListener('click',e=>{
   case'storyback':S.screen='detail';S.goAfter=S.storyK;S.act=S.storyK;S.resetTop=1;draw();break;
   /* 찜 */
   case'favs':S.screen='favs';S.sheet=null;S.mega=null;S.sOpen=false;S.crowXs={};S.resetTop=1;draw();break;
-  case'login':S.user={ch:v};S.sheet=null;S.keepTop=1;draw();say('연결했어요. 찜한 제품이 달라지면 알려드릴게요');break;
+  case'login':S.user={ch:v};S.sheet=null;if(S.pendJoin){const [id]=S.pendJoin;S.joins[id]=true;S.pendJoin=null;S.keepTop=1;draw();say('연결했어요. 참여했어요');break}S.keepTop=1;draw();say('연결했어요. 찜한 제품이 달라지면 알려드릴게요');break;
   case'logout':S.user=null;S.sheet=null;S.keepTop=1;draw();say('연결을 끊었어요. 찜은 이 기기에 그대로 있어요');break;
   case'notipref':S.notiPref[v]=!S.notiPref[v];S.keepTop=1;draw();break;
   case'unreq':delete S.requested[v];S.keepTop=1;draw();say('요청을 취소했어요');break;
@@ -1951,10 +2646,22 @@ document.addEventListener('click',e=>{
   case'demo':S.cmp={p1:1,m2:1,m12:1,p2:1};S.cpair=[];S.screen='compare';S.csub='프라이팬';S.crowXs={};S.resetTop=1;draw();break;
  }});
 document.addEventListener('input',e=>{if(e.target.matches('.rng input'))rangeLive(e.target);else if(e.target.matches('[data-cq]'))catLive(e.target);else if(e.target.matches('[data-sq]'))searchLive(e.target)});
+document.addEventListener('input',e=>{const t=e.target;
+ if(t.matches('[data-offer]')){const d=dealOf(t.dataset.offer),v=Math.round(+t.value||0);S.opsOffer[d.id]=v;
+  const box=document.querySelector(`[data-vd="${d.id}"]`);if(box&&dReached(d))box.innerHTML=opsVerdictHtml(d,v);
+  const b=document.querySelector(`[data-oo="${d.id}"]`);if(b){if(offerVerdict(d,v)==='open')b.removeAttribute('aria-disabled');else b.setAttribute('aria-disabled','true')}}});
+document.addEventListener('change',e=>{const t=e.target;if(!t.dataset||!t.dataset.ops)return;const [k,id,i]=t.dataset.ops.split(':');
+ if(k==='tier'){const dr=S.opsDraft[id];dr.tierN[+i]=Math.max(1,Math.round(+t.value||1))}
+ else if(k==='days'){S.opsDraft[id].days=Math.min(60,Math.max(3,Math.round(+t.value||14)))}
+ else if(k==='dtier'){const d=dealOf(id);d.tierN=(d.tierN||TIER_N0).slice();d.tierN[+i]=Math.max(1,Math.round(+t.value||1));say('인원 기준을 바꿨어요. 소비자 화면에 바로 반영돼요')}
+ else if(k==='end'){S.opsEndDays[id]=Math.min(30,Math.max(1,Math.round(+t.value||5)))}
+ else if(k==='link'){S.opsLink[id]=t.value}
+ S.keepTop=1;draw()});
 document.addEventListener('focusin',e=>{if(e.target.matches('.gsw [data-sq]')&&!S.sOpen){S.sOpen=true;S.mega=null;S.focusSearch=true;S.keepTop=1;draw()}});
-document.addEventListener('change',e=>{if(e.target.matches('.rng input')){const [a,b,lo,hi]=rangeLive(e.target);
-  S.f.pmin=a<=lo?null:a;S.f.pmax=b>=hi?null:b;S.keepTop=1;draw();return}
+document.addEventListener('change',e=>{if(e.target.matches('.rng input')){const [a,b,lo,hi]=rangeLive(e.target),F=e.target.closest('.rng').dataset.scope==='moa'?S.mf:S.f;
+  F.pmin=a<=lo?null:a;F.pmax=b>=hi?null:b;S.keepTop=1;draw();return}
  const el=e.target.closest('[data-change]');if(!el)return;
+ if(el.dataset.change==='msort'){S.msort=el.value;S.keepTop=1;draw();return}
  if(el.dataset.change==='lsort'){S.lsort=el.value;S.keepTop=1;draw()}});
 document.addEventListener('keydown',e=>{if(e.target.matches('[data-sq]')){
   if(e.key==='Enter'){e.preventDefault();submitSearch(e.target.value);return}
@@ -1963,6 +2670,7 @@ document.addEventListener('keydown',e=>{if(e.target.matches('[data-sq]')){
  if(e.key==='Escape'&&(S.mega||S.sheet)){S.mega=null;S.sheet=null;S.keepTop=1;draw()}});
 window.addEventListener('resize',()=>{if(window.innerWidth<PCW&&S.view==='pc'){S.view='mo';draw()}else fitLeft()});
 // 홈 검색창 예시 문구를 바꿔 가며 보여줌 (화면을 다시 그리지 않고 글자만 바꿈)
+setInterval(()=>{document.querySelectorAll('[data-cd]').forEach(e=>{const d=dealOf(e.dataset.cd);if(d)e.textContent=ddayText(d)})},1000);
 setInterval(()=>{S.phI++;document.querySelectorAll('[data-ph]').forEach(e=>e.textContent=`「${PH[S.phI%PH.length]}」`)},2800);
 draw();
 </script>
