@@ -303,11 +303,10 @@ body.pcmode{display:block;padding:0;background:var(--surface)}
 .radio{width:20px;height:20px;border-radius:10px;border:1.5px solid var(--faint);flex-shrink:0;position:relative}
 .radio.on{border-color:var(--brand)}.radio.on::after{content:"";position:absolute;inset:4px;border-radius:6px;background:var(--brand)}
 .kwrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.sortrow{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:26px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.sortrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:26px;padding-bottom:10px;border-bottom:1px solid var(--line)}
 .lsel{height:40px;padding:0 36px 0 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:15px;font-weight:600;appearance:none;-webkit-appearance:none;cursor:pointer;
  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236E6E75' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
 .lsel:hover{background-color:var(--surface2)}
-.sortrow{gap:10px}
 .ltable td{padding:14px 12px}.ltable th{padding-left:12px;padding-right:12px}
 .ltable td:first-child,.ltable th:first-child{padding-left:16px}
 .ltable th{white-space:normal;line-height:1.35;vertical-align:bottom}
@@ -782,7 +781,7 @@ const GLY={
 const TINT={green:'var(--tGreen)',sand:'var(--tSand)',gray:'var(--tGray)'};
 const thumb=(p,w,h,cls='thumb')=>`<div class="${cls}" style="width:${w}px;height:${h}px;background:${TINT[p.tint]}"><svg width="${Math.round(w*.86)}" height="${Math.round(h*.86)}" viewBox="0 0 100 86">${GLY[p.gly]}</svg></div>`;
 
-/* ── 라벨: 결정론적 함수 (임계값은 파일럿 전 재검토 — CLAUDE.md 7장 ①) ── */
+/* ── 라벨: 결정론적 함수 (임계값은 파일럿 전 재검토 — CLAUDE.md 8장 ①) ── */
 const label_of=(n,rate)=>n<30?'표본 부족':rate<.15?'대체로 만족':rate<.35?'의견 갈림':'대체로 불만';
 const rateOf=p=>p.evalN?p.probN/p.evalN:0;
 const LAB=p=>label_of(p.n,rateOf(p));
@@ -1137,8 +1136,8 @@ const body=p=>`<div class="scr" id="scr">
  <button class="rowbtn" data-a="sheet:cons" style="border-top:.5px solid var(--line)"><span style="display:flex;align-items:center;gap:10px">${mk('-')}<span class="t-body" style="font-weight:700">아쉽다는 이야기만 모아보기</span></span>
   <span class="t-sub num" style="display:flex;align-items:center;gap:2px">${consAll(p).length}가지 ${ic('chev',16,'var(--meta)',2)}</span></button>
  ${howBlock(p)}
- <button class="rowbtn" data-a="say:새 창에서 스마트스토어가 열려요" style="border-top:.5px solid var(--line);margin-top:14px">
-  <span style="display:flex;align-items:center;gap:10px">${ic('ext',18,'var(--ink2)')}<span class="t-body" style="font-weight:600">스마트스토어에서 상세 보기</span></span>
+ <button class="rowbtn" data-a="say:새 창에서 브랜드스토어가 열려요" style="border-top:.5px solid var(--line);margin-top:14px">
+  <span style="display:flex;align-items:center;gap:10px">${ic('ext',18,'var(--ink2)')}<span class="t-body" style="font-weight:600">브랜드스토어에서 상세 보기</span></span>
   <span class="t-sub num">${won(p.price)}</span></button>
  ${siblings(p)}
  <!-- 공구 자리: 기능 스위치 FEATURE.deal 이 켜지면 이 위치에 붙입니다 (지금은 꺼 둠) -->
@@ -1210,7 +1209,7 @@ const pcLeft=p=>{const thin=LAB(p)==='표본 부족',f=!!S.fav[p.id],c=!!S.cmp[p
  ${thin?`<button class="pmainbtn ${f?'on':''}" data-a="fav">${f?'후기 모이면 알려드릴게요':'후기 모이면 알려주세요'}</button>`
   :`<button class="pmainbtn" data-a="list:${p.sub}">같은 ${p.sub} ${subCount(p.sub)}종과 비교</button>`}
  ${highlights(p).replace('<div class="pad">','<div>')}
- <button class="pstore" data-a="say:새 창에서 스마트스토어가 열려요"><span style="display:flex;align-items:center;gap:8px">${ic('ext',18,'var(--ink2)')}스마트스토어에서 상세 보기</span><span class="t-sub num">${won(p.price)}</span></button>
+ <button class="pstore" data-a="say:새 창에서 브랜드스토어가 열려요"><span style="display:flex;align-items:center;gap:8px">${ic('ext',18,'var(--ink2)')}브랜드스토어에서 상세 보기</span><span class="t-sub num">${won(p.price)}</span></button>
  </aside>`};
 
 const pcTable=p=>{const rows=sameSub(p),hasVol=rows.some(x=>x.vol);
@@ -1357,7 +1356,7 @@ const tabBar=(sub,act=1)=>{const key=typeof act==='number'?['home','cats','cmp',
   <button class="cgo" data-a="${cn<2?'say:같은 '+sub+' 하나를 더 담으면 비교할 수 있어요':'compare:'+sub}" ${cn<2?'aria-disabled="true"':''}>${cn<2?'하나 더 담아 주세요':'비교하기'}</button></div>`:'';
  const tcn=Object.keys(S.cmp).length;
  const tabs=[['home','home','홈','home'],['cats','grid','카테고리','cats:'],['cmp','cmpi','비교함','compare:'+(sub||'')],...(S.moaOn?[['moa','moa','모아 사기','moa']]:[]),['fav','heart','찜','favs']];
- return cf+`<nav class="tabs">${tabs.map(([k,i,t,a])=>`<button class="tab ${k===key?'on':''}" ${a&&k!==key?`data-a="${a}"`:''} ${k===key?'aria-current="page"':''}>${ic(i,22,k===key?'var(--brand)':'var(--meta)')}<span>${t}${k==='cmp'&&tcn?` ${tcn}`:k==='fav'&&fn?` ${fn}`:''}</span></button>`).join('')}</nav>`};
+ return cf+`<nav class="tabs">${tabs.map(([k,i,t,a])=>`<button class="tab ${k===key?'on':''}" ${a&&(k!==key||k==='home')?`data-a="${a}"`:''} ${k===key?'aria-current="page"':''}>${ic(i,22,k===key?'var(--brand)':'var(--meta)')}<span>${t}${k==='cmp'&&tcn?` ${tcn}`:k==='fav'&&fn?` ${fn}`:''}</span></button>`).join('')}</nav>`};
 
 /* PC 목록 */
 const pcList=sub=>{const all=allIn(sub),key=S.lsort,items=sortItems(filt(all),key),{dom,mid}=midOf(sub);
@@ -2003,7 +2002,7 @@ const storyParts=(p,k,pc)=>{const c=p.cats.find(x=>x.k===k),d=storyData(p,c),st=
    <span class="pbar"><i style="width:${v*100}%"></i></span><span class="num pv">${Math.round(v*100)}%</span></button>`}).join('')}</div>
   ${few.length?`<div class="t-cap" style="margin-top:8px">이 이야기를 한 후기가 30건이 안 되는 ${few.length}개 제품은 뺐어요.</div>`:''}
   <button class="more" data-a="theme:${p.sub}:${k}">이 기준으로 ${p.sub} 목록 보기 ${ic('chev',14,'var(--brand)',2.2)}</button></section>`;
- const foot=`<div class="foot"><div class="t-cap">리뷰 원문은 옮겨 오지 않아요. 원래 글은 스마트스토어에서 볼 수 있어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div>`;
+ const foot=`<div class="foot"><div class="t-cap">리뷰 원문은 옮겨 오지 않아요. 원래 글은 브랜드스토어에서 볼 수 있어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div>`;
  return {head,points,month,cmp,foot,c}};
 
 const storyTop=()=>`<div class="top"><button class="ib" data-a="storyback" aria-label="제품으로 돌아가기">${ic('back',22,'var(--ink)')}</button>
@@ -2222,7 +2221,7 @@ const reviewMini=x=>{const L=labOf(x),pros=x.full?topPts(byId(x.id),'+').slice(0
   <span class="t-sub num">네이버 ★${x.nv.r} · 리뷰 ${nf(x.nv.c)}건</span></div>
   <div style="margin-top:6px">${[...pros.map(p2=>['+',...p2]),...cons.map(p2=>['-',...p2])].map(([sg,t,n])=>`<div class="pt">${mk(sg)}<div class="tx" style="font-size:14px;line-height:1.45">${t}</div>${n?`<div class="ct num">${n}건</div>`:''}</div>`).join('')}</div>
   <div class="t-cap num" style="margin-top:6px">진짜 후기 ${nf(x.n)}건 기준</div>
-  <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="tbtn" data-a="open:${x.id}">진짜 후기 전체 보기</button><button class="tbtn" data-a="say:새 창에서 스마트스토어가 열려요">${ic('ext',16,'var(--ink2)')}스마트스토어</button></div></div>`};
+  <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="tbtn" data-a="open:${x.id}">진짜 후기 전체 보기</button><button class="tbtn" data-a="say:새 창에서 브랜드스토어가 열려요">${ic('ext',16,'var(--ink2)')}브랜드스토어</button></div></div>`};
 const moaTop=()=>S.moaSeg==='mine'?rootTop('내 참여',{back:`<button class="ib" data-a="moaseg:live" aria-label="모아 사기로">${ic('back',22,'var(--ink)')}</button>`}):rootTop('모아 사기');
 const moaBody=()=>{if(S.moaSeg==='mine')return `<div class="scr" id="scr"><div class="pad" style="padding-top:8px">${moaMine()}</div>
  <div class="foot"><div class="t-cap">${FEE}</div></div></div>`;
@@ -2487,7 +2486,7 @@ const protoFab=()=>{if(S.sheet)return '';   // 창이 열려 있으면 숨김 �
   ${grp('목록',LSUBS.map(x=>[x+' 목록','list:'+x,S.screen==='list'&&S.lsub===x]))}
   ${grp('제품 상세',P.map(p=>[`${LAB(p)} · ${p.brand} ${p.sub}`,'pick:'+p.id,S.screen==='detail'&&S.pid===p.id]))}
   ${grp('운영',[['운영 콘솔 (PC)','console',S.screen==='console']])}
-  ${grp('모아 사기',[[S.moaOn?'모아 사기 탭 숨기기 (런칭 전 모습)':'모아 사기 탭 보기 (런칭 후 모습)','moaon',false],['모아 사기 · 성사된 제품이 있는 사람','demoMoa',false]])}
+  ${grp('모아 사기',[[S.moaOn?'모아 사기 탭 숨기기 (런칭 전 모습)':'모아 사기 탭 보기 (런칭 후 모습)','moaon',false],['모아 사기 · 참여한 제품이 열린 사람','demoMoa',false]])}
   ${grp('비교함',[['비교 예시 (프라이팬 4개)','demo',S.screen==='compare'&&!!S.csub],['빈 비교함 (처음 온 사람)','demo0',S.screen==='compare'&&!S.csub]])}</div>`:'';
  return `<div class="pfab">${panel}<button class="pfb ${E.length?'bad':''}" data-a="proto" aria-expanded="${!!S.protoOpen}">샘플${E.length?' · 확인 필요':''}</button></div>`};
 
@@ -2641,7 +2640,8 @@ document.addEventListener('click',e=>{
   case'cdom':S.cdom=v;S.crTop=0;S.keepTop=1;draw();break;
   case'cjump':catJump(v,true);break;
   /* 홈 */
-  case'home':if(S.screen==='home'&&!el.closest('.pfp')){const sc=document.getElementById('scr');if(S.view==='pc')window.scrollTo({top:0,behavior:'smooth'});else if(sc)sc.scrollTo({top:0,behavior:'smooth'});break}
+  // 이미 홈에서 로고 · 홈 탭을 다시 누르면 맨 위로 + 새로고침(다시 섞기). 다른 화면에서 오면 보던 홈 그대로 (CLAUDE.md 2-7)
+  case'home':if(S.screen==='home'&&!el.closest('.pfp')){SEED=Math.floor(Math.random()*2147483647);S.sheet=null;S.mega=null;S.sOpen=false;S.resetTop=1;draw();say('새로 고쳤어요');break}
    if(el.closest('.pfp'))Object.assign(S,{fav:{},recent:[],recentSubs:[],cmp:{},lastSub:null,entry:null,hdomSet:false,hrank:null,pOff:false});S.screen='home';S.sheet=null;S.mega=null;S.crowXs={};S.resetTop=1;draw();break;
   case'hdom':S.hdom=v;S.hdomSet=true;S.hrank=null;S.keepTop=1;draw();break;
   case'poff':S.pOff=!S.pOff;S.keepTop=1;draw();say(S.pOff?'맞춤을 껐어요. 모든 분께 같은 기준으로 보여드려요':'맞춤을 켰어요');break;
@@ -2681,7 +2681,9 @@ document.addEventListener('keydown',e=>{if(e.target.matches('[data-sq]')){
  if(e.key==='Escape'&&(S.mega||S.sheet)){S.mega=null;S.sheet=null;S.keepTop=1;draw()}});
 window.addEventListener('resize',()=>{if(window.innerWidth<PCW&&S.view==='pc'){S.view='mo';draw()}else fitLeft()});
 // 홈 검색창 예시 문구를 바꿔 가며 보여줌 (화면을 다시 그리지 않고 글자만 바꿈)
-setInterval(()=>{document.querySelectorAll('[data-cd]').forEach(e=>{const d=dealOf(e.dataset.cd);if(d)e.textContent=ddayText(d)})},1000);
+// 구매 기간 실시간 시간 — 화면이 새로 그려질 때마다(초당 약 60번) 보고, 값이 바뀔 때만 글자를 고침
+// (1초 간격 타이머는 초 경계와 어긋나 최대 1초 늦게 보였음. 숨은 탭에서는 브라우저가 알아서 멈춤)
+(function cdLoop(){document.querySelectorAll('[data-cd]').forEach(e=>{const d=dealOf(e.dataset.cd);if(!d)return;const t=ddayText(d);if(e.textContent!==t)e.textContent=t});requestAnimationFrame(cdLoop)})();
 setInterval(()=>{S.phI++;document.querySelectorAll('[data-ph]').forEach(e=>e.textContent=`「${PH[S.phI%PH.length]}」`)},2800);
 draw();
 </script>
