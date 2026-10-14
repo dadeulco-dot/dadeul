@@ -351,8 +351,8 @@ body.pcmode{display:block;padding:0;background:var(--surface)}
 .dseg{display:inline-flex;background:var(--surface2);border-radius:12px;padding:3px}
 .dseg button{height:40px;padding:0 18px;border-radius:10px;font-size:15px;font-weight:600;color:var(--sub)}
 .dseg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.mids{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:12px}
-.mid{min-height:56px;border-radius:14px;background:var(--surface2);font-size:13px;font-weight:600;letter-spacing:-.02em;color:var(--ink2);text-align:center;padding:6px 4px;line-height:1.3;word-break:keep-all}
+.mids{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:8px;margin-top:12px}
+.mid{min-height:56px;border-radius:14px;background:var(--surface2);font-size:13px;font-weight:600;letter-spacing:-.02em;color:var(--ink2);text-align:center;padding:6px 4px;line-height:1.3;word-break:keep-all;overflow-wrap:normal}
 .mid:hover{background:var(--brandBg);color:var(--brand)}
 .hsec{margin-top:26px;padding-top:22px;border-top:8px solid var(--surface2)}
 .gcard{display:flex;gap:12px;align-items:center;width:100%;padding:12px 0;border-bottom:.5px solid var(--line);text-align:left}
@@ -377,7 +377,7 @@ body.pcmode{display:block;padding:0;background:var(--surface)}
 .cpanes[hidden],[data-cpanes][hidden],.cres[hidden]{display:none}
 .crail{width:112px;flex-shrink:0;overflow-y:auto;background:var(--surface2);scrollbar-width:none;overscroll-behavior:contain}
 .crail::-webkit-scrollbar{display:none}
-.crail button{display:block;width:100%;text-align:left;padding:14px 10px 14px 16px;font-size:14px;color:var(--sub);line-height:1.35;position:relative;word-break:keep-all}
+.crail button{display:block;width:100%;text-align:left;padding:14px 10px 14px 16px;font-size:14px;color:var(--sub);line-height:1.35;position:relative;word-break:keep-all;overflow-wrap:normal}
 .crail button.on{background:var(--surface);color:var(--ink);font-weight:700}
 .crail button.on::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:2px;background:var(--brand)}
 .cright{flex:1;min-width:0;overflow-y:auto;padding:0 16px 0;overscroll-behavior:contain}
@@ -518,6 +518,8 @@ body.pcmode .pfab{left:20px;bottom:100px}
 .bgrp{margin-top:26px}
 .bback{display:inline-flex;align-items:center;gap:4px;margin-top:16px;min-height:32px;font-size:14px;font-weight:600;color:var(--ink2)}.bback:hover{color:var(--ink)}
 .bidx{margin-top:10px}
+.bidxpad{height:calc(100vh - 220px)}   /* 초성 이동용 여백 — 마지막 묶음도 위로 */
+.pcroot .bidx{scroll-margin-top:84px}   /* PC 는 상단 메뉴(69px)가 화면에 붙어 있어, 이동한 묶음 제목이 그 뒤에 가려지지 않게 */
 .bcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:28px}
 /* ════ 알림 ════ */
 .bell{position:relative}
@@ -721,7 +723,7 @@ div.lrow{grid-template-columns:116px minmax(0,1fr) auto}
 .opsk{font-size:12px;font-weight:700;color:var(--sub);margin-bottom:4px}
 .opsvd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px}
 .opsv{display:inline-flex;align-items:center;height:24px;padding:0 9px;border-radius:12px;font-size:12px;font-weight:800}
-.opsv.ok{background:var(--brandBg);color:var(--brand)}.opsv.mid{background:var(--accentBg);color:var(--accent)}.opsv.no{background:var(--surface2);color:var(--ink2)}
+.opsv.ok{background:var(--brandBg);color:var(--brand)}.opsv.opsrev{background:var(--accentBg);color:var(--accent)}.opsv.no{background:var(--surface2);color:var(--ink2)}
 /* 로고 SVG */
 .dlogo{display:block;color:var(--ink)}
 /* 탭 화면 상단 막대 — 다섯 화면 같은 높이 · 같은 제목 크기 · 같은 오른쪽 아이콘 묶음 */
@@ -729,6 +731,25 @@ div.lrow{grid-template-columns:116px minmax(0,1fr) auto}
 .top.rtop.hasb{padding-left:6px}
 .rtt{flex:1;min-width:0;font-size:20px;font-weight:700;letter-spacing:-.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rti{display:flex;align-items:center;gap:0}
+/* 모바일 카테고리 탭의 「카테고리 | 브랜드」 · PC 상단 메뉴의 브랜드 구분선 */
+.csegtab{display:flex;background:var(--surface);border-bottom:1px solid var(--line);flex-shrink:0}
+.csegtab button{flex:1;height:44px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:var(--sub);border-bottom:2px solid transparent;margin-bottom:-1px}
+.csegtab button.on{color:var(--ink);font-weight:800;border-bottom-color:var(--ink)}
+.gnb .menu .mdiv{width:1px;height:16px;background:var(--line);margin:0 6px;align-self:center}
+/* 브랜드 화면 카드 · 머리 줄 */
+.bcd{display:flex;flex-direction:column;min-width:0;height:100%}
+.bcdm{display:block;text-align:left;width:100%;flex:1}   /* 이름이 두 줄이어도 가격 줄은 카드 맨 아래로 — 옆 카드와 줄을 맞춤 */
+.bcdn{font-size:14px;font-weight:600;letter-spacing:-.02em;line-height:1.4;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bcdl{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:4px;font-size:12px;color:var(--sub)}
+.bcdl b{font-weight:700}
+.bcdf{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:6px}
+.bcdf>.num{font-size:15px;font-weight:800;letter-spacing:-.02em}
+.phone .bcd .cbtn{padding:0 8px;height:34px}.phone .bcd .ib2{width:32px}   /* 좁은 휴대폰 두 줄 카드에서도 가격 · 찜 · 비교가 한 줄에 (360px 기준) */
+.bhd{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;min-height:36px;margin-top:6px}
+.pcroot .bhd{margin-top:0;flex:1}
+.bdseg{display:flex;max-width:520px}   /* 브랜드 모아보기 대분류 — 숫자를 이름 옆 같은 줄에, 좁은 폭에서도 네 칸이 한 줄 */
+.bdseg button{flex:1;padding:0 6px;white-space:nowrap;font-size:14px;display:flex;align-items:center;justify-content:center}
+.bdseg .num{font-size:12px;margin-left:2px}
 </style>
 </head>
 <body>
@@ -970,10 +991,16 @@ const validateAll=()=>[...P.flatMap(p=>validate(p).map(e=>p.id+': '+e)),...MINIS
 /* ── 상태 ── */
 const PCW=1024; // 이 폭 이상이면 PC 화면
 const S={pid:'p1',month:false,fav:{},cmp:{},sheet:null,toast:null,view:window.innerWidth>=PCW?'pc':'mo',mega:null,act:null,crowXs:{},spyHold:0,
- screen:'home',favSeg:'fav',opsTab:'cand',opsGroup:'brand',opsEx:false,opsBig:{},opsOpen:null,opsDraft:{},opsOffer:{},opsEndDays:{},opsLink:{},moaOn:true,moaSeg:'live',moaDom:'전체',mcat:{dom:null,mid:null,sub:null},mf:{states:['gathering','talking','open'],pmin:null,pmax:null,off:0,soon:false,brands:[],mine:false},msort:'hot',   /* mf 초기값은 MF0() 와 같게 — 상태를 만들 때는 MF0 가 아직 정의 전 */
+ screen:'home',favSeg:'fav',bdom:null,bsub:null,bsort:'default',bf:{good:false,pmin:null,pmax:null},opsTab:'cand',opsGroup:'brand',opsEx:false,opsBig:{},opsOpen:null,opsDraft:{},opsOffer:{},opsEndDays:{},opsLink:{},moaOn:true,moaSeg:'live',moaDom:'전체',mcat:{dom:null,mid:null,sub:null},mf:{states:['gathering','talking','open'],pmin:null,pmax:null,off:0,soon:false,brands:[],mine:false},msort:'hot',   /* mf 초기값은 MF0() 와 같게 — 상태를 만들 때는 MF0 가 아직 정의 전 */
  joins:{},moaNext:{},did:null,mPrev:null,pendJoin:null,dPrev:null,readNoti:{},nPrev:null,brand:null,follow:{},bPrev:null,storyK:null,goAfter:null,user:null,notiPref:{price:true,month:true,label:true,req:true},q:'',sqDone:false,recentQ:[],sOpen:false,requested:{},sPrev:null,focusSearch:false,hdom:'뷰티',hdomSet:false,pOff:false,entry:null,hrank:null,recent:[],phI:0,cdom:'뷰티',cq:'',recentSubs:[],prev:null,catFocus:null,crTop:null,lsub:'프라이팬',lsort:'default',csub:'프라이팬',cpair:[],cdiff:true,lastSub:null,protoOpen:false,f:{good:false,pmin:null,pmax:null,brands:[]}};
 let toastT=0;
-const say=m=>{S.toast=m;draw();clearTimeout(toastT);toastT=setTimeout(()=>{S.toast=null;draw()},2400)};
+// 안내가 뜨고 사라질 때 화면 전체를 다시 그리지 않고 안내 칸만 고침
+// (예전엔 사라질 때마다 전체를 다시 그려, 그 순간 하던 스크롤이 끊겼음 — 목록을 넘기다 멈추거나 초성 이동이 중간에 멈춤)
+const paintToast=()=>{let t=app.querySelector('.toast');
+ if(!S.toast){if(t)t.remove();return}
+ if(!t){t=document.createElement('div');t.className='toast';t.setAttribute('role','status');app.appendChild(t)}
+ t.textContent=S.toast};
+const say=m=>{S.toast=m;paintToast();clearTimeout(toastT);toastT=setTimeout(()=>{S.toast=null;paintToast()},2400)};
 
 /* ── 계산 ── */
 const evalCats=p=>p.cats.filter(c=>!c.defect&&c.m>0);
@@ -1154,7 +1181,7 @@ const bottomBar=p=>{const thin=LAB(p)==='표본 부족',f=!!S.fav[p.id],c=!!S.cm
  :`<button class="main" data-a="list:${p.sub}">${what} ${subCount(p.sub)}종과 비교</button>`}</div>`};
 
 const sheet=p=>{if(!S.sheet)return'';
- const inner=S.sheet==='mcats'?`<div class="pad"><div class="t-h">카테고리</div><div class="t-cap" style="margin-top:2px">모아 사기가 열린 곳만 보여드려요</div><div class="mtree" style="margin-top:10px">${mcatTree()}</div></div>`
+ const inner=['bsort','bfilter'].includes(S.sheet)?bSheet():S.sheet==='mcats'?`<div class="pad"><div class="t-h">카테고리</div><div class="t-cap" style="margin-top:2px">모아 사기가 열린 곳만 보여드려요</div><div class="mtree" style="margin-top:10px">${mcatTree()}</div></div>`
   :S.sheet==='msort'?`<div class="pad"><div class="t-h">정렬</div><div style="margin-top:8px">${MSORTS.map(([k,t])=>`<button class="srow" data-a="msort:${k}"><span>${t}</span>${S.msort===k?ic('check',20,'var(--brand)',2.6):''}</button>`).join('')}</div></div>`
   :S.sheet==='mfilter'?`<div class="pad"><div class="t-h">필터</div>${mfilters()}<div style="display:flex;gap:8px;margin-top:20px"><button class="tbtn" style="flex:0 0 auto" data-a="mreset">초기화</button><button class="main" style="height:48px" data-a="close">${mList().length}개 보기</button></div></div>`
   :S.sheet==='moahow'?moaHowSheet():S.sheet==='login'?loginSheet():S.sheet==='noti'?notiSheet():(S.sheet==='sort'||S.sheet==='filter')?listSheet(S.lsub):S.sheet==='cons'?`<div class="pad"><div class="t-h">아쉽다는 이야기만 모아보기</div>
@@ -1173,9 +1200,9 @@ const sheet=p=>{if(!S.sheet)return'';
 /* ② 에서 확정한 제품 카테고리 (대 · 중 · 소) — 2026-09-30 육아용품 추가, 순서: 뷰티 · 육아용품 · 주방용품
    육아용품 런칭 제외: 카시트(안전 인증 영역) · 분유·이유식·간식(식품) · 체온계·콧물흡입기(의료기기) */
 const TAX={
- '뷰티':[['스킨케어',['스킨·토너','에센스·세럼·앰플','로션·에멀전','크림','아이크림','미스트','페이스오일']],['클렌징',['클렌징폼','클렌징오일·밤','클렌징워터·젤','필링·스크럽','립·아이리무버']],['선케어',['선크림','선스틱','선쿠션','선스프레이']],['마스크·팩',['시트마스크','워시오프팩','슬리핑팩','토너패드']],['베이스메이크업',['쿠션','파운데이션','프라이머·베이스','컨실러','파우더·팩트']],['색조메이크업',['립','아이섀도','아이라이너','마스카라','블러셔','아이브로우']],['바디케어',['바디워시','바디로션·크림','핸드크림','바디스크럽','데오드란트']],['헤어케어',['샴푸','트리트먼트·린스','헤어에센스·오일','두피케어','헤어스타일링']],['뷰티기기·소품',['피부관리기기','헤어드라이어·고데기','퍼프·브러시','네일']]],
- '육아용품':[['수유·이유식 도구',['젖병','젖꼭지','젖병소독기','분유포트','유축기','이유식 조리기','유아식기','빨대컵']],['기저귀·물티슈',['밴드 기저귀','팬티 기저귀','물티슈','기저귀 휴지통','기저귀 갈이대']],['목욕·스킨케어',['유아 로션·크림','유아 바스·샴푸','유아 선크림','유아 욕조','바스타월·가운']],['외출용품',['유모차','아기띠·힙시트','기저귀 가방','유모차 액세서리']],['침구·수면',['아기 침대','범퍼침대','유아 이불·베개','속싸개·스와들','수면조끼']],['놀이·장난감',['아기체육관','모빌','치발기','딸랑이·촉감완구','블록·쌓기','목욕 장난감']],['유아 가구·안전',['하이체어','유아 소파','책상·의자','안전문','모서리 보호대']]],
- '주방용품':[['조리팬',['프라이팬','궁중팬·웍','계란말이팬','그릴팬','전골팬']],['냄비·솥',['편수냄비','양수냄비','전골냄비','밀크팬','압력솥','곰솥·들통']],['무쇠·주물',['무쇠팬','더치오븐','그리들']],['칼·도마',['식도·셰프나이프','과도','주방가위','도마','칼갈이']],['조리도구',['뒤집개','국자','집게','거품기','계량도구','채반·볼','강판·다지기']],['주방가전',['에어프라이어','전기포트','토스터·미니오븐','블렌더·믹서','전기밥솥','커피머신','식기세척기','음식물처리기']],['보관용기',['밀폐용기','유리용기','진공용기','양념통·저장병','도시락','텀블러·보온병']],['식기·컵',['접시','공기·대접','머그·컵','수저·커트러리','쟁반']],['베이킹',['오븐팬·트레이','케이크틀','머핀틀','실리콘몰드','베이킹도구']],['주방잡화',['앞치마','행주·수세미','고무장갑','식기건조대','수납·정리','음식물쓰레기통']]]};
+ '뷰티':[['스킨케어',['스킨·토너','에센스·세럼·앰플','로션·에멀전','크림','아이크림','미스트','페이스오일','임산부 화장품']],['클렌징',['클렌징폼','클렌징오일·밤','클렌징워터·젤','필링·스크럽','립·아이리무버']],['선케어',['선크림','선스틱','선쿠션','선스프레이']],['마스크·팩',['시트마스크','워시오프팩','슬리핑팩','토너패드']],['베이스메이크업',['쿠션','파운데이션','프라이머·베이스','컨실러','파우더·팩트']],['색조메이크업',['립','아이섀도','아이라이너','마스카라','블러셔','아이브로우']],['바디케어',['바디워시','바디로션·크림','핸드크림','바디스크럽','데오드란트','풋케어','여성청결제','제모제','바디슬리밍·마사지','쉐이빙']],['헤어케어',['샴푸','트리트먼트·린스','헤어에센스·오일','두피케어','헤어스타일링','염색·펌']],['뷰티가전',['헤어드라이어','고데기','피부관리기기','파라핀베스','발각질 제거기','네일기기','눈썹관리기','전기면도기']],['뷰티소품',['퍼프·브러시','네일']]],
+ '육아용품':[['수유·이유식 도구',['젖병','젖꼭지','유축기','유아식기','빨대컵']],['육아가전',['젖병소독기','분유포트','이유식 조리기','젖병워머']],['기저귀·물티슈',['밴드 기저귀','팬티 기저귀','물티슈','기저귀 휴지통','기저귀 갈이대']],['목욕·스킨케어',['유아 로션·크림','유아 바스·샴푸','유아 선크림','유아 욕조','바스타월·가운','어린이 화장품']],['외출용품',['유모차','아기띠·힙시트','기저귀 가방','유모차 액세서리']],['침구·수면',['아기 침대','범퍼침대','유아 이불·베개','속싸개·스와들','수면조끼']],['놀이·장난감',['아기체육관','모빌','치발기','딸랑이·촉감완구','블록·쌓기','목욕 장난감']],['유아 가구·안전',['하이체어','유아 소파','책상·의자','안전문','모서리 보호대']]],
+ '주방용품':[['조리팬',['프라이팬','궁중팬·웍','계란말이팬','그릴팬','전골팬']],['냄비·솥',['편수냄비','양수냄비','전골냄비','밀크팬','압력솥','곰솥·들통']],['무쇠·주물',['무쇠팬','더치오븐','그리들']],['칼·도마',['식도·셰프나이프','과도','주방가위','도마','칼갈이']],['조리도구',['뒤집개','국자','집게','거품기','계량도구','채반·볼','강판·다지기']],['주방가전',['에어프라이어','전기포트','토스터·미니오븐','블렌더·믹서','전기밥솥','커피머신','식기세척기','음식물처리기']],['보관용기',['밀폐용기','유리용기','진공용기','양념통·저장병','도시락','텀블러·보온병']],['식기·컵',['접시','공기·대접','머그·컵','수저·커트러리','쟁반','와인용품','커피용품','제기·제수용품']],['베이킹',['오븐팬·트레이','케이크틀','머핀틀','실리콘몰드','베이킹도구']],['주방잡화',['앞치마','행주·수세미','고무장갑','식기건조대','수납·정리','음식물쓰레기통','가스차단기','렌지가드']]]};
 const LABS=['대체로 만족','의견 갈림','대체로 불만','표본 부족'];
 const LORD={'대체로 만족':0,'의견 갈림':1,'대체로 불만':2,'표본 부족':3};
 const sameSub=p=>sortItems(allIn(p.sub),'default').map(x=>({...x,L:labOf(x),rate:rateX(x)}));
@@ -1185,13 +1212,13 @@ const pcProto=()=>'';
 const pcGnb=p=>{const cn=Object.keys(S.cmp).length,fn=Object.values(S.fav).filter(Boolean).length+(S.moaOn?Object.values(S.joins).filter(Boolean).length:0);
  return `<header class="gnb"><div class="wrap">
  <button class="logo" data-a="home" aria-label="다들 홈">${logoMark(44)}</button>
- <nav class="menu">${Object.keys(TAX).map(d=>`<button class="${S.mega===d?'on':''}" data-a="mega:${d}" aria-expanded="${S.mega===d}">${d}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`).join('')}</nav>
+ <nav class="menu">${Object.keys(TAX).map(d=>`<button class="${S.mega===d?'on':''}" data-a="mega:${d}" aria-expanded="${S.mega===d}">${d}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`).join('')}<span class="mdiv" aria-hidden="true"></span><button class="${['brand','brands'].includes(S.screen)?'on':''}" data-a="brands">브랜드</button></nav>
  <div class="gsw" data-sroot><label class="gsearch">${ic('search',19,'var(--meta)')}<input data-sq type="search" enterkeyhint="search" autocomplete="off" value="${escA(S.q)}" placeholder="제품 · 브랜드 · 카테고리 검색" aria-label="검색어"></label>
   ${S.sOpen?`<div class="sdrop" data-sres>${S.q.trim()?sugHTML(S.q):preHTML()}</div>`:''}</div>
  <div class="gright">${S.moaOn?`<button class="gbtn ${['moa','deal'].includes(S.screen)?'on':''}" data-a="moa">${ic('moa',20,'var(--ink2)')}모아 사기</button>`:''}<button class="gbtn" data-a="compare:${p.sub||''}">${ic('cmpi',20,'var(--ink2)')}비교함${cn?`<span class="n num">${cn}</span>`:''}</button>
   <button class="gbtn" data-a="favs">${ic('heart',20,'var(--ink2)')}찜${fn?`<span class="n num">${fn}</span>`:''}</button>
   <button class="gbtn" data-a="noti" aria-label="알림${unreadN()?` · 안 읽은 알림 ${unreadN()}개`:''}">${bellIcon('var(--ink2)').replace('width="22" height="22"','width="20" height="20"')}알림${unreadN()?`<span class="bdot num">${unreadN()}</span>`:''}</button></div></div>
- ${S.mega?`<div class="mega" data-catroot><div class="wrap mhead">${catSearch(1)}${recentCats()}<button class="more" data-a="brands" style="margin-left:auto;white-space:nowrap">브랜드로 찾기 ${ic('chev',14,'var(--brand)',2.2)}</button></div>
+ ${S.mega?`<div class="mega" data-catroot><div class="wrap mhead">${catSearch(1)}${recentCats()}</div>
   <div class="wrap mres" data-cres ${S.cq.trim()?'':'hidden'}>${S.cq.trim()?catResults(S.cq):''}</div>
   <div class="wrap mwrap" data-cpanes ${S.cq.trim()?'hidden':''}>${TAX[S.mega].map(([m,subs])=>`<div><div class="mh">${m}</div>
   ${subs.map(x=>`<button class="ms ${x===p.sub&&m===p.mid?'cur':''}" data-a="${hasSub(x)?'list:'+x:'say:'+x+J(x,'은','는')+' 아직 준비 중이에요'}">${x}</button>`).join('')}</div>`).join('')}</div></div>`:''}
@@ -1271,7 +1298,7 @@ const isThin=x=>labOf(x)==='표본 부족';
 // 정렬: 표본 부족은 어떤 정렬에서도 맨 뒤에 따로 모음
 function sortItems(items,key){const L=items.slice();const thin=(a,b)=>isThin(a)-isThin(b);
  const f={default:(a,b)=>LORD[labOf(a)]-LORD[labOf(b)]||b.n-a.n, prob:(a,b)=>rateX(a)-rateX(b)||b.n-a.n, n:(a,b)=>b.n-a.n,
-  price:(a,b)=>a.price-b.price, unit:(a,b)=>unitVal(a)-unitVal(b), month:(a,b)=>b.month-a.month, nv:(a,b)=>b.nv.r-a.nv.r||b.nv.c-a.nv.c}[key];
+  price:(a,b)=>a.price-b.price, priceD:(a,b)=>b.price-a.price, unit:(a,b)=>unitVal(a)-unitVal(b), month:(a,b)=>b.month-a.month, nv:(a,b)=>b.nv.r-a.nv.r||b.nv.c-a.nv.c}[key];
  if(key.startsWith('cat:')){const k=key.slice(4),ok=x=>x.cs[k]&&x.cs[k][0]>=30;
   return L.sort((a,b)=>thin(a,b)||ok(b)-ok(a)||(ok(a)?shareK(b,k)-shareK(a,k):(b.cs[k]?b.cs[k][0]:0)-(a.cs[k]?a.cs[k][0]:0))||b.n-a.n)}
  return L.sort((a,b)=>thin(a,b)||f(a,b))}
@@ -1415,11 +1442,13 @@ function cmpRows(items,sub){const rows=[];
  rows.push({g:'기본',label:'문제를 말한 후기',cells:items.map(x=>isThin(x)?cell('<span class="t-sub">아직 적어요</span>'):cell(`<span class="num">${(rateX(x)*100).toFixed(1)}%</span>`))});
  rows.push({g:'기본',label:'네이버 별점',cells:items.map(x=>cell(`<span style="display:inline-flex;align-items:center;gap:3px">${ic('star',15,'var(--star)',1.2,'var(--star)')}<span class="num">${x.nv.r}</span></span>`))});
  rows.push({g:'기본',label:'가격',cells:items.map(x=>cell(`<span class="num">${won(x.price)}</span>`,x.vol?unitPrice(x):''))});
- tplOf(sub).forEach(c=>{const vals=items.map(x=>okK(x,c.k)?shareK(x,c.k):null),real=vals.filter(v=>v!=null);
-  const hi=real.length>1?Math.max(...real):null,spread=real.length>1?Math.max(...real)-Math.min(...real):0;
+ tplOf(sub).forEach(c=>{const vals=items.map(x=>okK(x,c.k)?shareK(x,c.k):null),
+  // 굵게 · 「차이 큰 것만」은 화면에 보이는 반올림 숫자로 판단 (CLAUDE.md 5장) — 같은 96%인데 한쪽만 굵어지지 않게
+  dv=items.map((x,i)=>vals[i]==null?null:pct(x.cs[c.k][1],x.cs[c.k][0])),real=dv.filter(v=>v!=null);
+  const hi=real.length>1?Math.max(...real):null,spread=real.length>1?(Math.max(...real)-Math.min(...real))/100:0;
   rows.push({g:'후기 카테고리별 「좋다」 비율',label:c.name,time:c.time,k:c.k,spread,small:real.length<2||spread<DIFF_MIN,
    cells:items.map((x,i)=>{const v=x.cs[c.k];if(vals[i]==null)return cell('<span class="t-sub">아직 적어요</span>',`${v?v[0]:0}건`);
-    const top=hi!=null&&vals[i]===hi&&real.filter(r=>r===hi).length===1;
+    const top=hi!=null&&dv[i]===hi&&real.filter(r=>r===hi).length===1;   // 맨 위가 같으면 아무도 굵게 하지 않음
     return `<div class="cv num" style="${top?'font-weight:800;color:var(--brand)':''}">${pct(v[1],v[0])}%</div>
      <div class="cbar"><i style="width:${vals[i]*100}%"></i></div><div class="t-cap num">${nf(v[0])}건 중</div>`})})});
  rows.push({g:'가장 많이 나온 이야기',label:'좋다는 이야기',cells:items.map(x=>isThin(x)?cell('<span class="t-sub">아직 적어요</span>'):`<div class="cpt">${mk('+')}<span>${x.pro}</span></div>`)});
@@ -1545,7 +1574,9 @@ const heroText=st=>`<h1 class="t-title" style="font-size:24px">네이버 리뷰 
  <div class="t-sub num" style="margin-top:8px">지금까지 리뷰 <b style="color:var(--ink)">${nf(st.found)}건</b>을 모두 읽고, <b style="color:var(--ink)">${nf(st.excl)}건</b>을 제외했어요.</div>
  <button class="more" data-a="sheet:method">어떻게 고르나요 ${ic('chev',14,'var(--brand)',2.2)}</button>`;
 const domSeg=dom=>`<div class="dseg" role="tablist">${Object.keys(TAX).map(d=>`<button role="tab" aria-selected="${d===dom}" class="${d===dom?'on':''}" data-a="hdom:${d}">${d}</button>`).join('')}</div>`;
-const midTiles=dom=>`<div class="mids">${TAX[dom].map(([m])=>`<button class="mid" data-a="${MID2SUB[m]?'list:'+MID2SUB[m]:'say:샘플에는 '+m+' 제품이 아직 없어요'}">${m}</button>`).join('')}</div>`;
+// 중분류 이름의 줄바꿈 자리 — 「베이스 / 메이크업」 「색조 / 메이크업」, 「·」 뒤 (앞에서는 안 끊음)
+const brkName=m=>m.replace(/(.)(메이크업)$/,'$1<wbr>$2').replace(/·/g,'\u2060·<wbr>');
+const midTiles=dom=>`<div class="mids">${TAX[dom].map(([m])=>`<button class="mid" data-a="${MID2SUB[m]?'list:'+MID2SUB[m]:'say:샘플에는 '+m+' 제품이 아직 없어요'}">${brkName(m)}</button>`).join('')}</div>`;
 const newsBox=(favs,news)=>favs.length?`<div class="newsb"><div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:15px;font-weight:700">찜한 제품 소식</div>
  <button class="t-sub" data-a="favs" style="min-height:32px">찜 ${favs.length}개 전체</button></div>
  ${news.length?news.map(x=>`<button class="nrow" data-a="open:${x.id}">${thumb(x,40,40)}<div style="min-width:0;flex:1;text-align:left"><div class="t-cap" style="color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${x.brand} · ${x.name}</div>
@@ -1740,13 +1771,15 @@ function catLive(inp){S.cq=inp.value;const root=inp.closest('[data-catroot]');if
  const res=root.querySelector('[data-cres]');if(res){res.hidden=!on;res.innerHTML=on?catResults(S.cq):''}}
 
 /* 모바일 카테고리 화면 */
+// 모바일 카테고리 탭 위 두 칸 — 「카테고리 | 브랜드」 (브랜드 칸은 브랜드 모아보기를 탭 안에서 보여줌)
+const catSegEl=on=>`<div class="csegtab" role="tablist">${[['cat','카테고리'],['brand','브랜드']].map(([k,t])=>`<button role="tab" aria-selected="${on===k}" class="${on===k?'on':''}" data-a="catseg:${k}">${t}</button>`).join('')}</div>`;   // 밑줄 탭 — 아래 대분류 칸(둥근 버튼)과 모양을 달리해 역할을 구분
 const catsTop=()=>rootTop('카테고리',{back:S.prev?`<button class="ib" data-a="catclose" aria-label="닫기"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>`:''});
 const catsBody=()=>{const dom=S.cdom,on=!!S.cq.trim();
  return `<div class="catwrap" data-catroot>
- <div style="padding:12px 0 12px">${catSearch()}<div class="pad">${recentCats()}<button class="more" data-a="brands" style="min-height:34px">브랜드로 찾기 ${ic('chev',14,'var(--brand)',2.2)}</button></div></div>
+ <div style="padding:12px 0 12px">${catSearch()}<div class="pad">${recentCats()}</div></div>
  <div data-cpanes ${on?'hidden':''} style="padding:0 16px 12px">${domSeg(dom).replace(/data-a="hdom:/g,'data-a="cdom:')}</div>
  <div class="cpanes" data-cpanes ${on?'hidden':''}>
-  <nav class="crail" id="cl" aria-label="중분류">${TAX[dom].map(([m])=>`<button data-m="${m}" data-a="cjump:${m}">${m.replace(/·/g,'\u2060·')}</button>`).join('')}</nav>
+  <nav class="crail" id="cl" aria-label="중분류">${TAX[dom].map(([m])=>`<button data-m="${m}" data-a="cjump:${m}">${brkName(m)}</button>`).join('')}</nav>
   <div class="cright" id="cr">${TAX[dom].map(([m,subs])=>`<section class="cgrp" data-g="${m}"><h3>${m}</h3>
    ${subs.map(s=>`<button class="crow2 ${hasSub(s)?'':'off'}" data-a="${subGo(s)}"><span>${s}</span><span class="t-cap num" style="display:flex;align-items:center;gap:2px">${subCountTxt(s)}${hasSub(s)?ic('chev',14,'var(--meta)',2):''}</span></button>`).join('')}</section>`).join('')}
    <div class="t-cap" style="padding:18px 0 30px">프로토타입 · 제품이 있는 곳은 ${LSUBS.join(' · ')}뿐이에요</div></div></div>
@@ -2031,24 +2064,70 @@ const brandParts=(b,pc)=>{const xs=brandItems(b),subs=[...new Set(xs.map(x=>x.su
    <button class="tbtn" data-a="say:새 창에서 ${escA(b)} 브랜드스토어가 열려요">${ic('ext',16,'var(--ink2)')}브랜드스토어</button></div>
   <div class="bnote">${bySent('다들은 브랜드를 평가하지 않아요. 같은 브랜드라도 제품마다 후기를 따로 모아요.')}</div>
   ${distBar(xs)}`;
- const groups=subs.map(s=>{const g=sortItems(xs.filter(x=>x.sub===s),'default');return `<section class="bgrp"><div class="fgh"><span><b>${s}</b> <span class="num" style="color:var(--meta)">${g.length}</span></span>
-  <button class="plink" style="font-size:13px" data-a="list:${s}">같은 ${s} ${subCount(s)}종과 비교</button></div>
-  <div class="${pc?'sgrid':''}" style="${pc?'padding:10px 0 0':''}">${g.map(x=>lcard(x,'default')).join('')}</div></section>`}).join('');
- return {head,groups}};
+ return {head}};
 
+/* 브랜드 화면 본문 — 쇼핑몰형: 소분류로 골라 보기 · 정렬 · 필터 · 큰 사진 그리드 · 비교는 그대로 (2026-10-13) */
+const BSORTS=[['default','모아보니 순'],['n','모은 후기 많은 순'],['prob','문제 언급 적은 순'],['price','가격 낮은 순'],['priceD','가격 높은 순']];
+const bAll=()=>brandItems(S.brand);
+const bSubs=()=>{const xs=bAll();return ALLSUBS.filter(s=>xs.some(x=>x.sub===s))};   // 카테고리표 순서
+const bScope=()=>bAll().filter(x=>!S.bsub||x.sub===S.bsub);
+const bShown=()=>sortItems(bScope().filter(x=>(!S.bf.good||labOf(x)==='대체로 만족')&&(S.bf.pmin==null||x.price>=S.bf.pmin)&&(S.bf.pmax==null||x.price<=S.bf.pmax)),S.bsort);
+const bfN=()=>(S.bf.good?1:0)+(S.bf.pmin!=null||S.bf.pmax!=null?1:0);
+const bBounds=()=>{const ps=bScope().map(x=>x.price);return [Math.floor(Math.min(...ps)/PSTEP)*PSTEP,Math.ceil(Math.max(...ps)/PSTEP)*PSTEP]};
+const bRange=()=>{const [lo,hi]=bBounds();return hi>lo?rangeBox(lo,hi,S.bf.pmin??lo,S.bf.pmax??hi,'brand'):''};
+const bCmpSub=()=>(S.bsub?[S.bsub]:bSubs()).find(s=>cmpList({sub:s}).length)||null;
+// 카드 — 큰 사진 · 이름 · 라벨 · 모은 후기 · 가격 · 찜 · 비교
+const bcard=x=>{const L=labOf(x);return `<div class="bcd"><button class="bcdm" data-a="open:${x.id}">${thumb(x,160,160,'thumb mth')}
+ <div class="bcdn">${x.name.replace(/ (?=\S+$)/,'\u00a0')}</div>
+ <div class="bcdl"><span class="dot" style="background:${LDOT(L)}"></span><b style="color:${LCOL(L)}">${L}</b><span class="num">· 후기 ${nf(x.n)}건</span></div></button>
+ <div class="bcdf"><span class="num">${won(x.price)}</span><span style="display:flex;gap:2px;align-items:center">${favBtn(x,20)}${cmpBtn(x)}</span></div></div>`};
+const bHead=()=>{const n=bShown().length,sub=S.bsub,more=sub&&subCount(sub)>bAll().filter(x=>x.sub===sub).length;
+ return `<div class="bhd"><span class="t-sub num">${sub||'전체'} · ${n}개${bfN()?` <button class="plink" data-a="bfreset">조건 풀기</button>`:''}</span>
+  ${more?`<button class="plink" data-a="list:${sub}">같은 ${sub} ${subCount(sub)}종과 비교 ${ic('chev',13,'var(--brand)',2.2)}</button>`:''}</div>`};
+const bGrid=pc=>{const xs=bShown();return xs.length?`<div class="${pc?'mgrid4':'mgrid2'}">${xs.map(bcard).join('')}</div>`
+ :`<div style="padding:40px 0;text-align:center"><div class="t-body">조건에 맞는 제품이 없어요</div><button class="tbtn" style="margin-top:10px" data-a="bfreset">조건 풀기</button></div>`};
+// 모바일 — 소분류 칩 줄 · 정렬 · 필터 (위에 붙어 있음)
+const bSubRow=()=>{const all=bAll();return `<div class="cwrap"><div class="crow" data-key="bsubs" style="padding-top:10px;padding-bottom:0">${[[null,'전체',all.length],...bSubs().map(s=>[s,s,all.filter(x=>x.sub===s).length])]
+ .map(([v,t,n])=>`<button class="chip ${S.bsub===v?'on':''}" data-a="bsub:${v||''}">${t} <span class="num" style="opacity:.7">${n}</span></button>`).join('')}</div></div>`};
+const bTools=()=>`<div class="ltool pad" style="border-top:0;padding-top:10px">
+ <button class="tbtn" data-a="sheet:bsort" style="flex:1;min-width:0">${ic('list',17,'var(--ink2)',2)}<span>${BSORTS.find(x=>x[0]===S.bsort)[1]}</span></button>
+ <button class="tbtn" data-a="sheet:bfilter" style="flex-shrink:0;${bfN()?'color:var(--brand);border-color:var(--brand)':''}">필터${bfN()?` <b class="num">${bfN()}</b>`:''}</button></div>`;
+const bCmpFloat=()=>{const sub=bCmpSub();if(!sub)return '';const cn=cmpList({sub}).length;
+ return `<div class="cfloat"><div style="display:flex;align-items:center;gap:6px;min-width:0">${cmpList({sub}).slice(0,3).map(x=>thumb(x,30,30)).join('')}
+  <span style="font-size:14px;font-weight:700;margin-left:4px;white-space:nowrap">${sub} 비교함 <span class="num">${cn}</span></span></div>
+ <button class="cgo" data-a="${cn<2?'say:같은 '+sub+' 하나를 더 담으면 비교할 수 있어요':'compare:'+sub}" ${cn<2?'aria-disabled="true"':''}>${cn<2?'하나 더 담아 주세요':'비교하기'}</button></div>`};
+// PC — 왼쪽 카테고리 · 좁혀 보기
+const bSide=()=>{const all=bAll(),doms=[...new Set(bSubs().map(s=>midOf(s).dom))];
+ return `<aside class="lside bside"><div class="sh">카테고리</div><button class="sl ${!S.bsub?'on':''}" data-a="bsub:">전체 <span class="num">${all.length}</span></button>
+ ${doms.map(d=>`<div class="sh2">${d}</div>${bSubs().filter(s=>midOf(s).dom===d).map(s=>`<button class="sl ${S.bsub===s?'on':''}" data-a="bsub:${s}">${s} <span class="num">${all.filter(x=>x.sub===s).length}</span></button>`).join('')}`).join('')}
+ <div class="sh" style="margin-top:22px">좁혀 보기</div>
+ <button class="ck" data-a="bgood" aria-pressed="${S.bf.good}"><span class="box ${S.bf.good?'on':''}">${S.bf.good?ic('check',14,'#fff',3):''}</span>「대체로 만족」만</button>
+ ${bRange()?`<div class="sh2">가격 범위</div>${bRange()}`:''}
+ ${bfN()?`<button class="more" data-a="bfreset" style="margin-top:10px">조건 풀기</button>`:''}</aside>`};
+const bSheet=()=>S.sheet==='bsort'?`<div class="pad"><div class="t-h">정렬</div><div style="margin-top:8px">${BSORTS.map(([k,t])=>`<button class="srow" data-a="bsortk:${k}"><span>${t}</span>${S.bsort===k?ic('check',20,'var(--brand)',2.6):''}</button>`).join('')}</div></div>`
+ :`<div class="pad"><div class="t-h">필터</div>
+  <button class="srow" data-a="bgood"><span>「대체로 만족」만 보기</span><span class="sw ${S.bf.good?'on':''}"><i></i></span></button>
+  ${bRange()?`<div class="sh2">가격 범위</div>${bRange()}`:''}
+  <div style="display:flex;gap:8px;margin-top:20px"><button class="tbtn" style="flex:0 0 auto" data-a="bfreset">초기화</button><button class="main" style="height:48px" data-a="close">${bShown().length}개 제품 보기</button></div></div>`;
 const brandTop=t=>`<div class="top"><button class="ib" data-a="brandback" aria-label="뒤로">${ic('back',22,'var(--ink)')}</button>
  <div style="flex:1;font-size:17px;font-weight:700;letter-spacing:-.02em">${t}</div>
  <button class="ib" data-a="home" aria-label="홈으로">${ic('home',22,'var(--ink)')}</button></div>`;
 const brandBody=()=>{const s=brandParts(S.brand);return `<div class="scr" id="scr"><div class="pad" style="padding-top:16px">${s.head}</div>
- <div class="pad">${s.groups}</div><div class="pad" style="padding-top:18px"><button class="more" data-a="brands">다른 브랜드 둘러보기 ${ic('chev',14,'var(--brand)',2.2)}</button></div>
+ <div class="msticky">${bSubRow()}${bTools()}</div>
+ <div class="pad">${bHead()}${bGrid(false)}</div><div class="pad" style="padding-top:18px"><button class="more" data-a="brands">다른 브랜드 둘러보기 ${ic('chev',14,'var(--brand)',2.2)}</button></div>
  <div class="foot"><div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div></div>`};
 // 브랜드 모아보기 — 가나다순, 초성으로 묶음
-const brandIndex=pc=>{const bs=allBrands(),keys=[...new Set(bs.map(choKey))];
- return `<div class="t-sub" style="margin-top:4px">다들이 후기를 모은 브랜드 ${bs.length}곳이에요. 브랜드 공식 스토어가 있는 곳만 모아요.</div>
- <div class="fchips" style="margin-top:12px">${keys.map(k=>`<button class="chip" data-a="bjump:${k}">${k}</button>`).join('')}</div>
+// 브랜드 모아보기 — 대분류로 좁히고(그 대분류 제품이 있는 브랜드만), 자음으로 묶음 (2026-10-13 대분류 칩 추가)
+const bIn=(b,d)=>brandItems(b).filter(x=>!d||midOf(x.sub).dom===d);
+const brandIndex=pc=>{const all=allBrands(),d=S.bdom,bs=all.filter(b=>bIn(b,d).length),keys=[...new Set(bs.map(choKey))];
+ return `<div class="t-sub" style="margin-top:4px">다들이 후기를 모은 ${d?d+' ':''}브랜드 ${bs.length}곳이에요. 브랜드 공식 스토어가 있는 곳만 모아요.</div>
+ <div class="dseg bdseg" role="tablist" style="margin-top:12px">${[[null,'전체',all.length],...Object.keys(TAX).map(k=>[k,k,all.filter(b=>bIn(b,k).length).length])]
+  .map(([v,t,n])=>`<button role="tab" aria-selected="${d===v}" class="${d===v?'on':''}" data-a="bdom:${v||''}">${t} <span class="num" style="opacity:.7">${n}</span></button>`).join('')}</div>
+ <div class="fchips" style="margin-top:10px">${keys.map(k=>`<button class="chip" data-a="bjump:${k}">${k}</button>`).join('')}</div>
  ${keys.map(k=>`<section class="bidx" id="bk-${k}"><div class="sgh" style="font-size:14px">${k}</div><div class="${pc?'bcols':''}">
-  ${bs.filter(b=>choKey(b)===k).map(b=>{const xs=brandItems(b);return `<button class="srow2" data-a="brand:${escA(b)}"><span style="flex:1;min-width:0;text-align:left"><b style="font-weight:600">${b}</b>
-   <span class="t-cap" style="display:block">${[...new Set(xs.map(x=>x.sub))].join(' · ')}</span></span><span class="t-cap num">${xs.length}개</span>${ic('chev',14,'var(--meta)',2)}</button>`}).join('')}</div></section>`).join('')}`};
+  ${bs.filter(b=>choKey(b)===k).map(b=>{const xs=bIn(b,d);return `<button class="srow2" data-a="brand:${escA(b)}"><span style="flex:1;min-width:0;text-align:left"><b style="font-weight:600">${b}</b>
+   <span class="t-cap" style="display:block">${[...new Set(xs.map(x=>x.sub))].join(' · ')}</span></span><span class="t-cap num">${xs.length}개</span>${ic('chev',14,'var(--meta)',2)}</button>`}).join('')}</div></section>`).join('')}
+ <div class="bidxpad" aria-hidden="true"></div>`};   // 맨 아래 여백 — 마지막 초성(ㅎ)을 눌러도 그 묶음이 화면 위로 올라오게
 const brandsBody=()=>`<div class="scr" id="scr"><div class="pad" style="padding-top:12px">${brandIndex(false)}</div>
  <div class="foot"><div class="t-cap">프로토타입 · 이 화면의 브랜드와 숫자는 모두 가상이에요</div></div></div>`;
 /* PC */
@@ -2057,8 +2136,10 @@ const bBackLink=()=>{const pv=S.bPrev,lab=S.bFromIdx?'브랜드 모아보기':!p
  return lab?`<button class="bback" data-a="brandback">${ic('back',16,'var(--ink2)',2.2)}${lab}</button>`:''};
 const pcBrand=()=>{const s=brandParts(S.brand,true);return pcProto()+pcGnb({sub:null,mid:null})+`<div class="wrap" style="padding-bottom:140px">
  ${bBackLink()}<div class="pcrumb" style="padding-top:6px"><button data-a="home" style="color:var(--meta)">홈</button><span aria-hidden="true">›</span><button data-a="brands" style="color:var(--meta)">브랜드</button><span aria-hidden="true">›</span><b>${S.brand}</b></div>
- <div style="max-width:620px">${s.head}</div><div style="max-width:980px">${s.groups}</div>
- <div class="foot"><div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div></div>`+pcTray({sub:S.lsub})};
+ <div style="max-width:620px">${s.head}</div>
+ <div class="lgrid" style="margin-top:26px">${bSide()}<main style="min-width:0"><div class="sortrow" style="margin-top:0">${bHead()}
+  <select class="lsel" data-change="bsort" style="margin-left:auto" aria-label="정렬">${BSORTS.map(([k,t])=>`<option value="${k}" ${S.bsort===k?'selected':''}>${t}</option>`).join('')}</select></div>${bGrid(true)}</main></div>
+ <div class="foot"><div class="t-cap">별점과 리뷰 수는 네이버 쇼핑에서 그대로 옮겨 왔어요.</div><div class="t-cap" style="margin-top:6px">프로토타입 · 이 화면의 제품과 숫자는 모두 가상이에요</div></div></div>`+pcTray({sub:bCmpSub()||S.lsub})};
 const pcBrands=()=>pcProto()+pcGnb({sub:null,mid:null})+`<div class="wrap" style="padding-bottom:80px">
  <div class="pcrumb"><button data-a="home" style="color:var(--meta)">홈</button><span aria-hidden="true">›</span><b>브랜드</b></div>
  <h1 class="t-title">브랜드 모아보기</h1><div style="max-width:980px">${brandIndex(true)}</div></div>`;
@@ -2406,7 +2487,7 @@ const OPS_TABS=[['cand','후보'],['gather','모으는 중'],['propose','브랜�
 const opsCount=k=>k==='cand'?opsCands().filter(x=>opsCheck(x).ok).length:k==='gather'?DEALS.filter(d=>d.state==='gathering').length:k==='propose'?DEALS.filter(d=>d.state==='proposing').length:k==='open'?DEALS.filter(canBuy).length:DEALS.filter(d=>dSt(d)==='past').length;
 const opsProd=x=>`<button class="opsp" data-a="${x.full?'pick:'+x.id:'say:프로토타입에서는 샘플 '+P.length+'개만 상세가 있어요'}">${thumb(x,40,40)}<span><span class="t-cap" style="color:var(--sub)">${x.brand}</span><b>${x.name}</b></span></button>`;
 const opsLab=x=>{const L=labOf(x);return `<span class="opsl" style="color:${LCOL(L)}"><span class="dot" style="background:${LDOT(L)}"></span>${L}</span>`};
-const opsVd={open:['열어도 됨','ok'],review:['다시 협상','mid'],reject:['거절','no']};
+const opsVd={open:['열어도 됨','ok'],review:['다시 협상','opsrev'],reject:['거절','no']};   // 'mid' 는 홈 중분류 버튼(.mid)과 겹쳐 쓰지 않음
 const opsDays=n=>{const t=new Date(Date.now()+n*864e5);return `${t.getMonth()+1}월 ${t.getDate()}일`};
 
 /* ① 후보 */
@@ -2482,7 +2563,7 @@ const protoFab=()=>{if(S.sheet)return '';   // 창이 열려 있으면 숨김 �
   <div style="font-size:15px;font-weight:700">프로토타입 바로가기</div><div class="t-cap" style="margin-top:2px">실제 서비스에는 없는 버튼이에요. 제품과 숫자는 모두 가상이에요.</div>
   ${E.length?`<div class="warn" style="margin-top:10px;border-radius:10px">데이터 정합성 확인 필요: ${E.join(' / ')}</div>`:''}
   ${wide?grp('화면',[['모바일로 보기','view:mo',S.view==='mo'],['PC로 보기','view:pc',S.view==='pc']]):''}
-  ${grp('처음 · 다시 온 사람',[['홈 (처음 온 사람 · 기록 없음)','home',false],['검색으로 처음 온 사람 (「아기 젖병」)','demoEntry',false],['다시 온 사람의 홈 (크림 · 프라이팬 관심)','demo1',false],['새로고침 (다시 섞기)','reseed',false]])}
+  ${grp('처음 · 다시 온 사람',[['홈 (처음 온 사람 · 기록 없음)','demoFirst',false],['검색으로 처음 온 사람 (「아기 젖병」)','demoEntry',false],['다시 온 사람의 홈 (크림 · 프라이팬 관심)','demo1',false],['새로고침 (다시 섞기)','reseed',false]])}
   ${grp('목록',LSUBS.map(x=>[x+' 목록','list:'+x,S.screen==='list'&&S.lsub===x]))}
   ${grp('제품 상세',P.map(p=>[`${LAB(p)} · ${p.brand} ${p.sub}`,'pick:'+p.id,S.screen==='detail'&&S.pid===p.id]))}
   ${grp('운영',[['운영 콘솔 (PC)','console',S.screen==='console']])}
@@ -2508,7 +2589,7 @@ function draw(){
   window.scrollTo(0,S.resetTop?0:y);S.keepTop=0;S.resetTop=0;fitLeft();bindChips();focusQ();goAfterDraw();return}
  document.body.classList.remove('pcmode');app.className='phone';
  const old=document.getElementById('scr');const top=old?old.scrollTop:0;
- app.innerHTML=protoFab()+(S.screen==='console'?`<div class="top"><div style="flex:1;font-size:17px;font-weight:700;padding-left:6px">운영 콘솔</div></div><div class="scr" id="scr"><div style="padding:60px 24px;text-align:center"><div class="t-h">운영 콘솔은 PC에서만 열려요</div><div class="t-sub" style="margin-top:6px">화면이 넓어야 후보 표와 브랜드 답변을 한눈에 볼 수 있어요.</div><button class="tbtn" style="margin-top:14px" data-a="home">서비스 화면으로</button></div></div>`:S.screen==='moa'?moaTop()+moaBody()+tabBar(null,'moa'):S.screen==='deal'?dealTop()+dealBody():S.screen==='noti'?notiTop()+notiScreen():S.screen==='brand'?brandTop('브랜드')+brandBody():S.screen==='brands'?brandTop('브랜드 모아보기')+brandsBody():S.screen==='story'?storyTop()+storyBody():S.screen==='favs'?favTop()+favScreen()+tabBar(null,3):S.screen==='search'?searchTop()+searchBody():S.screen==='cats'?catsTop()+catsBody()+tabBar(null,1):S.screen==='home'?homeTop()+homeBody()+tabBar(S.lastSub,0):S.screen==='compare'?cmpTop(S.csub)+cmpBody(S.csub)+tabBar(S.csub,2):list?listTop(S.lsub)+listBody(S.lsub)+tabBar(S.lsub):topBar()+body(p)+bottomBar(p))+sheet(p)+toast;
+ app.innerHTML=protoFab()+(S.screen==='console'?`<div class="top"><div style="flex:1;font-size:17px;font-weight:700;padding-left:6px">운영 콘솔</div></div><div class="scr" id="scr"><div style="padding:60px 24px;text-align:center"><div class="t-h">운영 콘솔은 PC에서만 열려요</div><div class="t-sub" style="margin-top:6px">화면이 넓어야 후보 표와 브랜드 답변을 한눈에 볼 수 있어요.</div><button class="tbtn" style="margin-top:14px" data-a="home">서비스 화면으로</button></div></div>`:S.screen==='moa'?moaTop()+moaBody()+tabBar(null,'moa'):S.screen==='deal'?dealTop()+dealBody():S.screen==='noti'?notiTop()+notiScreen():S.screen==='brand'?brandTop('브랜드')+brandBody()+bCmpFloat():S.screen==='brands'?(S.brandsInTab?catsTop()+catSegEl('brand')+brandsBody()+tabBar(null,1):brandTop('브랜드 모아보기')+brandsBody()):S.screen==='story'?storyTop()+storyBody():S.screen==='favs'?favTop()+favScreen()+tabBar(null,3):S.screen==='search'?searchTop()+searchBody():S.screen==='cats'?catsTop()+catSegEl('cat')+catsBody()+tabBar(null,1):S.screen==='home'?homeTop()+homeBody()+tabBar(S.lastSub,0):S.screen==='compare'?cmpTop(S.csub)+cmpBody(S.csub)+tabBar(S.csub,2):list?listTop(S.lsub)+listBody(S.lsub)+tabBar(S.lsub):topBar()+body(p)+bottomBar(p))+sheet(p)+toast;
  const sc=document.getElementById('scr');if(sc)sc.scrollTop=S.keepTop?top:(S.resetTop?0:top);S.keepTop=0;S.resetTop=0;bindChips();bindCats();focusQ();goAfterDraw()}
 
 const goList=sub=>{S.prev=null;S.cq='';S.screen='list';S.lsub=sub;S.lsort='default';S.f={good:false,pmin:null,pmax:null,brands:[]};S.sheet=null;S.mega=null;S.crowXs={};S.resetTop=1;draw()};
@@ -2606,8 +2687,15 @@ document.addEventListener('click',e=>{
    else if(a2==='deal'){S.mPrev={screen:'noti'};S.did=v2;S.screen='deal';S.resetTop=1;draw()}
    else if(a2==='sgo')submitSearch(v2);else if(a2==='brand'){S.bPrev={screen:'noti'};S.bFromIdx=false;S.brand=v2;S.screen='brand';S.resetTop=1;draw()}break}
   /* 브랜드 */
-  case'brand':if(!['brand','brands'].includes(S.screen))S.bPrev={screen:S.screen,pid:S.pid,lsub:S.lsub,csub:S.csub,storyK:S.storyK};S.bFromIdx=S.screen==='brands';S.brand=v;S.screen='brand';S.sheet=null;S.mega=null;S.sOpen=false;S.crowXs={};S.resetTop=1;draw();break;
-  case'brands':if(!['brand','brands'].includes(S.screen))S.bPrev={screen:S.screen,pid:S.pid,lsub:S.lsub,csub:S.csub,storyK:S.storyK};S.screen='brands';S.sheet=null;S.mega=null;S.sOpen=false;S.resetTop=1;draw();break;
+  case'brand':if(S.brand!==v||S.screen!=='brand')Object.assign(S,{bsub:null,bsort:'default',bf:{good:false,pmin:null,pmax:null}});   // 다른 브랜드로 가면 고른 소분류 · 정렬 · 필터를 비움
+   if(!['brand','brands'].includes(S.screen))S.bPrev={screen:S.screen,pid:S.pid,lsub:S.lsub,csub:S.csub,storyK:S.storyK};S.bFromIdx=S.screen==='brands';S.brand=v;S.screen='brand';S.sheet=null;S.mega=null;S.sOpen=false;S.crowXs={};S.resetTop=1;draw();break;
+  case'bdom':S.bdom=v||null;S.keepTop=1;draw();break;
+  case'bsub':S.bsub=v||null;S.bf.pmin=null;S.bf.pmax=null;S.keepTop=1;draw();break;   // 소분류가 바뀌면 가격 범위의 양 끝도 바뀌어 범위를 비움
+  case'bsortk':S.bsort=v;S.sheet=null;S.keepTop=1;draw();break;
+  case'bgood':S.bf.good=!S.bf.good;S.keepTop=1;draw();break;
+  case'bfreset':S.bf={good:false,pmin:null,pmax:null};S.keepTop=1;draw();break;
+  case'catseg':if(v==='brand'){S.screen='brands';S.brandsInTab=true;S.bPrev={screen:'cats'}}else{S.screen='cats';S.brandsInTab=false}S.cq='';S.sheet=null;S.resetTop=1;draw();break;
+  case'brands':S.brandsInTab=false;if(!['brand','brands'].includes(S.screen))S.bPrev={screen:S.screen,pid:S.pid,lsub:S.lsub,csub:S.csub,storyK:S.storyK};S.screen='brands';S.sheet=null;S.mega=null;S.sOpen=false;S.resetTop=1;draw();break;
   case'brandback':if(S.screen==='brand'&&S.bFromIdx){S.screen='brands';S.bFromIdx=false}else{Object.assign(S,S.bPrev||{screen:'home'});S.bPrev=null}S.resetTop=1;draw();break;
   case'bjump':{const t=document.getElementById('bk-'+v);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});break}
   case'follow':S.follow[v]=!S.follow[v];S.keepTop=1;draw();say(S.follow[v]?(S.user?`${v}의 새 제품이 모이면 알려드릴게요`:`${v}의 새 제품이 모이면 찜 탭에서 알려드릴게요`):'알림을 껐어요');break;
@@ -2646,6 +2734,8 @@ document.addEventListener('click',e=>{
   case'hdom':S.hdom=v;S.hdomSet=true;S.hrank=null;S.keepTop=1;draw();break;
   case'poff':S.pOff=!S.pOff;S.keepTop=1;draw();say(S.pOff?'맞춤을 껐어요. 모든 분께 같은 기준으로 보여드려요':'맞춤을 켰어요');break;
   case'reseed':SEED=Math.floor(Math.random()*2147483647);S.resetTop=1;draw();say('새로고침했어요');break;
+  // 「처음 온 사람」 — 기록(찜 · 최근 본 것 · 검색으로 온 말)을 비우고 홈. 예전엔 홈으로만 가서, 다시 온 사람을 본 뒤 누르면 처음 온 사람 화면이 안 나왔음
+  case'demoFirst':Object.assign(S,{fav:{},recent:[],recentSubs:[],cmp:{},lastSub:null,entry:null,hdomSet:false,hrank:null,pOff:false,screen:'home',resetTop:1});draw();break;
   case'demoEntry':Object.assign(S,{fav:{},recent:[],recentSubs:[],cmp:{},lastSub:null,entry:{kw:'아기 젖병'},hdomSet:false,hrank:null,pOff:false,screen:'home',resetTop:1});draw();break;
   case'hrank':S.hrank=v;S.keepTop=1;draw();break;
   case'pair':{const ids=v.split(','),sub=itemOf(ids[0]).sub,now=cmpList({sub}).map(x=>x.id),add=ids.filter(id=>!now.includes(id));
@@ -2669,10 +2759,14 @@ document.addEventListener('change',e=>{const t=e.target;if(!t.dataset||!t.datase
  else if(k==='link'){S.opsLink[id]=t.value}
  S.keepTop=1;draw()});
 document.addEventListener('focusin',e=>{if(e.target.matches('.gsw [data-sq]')&&!S.sOpen){S.sOpen=true;S.mega=null;S.focusSearch=true;S.keepTop=1;draw()}});
-document.addEventListener('change',e=>{if(e.target.matches('.rng input')){const [a,b,lo,hi]=rangeLive(e.target),F=e.target.closest('.rng').dataset.scope==='moa'?S.mf:S.f;
-  F.pmin=a<=lo?null:a;F.pmax=b>=hi?null:b;S.keepTop=1;draw();return}
+document.addEventListener('change',e=>{if(e.target.matches('.rng input')){const [a,b,lo,hi]=rangeLive(e.target),sc0=e.target.closest('.rng').dataset.scope,F=sc0==='moa'?S.mf:sc0==='brand'?S.bf:S.f;
+  F.pmin=a<=lo?null:a;F.pmax=b>=hi?null:b;S.keepTop=1;
+  // 다시 그리면 손잡이가 새로 만들어져 초점이 사라짐 → 키보드로 이어서 움직일 수 있게 같은 손잡이에 초점을 되돌림
+  const had=document.activeElement===e.target,sc=e.target.closest('.rng').dataset.scope,r=e.target.dataset.r;draw();
+  if(had){const n=document.querySelector(`.rng[data-scope="${sc}"] input[data-r="${r}"]`);if(n)n.focus({preventScroll:true})}return}
  const el=e.target.closest('[data-change]');if(!el)return;
  if(el.dataset.change==='msort'){S.msort=el.value;S.keepTop=1;draw();return}
+ if(el.dataset.change==='bsort'){S.bsort=el.value;S.keepTop=1;draw();return}
  if(el.dataset.change==='lsort'){S.lsort=el.value;S.keepTop=1;draw()}});
 document.addEventListener('keydown',e=>{if(e.target.matches('[data-sq]')){
   if(e.key==='Enter'){e.preventDefault();submitSearch(e.target.value);return}
